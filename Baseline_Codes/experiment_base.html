@@ -1,0 +1,197 @@
+<!--  Base code for experiment online using JavaScript and jsPsych Library
+            - Author: Juliana Sporrer (juliana.sporrer.18@ucl.ac.uk)
+            - Creation date: March 2020
+
+      Advice:
+            - You must have one main HTML file that is calling Js functions
+            - Open with your browser (best with Chrome) and click on F12 to open your console. Use F5 to refresh after each save.
+            - Use "console.log(var)" to print the variable "var" in your console
+            - Be SUPER careful with the use of "," / ";" and "{}". This is probably why you get an error (and it's not always indicated in your console)
+
+      Useful material:
+            - https://www.w3schools.com/html/default.asp
+            - https://www.jspsych.org/tutorials/hello-world/
+            - if you use Atom as text editor : https://www.sitepoint.com/12-favorite-atom-tips-and-shortcuts-to-improve-your-workflow/
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>   My experiment </title>
+        <script   src = "jspsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
+        <link     href= "jspsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+        <script   src = "jspsych-master/plugins/jspsych-html-keyboard-response.js"></script>  <!-- every plugin that you use needs to be added in the head -->
+        <script   src = "jspsych-master/plugins/jspsych-survey-text.js"></script>
+        <script   src = "jspsych-master/plugins/jspsych-image-keyboard-response.js"></script>
+        <script   src = "jspsych-master/plugins_JS/fullscreen-JS.js"></script> <!-- plugin that I modified -->
+        <script   src = "getBrowserInfo.js"></script> <!-- add the external functions-->
+        <style    id ="cursornone"> html { cursor: none; };  </style> <!-- remove the cursor, delete if cursor needed -->
+    </head>
+    <body>
+          <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+          <canvas class = "canvas" id="myCanvas"></canvas>
+   </body>
+   <script>
+
+// --------------------------------- PARAMETERS --------------------------------//
+
+    // Put here all your parameters, they will be global.
+    var nbBlocksPrac   = 1;
+    var nbTrialsPrac   = 1;
+    var nbBlocksExp    = 1;
+    var nbTrialsExp    = 1;
+
+    var fixation_time  = 1000; // in ms, so 1 sec
+
+    var debug          = false; // if true, skips fullscreen and info
+
+// --------------------------------- INITIALISATION  ---------------------------//
+
+    // Checks if the browser is Chrome or Firefox (best compatibility)
+    var browserInfo = getBrowserInfo(); // Call the function that I specified in the head
+
+    if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
+            var wrong_browser = {
+                    type: 'html-keyboard-response',
+                    stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
+                             +'<p> Please re-open the experiment in one of these browsers. </p>',
+            };
+            jsPsych.init({
+                    timeline: [wrong_browser],
+            });
+    }
+
+    else { // If browser is ok, lead on to the experiment
+
+          // Remove the cursor which can be distracting
+          let cursornone = document.getElementById("cursornone").innerHTML;
+
+          // Create "Variable/function" that makes sure you remain in FullScreen
+          var firstFullscreen = {
+                type: 'fullscreen', // Call the function "fullscreen" of the plugin "fullscreen_emo"
+                message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
+                button_label: 'Put in Fullscreen',
+                delay_after: 300,
+                check_fullscreen: true,
+                data: {
+                      test_part: 'firstFullscreen',
+                      // Here put all the names of the variables you want to save.
+                      // example:
+                      // blocknumber: null,
+                      // trialnumber: null,
+                },
+          };
+
+          var fullscreenExp = {
+                type: 'fullscreen',
+                message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
+                fullscreen_mode: false,
+                data: {
+                      test_part: 'fullscreenExp',
+                      // blocknumber: null,
+                },
+          };
+
+          var fixation = {
+                type:'html-keyboard-response',
+                stimulus: '<div style="font-size:70px;">+</div>',
+                choices: jsPsych.NO_KEYS,
+                trial_duration: fixation_time,
+                data:{
+                      test_part:'fixation',
+                      // blocknumber: null,
+                }
+          };
+
+          // Ask the participants to enter details
+          var subdetails = {
+                type: 'survey-text',
+                preamble: ['<p style = "text-align: center; font-size: 28px">Please enter the following:</p>'],
+                questions: [{prompt: "Worker ID?", rows: 3, columns: 40}],
+                data: {
+                      test_part: 'subdetails',
+                      // Here put all the names of the variables you want to save
+                },
+                on_start: function(){
+                      var res = cursornone.replace("none", "default");
+                      document.getElementById("cursornone").innerHTML = res;
+                },
+                on_finish: function(){
+                      var res = cursornone.replace("default", "none");
+                      document.getElementById("cursornone").innerHTML = res;
+                },
+          };
+
+          var subdetails2 = {
+                type: 'survey-text',
+                preamble: ['<p style = "text-align: center; font-size: 28px">Please enter the following:</p>'],
+                questions: [{prompt: "Gender (F/M)?", rows: 3, columns: 40}, {prompt: "Age?", rows: 3, columns: 40}],
+                data: {
+                      test_part: 'subdetails2',
+                      // Here put all the names of the variables you want to save
+                },
+                on_start: function(){
+                      var res = cursornone.replace("none", "default");
+                      document.getElementById("cursornone").innerHTML = res;
+                },
+                on_finish: function(){
+                      var res = cursornone.replace("default", "none");
+                      document.getElementById("cursornone").innerHTML = res;
+                },
+          };
+
+// --------------------------------- PRE-LOAD ANY MEDIA  --------------------------------- //
+            // Example
+            // var instrImg = [];
+            // for(var t=1;t < 14+1;t++){
+            //       instrImg[t-1] = 'instructions/instructionsDiapo/Slide'+t+'.jpg';
+            // };
+
+// --------------------------------- BEGINING EXPERIMENT  --------------------------------- //
+
+            var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
+            // there is also a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
+
+            var exp_timeline = [];
+
+            if(debug == false){
+                  exp_timeline.push(firstFullscreen);
+                  exp_timeline.push(subdetails);
+                  exp_timeline.push(subdetails2);
+            }
+
+            // Example: call your instruction function
+            // You can use the pluggin "html-keyboard-response" if you want to write text or "image-keyboard-response" if you use ppx slides
+
+            // var firstInstr    = instr();
+
+            // for(var i = 0; i < firstInstr.length; i++){
+            //        exp_timeline.push(firstInstr[i]);
+            // };
+
+            // Example: call your experiment
+            // var task          = rsvp();
+
+            // for(var i = 0; i < task.length; i++){
+            //       exp_timeline.push(task[i]);
+            // };
+
+            // Execute the whole experiment's timeline
+            jsPsych.init({
+                  //preload_images: instrImg, // if you preload images you need to put it here. It is HIGHLY recommended
+                  timeline: exp_timeline,
+                  on_trial_finish: function() {
+                      jsPsych.data.addProperties({
+                          subject_id: subject_id
+                      });
+                      var data = JSON.parse(jsPsych.data.getLastTrialData().json());
+                  },
+                  on_finish: function() {
+                        jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                        document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                  },
+            });
+
+    } // End of the experiment (end of checking browser)
+</script>
+</html>
