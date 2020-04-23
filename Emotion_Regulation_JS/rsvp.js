@@ -1,4 +1,4 @@
-function rsvp()
+function rsvp(nbBlocks, nbTrials, training)
 {
       /////////////////////////////
       ////// INITIALISATION //////
@@ -6,87 +6,48 @@ function rsvp()
 
       var timelineTask = [];
 
-      // Creation of Condition Matrix
-      // Worth looking at the info on jsPsych.randomization.factorial
+      // Creation of Condition Matrix (Worth looking at the info on jsPsych.randomization.factorial)
 
-
-      [conditionRwd, condition] = createCondiMatrix(nbBlocksExp, nbTrialsExp);
+      [conditionRwd, condition] = createCondiMatrix(nbBlocks, nbTrials, training);
 
       console.log(conditionRwd)
       console.log(condition)
-
-      function randi(min, max) { // min and max included (acts like randi of Matlab)
-        return Math.floor(Math.random() * (max - min + 1) + min);
-      }
-
-      // var factors = {
-      //       condiEmo: ['DC', 'CC', 'BC'],
-      //       condiGender: ['Hom', 'Fem'],
-      //       condiRwd: ['smallRwd', 'largeRwd']
-      // };
-      //
-      // var full_design = jsPsych.randomization.factorial(factors, 1);
-      // console.log(full_design)
-
-      var DC_largeRwd = {
-            type:'html-keyboard-response',
-            stimulus: '<p> DC_largeRwd.</p>'+
-            '<p> <strong> Press spacebar when you are ready to start!</strong></p>',
-            choices: 32,
-            data: {
-                  test_part: 'DC_largeRwd',
-                  blocknumber: 0,
-            }
-      };
-
-      var startBreak = {
-            type:'html-keyboard-response',
-            stimulus: '<p> Now you are ready to start the experiment.</p>'+
-            '<p> The mini-game comprises '+nbTrialsExp+' trials. </p>' +
-            '<p> In total there are '+nbBlocksExp+' parts and you will be offered to take breaks in-between parts. </p>' +
-            '<p> There is no time limit on your responses or on your ratings.</p>'+
-            '<p> <strong> Press spacebar when you are ready to start!</strong></p>',
-            choices: [32],
-            data: {
-                  test_part: 'startBreak',
-                  blockNb: 0,
-                  trialNb: 0,
-            }
-      };
 
       /////////////////////////////////
       ////// Start of the Block //////
       ////////////////////////////////
 
-      for (var block = 0; block < nbBlocksExp; block++)  {
-
-        var blockBreak = {
-          type:'html-keyboard-response',
-          stimulus:'<p> You can now pause for a break. You have completed '+block+' out of '+nbBlocksExp+' parts. </p>' +
-          '<p> <strong> Press spacebar when you are ready to continue!</strong></p>',
-          choices: [32],
-          data: {
-            test_part: 'blockbreak',
-            blockNb: block,
-            trialNb: 0,
-          }
-        };
-
-        //PUSH BREAK SCREENS BETWEEN EACH BLOCK
-        if (block == 0){
-            timelineTask.push(startBreak);
-        }
-        else {
-            timelineTask.push(blockBreak);
-        }
+      for (var block = 0; block < nbBlocks; block++)  {
 
             // Put here the parameters that need to be randomised every block
+
+            var instrCondiImg = "";
+            if (conditionRwd[block][1] = 1 ){
+              if (conditionRwd[block][0] = 1) {instrCondiImg =  instrImg[3]}
+              else if (conditionRwd[block][0] = 2) {instrCondiImg = instrImg[4]}
+            } //DC
+            else if (conditionRwd[block][1] = 2){
+              if (conditionRwd[block][0] = 1) {instrCondiImg =  instrImg[5]}
+              else if (conditionRwd[block][0] = 2) {instrCondiImg = instrImg[6]}
+            }; // BC
+
+            var instrCondi = {
+                  type: "image-keyboard-response",
+                  stimulus: instrCondiImg,
+                  stimulus_height: screen.height/2, // Size of the instruction depending on the size of the participants' screen
+                  choices: [32],
+                  data: {
+                        test_part: "instrCondi",
+                  },
+            };
+
+            if (training == 0) {timelineTask.push(instrCondi)};
 
             /////////////////////////////////
             ////// Start of the trial //////
             ////////////////////////////////
 
-            for(var trial = 0; trial < nbTrialsExp; trial++){
+            for(var trial = 0; trial < nbTrials; trial++){
 
               // Position of the Distractor and Target
               posCritDist = randi(4,8); // random number between 4 and 8
@@ -133,6 +94,7 @@ function rsvp()
                     choices: jsPsych.NO_KEYS,
                     condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                     reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
+                    training: training,
                     trial_duration: fixation_time,
                     data:{
                           test_part:'fixation',
@@ -157,6 +119,7 @@ function rsvp()
                   choices: jsPsych.NO_KEYS,
                   condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                   reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
+                  training: training,
                   trial_duration: imageDuration,
                   response_ends_trial: false,
                   data: {
@@ -174,7 +137,8 @@ function rsvp()
                 '<p> <strong> Oui [O] / Non [N] </strong></p>',
                 condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                 reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
-                choices: [37, 39], // left and right arrows
+                training: training,
+                choices: [79,78], //[37, 39], left and right arrows
                 response_ends_trial: true, //If true, trial will end when subject makes a response.
                 data: {
                   test_part: 'rsvpAnswFem',
@@ -189,7 +153,8 @@ function rsvp()
                 '<p> <strong> Oui [O] / Non [N] </strong></p>',
                 condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                 reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
-                choices: [37, 39],
+                training: training,
+                choices: [79,78],
                 response_ends_trial: true,
                 data: {
                   test_part: 'rsvpAnswHom',

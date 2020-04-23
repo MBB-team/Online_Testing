@@ -86,6 +86,12 @@ jsPsych.plugins["image-keyboard-response"] = (function() {
         default: null,
         description: 'What are the incentives of the trial (smallRwd or largeRwd).'
       },
+      training: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Training',
+        default: null,
+        description: 'Is the current trial part of the training'
+      },
     }
   }
 
@@ -130,8 +136,13 @@ jsPsych.plugins["image-keyboard-response"] = (function() {
     }
 
 
-    // render
-    display_element.innerHTML = [html + condi + rwd];
+    if (trial.training == 1){
+      display_element.innerHTML = [html + condi];
+    } else if (trial.training == 0 && trial.condition !== null && trial.reward !== null){
+      display_element.innerHTML = [html + condi + rwd];
+    } else if (trial.condition == null && trial.reward == null){
+      display_element.innerHTML = [html];
+    }
 
     // store response
     var response = {

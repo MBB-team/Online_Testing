@@ -34,18 +34,17 @@
 // --------------------------------- PARAMETERS --------------------------------//
 
     // Parameters (put here all your parameters, they will be global)
-    var nbBlocksPrac   = 1;
-    var nbTrialsPrac   = 1;
-    var nbBlocksExp    = 8;
-    var nbTrialsExp    = 6;
+    var nbBlocksPrac      = 2;
+    var nbTrialsPrac      = 6;
+    var nbBlocksExp       = 8;
+    var nbTrialsExp       = 6;
 
-    var setSize         = 15;
-    var imageDuration   = 70; // in ms, so 0.07 sec
-    var fixation_time   = 500; // in ms, so 1 sec
-    var timeBetweenTrials = 2000;
+    var setSize           = 15;
+    var imageDuration     = 70; // in ms, so 0.07 sec
+    var fixation_time     = 500; // in ms, so 1 sec
 
-    var nbInstr         = 14; // how many Instr Slides you have
-    var debug           = false; // if true, skips fullscreen and info
+    var nbInstr           = 12; // how many Instr Slides you have
+    var debug             = false; // if true, skips fullscreen and info
 
 // --------------------------------- INITIALISATION  ---------------------------//
 
@@ -68,13 +67,9 @@
           // Removes the cursor
           let cursornone = document.getElementById("cursornone").innerHTML;
 
-          //Set up the canvas and get the window height and width.
-          var canvas = document.getElementById("myCanvas");
-          var context = canvas.getContext("2d");
-          //context.canvas.width  = 800;
-          //context.canvas.height =  540;
-          var centerWidth = canvas.width / 2.0;
-          var centerHeight = canvas.height / 2.0;
+          function randi(min, max) { // min and max included (acts like randi of Matlab)
+                return Math.floor(Math.random() * (max - min + 1) + min);
+          }
 
           // Create "Variable/function" that makes sure you remain in FullScreen
           var firstFullscreen =	{
@@ -85,8 +80,6 @@
                 check_fullscreen: true,
                 data: {
                       test_part: 'firstFullscreen',
-                      // Here put all the names of the variables you want to save with a value like "888" example:
-                      // blocknumber: 888,
                 },
           };
 
@@ -106,7 +99,6 @@
                 questions: [{prompt: "Worker ID?", rows: 3, columns: 40}],
                 data: {
                       test_part: 'subdetails',
-                      // Here put all the names of the variables you want to save
                 },
                 on_start: function(){
                       var res = cursornone.replace("none", "default");
@@ -124,7 +116,6 @@
                 questions: [{prompt: "Gender (F/M)?", rows: 3, columns: 40}, {prompt: "Age?", rows: 3, columns: 40}],
                 data: {
                       test_part: 'subdetails',
-                      // Here put all the names of the variables you want to save
                 },
                 on_start: function(){
                       var res = cursornone.replace("none", "default");
@@ -139,7 +130,7 @@
 // --------------------------------- PRE-LOAD ANY MEDIA  -----------------------//
             // Example
             var instrImg = [];
-            for(var t=1;t < nbInstr+1;t++){
+            for(var t=1;t <= nbInstr;t++){
                   instrImg[t-1] = 'instructions/instructionsDiapo/Slide'+t+'.jpg'; // Pre-load all the jpg files in this folder
             };
 
@@ -181,6 +172,10 @@
 
             var exp_timeline = [];
 
+            var firstInstr    = instr([0,1,7,8,2,9]);
+            var endPract      = instr([10]);
+            var endExp        = instr([11]);
+
             if(debug == false){
                   jsPsych.pluginAPI.preloadImages([instrImg, imgWFF, imgWFN, imgWMF, imgWMN, imgCondi, imgRwd],
                   function(){ startExperiment();},
@@ -188,22 +183,31 @@
                   exp_timeline.push(firstFullscreen);
                   exp_timeline.push(subdetails);
                   exp_timeline.push(subdetails2);
+
+                  for(var i = 0; i < firstInstr.length; i++){
+                         exp_timeline.push(firstInstr[i]);
+                  };
             }
+            var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
+            for(var i = 0; i < practice.length; i++){
+                  exp_timeline.push(practice[i]);
+            };
 
-            var firstInstr    = instr();
-            var task          = rsvp();
-            //var practice    = practrsvp(numPrac);
+            for(var i = 0; i < endPract.length; i++){
+                   exp_timeline.push(endPract[i]);
+            };
 
-            // for(var i = 0; i < firstInstr.length; i++){
-            //        exp_timeline.push(firstInstr[i]);
-            // };
-
+            var task          = rsvp(nbBlocksExp, nbTrialsExp, 0);
             for(var i = 0; i < task.length; i++){
                   exp_timeline.push(task[i]);
             };
 
+            for(var i = 0; i < endPract.length; i++){
+                   exp_timeline.push(endExp[i]);
+            };
+
             // Execute the experiment
-            //function startExperiment(){
+            function startExperiment(){
               jsPsych.init({
                 //preload_images: [instrImg, imgWFF,imgWFN, imgWMF,imgWMN],
                 timeline: exp_timeline,
@@ -222,9 +226,7 @@
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                 },
               });
-            //}
-
-
+            }
 
     } // End of the experiment (end of checking browser)
 </script>

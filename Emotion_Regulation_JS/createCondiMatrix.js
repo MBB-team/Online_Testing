@@ -1,11 +1,16 @@
-function createCondiMatrix(nbBlocks, nbTrials)
+function createCondiMatrix(nbBlocks, nbTrials, training)
 {
-      let conditionRwd = [[1,1],[1,2],[2,1],[2,2]];
-      conditionRwd = jsPsych.randomization.repeat(conditionRwd, nbBlocks/4);
+      if (training == 1){
+          var conditionRwd = [[1,1],[2,2]];
+      } else if (training == 0){
+          var conditionRwd = [[1,1],[1,2],[2,1],[2,2]];
+          conditionRwd = jsPsych.randomization.repeat(conditionRwd, nbBlocks/4);
+        }
+
       conditionRwd = jsPsych.randomization.shuffleNoRepeats(conditionRwd);
 
-      let condition = []; let condiDC = []; let condiCC = []; let condiBC = [];
-      for (let i = 0; i < nbBlocks; i++) {
+      var condition = []; var condiDC = []; var condiCC = []; var condiBC = [];
+      for (var i = 0; i < nbBlocks; i++) {
 
             condiCC = Array(nbTrials/6).fill([3,4]).flat(); // acts like repmat in Matlab (but less good haha)
             condiDC = condiCC.concat(Array(nbTrials/3).fill([1,2]).flat());
