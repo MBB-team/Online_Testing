@@ -165,6 +165,7 @@ jsPsych.plugins["image-keyboard-response"] = (function() {
       var trial_data = {
         "rt": response.rt,
         "stimulus": trial.stimulus,
+        "responses": null,
         "key_press": response.key
       };
 

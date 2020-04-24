@@ -1,14 +1,27 @@
-<!--  Base code for experiment online using Javascript and jsPsych Library
+<!--  Emotion regulation experiment online using Javascript and jsPsych Library
             - Author: Juliana Sporrer (juliana.sporrer.18@ucl.ac.uk)
             - Creation date: March 2020
 
-      Advice:
-            - You must have one main HTML file that is calling Js functions
-            - Open with your browser (best with Chrome) and click on F12 to open your console. Use F5 to refresh after each save.
-            - Use "console.log(var)" to print the variable "var" in your console
-            - Be SUPER careful with the use of "," / ";" and "{}". This is probably why you get an error (and it's not always indicated in your console)
--->
+            Data Output:
+                  - rt
+                  - stimulus
+                  - responses (only for subdetails)
+                  - key_press ([79,78] for oui [o] and non [n])
+                  - test_part (the name we give to the trial, e.g. "quest_pract")
+                  - blockNb
+                  - trialNb
+                  - condiEmoBlock (1 = DC // 2 == BC)
+                  - condiEmoTrial (1 = DC_male, 2 = DC_female, 3 = CC_male, 4 = CC_female, 5 = BC_male , 6 = BC_female)
+                  - condiRwd (1= Small rwd // 2 = Large rwd)
+                  - posCritDist (position of the distractor, between 4 and 8 included)
+                  - posTarget (position of the target, either 1 or 3 images after the distractor)
+                  - trial_type (indicate the nature of the plugin)
+                  - trial_index
+                  - time_elapsed
+                  - internal_node_id
+                  - subject_id
 
+-->
 <!DOCTYPE html>
 <html>
     <head>
@@ -33,17 +46,16 @@
 
 // --------------------------------- PARAMETERS --------------------------------//
 
-    // Parameters (put here all your parameters, they will be global)
-    var nbBlocksPrac      = 2;
-    var nbTrialsPrac      = 6;
-    var nbBlocksExp       = 2; // Expected 12
-    var nbTrialsExp       = 6; // needs to be a multiple of 6 (e.g. 18 )
+    var nbBlocksPrac      = 2; // 2
+    var nbTrialsPrac      = 6; // 6
+    var nbBlocksExp       = 2; // 12
+    var nbTrialsExp       = 6; // 18
 
     var setSize           = 15;
-    var imageDuration     = 50; // in ms, so 0.07 sec
-    var fixation_time     = 500; // in ms
+    var imageDuration     = 50; // in ms
+    var fixation_time     = 500;
 
-    var nbInstr           = 12; // how many Instr Slides you have
+    var nbInstr           = 12; // how many Instr Slides
     var debug             = true; // if true, skips fullscreen and info
 
 // --------------------------------- INITIALISATION  ---------------------------//
@@ -82,7 +94,8 @@
                       test_part: 'firstFullscreen',
                       blockNb: null,
                       trialNb: null,
-                      condiEmo: null,
+                      condiEmoBlock: null,
+                      condiEmoTrial: null,
                       condiRwd: null,
                       posCritDist: null,
                       posTarget: null,
@@ -97,7 +110,8 @@
                       test_part: 'fullscreenExp',
                       blockNb: null,
                       trialNb: null,
-                      condiEmo: null,
+                      condiEmoBlock: null,
+                      condiEmoTrial: null,
                       condiRwd: null,
                       posCritDist: null,
                       posTarget: null,
@@ -113,7 +127,8 @@
                       test_part: 'subdetails',
                       blockNb: null,
                       trialNb: null,
-                      condiEmo: null,
+                      condiEmoBlock: null,
+                      condiEmoTrial: null,
                       condiRwd: null,
                       posCritDist: null,
                       posTarget: null,
@@ -136,7 +151,8 @@
                       test_part: 'subdetails2',
                       blockNb: null,
                       trialNb: null,
-                      condiEmo: null,
+                      condiEmoBlock: null,
+                      condiEmoTrial: null,
                       condiRwd: null,
                       posCritDist: null,
                       posTarget: null,
@@ -245,7 +261,7 @@
                   //save_data_pt(data);
                 },
                 on_finish: function() {
-                  //jsPsych.data.localSave('mome' + subject_id + 'local.csv', 'csv');
+                  //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
                   jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                 },

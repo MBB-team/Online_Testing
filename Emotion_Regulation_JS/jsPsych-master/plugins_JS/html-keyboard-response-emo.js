@@ -133,7 +133,6 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
       var trial_data = {
         "rt": response.rt,
         "stimulus": trial.stimulus,
-        "button_pressed": null,
         "responses": null,
         "key_press": response.key
       };

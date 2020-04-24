@@ -161,8 +161,7 @@ jsPsych.plugins['survey-text'] = (function() {
       var trialdata = {
         "rt": response_time,
         "stimulus": null,
-        "button_pressed": null,
-        "responses": JSON.stringify(question_data), 
+        "responses": JSON.stringify(question_data),
         "key_press": null,
       };
 
