@@ -6,8 +6,8 @@ function createCondiMatrix(nbBlocks, nbTrials, train)
       }
       if (train == 0){
           let condiRwd = [[1,1],[1,2],[2,1],[2,2]];
-          condiRwdRepeat = jsPsych.randomization.repeat(condiRwd, nbBlocks/4);
-          condiRwdShuffle = jsPsych.randomization.shuffleNoRepeats(condiRwdRepeat);
+          //condiRwdRepeat = jsPsych.randomization.repeat(condiRwd, nbBlocks/4);
+          condiRwdShuffle = jsPsych.randomization.shuffleNoRepeats(condiRwd);
       }
 
       let condition = []; let condiDC = []; let condiCC = []; let condiBC = [];

@@ -10,6 +10,12 @@ function instr(instrArray)
                   choices: [32], // 32, spacebar //[37,39], left and right arrows
                   data: {
                         test_part: "instr",
+                        blockNb: null,
+                        trialNb: null,
+                        condiEmo: null,
+                        condiRwd: null,
+                        posCritDist: null,
+                        posTarget: null,
                   },
             };
             timeline.push(fullscreenExp); // Makes sure the participants remain in fullscreen

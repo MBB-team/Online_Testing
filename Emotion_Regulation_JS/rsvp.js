@@ -8,9 +8,7 @@ function rsvp(nbBlocks, nbTrials, training)
 
   // Creation of Condition Matrix (Worth looking at the info on jsPsych.randomization.factorial)
   [conditionRwd, condition] = createCondiMatrix(nbBlocks, nbTrials, training);
-
-  console.log(conditionRwd)
-  console.log(condition)
+  console.log(JSON.parse(JSON.stringify(conditionRwd)))
 
   /////////////////////////////////
   ////// Start of the Block //////
@@ -20,13 +18,13 @@ function rsvp(nbBlocks, nbTrials, training)
 
     // Put here the parameters that need to be randomised every block
     var instrCondiImg = "";
-    if (conditionRwd[block][1] = 1 ){
-      if (conditionRwd[block][0] = 1) {instrCondiImg =  instrImg[3]}
-      else if (conditionRwd[block][0] = 2) {instrCondiImg = instrImg[4]}
+    if (conditionRwd[block][1] == 1 ){
+      if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[3]}
+      else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[4]}
     }
-    else if (conditionRwd[block][1] = 2){
-      if (conditionRwd[block][0] = 1) {instrCondiImg =  instrImg[5]}
-      else if (conditionRwd[block][0] = 2) {instrCondiImg = instrImg[6]}
+    else if (conditionRwd[block][1] == 2){
+      if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[5]}
+      else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[6]}
     };
 
     var instrCondi = {
@@ -36,6 +34,12 @@ function rsvp(nbBlocks, nbTrials, training)
       choices: [32],
       data: {
         test_part: "instrCondi",
+        blockNb: block,
+        trialNb: null,
+        condiEmo: conditionRwd[block][1],
+        condiRwd: conditionRwd[block][0],
+        posCritDist: posCritDist,
+        posTarget: posTarget,
       },
     };
 
@@ -96,6 +100,12 @@ function rsvp(nbBlocks, nbTrials, training)
         trial_duration: fixation_time,
         data:{
           test_part:'fixation',
+          blockNb: block,
+          trialNb: trial,
+          condiEmo: conditionRwd[block][1],
+          condiRwd: conditionRwd[block][0],
+          posCritDist: posCritDist,
+          posTarget: posTarget,
         }
       };
 
@@ -124,11 +134,18 @@ function rsvp(nbBlocks, nbTrials, training)
             test_part: 'rsvp'+block+'image',
             blockNb: block,
             trialNb: trial,
+            training: training,
+            condiRwd: conditionRwd[block][0],
+            condiEmo: conditionRwd[block][1],
+            posCritDist: posCritDist,
+            posTarget: posTarget,
           },
         };
         timelineTask.push(rsvp);
       }
 
+      //console.log(conditionRwd[block])
+      //console.log(conditionRwd[block][1])
       var rsvpAnswFem = {
         type:'html-keyboard-response',
         stimulus:'<p> Avez-vous vu au moins une femme? </p>' +
@@ -137,11 +154,15 @@ function rsvp(nbBlocks, nbTrials, training)
         reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
         training: training,
         choices: [79,78], //[37, 39], left and right arrows
-        response_ends_trial: true, 
+        response_ends_trial: true,
         data: {
           test_part: 'rsvpAnswFem',
           blockNb: block,
           trialNb: trial,
+          condiEmo: conditionRwd[block][1],
+          condiRwd: conditionRwd[block][0],
+          posCritDist: posCritDist,
+          posTarget: posTarget,
         },
       };
 
@@ -158,6 +179,10 @@ function rsvp(nbBlocks, nbTrials, training)
           test_part: 'rsvpAnswHom',
           blockNb: block,
           trialNb: trial,
+          condiEmo: conditionRwd[block][1],
+          condiRwd: conditionRwd[block][0],
+          posCritDist: posCritDist,
+          posTarget: posTarget,
         },
       };
 
