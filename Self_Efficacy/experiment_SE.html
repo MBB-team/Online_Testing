@@ -1,0 +1,162 @@
+<!--  Code for Self-Efficacy task online using Javascript and jsPsych Library
+Author: William Hopper (williamjthopper@gmail.com)
+Created: 23/04/2020
+
+Data Output:
+-
+Per trial:
+-
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Self-Efficacy </title>
+  <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
+  <link     href = "jspsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  <script   src  = "jspsych-master/plugins/jspsych-html-keyboard-response.js"></script>  <!-- every plugin that you use needs to be added in the head -->
+  <script   src  = "jspsych-master/plugins/jspsych-survey-text.js"></script>
+  <script   src  = "jspsych-master/plugins/jspsych-image-keyboard-response.js"></script>
+  <script   src  = "jspsych-master/plugins_JS/fullscreen-JS.js"></script> <!-- plugin that Juliana modified -->
+  <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
+  <script   src  = "instr.js"></script>
+  <script   src  = 'jspsych-master/plugins/jspsych-instructions.js'></script>
+  <script   src  = 'jspsych-master/plugins/jspsych-serial-reaction-time-mouse.js'></script>
+
+  </script>
+</head>
+<body>
+  <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+  <canvas class = "canvas" id="myCanvas"></canvas>
+</body>
+
+<script>
+
+  // --------------------------------- PARAMETERS --------------------------------//
+
+  // Put here all your parameters, they will be global.
+
+  // What to do
+  const cfg = {debug:          false,
+               cheat:          false,
+               instructions:   false,
+               main:           true};
+
+  // Configuration parameters of experiment
+  const exp = {name:          "exp_01",
+               nbTrials:      30};
+
+  // Timings
+  const time = {flipSpeed:     1000, // in ms so 1 sec
+                responseSpeed: 3000,
+                SEconf:        10000,
+                highlight:     500,
+                showFeedback:  2000,
+                rewatch:       3000};
+
+  // instructions
+  const nbInstr              = 22;
+
+  // --------------------------------- INITIALISATION  --------------------------- //
+
+  // Checks if the browser is Chrome or Firefox (best compatibility)
+  var browserInfo = getBrowserInfo();
+
+  if (browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox') {
+    var wrong_browser = {
+      type: 'html-keyboard-response',
+      stimulus: '<p> This experiment is only supported in Google Chrome or Mozilla FireFox. </p>'
+               +'<p> Please re-open the experiment in one of these browsers. </p>'
+             };
+
+             jsPsych.init({
+               timeline: [wrong_browser]
+             })
+
+  } else { // If the browswer is ok, proceed to the experiment
+
+  //  var hello_world = {
+    //  type: 'html-keyboard-response',
+    //  stimulus: 'Hello World!'
+
+
+    // ------------------------------ PRE-LOAD MEDIA ----------------------------- //
+
+    // Instructions
+    var instrImg = [];
+    var instrImg_html = [];
+    for (var t=1; t <= nbInstr; t++){
+      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.jpg'; // pre-load all instructions
+      instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"></img>';
+    };
+
+    var numbersImg  = [];
+    for (var t=1; t <= 8; t++){
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
+    }
+
+
+
+
+    // ------------------------------ BEGIN EXPERIMENT --------------------------- //
+
+    var exp_timeline = [];
+//    exp_timeline.push(hello_world);
+
+//    var instruction = instr([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]);
+
+    if (cfg.debug == false) {
+      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg]);
+
+    }
+
+    var instructions = {
+      type: 'instructions',
+      pages: instrImg_html,
+      show_clickable_nav: true
+    }
+
+    exp_timeline.push(instructions);
+
+    var test_phase1 = {
+      type: 'serial-reaction-time-mouse',
+      target: [1,1],
+      grid: [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]],
+      grid_square_size: 100,
+      response_ends_trial: false,
+      trial_duraion: 3,
+      allow_nontarget_responses: true,
+      pre_target_duration: 1000
+    }
+
+    var test_phase2 = {
+      type: 'serial-reaction-time-mouse',
+      target: [2,2],
+      grid: [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]],
+      grid_square_size: 200,
+      response_ends_trial: false,
+      trial_duraion: 3,
+      allow_nontarget_responses: true,
+      pre_target_duration: 1000
+    }
+
+    exp_timeline.push(test_phase1);
+    exp_timeline.push(test_phase2);
+
+    jsPsych.init({
+      timeline: exp_timeline,
+      show_progress_bar: true,
+      on_finish: function() {
+        //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
+        jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+        //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+      }
+    });
+
+  }
+
+
+
+    </script>
+    </html>
