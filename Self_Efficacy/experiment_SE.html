@@ -22,7 +22,8 @@ Per trial:
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
   <script   src  = "instr.js"></script>
   <script   src  = 'jspsych-master/plugins/jspsych-instructions.js'></script>
-  <script   src  = 'jspsych-master/plugins/jspsych-serial-reaction-time-mouse.js'></script>
+  <script   src  = 'jspsych-master/plugins_WH/jspsych-serial-reaction-time-mouse.js'></script>
+  <script   src  = 'jspsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
 
   </script>
 </head>
@@ -92,8 +93,10 @@ Per trial:
     };
 
     var numbersImg  = [];
+    var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
       numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
+      numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     }
 
 
@@ -117,7 +120,7 @@ Per trial:
       show_clickable_nav: true
     }
 
-    exp_timeline.push(instructions);
+    //exp_timeline.push(instructions);
 
     var test_phase1 = {
       type: 'serial-reaction-time-mouse',
@@ -125,7 +128,7 @@ Per trial:
       grid: [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]],
       grid_square_size: 100,
       response_ends_trial: false,
-      trial_duraion: 3,
+      trial_duration: time.responseSpeed,
       allow_nontarget_responses: true,
       pre_target_duration: 1000
     }
@@ -133,15 +136,17 @@ Per trial:
     var test_phase2 = {
       type: 'serial-reaction-time-mouse',
       target: [2,2],
+      target_image: numbersImg[0],
       grid: [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]],
-      grid_square_size: 200,
+      grid_square_size: 100,
       response_ends_trial: false,
-      trial_duraion: 3,
+      trial_duration: time.responseSpeed,
       allow_nontarget_responses: true,
       pre_target_duration: 1000
     }
 
-    exp_timeline.push(test_phase1);
+
+    //exp_timeline.push(test_phase1);
     exp_timeline.push(test_phase2);
 
     jsPsych.init({
