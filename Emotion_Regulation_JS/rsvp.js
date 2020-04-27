@@ -8,7 +8,7 @@ function rsvp(nbBlocks, nbTrials, training)
 
   // Creation of Condition Matrix (Worth looking at the info on jsPsych.randomization.factorial)
   [conditionRwd, condition] = createCondiMatrix(nbBlocks, nbTrials, training);
-  console.log(JSON.parse(JSON.stringify(conditionRwd)))
+  //console.log(JSON.parse(JSON.stringify(conditionRwd)))
 
   /////////////////////////////////
   ////// Start of the Block //////

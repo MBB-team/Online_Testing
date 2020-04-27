@@ -52,7 +52,7 @@
     var nbTrialsExp       = 6; // 18
 
     var setSize           = 15;
-    var imageDuration     = 50; // in ms
+    var imageDuration     = 70; // in ms
     var fixation_time     = 500;
 
     var nbInstr           = 12; // how many Instr Slides
@@ -247,10 +247,10 @@ function saveData() {
                          exp_timeline.push(firstInstr[i]);
                   };
             }
-            // var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
-            // for(var i = 0; i < practice.length; i++){
-            //       exp_timeline.push(practice[i]);
-            // };
+            var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
+            for(var i = 0; i < practice.length; i++){
+                  exp_timeline.push(practice[i]);
+            };
 
             for(var i = 0; i < endPract.length; i++){
                    exp_timeline.push(endPract[i]);
@@ -277,11 +277,9 @@ function saveData() {
                     subject_id: subject_id
                   });
                   var data = JSON.parse(jsPsych.data.getLastTrialData().json());
-                  // save_data_pt(data);
                 },
                 on_finish: function() {
                   saveData();
-                  //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
                   jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                 },
