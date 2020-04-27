@@ -56,7 +56,7 @@
     var fixation_time     = 500;
 
     var nbInstr           = 12; // how many Instr Slides
-    var debug             = true; // if true, skips fullscreen and info
+    var debug             = false; // if true, skips fullscreen and info
 
 // --------------------------------- INITIALISATION  ---------------------------//
 
@@ -206,6 +206,25 @@
               console.log('Loaded '+percentcomplete+'% of images');
             }
 
+
+// --------------------------------- SAVING DATA  ----------------------//
+
+//CODE TO SAVE FULLDATA AT THE END
+
+function saveData() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'C:/xampp/htdocs/write_data.php'); // change it to point to php script.
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if(xhr.status == 200){
+      var response = JSON.parse(xhr.responseText);
+      console.log(response.success);
+    }
+  };
+  xhr.send(jsPsych.data.get().json());
+}
+
+
 // --------------------------------- BEGINING EXPERIMENT  ----------------------//
 
             var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
@@ -228,10 +247,10 @@
                          exp_timeline.push(firstInstr[i]);
                   };
             }
-            var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
-            for(var i = 0; i < practice.length; i++){
-                  exp_timeline.push(practice[i]);
-            };
+            // var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
+            // for(var i = 0; i < practice.length; i++){
+            //       exp_timeline.push(practice[i]);
+            // };
 
             for(var i = 0; i < endPract.length; i++){
                    exp_timeline.push(endPract[i]);
@@ -247,7 +266,7 @@
             };
 
             // Execute the experiment
-            //function startExperiment(){
+            function startExperiment(){
               jsPsych.init({
                 //preload_images: [instrImg, imgWFF,imgWFN, imgWMF,imgWMN],
                 timeline: exp_timeline,
@@ -258,15 +277,16 @@
                     subject_id: subject_id
                   });
                   var data = JSON.parse(jsPsych.data.getLastTrialData().json());
-                  //save_data_pt(data);
+                  // save_data_pt(data);
                 },
                 on_finish: function() {
+                  saveData();
                   //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
                   jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                 },
               });
-//            }
+            }
 
     } // End of the experiment (end of checking browser)
 </script>
