@@ -20,13 +20,12 @@ function createCondiMatrix(nbBlocks, nbTrials, train)
             condiDC = jsPsych.randomization.shuffle(condiDC);
             condiBC = jsPsych.randomization.shuffle(condiBC);
 
-            console.log(condiRwdShuffle[i])
             if (condiRwdShuffle[i][1] == 1) {
                   condition[i] = condiDC;
             } else if (condiRwdShuffle[i][1] == 2) {
                   condition[i] = condiBC;
             };
       };
-      console.log(condition)
+
       return [condiRwdShuffle, condition];
 } // end function
