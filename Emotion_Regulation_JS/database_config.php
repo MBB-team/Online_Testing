@@ -9,5 +9,5 @@
 
   $db = new mysqli('localhost', $user, $pass, $db) or die("Unable to connect");
 
-  echo "Sucess, connected to my databaseEmo MySQL with PHP"
+  echo "Success, connected to my databaseEmo MySQL with PHP"
 ?>
