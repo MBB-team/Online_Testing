@@ -35,10 +35,12 @@
         <script  src = "jsPsych-master/plugins_JS/html-keyboard-response-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/survey-text-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/image-keyboard-response-emo.js"></script>
+        <script  src = "jsPsych-master/plugins_JS/jspsych-survey-multi-choice.js"></script>
         <script  src = "getBrowserInfo.js"></script>
         <script  src = "createCondiMatrix.js"></script>
         <script  src = "rsvp.js"></script>
         <script  src = "instr.js"></script>
+        <script  src = "quest.js"></script>
         <style   id ="cursornone"> html { cursor: none; };  </style>
     </head>
     <body>
@@ -246,6 +248,11 @@
             function(nLoaded) {updateLoadedCount(nLoaded);});
 
             exp_timeline.push(firstFullscreen);
+
+            var questExp            = quest();
+            for(var i = 0; i < questExp.length; i++){
+                   exp_timeline.push(questExp[i]);
+            };
 
             if(debug == false){
                   //exp_timeline.push(subdetails);
