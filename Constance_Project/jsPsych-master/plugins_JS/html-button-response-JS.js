@@ -172,8 +172,8 @@ jsPsych.plugins["html-button-response"] = (function() {
         "rt": response.rt,
         "stimulus": trial.stimulus,
         "button_pressed": response.button,
-        "responses": null,
-        "key_press": null,
+        "responses": "999",
+        "key_press": 999,
       };
 
       // clear the display

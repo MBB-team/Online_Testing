@@ -54,6 +54,12 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
         default: true,
         description: 'If true, trial will end when subject makes a response.'
       },
+      fixation: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'fixation trial',
+        default: false,
+        description: 'If true, this is a fixation cross.'
+      },
       condition: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Condition Emotion',
@@ -129,13 +135,23 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
         jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
+
       // gather the data to store for the trial
       var trial_data = {
         "rt": response.rt,
         "stimulus": trial.stimulus,
-        "responses": null,
+        "responses": "999",
         "key_press": response.key
       };
+
+      if (trial.fixation) { // if this is a fixation trial
+            var trial_data = {
+                  "rt": 999,
+                  "stimulus": "fixation_cross",
+                  "responses": "999",
+                  "key_press": 999
+            };
+      }
 
       // clear the display
       display_element.innerHTML = '';

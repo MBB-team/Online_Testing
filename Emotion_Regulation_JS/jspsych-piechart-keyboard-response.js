@@ -1,5 +1,5 @@
 /**
- * jspsych-html-keyboard-response
+ * jspsych-image-keyboard-response
  * Josh de Leeuw
  *
  * plugin for displaying a stimulus and getting a keyboard response
@@ -9,19 +9,19 @@
  **/
 
 
-jsPsych.plugins["html-keyboard-response"] = (function() {
+jsPsych.plugins["piechart-keyboard-response"] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: 'html-keyboard-response',
+    name: 'piechart-keyboard-response',
     description: '',
     parameters: {
-      stimulus: {
-        type: jsPsych.plugins.parameterType.HTML_STRING,
-        pretty_name: 'Stimulus',
+      probabilities: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Piechart probabilities',
         default: undefined,
-        description: 'The HTML string to be displayed'
+        description: 'The probabilities to be displayed by the piechart'
       },
       choices: {
         type: jsPsych.plugins.parameterType.KEYCODE,
@@ -54,26 +54,71 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
         default: true,
         description: 'If true, trial will end when subject makes a response.'
       },
-      fixation: {
-        type: jsPsych.plugins.parameterType.BOOL,
-        pretty_name: 'fixation trial',
-        default: false,
-        description: 'If true, this is a fixation cross.'
-      },
     }
   }
 
   plugin.trial = function(display_element, trial) {
 
-    var new_html = '<div id="jspsych-html-keyboard-response-stimulus">'+trial.stimulus+'</div>';
+
+    // var data = [{
+    //   type: "pie",
+    //   marker: {
+    //     colors: ['rgb(0, 128, 0)','rgb(255, 0, 0)']
+    //   },
+    //   values: trial.probabilities,
+    //   labels: ["Win", "Lose"],
+    //   textinfo: "label",
+    //   textposition: "inside",
+    //   automargin: true
+    // }]
+    //
+    // var layout = {
+    //   height: 400,
+    //   width: 400,
+    //   showlegend: false
+    // }
+    //
+    //
+    // var newpiechart = Plotly.newPlot(PIE, data, layout)
+
+
+    var d3 = Plotly.d3;
+    var img_jpg= d3.select('#jpgexp');
+
+    var data = [{
+      values: [19, 26, 55],
+      labels: ['blabla', 'Non-Residential', 'Utility'],
+      type: 'pie'
+    }];
+
+    var layout = {title : "Simple JavaScript Graph"};
+
+    Plotly.newPlot(
+          PIETEST,
+          data,
+          layout)
+    .then(function(gd)
+          {Plotly.toImage(gd,{height:300,width:300})
+          .then(
+                function(url)
+                {img_jpg.attr("src", url);
+                //console.log(url)
+            }
+               )
+         });
+
+    //var new_html = '<div id="jspsych-html-keyboard-response-stimulus">'+trial.stimulus+'</div>';
+   //var new_html= '<img id="'+jpg-export+'"></img>';
+   var new_html= '<img id="jpgexp"></img>';
+
+   //var html = '<img src="'+trial.stimulus+'" id="jspsych-image-keyboard-response-stimulus" style="';;
+
+    display_element.innerHTML = new_html;
 
     // add prompt
-    if(trial.prompt !== null){
-      new_html += trial.prompt;
+    if (trial.prompt !== null){
+      html += trial.prompt;
     }
-
-    // draw
-    display_element.innerHTML = new_html;
 
     // store response
     var response = {
@@ -96,20 +141,10 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
       var trial_data = {
         "rt": response.rt,
         "stimulus": trial.stimulus,
-        "button_pressed": 999,
-        "responses": "999",
         "key_press": response.key
       };
 
-      if (trial.fixation) { // if this is a fixation trial
-            var trial_data = {
-                  "rt": 999,
-                  "stimulus": "fixation_cross",
-                  "button_pressed": 999,
-                  "responses": "999",
-                  "key_press": 999
-            };
-      }
+      console.log(trial_data);
 
       // clear the display
       display_element.innerHTML = '';
@@ -123,7 +158,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
 
       // after a valid response, the stimulus will have the CSS class 'responded'
       // which can be used to provide visual feedback that a response was recorded
-      display_element.querySelector('#jspsych-html-keyboard-response-stimulus').className += ' responded';
+      //display_element.querySelector('#piechart-keyboard-response').className += ' responded';
 
       // only record the first response
       if (response.key == null) {
@@ -149,7 +184,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
     // hide stimulus if stimulus_duration is set
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function() {
-        display_element.querySelector('#jspsych-html-keyboard-response-stimulus').style.visibility = 'hidden';
+        display_element.querySelector('#jspsych-image-keyboard-response-stimulus').style.visibility = 'hidden';
       }, trial.stimulus_duration);
     }
 

@@ -113,10 +113,10 @@ jsPsych.plugins.fullscreen = (function() {
       jsPsych.pluginAPI.setTimeout(function(){
 
         var trial_data = {
-          "rt": null,
-          "stimulus": null,
-          "responses": null,
-          "key_press": null
+             "rt": 999,
+             "stimulus": "999",
+             "responses": "999",
+             "key_press": 999
         };
 
         jsPsych.finishTrial(trial_data);

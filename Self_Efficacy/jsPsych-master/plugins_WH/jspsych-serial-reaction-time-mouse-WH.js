@@ -8,10 +8,11 @@
  *
  * MODIFIED BY WILLIAM HOPPER - 26/04/2020
  * Modified to make stimuli images displayed as html
+ * Modified so that response location is not the same as target_image location
  *
  **/
 
-jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
+jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
   var plugin = {};
 
@@ -24,7 +25,14 @@ jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
         pretty_name: 'Target',
         array: true,
         default: undefined,
-        description: 'The location of the target. The array should be the [row, column] of the target.'
+        description: 'The location of the stimuli. The array should be the [row, column] of the target.'
+      },
+      correct_location: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Correct Location',
+        array: true,
+        default: undefined,
+        description: 'The location of the response target (where the participant should click). The array should be the [row, column] of the target.'
       },
       grid: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -96,7 +104,6 @@ jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
     // display stimulus
     var stimulus = this.stimulus(trial.grid, trial.grid_square_size, trial.target, trial.target_image);
     display_element.innerHTML = stimulus;
-    console.log(trial.target_html)
 
 		if(trial.pre_target_duration <= 0){
 			showTarget();
@@ -113,21 +120,29 @@ jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
 
 		function showTarget(){
       var resp_targets;
+      var response = 0;
+
       if(!trial.allow_nontarget_responses){
         resp_targets = [display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target[0]+'-'+trial.target[1])]
       } else {
         resp_targets = display_element.querySelectorAll('.jspsych-serial-reaction-time-stimulus-cell');
       }
+
       for(var i=0; i<resp_targets.length; i++){
-        resp_targets[i].addEventListener('mousedown', function(e){
+        resp_targets[i].addEventListener('mousedown', function responseListener(e){
           if(startTime == -1){
             return;
           } else {
-            var info = {}
-            info.row = e.currentTarget.getAttribute('data-row');
-            info.column = e.currentTarget.getAttribute('data-column');
-            info.rt = performance.now() - startTime;
-            after_response(info);
+            if (response == 0) {
+               var info = {}
+               e.currentTarget.style.outline = "5px solid yellow"
+               info.row = e.currentTarget.getAttribute('data-row');
+               info.column = e.currentTarget.getAttribute('data-column');
+               info.rt = performance.now() - startTime;
+               after_response(info);
+               console.log(info);
+               response = 1;
+            }
           }
         });
       }
@@ -157,10 +172,11 @@ jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
         "rt": response.rt,
 				"grid": JSON.stringify(trial.grid),
 				"target": JSON.stringify(trial.target),
+        "correct_location": JSON.stringify(trial.correct_location),
         "target_image": trial.target_image,
         "response_row": response.row,
         "response_column": response.column,
-        "correct": response.row == trial.target[0] && response.column == trial.target[1]
+        "correct": response.row == trial.correct_location[0] && response.column == trial.correct_location[1]
       };
 
       // clear the display
@@ -176,6 +192,8 @@ jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
 
 			// only record first response
       response = response.rt == null ? info : response;
+
+      //display_element.querySelectorAll('.jspsych-serial-reaction-time-stimulus-cell').removeEventListener('mousedown', responseListener());
 
       if (trial.response_ends_trial) {
         endTrial();
@@ -196,7 +214,7 @@ jsPsych.plugins["serial-reaction-time-mouse"] = (function() {
           "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
 
         if(grid[i][j] == 1){
-          stimulus += "border: 5px solid black;"
+          stimulus += "border: 2px solid black;"
         }
 
         stimulus += "'>";

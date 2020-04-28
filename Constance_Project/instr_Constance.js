@@ -11,13 +11,14 @@ function instr_Constance()
             choices: [32],
             data: {
                   test_part: 'instr',
-                  trialNb: 999,
-                  effort:'999',
-                  rwd: '999',
-                  condi: 999,
+                  trialNb: "999",
+                  effort:"999",
+                  condiEffort: 999,
+                  rwd: "999",
+                  condiRwd: 999,
             },
       };
-      //timeline.push(fullscreenExp); // Makes sure the participants remain in fullscreen
+      timeline.push(fullscreenExp); // Makes sure the participants remain in fullscreen
       timeline.push(instr_Constance);
 
       return timeline;

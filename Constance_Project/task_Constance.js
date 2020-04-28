@@ -19,10 +19,11 @@ function task_Constance()
             choices: [32],
             data: {
                   test_part: 'instr_pract',
-                  trialNb: null,
-                  effort:null,
-                  rwd: null,
-                  condi: null,
+                  trialNb: "999",
+                  effort:"999",
+                  condiEffort: 999,
+                  rwd: "999",
+                  condiRwd: 999,
             },
       };
 
@@ -40,13 +41,15 @@ function task_Constance()
                   response_ends_trial: false,
                   trial_ends_duration: feedback_time,
                   data: {
-                        test_part: 'quest_pract',
+                        test_part: "quest_pract",
                         trialNb: trial_pract,
-                        effort: effort_pract[trial_pract],
-                        rwd: rwd_pract[trial_pract],
-                        condi: null,
+                        effort: effort_pract[trial_pract].join(), // MySQl cannot save arrays, so join() converts the elements of an array into a string
+                        condiEffort: 999,
+                        rwd: rwd_pract[trial_pract].join(),
+                        condiRwd: 999,
                   },
             };
+
 
             timelineTask.push(quest_pract);
             timelineTask.push(fullscreenExp);
@@ -63,10 +66,11 @@ function task_Constance()
             choices: [32],
             data: {
                   test_part: 'instr_exp',
-                  trialNb: null,
-                  effort:null,
-                  rwd: null,
-                  condi: null,
+                  trialNb: "999",
+                  effort:"999",
+                  condiEffort: 999,
+                  rwd: "999",
+                  condiRwd: 999,
             },
       };
 
@@ -77,19 +81,23 @@ function task_Constance()
             // First, fixation
             timelineTask.push(fixation);
 
+            effort_sentence = effort_exp[condi_shuffled[trial][1]-1].join();
+            rwd_sentence =  rwd_exp[condi_shuffled[trial][0]-1].join();
+            // -1 because of the Javascript zero-indexing
+
             var quest_exp = {
                   type:'html-button-response',
-                  stimulus:"<p> J'accepte de </p>" + effort_exp[condi_shuffled[trial][1]-1] + "<p> pour </p>" + rwd_exp[condi_shuffled[trial][0]-1] + "<p> </p>",
-                  // -1 because of the Javascript zero-indexing
+                  stimulus:"<p> J'accepte de </p>" + effort_sentence + "<p> pour </p>" + rwd_sentence + "<p> </p>",
                   choices: ['OUI', 'NON'],
                   response_ends_trial: false,
                   trial_ends_duration: feedback_time,
                   data: {
                         test_part: 'quest_exp',
                         trialNb: trial,
-                        effort: effort_exp[condi_shuffled[trial][1]],
-                        rwd: rwd_exp[condi_shuffled[trial][0]],
-                        condi: condi_shuffled[trial],
+                        effort: effort_sentence,
+                        condiEffort: condi_shuffled[trial][1],
+                        rwd: rwd_sentence,
+                        condiRwd: condi_shuffled[trial][0],
                   },
             };
 

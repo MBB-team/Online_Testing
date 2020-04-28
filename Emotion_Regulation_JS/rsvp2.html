@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My experiment</title>
+    <link href="jspsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    <script src="jspsych-master/jspsych.js"></script>
+    <script src="jspsych-master/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-master/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="jspsych-piechart-keyboard-response.js"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <img id="jpgexp"></img>
+  </head>
+  <body>
+    <div id="pie" class="js-plotly-plot"> </div>
+</body>
+<script>
+
+    let PIETEST = document.getElementById("pie");
+
+    /* create timeline */
+    var timeline = [];
+
+
+    var data = [{
+          type: "pie",
+          marker: {
+                colors: ['rgb(0, 128, 0)','rgb(255, 0, 0)']
+          },
+          values: [0.25, 0.75],
+          labels: ["Win", "Lose"],
+          textinfo: "label",
+          textposition: "inside",
+          automargin: true
+    }]
+
+    var layout = {
+          height: 400,
+          width: 400,
+          showlegend: false
+    }
+
+
+    var plot = Plotly.newPlot(PIETEST, data, layout);
+    console.log(plot);
+
+    /* define welcome message trial */
+    var welcome = {
+      type: "html-keyboard-response",
+      stimulus: "Welcome to the experiment. Press any key to begin."
+    };
+    //timeline.push(welcome);
+
+    /* define instructions trial */
+    var instructions = {
+      type: "html-keyboard-response",
+      stimulus: "<p>In this experiment, a circle will appear in the center " +
+          "of the screen.</p><p>If the circle is <strong>blue</strong>, " +
+          "press the letter F on the keyboard as fast as you can.</p>" +
+          "<p>If the circle is <strong>orange</strong>, press the letter J " +
+          "as fast as you can.</p>" +
+          "<div style='width: 700px;'>"+
+          //"<div style='float: left;'><img src='img/blue.png'></img>" +
+          "<p class='small'><strong>Press the F key</strong></p></div>" +
+          //"<div class='float: right;'><img src='img/orange.png'></img>" +
+          "<p class='small'><strong>Press the J key</strong></p></div>" +
+          "</div>"+
+          "<p>Press any key to begin.</p>",
+      //post_trial_gap: 2000
+    };
+    //timeline.push(instructions);
+
+    /* test trials */
+      var test_stimuli = [
+        { probabilities: [0.25, 0.75]},
+        { probabilities: [0.75, 0.25]}
+      ];
+
+      var fixation = {
+        type: 'html-keyboard-response',
+        stimulus: '<div style="font-size:60px;">+</div>',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 500
+      }
+
+      var test = {
+        type: "piechart-keyboard-response",
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        choices: ['f', 'j']
+      }
+
+      var test_procedure = {
+        // timeline: [fixation],
+        timeline: [fixation, test],
+        timeline_variables: test_stimuli,
+      }
+
+      timeline.push(test_procedure);
+
+      /* start the experiment */
+      jsPsych.init({
+        timeline: timeline,
+        on_finish: function() {
+          jsPsych.data.displayData();
+        }
+      });
+    </script>
+    </html>
