@@ -163,10 +163,10 @@ jsPsych.plugins["image-keyboard-response"] = (function() {
 
       // gather the data to store for the trial
       var trial_data = {
-        "rt": response.rt,
-        "stimulus": trial.stimulus,
-        "responses": null,
-        "key_press": response.key
+            "rt": 999,
+            "stimulus": trial.stimulus,
+            "responses": "999",
+            "key_press": 999
       };
 
       // clear the display
