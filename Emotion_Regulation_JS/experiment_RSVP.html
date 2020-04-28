@@ -289,12 +289,11 @@
                         },
                         on_finish: function() {
                               saveData(); // edit out if not on server
-                              jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                              //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                              //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                              document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                         },
                   });
             }
-
     } // End of the experiment (end of checking browser)
 </script>
 </html>
