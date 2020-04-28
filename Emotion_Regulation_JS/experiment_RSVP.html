@@ -26,14 +26,15 @@
 <html>
     <head>
         <meta charset="utf-8"/>
-        <title>   My experiment EMO </title>
-        <script  src = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
+        <title>  Experiment EMO </title>
+        <script  src = "jsPsych-master/jspsych.js"></script>
         <link    href= "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-        <script  src = "jsPsych-master/plugins_JS/fullscreen-emo.js"></script> <!-- plugin that I modified -->
+        <script  src = "jsPsych-master/plugins_JS/fullscreen-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/html-keyboard-response-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/survey-text-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/image-keyboard-response-emo.js"></script>
-        <script  src = "getBrowserInfo.js"></script> <!-- add the external functions-->
+        <script  src = "jsPsych-master/plugins_JS/jspsych-call-function.js"></script>
+        <script  src = "getBrowserInfo.js"></script>
         <script  src = "createCondiMatrix.js"></script>
         <script  src = "rsvp.js"></script>
         <script  src = "instr.js"></script>
@@ -57,12 +58,12 @@
     var fixation_time     = 500;
 
     var nbInstr           = 12; // how many Instr Slides
-    var debug             = false; // if true, skips fullscreen and info
+    var debug             = true; // if true, skips fullscreen and info
 
 // --------------------------------- INITIALISATION  ---------------------------//
 
     // Checks if the browser is Chrome or Firefox (best compatibility)
-    var browserInfo = getBrowserInfo(); // Call the function that I specified in the head
+    var browserInfo = getBrowserInfo();
 
     if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
             var wrong_browser = {
@@ -93,13 +94,15 @@
                 check_fullscreen: true,
                 data: {
                       test_part: 'firstFullscreen',
-                      blockNb: null,
-                      trialNb: null,
-                      condiEmoBlock: null,
-                      condiEmoTrial: null,
-                      condiRwd: null,
-                      posCritDist: null,
-                      posTarget: null,
+                      blockNb: 999,
+                      trialNb: 999,
+                      condiEmoBlock: 999,
+                      condiEmoTrial: 999,
+                      condiRwd: 999,
+                      posCritDist: 999,
+                      distractor: 999,
+                      posTarget: 999,
+                      target: 999,
                 },
           };
 
@@ -109,54 +112,58 @@
                 fullscreen_mode: false,
                 data: {
                       test_part: 'fullscreenExp',
-                      blockNb: null,
-                      trialNb: null,
-                      condiEmoBlock: null,
-                      condiEmoTrial: null,
-                      condiRwd: null,
-                      posCritDist: null,
-                      posTarget: null,
+                      blockNb: 999,
+                      trialNb: 999,
+                      condiEmoBlock: 999,
+                      condiEmoTrial: 999,
+                      condiRwd: 999,
+                      posCritDist: 999,
+                      distractor: 999,
+                      posTarget: 999,
+                      target: 999,
                 },
           };
 
           // Ask the participants to enter details
-          var subdetails = {
-                type: 'survey-text',
-                preamble: ['<p style = "text-align: center; font-size: 28px">Please enter the following:</p>'],
-                questions: [{prompt: "Worker ID?", rows: 3, columns: 40}],
-                data: {
-                      test_part: 'subdetails',
-                      blockNb: null,
-                      trialNb: null,
-                      condiEmoBlock: null,
-                      condiEmoTrial: null,
-                      condiRwd: null,
-                      posCritDist: null,
-                      posTarget: null,
-                },
-                on_start: function(){
-                      var res = cursornone.replace("none", "default");
-                      document.getElementById("cursornone").innerHTML = res;
-                },
-                on_finish: function(){
-                      var res = cursornone.replace("default", "none");
-                      document.getElementById("cursornone").innerHTML = res;
-                },
-          };
+          // var subdetails = {
+          //       type: 'survey-text',
+          //       preamble: ['<p style = "text-align: center; font-size: 28px">Please enter the following:</p>'],
+          //       questions: [{prompt: "Worker ID?", rows: 3, columns: 40}],
+          //       data: {
+          //             test_part: 'subdetails',
+          //             blockNb: 999,
+          //             trialNb: 999,
+          //             condiEmoBlock: 999,
+          //             condiEmoTrial: 999,
+          //             condiRwd: 999,
+          //             posCritDist: 999,
+          //             posTarget: 999,
+          //       },
+          //       on_start: function(){
+          //             var res = cursornone.replace("none", "default");
+          //             document.getElementById("cursornone").innerHTML = res;
+          //       },
+          //       on_finish: function(){
+          //             var res = cursornone.replace("default", "none");
+          //             document.getElementById("cursornone").innerHTML = res;
+          //       },
+          // };
 
           var subdetails2 = {
                 type: 'survey-text',
-                preamble: ['<p style = "text-align: center; font-size: 28px">Please enter the following:</p>'],
-                questions: [{prompt: "Gender (F/M)?", rows: 3, columns: 40}, {prompt: "Age?", rows: 3, columns: 40}],
+                preamble: ['<p style = "text-align: center; font-size: 28px">Remplissez les informations suivantes:</p>'],
+                questions: [{prompt: "Genre (F/H)?", rows: 3, columns: 40}, {prompt: "Age?", rows: 3, columns: 40}],
                 data: {
                       test_part: 'subdetails2',
-                      blockNb: null,
-                      trialNb: null,
-                      condiEmoBlock: null,
-                      condiEmoTrial: null,
-                      condiRwd: null,
-                      posCritDist: null,
-                      posTarget: null,
+                      blockNb: 999,
+                      trialNb: 999,
+                      condiEmoBlock: 999,
+                      condiEmoTrial: 999,
+                      condiRwd: 999,
+                      posCritDist: 999,
+                      distractor: 999,
+                      posTarget: 999,
+                      target: 999,
                 },
                 on_start: function(){
                       var res = cursornone.replace("none", "default");
@@ -204,7 +211,7 @@
 
             function updateLoadedCount(nLoaded){
               var percentcomplete = nLoaded / (instrImg.length + imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length + imgCondi.length + imgRwd.length)  * 100;
-              console.log('Loaded '+percentcomplete+'% of images');
+              //console.log('Loaded '+percentcomplete+'% of images');
             }
 
 
@@ -214,75 +221,80 @@
 
 function saveData() {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'C:/xampp/htdocs/write_data.php'); // change it to point to php script.
+  xhr.open('POST', 'write_data.php'); // change it to point to php script.
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function() {
     if(xhr.status == 200){
-      var response = JSON.parse(xhr.responseText);
-      console.log(response.success);
+          console.log(xhr)
+          var response = JSON.parse(xhr.responseText); // $.parseJSON
+          console.log(response.success);
     }
   };
   xhr.send(jsPsych.data.get().json());
 }
 
-
 // --------------------------------- BEGINING EXPERIMENT  ----------------------//
 
             var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
 
+            console.log("The subject ID is "+subject_id)
+
             var exp_timeline = [];
 
-            var firstInstr    = instr([0,1,7,8,2,9]);
-            var endPract      = instr([10]);
-            var endExp        = instr([11]);
+            jsPsych.pluginAPI.preloadImages([instrImg, imgWFF, imgWFN, imgWMF, imgWMN, imgCondi, imgRwd],
+            function(){ startExperiment();},
+            function(nLoaded) {updateLoadedCount(nLoaded);});
+
+            exp_timeline.push(firstFullscreen);
 
             if(debug == false){
-                  jsPsych.pluginAPI.preloadImages([instrImg, imgWFF, imgWFN, imgWMF, imgWMN, imgCondi, imgRwd],
-                  function(){ startExperiment();},
-                  function(nLoaded) {updateLoadedCount(nLoaded);});
-                  exp_timeline.push(firstFullscreen);
-                  exp_timeline.push(subdetails);
+                  //exp_timeline.push(subdetails);
                   exp_timeline.push(subdetails2);
 
+                  var firstInstr    = instr([0,1,7,8,2,9]);
                   for(var i = 0; i < firstInstr.length; i++){
                          exp_timeline.push(firstInstr[i]);
                   };
-            }
-            var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
-            for(var i = 0; i < practice.length; i++){
-                  exp_timeline.push(practice[i]);
-            };
 
-            for(var i = 0; i < endPract.length; i++){
-                   exp_timeline.push(endPract[i]);
-            };
+                  var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
+                  for(var i = 0; i < practice.length; i++){
+                        exp_timeline.push(practice[i]);
+                  };
+
+                  var endPract      = instr([10]);
+                  for(var i = 0; i < endPract.length; i++){
+                         exp_timeline.push(endPract[i]);
+                  };
+
+            }
 
             var task          = rsvp(nbBlocksExp, nbTrialsExp, 0);
             for(var i = 0; i < task.length; i++){
                   exp_timeline.push(task[i]);
             };
 
-            for(var i = 0; i < endPract.length; i++){
+            var endExp        = instr([11]);
+            for(var i = 0; i < endExp.length; i++){
                    exp_timeline.push(endExp[i]);
             };
+
+            exp_timeline.push({
+                  type: 'call-function',
+                  func: saveData
+            });
 
             // Execute the experiment
             function startExperiment(){
               jsPsych.init({
-                //preload_images: [instrImg, imgWFF,imgWFN, imgWMF,imgWMN],
                 timeline: exp_timeline,
                 show_progress_bar: true,
-
                 on_trial_finish: function() {
-                  jsPsych.data.addProperties({
-                    subject_id: subject_id
-                  });
-                  var data = JSON.parse(jsPsych.data.getLastTrialData().json());
+                      jsPsych.data.addProperties({subject_id: subject_id});
+                      //var data = JSON.parse(jsPsych.data.getLastTrialData().json());
                 },
                 on_finish: function() {
-                  saveData();
-                  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                  //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                      jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                      //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                 },
               });
             }
