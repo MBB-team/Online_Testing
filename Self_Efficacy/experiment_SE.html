@@ -24,8 +24,8 @@ Per trial:
   <script   src  = 'jspsych-master/plugins/jspsych-instructions.js'></script>
   <script   src  = 'jspsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
   <script   src  = 'jspsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
+  <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
 
-  </script>
 </head>
 <body>
   <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
@@ -92,12 +92,16 @@ Per trial:
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"></img>';
     };
 
+    // Numbers
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
       numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     }
+
+    // Grids
+    //console.log(grid_indexes)
 
     function updateLoadedCount(nLoaded){
       var percentcomplete = nLoaded / (instrImg.length + numbersImg.length)  * 100;
