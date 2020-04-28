@@ -12,7 +12,7 @@
                   - trialNb (int(3))
                   - condiEmoBlock: 1 = DC, 2 == BC (int(3))
                   - condiEmoTrial: 1 = DC_male, 2 = DC_female, 3 = CC_male, 4 = CC_female, 5 = BC_male , 6 = BC_female (int(3))
-                  - condiRwd: 1= Small rwd, 2 = Large rwd (int(3))
+                  - condiRwd: 1 = Small rwd, 2 = Large rwd (int(3))
                   - posCritDist: between 4 and 8 included (int(3))
                   - distractor (int(3))
                   - posTarget: either 1 or 3 images after the distractor (int(3))
@@ -35,7 +35,6 @@
         <script  src = "jsPsych-master/plugins_JS/html-keyboard-response-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/survey-text-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/image-keyboard-response-emo.js"></script>
-        <script  src = "jsPsych-master/plugins_JS/jspsych-call-function.js"></script>
         <script  src = "getBrowserInfo.js"></script>
         <script  src = "createCondiMatrix.js"></script>
         <script  src = "rsvp.js"></script>
@@ -278,10 +277,6 @@
                    exp_timeline.push(endExp[i]);
             };
 
-            exp_timeline.push({
-                  type: 'call-function',
-                  func: saveData
-            });
 
             // Execute the experiment
             function startExperiment(){
@@ -293,6 +288,7 @@
                               //var data = JSON.parse(jsPsych.data.getLastTrialData().json());
                         },
                         on_finish: function() {
+                              saveData(); // edit out if not on server
                               jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                               //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                         },

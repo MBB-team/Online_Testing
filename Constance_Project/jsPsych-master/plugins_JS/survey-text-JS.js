@@ -160,10 +160,10 @@ jsPsych.plugins['survey-text'] = (function() {
       // save data
       var trialdata = {
         "rt": response_time,
-        "stimulus": null,
-        "button_pressed": null,
-        "responses": JSON.stringify(question_data), 
-        "key_press": null,
+        "stimulus": "999",
+        "button_pressed": 999,
+        "responses": JSON.stringify(question_data),
+        "key_press": 999,
       };
 
       display_element.innerHTML = '';
