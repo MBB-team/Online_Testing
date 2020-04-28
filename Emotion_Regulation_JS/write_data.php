@@ -3,13 +3,15 @@
 // this path should point to your configuration file.
 include('database_config.php');
 
+// Nothing needs to be changed after this:
+
 $data_array = json_decode(file_get_contents('php://input'), true);
 
 try {
   $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  // First stage is to get all column names from the table and store
-  // them in $col_names array.
+
+  // First stage is to get all column names from the table and store them in $col_names array.
   $stmt = $conn->prepare("SHOW COLUMNS FROM `$table`");
   $stmt->execute();
   $col_names = array();
@@ -18,6 +20,7 @@ try {
   }
   // Second stage is to create prepared SQL statement using the column
   // names as a guide to what values might be in the JSON.
+  
   // If a value is missing from a particular trial, then NULL is inserted
   $sql = "INSERT INTO $table VALUES(";
   for($i = 0; $i < count($col_names); $i++){

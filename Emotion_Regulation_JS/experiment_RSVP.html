@@ -1,25 +1,27 @@
-<!--  Emotion regulation experiment online using Javascript and jsPsych Library
+<!--  Emotion regulation experiment online using JavaScript and jsPsych Library
             - Author: Juliana Sporrer (juliana.sporrer.18@ucl.ac.uk)
             - Creation date: March 2020
 
-            Data Output:
-                  - rt
-                  - stimulus
-                  - responses (only for subdetails)
-                  - key_press ([79,78] for oui [o] and non [n])
-                  - test_part (the name we give to the trial, e.g. "quest_pract")
-                  - blockNb
-                  - trialNb
-                  - condiEmoBlock (1 = DC // 2 == BC)
-                  - condiEmoTrial (1 = DC_male, 2 = DC_female, 3 = CC_male, 4 = CC_female, 5 = BC_male , 6 = BC_female)
-                  - condiRwd (1= Small rwd // 2 = Large rwd)
-                  - posCritDist (position of the distractor, between 4 and 8 included)
-                  - posTarget (position of the target, either 1 or 3 images after the distractor)
-                  - trial_type (indicate the nature of the plugin)
-                  - trial_index
-                  - time_elapsed
-                  - internal_node_id
-                  - subject_id
+            Data Output (as in MySQL)
+                  - rt (double)
+                  - stimulus (varchar(25))
+                  - responses: for the questions (varchar(25))
+                  - key_press: [79,78] for oui [o] and non [n] (int(3))
+                  - test_part (varchar(25))
+                  - blockNb (int(3))
+                  - trialNb (int(3))
+                  - condiEmoBlock: 1 = DC, 2 == BC (int(3))
+                  - condiEmoTrial: 1 = DC_male, 2 = DC_female, 3 = CC_male, 4 = CC_female, 5 = BC_male , 6 = BC_female (int(3))
+                  - condiRwd: 1= Small rwd, 2 = Large rwd (int(3))
+                  - posCritDist: between 4 and 8 included (int(3))
+                  - distractor (int(3))
+                  - posTarget: either 1 or 3 images after the distractor (int(3))
+                  - target (int(3))
+                  - trial_type (varchar(25))
+                  - trial_index (int(25))
+                  - time_elapsed (int(25))
+                  - internal_node_id (varchar(25))
+                  - subject_id (int(7))
 
 -->
 <!DOCTYPE html>
@@ -41,8 +43,8 @@
         <style   id ="cursornone"> html { cursor: none; };  </style>
     </head>
     <body>
-          <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
-          <canvas class = "canvas" id="myCanvas"></canvas>
+        <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+        <canvas class = "canvas" id="myCanvas"></canvas>
    </body>
    <script type="application/javascript">
 
@@ -53,12 +55,12 @@
     var nbBlocksExp       = 2; // 12
     var nbTrialsExp       = 6; // 18
 
-    var setSize           = 15;
+    var setSize           = 15; // 15
     var imageDuration     = 70; // in ms
     var fixation_time     = 500;
 
-    var nbInstr           = 12; // how many Instr Slides
-    var debug             = true; // if true, skips fullscreen and info
+    var nbInstr           = 12; // how many Instr Slides (12)
+    var debug             = false; // if true, skips details, instructions and practice
 
 // --------------------------------- INITIALISATION  ---------------------------//
 
@@ -66,14 +68,14 @@
     var browserInfo = getBrowserInfo();
 
     if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
-            var wrong_browser = {
-                    type: 'html-keyboard-response',
-                    stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
-                             +'<p> Please re-open the experiment in one of these browsers. </p>',
-            };
-            jsPsych.init({
-                    timeline: [wrong_browser],
-            });
+          var wrong_browser = {
+                type: 'html-keyboard-response',
+                stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
+                +'<p> Please re-open the experiment in one of these browsers. </p>',
+          };
+          jsPsych.init({
+                timeline: [wrong_browser],
+          });
     }
 
     else { // If browser is ok, lead on to the experimentIF BROWSER IS OK, LEAD ON TO THE EXPERIMENT
@@ -81,13 +83,14 @@
           // Removes the cursor
           let cursornone = document.getElementById("cursornone").innerHTML;
 
+          // General function that is needed
           function randi(min, max) { // min and max included (acts like randi of Matlab)
                 return Math.floor(Math.random() * (max - min + 1) + min);
           }
 
           // Create "Variable/function" that makes sure you remain in FullScreen
           var firstFullscreen =	{
-                type: 'fullscreen', // Call the function "fullscreen" of the pluggin "fullscreen_emo"
+                type: 'fullscreen',
                 message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
                 button_label: 'Put in Fullscreen',
                 delay_after: 300,
@@ -176,64 +179,62 @@
           };
 
 // --------------------------------- PRE-LOAD ANY MEDIA  -----------------------//
-            // Example
-            var instrImg = [];
-            for(var t=1;t <= nbInstr;t++){
-                  instrImg[t-1] = 'instructions/instructionsDiapo/Slide'+t+'.jpg'; // Pre-load all the jpg files in this folder
-            };
+          var instrImg = [];
+          for(var t=1;t <= nbInstr;t++){
+                instrImg[t-1] = 'instructions/instructionsDiapo/Slide'+t+'.jpg'; // Pre-load all the jpg files in this folder
+          };
 
-            var imgWFF = []; var scrambleWFF = [];
-            for(var t=1;t < 36+1;t++){
-                  imgWFF[t-1] = 'imgJS/WFF_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-                  scrambleWFF[t-1] = 'imgJS/WFF_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-            };
+          var imgWFF = []; var scrambleWFF = [];
+          for(var t=1;t < 36+1;t++){
+                imgWFF[t-1] = 'imgJS/WFF_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+                scrambleWFF[t-1] = 'imgJS/WFF_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+          };
 
-            var imgWFN = []; var scrambleWFN = [];
-            for(var t=1;t < 86+1;t++){
-                  imgWFN[t-1] = 'imgJS/WFN_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-                  scrambleWFN[t-1] = 'imgJS/WFN_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-            };
+          var imgWFN = []; var scrambleWFN = [];
+          for(var t=1;t < 86+1;t++){
+                imgWFN[t-1] = 'imgJS/WFN_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+                scrambleWFN[t-1] = 'imgJS/WFN_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+          };
 
-            var imgWMF = []; var scrambleWMF = [];
-            for(var t=1;t < 29+1;t++){
-                  imgWMF[t-1] = 'imgJS/WMF_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-                  scrambleWMF[t-1] = 'imgJS/WMF_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-            };
+          var imgWMF = []; var scrambleWMF = [];
+          for(var t=1;t < 29+1;t++){
+                imgWMF[t-1] = 'imgJS/WMF_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+                scrambleWMF[t-1] = 'imgJS/WMF_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+          };
 
-            var imgWMN = []; var scrambleWMN = [];
-            for(var t=1;t < 91+1;t++){
-                  imgWMN[t-1] = 'imgJS/WMN_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-                  scrambleWMN[t-1] = 'imgJS/WMN_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
-            };
+          var imgWMN = []; var scrambleWMN = [];
+          for(var t=1;t < 91+1;t++){
+                imgWMN[t-1] = 'imgJS/WMN_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+                scrambleWMN[t-1] = 'imgJS/WMN_scramble_'+t+'.jpg'; // Pre-load all the jpg files in this folder
+          };
 
-            imgCondi  = ['imgJS/instDC.jpg', 'imgJS/instBC.jpg'];
-            imgRwd    = ['imgJS/cent.jpg', 'imgJS/euro.jpg'];
+          imgCondi  = ['imgJS/instDC.jpg', 'imgJS/instBC.jpg'];
+          imgRwd    = ['imgJS/cent.jpg', 'imgJS/euro.jpg'];
 
-            function updateLoadedCount(nLoaded){
-              var percentcomplete = nLoaded / (instrImg.length + imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length + imgCondi.length + imgRwd.length)  * 100;
-              //console.log('Loaded '+percentcomplete+'% of images');
-            }
+          function updateLoadedCount(nLoaded){
+                var percentcomplete = nLoaded / (instrImg.length + imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length + imgCondi.length + imgRwd.length)  * 100;
+                //console.log('Loaded '+percentcomplete+'% of images');
+          }
 
-
-// --------------------------------- SAVING DATA  ----------------------//
+// --------------------------------- SAVING DATA  ----------------------------//
 
 //CODE TO SAVE FULLDATA AT THE END
 
-function saveData() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'write_data.php'); // change it to point to php script.
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function() {
-    if(xhr.status == 200){
-          console.log(xhr)
-          var response = JSON.parse(xhr.responseText); // $.parseJSON
-          console.log(response.success);
-    }
-  };
-  xhr.send(jsPsych.data.get().json());
-}
+          function saveData() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'write_data.php'); // change it to point to php script.
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                      if(xhr.status == 200){
+                           console.log(xhr)
+                           var response = JSON.parse(xhr.responseText); // $.parseJSON
+                           console.log(response.success);
+                     }
+               };
+               xhr.send(jsPsych.data.get().json());
+         }
 
-// --------------------------------- BEGINING EXPERIMENT  ----------------------//
+// --------------------------------- BEGINING EXPERIMENT  --------------------//
 
             var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
 
@@ -265,8 +266,7 @@ function saveData() {
                   for(var i = 0; i < endPract.length; i++){
                          exp_timeline.push(endPract[i]);
                   };
-
-            }
+            } // end debug
 
             var task          = rsvp(nbBlocksExp, nbTrialsExp, 0);
             for(var i = 0; i < task.length; i++){
@@ -285,18 +285,18 @@ function saveData() {
 
             // Execute the experiment
             function startExperiment(){
-              jsPsych.init({
-                timeline: exp_timeline,
-                show_progress_bar: true,
-                on_trial_finish: function() {
-                      jsPsych.data.addProperties({subject_id: subject_id});
-                      //var data = JSON.parse(jsPsych.data.getLastTrialData().json());
-                },
-                on_finish: function() {
-                      jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                      //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
-                },
-              });
+                  jsPsych.init({
+                        timeline: exp_timeline,
+                        show_progress_bar: true,
+                        on_trial_finish: function() {
+                              jsPsych.data.addProperties({subject_id: subject_id});
+                              //var data = JSON.parse(jsPsych.data.getLastTrialData().json());
+                        },
+                        on_finish: function() {
+                              jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                              //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                        },
+                  });
             }
 
     } // End of the experiment (end of checking browser)

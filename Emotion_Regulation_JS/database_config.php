@@ -1,13 +1,14 @@
 <?php
+// Change all the informations as needed
 
   $servername = 'localhost';
-  $port = 3306;
-  $user = 'root';
-  $pass = '';
-  $db = 'databaseEmo';
+  $port = 3306; //
+  $username = 'root'; // this is the default for XAMPP.
+  $password = '';
+  $dbname = 'databaseEmo';
   $table = "tableEmo";
 
-  $db = new mysqli('localhost', $user, $pass, $db) or die("Unable to connect");
+  $db = new mysqli('localhost', $username, $password, $dbname) or die("Unable to connect");
 
-  echo "Success, connected to my databaseEmo MySQL with PHP"
+  // echo "Success, connected to my databaseEmo MySQL with PHP"
 ?>
