@@ -239,7 +239,7 @@
 
             var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
 
-            console.log("The subject ID is "+subject_id)
+            //console.log("The subject ID is "+subject_id)
 
             var exp_timeline = [];
 
@@ -249,10 +249,10 @@
 
             exp_timeline.push(firstFullscreen);
 
-            var questExp            = quest();
-            for(var i = 0; i < questExp.length; i++){
-                   exp_timeline.push(questExp[i]);
-            };
+            // var questExp            = quest();
+            // for(var i = 0; i < questExp.length; i++){
+            //        exp_timeline.push(questExp[i]);
+            // };
 
             if(debug == false){
                   //exp_timeline.push(subdetails);
