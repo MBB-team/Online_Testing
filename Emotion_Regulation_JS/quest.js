@@ -4,14 +4,18 @@ function quest() {
 	//EMPTY ARRAY FOR TIMELINE OF QUESTIONNAIRES
 	var qns = [];
 
+	// Removes the cursor
+	let cursornone = document.getElementById("cursornone").innerHTML;
+
 	//INSTRUCTIONS PLUGIN
 
 	var  begin_qns = {
 		type: 'html-keyboard-response',
-		stimulus: '<p class="instructions">We will now ask you to complete some questionnaires. Please note the options given might differ for different questionnaries.</p>' +
-		'<p class="instructions">Please read each question carefully and answer according to the options given.</p>' +
-		'<p class="instructions">Press spacebar to continue.</p>',
-		choices: " ",
+		stimulus: '<p> Nous allons maintenant vous demander de remplir quelques questionnaires sur comment vous vous sentez en ce moment.</p>' +
+		"<p> S'il vous plait, lisez les questions avec soin et r\351pondez selon les options pr\351sent\351es" +
+		"<p> Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \340prouvez, qu'une r\340ponse longuement m\340dit\340e" +
+		"<p>Appuyez sur la barre d'espace pour continuer.</p>",
+		choices: [32],
 		data: {
 			test_part: 'questinstruction',
 
@@ -39,9 +43,17 @@ function quest() {
 		{prompt: "14) Vous-considereriez-vous comme apathique?", options: apathy_scale, required:true, horizontal: true}],
 		preamble: ["Au cours des quatre semaines qui viennent de s'\351couler et actuellement"],
 		data:{ test_part: 'apathy',
-		trial_type: 'quest', }
-
+		trial_type: 'quest', },
+		on_start: function(){
+			var res = cursornone.replace("none", "default");
+			document.getElementById("cursornone").innerHTML = res;
+		},
+		on_finish: function(){
+			var res = cursornone.replace("default", "none");
+			document.getElementById("cursornone").innerHTML = res;
+		},
 	};
+
 
 	var anx1 = ["la plupart du temps",  "souvent", "de temps en temps",  "jamais"];
 	var anx2 = ["oui, tr\350s nettement",  "oui, mais ce n'est pas grave", "un peu, mais cela ne m'inqui\350te pas",  "pas du tout"];
@@ -69,25 +81,32 @@ function quest() {
 		{prompt: "5) J'\351prouve des sensations de peur et j'ai l'estomac nou\351:", options: anx5, required:true, horizontal: true},
 		{prompt: "6) J'ai la bougeotte et n'arrive pas \340 tenir en place:", options: anx6, required:true, horizontal: true},
 		{prompt: "7) J'\351prouve des sensations soudaines de panique:", options: anx7, required:true, horizontal: true},
-		{prompt: "8) Avez-vous de l'\351nergie pour les activit\351s quotidiennes?", options: dep1, required:true, horizontal: true},
-		{prompt: "9) Quelqu'un doit-il vous dire chaque jour ce que vous devez faire?", options: dep2, required:true, horizontal: true},
-		{prompt: '10) Vous sentez-vous indiff\351rent(e) aux choses qui vous entourent?', options: dep3, required:true, horizontal: true},
-		{prompt: "11) Vous sentez-vous moins concern\351(e) qu'avant par certaines choses?", options: dep4, required:true, horizontal: true},
-		{prompt: "12) Avez-vous besoin d'\352tre stimul\351(e) pour commencer \340 faire quelque chose?", options: dep5, required:true, horizontal: true},
-		{prompt: "13) Ressentez-vous moins fortement les \351motions?", options: dep6, required:true, horizontal: true},
-		{prompt: "14) Vous-considereriez-vous comme apathique?", options: dep7, required:true, horizontal: true}],
-		preamble: ["Dans la s\351rie de questions ci-dessous, cochez la r\351ponse qui exprime le mieux ce que vous avez \351prouv\351 au cours de la semaine qui vient de s'\351couler."+
-		" Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \340prouvez, "+
-		"qu'une r\340ponse longuement m\340dit\340e"],
-		data:{ test_part: 'bis',
-		trial_type: 'quest', }
+		{prompt: "8) Je prends plaisir aux m\352mes choses qu'autrefois", options: dep1, required:true, horizontal: true},
+		{prompt: "9) Je ris facilement et vois le bon c\365t\351 des choses", options: dep2, required:true, horizontal: true},
+		{prompt: '10) Je suis de bonne humeur:', options: dep3, required:true, horizontal: true},
+		{prompt: "11) J'ai l'impression de fonctionner au ralenti:", options: dep4, required:true, horizontal: true},
+		{prompt: "12) Je ne m'int\351resse plus \340 mon apparence:", options: dep5, required:true, horizontal: true},
+		{prompt: "13) Je me r\351jouis d'avance \340 l'id\351e de faire certaines choses:", options: dep6, required:true, horizontal: true},
+		{prompt: "14) Je peux prendres plaisir \340 un bon livre ou \340 une bonne \351mission radio ou de t\351l\351vision:", options: dep7, required:true, horizontal: true}],
+		preamble: ["Dans la s\351rie de questions ci-dessous, cochez la r\351ponse qui exprime le mieux ce que vous avez \351prouv\351 au cours de la semaine qui vient de s'\351couler."],
+		data:{
+			test_part: 'hads',
+			trial_type: 'quest', },
+		on_start: function(){
+			var res = cursornone.replace("none", "default");
+			document.getElementById("cursornone").innerHTML = res;
+		},
+		on_finish: function(){
+			var res = cursornone.replace("default", "none");
+			document.getElementById("cursornone").innerHTML = res;
+		},
 
 	};
 
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
 
-	var questlist = [apathy];
+	var questlist = [apathy, hads];
 
 	var shufflequestlist  = jsPsych.randomization.shuffle(questlist);
 
@@ -95,9 +114,8 @@ function quest() {
 	for(var i = 0; i < shufflequestlist.length; i++)
 	{
 		qns.push(shufflequestlist[i]);
+	};
 
-		return qns;
-
-	}
+	return qns;
 
 }

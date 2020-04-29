@@ -18,7 +18,7 @@ function instr(instrArray)
                         posCritDist: 999,
                         distractor: 999,
                         posTarget: 999,
-                        target: 999, 
+                        target: 999,
                   },
             };
             timeline.push(fullscreenExp); // Makes sure the participants remain in fullscreen
