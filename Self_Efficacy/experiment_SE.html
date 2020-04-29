@@ -25,6 +25,7 @@ Per trial:
   <script   src  = 'jspsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
   <script   src  = 'jspsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
   <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
+  <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
 
 </head>
 <body>
@@ -102,13 +103,19 @@ Per trial:
 
     // Grids
     //console.log(grid_indexes)
+    var grid_dim = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+
+    // Target Scores
+    var target_scores = [3, 4, 5, 6, 7, 8];
+        target_scores.push(...jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat([3, 4, 5, 6, 7, 8],3)));
 
     function updateLoadedCount(nLoaded){
       var percentcomplete = nLoaded / (instrImg.length + numbersImg.length)  * 100;
-      console.log('Loaded '+percentcomplete+'% of images');
+    //  console.log('Loaded '+percentcomplete+'% of images');
     }
 
-
+    var flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes);
+console.log(flip_stimuli)
     // ------------------------------ BEGIN EXPERIMENT --------------------------- //
 
     var exp_timeline = [];
@@ -136,18 +143,44 @@ Per trial:
 
     var test_phase = {
       type: 'serial-reaction-time-mouse-WH',
-      target: [2,2],
+      target_location: [2,2],
       correct_location: [0,0],
       target_image: numbersImg[0],
-      grid: [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]],
+      grid: grid_dim,
       grid_square_size: screen.height/6,
       response_ends_trial: false,
-      trial_duration: 300000,//time.responseSpeed,
+      trial_duration: time.responseSpeed,
       allow_nontarget_responses: true,
       pre_target_duration: 0
     }
 
-    exp_timeline.push(test_phase);
+    //exp_timeline.push(test_phase);
+
+
+
+
+  var flip_stimulus2 = [
+  [numbersImg[0], 0, 0, numbersImg[3]],
+  [0, numbersImg[5], numbersImg[6], 0],
+  [numbersImg[0], 0, 0, numbersImg[3]],
+  [0, numbersImg[5], numbersImg[6], 0]
+];
+
+    var image_size = screen.height/20;
+
+    for (var flip_i = 0; flip_i < exp.nbTrials; flip_i++){
+    var flip = {
+      type: 'vsl-grid-scene',
+      image_size: [150, 150],
+      stimuli: flip_stimuli[flip_i]
+
+    }
+
+    exp_timeline.push(flip);
+  }
+
+  //  exp_timeline.push(test_phase);
+
 
     jsPsych.init({
       timeline: exp_timeline,

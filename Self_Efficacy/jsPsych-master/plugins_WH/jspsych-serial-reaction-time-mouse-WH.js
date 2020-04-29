@@ -20,9 +20,9 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     name: 'serial-reaction-time-mouse',
     description: '',
     parameters: {
-      target: {
+      target_location: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Target',
+        pretty_name: 'target_location',
         array: true,
         default: undefined,
         description: 'The location of the stimuli. The array should be the [row, column] of the target.'
@@ -102,7 +102,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     }
 
     // display stimulus
-    var stimulus = this.stimulus(trial.grid, trial.grid_square_size, trial.target, trial.target_image);
+    var stimulus = this.stimulus(trial.grid, trial.grid_square_size, trial.target_location, trial.target_image);
     display_element.innerHTML = stimulus;
 
 		if(trial.pre_target_duration <= 0){
@@ -123,7 +123,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       var response = 0;
 
       if(!trial.allow_nontarget_responses){
-        resp_targets = [display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target[0]+'-'+trial.target[1])]
+        resp_targets = [display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1])]
       } else {
         resp_targets = display_element.querySelectorAll('.jspsych-serial-reaction-time-stimulus-cell');
       }
@@ -150,10 +150,10 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       startTime = performance.now();
 
       if(trial.fade_duration == null){
-        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target[0]+'-'+trial.target[1]).style.backgroundColor = trial.target_color;
+        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1]).style.backgroundColor = trial.target_color;
       } else {
-        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target[0]+'-'+trial.target[1]).style.transition = "background-color "+trial.fade_duration;
-        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target[0]+'-'+trial.target[1]).style.backgroundColor = trial.target_color;
+        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1]).style.transition = "background-color "+trial.fade_duration;
+        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1]).style.backgroundColor = trial.target_color;
       }
 
 			if(trial.trial_duration !== null){
@@ -171,7 +171,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       var trial_data = {
         "rt": response.rt,
 				"grid": JSON.stringify(trial.grid),
-				"target": JSON.stringify(trial.target),
+				"target_location": JSON.stringify(trial.target_location),
         "correct_location": JSON.stringify(trial.correct_location),
         "target_image": trial.target_image,
         "response_row": response.row,
@@ -202,7 +202,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
   };
 
-  plugin.stimulus = function(grid, square_size, target, target_image, labels) {
+  plugin.stimulus = function(grid, square_size, target_location, target_image, labels) {
     var stimulus = "<div id='jspsych-serial-reaction-time-stimulus' style='margin:auto; display: table; table-layout: fixed; border-spacing:"+square_size/4+"px'>";
     for(var i=0; i<grid.length; i++){
       stimulus += "<div class='jspsych-serial-reaction-time-stimulus-row' style='display:table-row;'>";
@@ -218,7 +218,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         }
 
         stimulus += "'>";
-        if(typeof target !== 'undefined' && target[0] == i && target[1] == j){
+        if(typeof target_location !== 'undefined' && target_location[0] == i && target_location[1] == j){
           stimulus += '<img src="'+target_image+'" style="height:'+square_size+'px; width:auto"></img>';
         }
 
