@@ -116,24 +116,28 @@ function rsvp(nbBlocks, nbTrials, training)
 
                   timelineTask.push(fixation);
 
+                  var rsvpFlux = [];
                   // The RSVP
                   for (var nbImg = 0; nbImg < setSize; nbImg++){
                         if (nbImg == posCritDist){
-                              var rsvpFlux = img[distractor][randi(0,(img[distractor].length-1))];
+                              rsvpFlux[nbImg] = img[distractor][randi(0,(img[distractor].length-1))];
                         } else if (nbImg == posTarget){
-                              var rsvpFlux = img[target][randi(0,(img[target].length-1))];
+                              rsvpFlux[nbImg] = img[target][randi(0,(img[target].length-1))];
                         } else {
-                              var rsvpFlux = scramble[distractor][randi(0,(img[distractor].length-1))];
+                              rsvpFlux[nbImg] = scramble[distractor][randi(0,(img[distractor].length-1))];
                         };
+                  }
+                  //console.log(rsvpFlux.join())
 
                         var rsvp = {
-                              type: "image-keyboard-response",
-                              stimulus: rsvpFlux,
+                              type: "rsvp_flux",
+                              flux: rsvpFlux,
+                              number_images: setSize,
                               choices: jsPsych.NO_KEYS,
                               condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                               reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
                               training: training,
-                              trial_duration: imageDuration,
+                              stimulus_duration: imageDuration,
                               response_ends_trial: false,
                               data: {
                                     test_part: 'rsvp_img_'+nbImg+'',
@@ -149,17 +153,17 @@ function rsvp(nbBlocks, nbTrials, training)
                               },
                         };
                         timelineTask.push(rsvp);
-                  }
 
                   var rsvpAnswFem = {
                         type:'html-keyboard-response',
-                        stimulus:'<div style="font-size:24px;"><p> Avez-vous vu au moins une femme? </p>' +
+                        stimulus:'<div style="font-size:20px;"><p> Avez-vous vu au moins une femme? </p>' +
                         '<p> <strong> Oui [O] / Non [N] </strong></p> </div>',
                         condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                         reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
                         training: training,
                         choices: [79,78], //[37, 39], left and right arrows
                         response_ends_trial: true,
+                        //post_trial_gap : 1000,
                         data: {
                               test_part: 'rsvpAnswFem',
                               blockNb: block,
@@ -176,13 +180,14 @@ function rsvp(nbBlocks, nbTrials, training)
 
                   var rsvpAnswHom = {
                         type:'html-keyboard-response',
-                        stimulus:'<div style="font-size:24px;"><p> Avez-vous vu au moins un homme? </p>' +
+                        stimulus:'<div style="font-size:20px;"><p> Avez-vous vu au moins un homme? </p>' +
                         '<p> <strong> Oui [O] / Non [N] </strong></p> </div>',
                         condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                         reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
                         training: training,
                         choices: [79,78],
                         response_ends_trial: true,
+                        //post_trial_gap : 1000,
                         data: {
                               test_part: 'rsvpAnswHom',
                               blockNb: block,

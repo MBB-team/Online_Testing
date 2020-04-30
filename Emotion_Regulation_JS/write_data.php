@@ -1,7 +1,7 @@
 <?php
 
 // this path should point to your configuration file.
-include('database_config_constance.php');
+include('database_config.php');
 
 // Nothing needs to be changed after this:
 
