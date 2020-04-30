@@ -136,19 +136,19 @@
 
 //CODE TO SAVE FULLDATA AT THE END
 
-            function saveData() {
-                 var xhr = new XMLHttpRequest();
-                 xhr.open('POST', 'write_data_constance.php'); // change it to point to php script.
-                 xhr.setRequestHeader('Content-Type', 'application/json');
-                 xhr.onload = function() {
-                       if(xhr.status == 200){
-                             console.log(xhr)
-                             var response = JSON.parse(xhr.responseText); // $.parseJSON
-                       } if(response.success){ console.log("Data saved");
-                       } else {console.log("Data not saved");}
-                 };
-                 xhr.send(jsPsych.data.get().json());
-            }
+          function saveData() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'write_data_constance.php'); // change it to point to php script.
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                      if(xhr.status == 200){
+                           //console.log(xhr)
+                           var response = JSON.parse(xhr.responseText); // $.parseJSON
+                     } if(response.success){ console.log("Data saved");
+                     } else {console.log("Data not saved");}
+               };
+               xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trail
+         }
 
 // --------------------------------- BEGINING EXPERIMENT  --------------------------------- //
 
@@ -171,20 +171,18 @@
                   exp_timeline.push(task[i]);
             };
 
-
             // Execute the experiment
             jsPsych.init({
                   timeline: exp_timeline,
                   on_trial_finish: function() {
                         jsPsych.data.addProperties({subject_id: subject_id});
+                        saveData();
                   },
                   on_finish: function() {
-                        saveData();
                         //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                         document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                   },
             });
-
       } // End of the experiment (end of checking browser)
 </script>
 </html>
