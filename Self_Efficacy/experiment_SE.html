@@ -14,16 +14,17 @@ Per trial:
 <head>
   <title> Self-Efficacy </title>
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
-  <link     href = "jspsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-  <script   src  = "jspsych-master/plugins/jspsych-html-keyboard-response.js"></script>  <!-- every plugin that you use needs to be added in the head -->
-  <script   src  = "jspsych-master/plugins/jspsych-survey-text.js"></script>
-  <script   src  = "jspsych-master/plugins/jspsych-image-keyboard-response.js"></script>
-  <script   src  = "jspsych-master/plugins_JS/fullscreen-JS.js"></script> <!-- plugin that Juliana modified -->
+  <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  <script   src  = "jsPsych-master/plugins/jspsych-html-keyboard-response.js"></script>  <!-- every plugin that you use needs to be added in the head -->
+  <script   src  = "jsPsych-master/plugins/jspsych-survey-text.js"></script>
+  <script   src  = "jsPsych-master/plugins/jspsych-image-keyboard-response.js"></script>
+  <script   src  = "jsPsych-master/plugins_JS/fullscreen-JS.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
   <script   src  = "instr.js"></script>
-  <script   src  = 'jspsych-master/plugins/jspsych-instructions.js'></script>
-  <script   src  = 'jspsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
-  <script   src  = 'jspsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
+  <script   src  = 'jsPsych-master/plugins/jspsych-instructions.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspysch-animation-WH.js'></script>
   <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
   <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
 
@@ -101,21 +102,30 @@ Per trial:
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     }
 
+    // Grey square
+    var greySquare = 'Stimuli/grey-square.png';
+    var greySquareHTML = '<img src="'+greySquare+'"></img>';
+
     // Grids
-    //console.log(grid_indexes)
     var grid_dim = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var square_size = screen.height/6;
+    var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes_shuffled, square_size);
+
+    var grid_stimuli = []; // slice array into chunks of 8
+    for (var i=0; i<all_flip_stimuli.length; i+=8) {
+         grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
+    }
 
     // Target Scores
     var target_scores = [3, 4, 5, 6, 7, 8];
         target_scores.push(...jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat([3, 4, 5, 6, 7, 8],3)));
 
     function updateLoadedCount(nLoaded){
-      var percentcomplete = nLoaded / (instrImg.length + numbersImg.length)  * 100;
-    //  console.log('Loaded '+percentcomplete+'% of images');
+      var percentcomplete = nLoaded / (instrImg.length + numbersImg.length + 1)  * 100;
+      console.log('Loaded '+percentcomplete+'% of images');
     }
 
-    var flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes);
-console.log(flip_stimuli)
     // ------------------------------ BEGIN EXPERIMENT --------------------------- //
 
     var exp_timeline = [];
@@ -124,7 +134,7 @@ console.log(flip_stimuli)
 //    var instruction = instr([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]);
 
     if (cfg.debug == false) {
-      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg],
+      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, greySquare],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
 
@@ -132,14 +142,23 @@ console.log(flip_stimuli)
 
     // Execute the experiment
     function startExperiment(){
+
     var instructions = {
       type: 'instructions',
       pages: instrImg_html,
       show_clickable_nav: true
-    }
+    };
 
     //exp_timeline.push(instructions);
 
+    var flip = {
+      type: 'animation',
+      stimuli: grid_stimuli[0],
+      frame_time: time.flipSpeed,
+      choices: jsPsych.NO_KEYS
+    };
+
+    exp_timeline.push(flip);
 
     var test_phase = {
       type: 'serial-reaction-time-mouse-WH',
@@ -152,34 +171,9 @@ console.log(flip_stimuli)
       trial_duration: time.responseSpeed,
       allow_nontarget_responses: true,
       pre_target_duration: 0
-    }
+    };
 
-    //exp_timeline.push(test_phase);
-
-
-
-
-  var flip_stimulus2 = [
-  [numbersImg[0], 0, 0, numbersImg[3]],
-  [0, numbersImg[5], numbersImg[6], 0],
-  [numbersImg[0], 0, 0, numbersImg[3]],
-  [0, numbersImg[5], numbersImg[6], 0]
-];
-
-    var image_size = screen.height/20;
-
-    for (var flip_i = 0; flip_i < exp.nbTrials; flip_i++){
-    var flip = {
-      type: 'vsl-grid-scene',
-      image_size: [150, 150],
-      stimuli: flip_stimuli[flip_i]
-
-    }
-
-    exp_timeline.push(flip);
-  }
-
-  //  exp_timeline.push(test_phase);
+    exp_timeline.push(test_phase);
 
 
     jsPsych.init({
