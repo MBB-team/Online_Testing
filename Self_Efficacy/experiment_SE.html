@@ -22,8 +22,9 @@ Per trial:
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
   <script   src  = "instr.js"></script>
   <script   src  = 'jsPsych-master/plugins/jspsych-instructions.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins/jspsych-html-button-response.js'></script>
   <script   src  = 'jsPsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspysch-animation-WH.js'></script>
   <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
   <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
@@ -154,11 +155,34 @@ Per trial:
     var flip = {
       type: 'animation',
       stimuli: grid_stimuli[0],
-      frame_time: time.flipSpeed,
+      frame_time: 100,//time.flipSpeed,
       choices: jsPsych.NO_KEYS
     };
 
-    exp_timeline.push(flip);
+    var rewatch = {
+      type: 'html-button-response',
+      stimulus: '<p>Do you want to rewatch the stimuli?</p>',
+      choices: ['Yes','No'],
+      trial_duration: time.rewatch
+
+    }
+
+    var looping_chunk = {
+      timeline: [flip, rewatch],
+      loop_function: function(data){
+        response = data.values()[1]["button_pressed"];
+        if (response == 0){
+          return true;
+        } else {
+          return false;
+        };
+      }
+    }
+
+
+exp_timeline.push(looping_chunk)
+
+  //  exp_timeline.push(flip);
 
     var test_phase = {
       type: 'serial-reaction-time-mouse-WH',
