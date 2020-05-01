@@ -152,6 +152,8 @@ Per trial:
 
     //exp_timeline.push(instructions);
 
+    var flip_counter = 1;
+
     var flip = {
       type: 'animation',
       stimuli: grid_stimuli[0],
@@ -163,7 +165,18 @@ Per trial:
       type: 'html-button-response',
       stimulus: '<p>Do you want to rewatch the stimuli?</p>',
       choices: ['Yes','No'],
-      trial_duration: time.rewatch
+      trial_duration: time.rewatch,
+      on_finish: function(data){
+        response = data.button_pressed;
+        if (response == 0){
+          flip_counter++;
+        } else {
+          jsPsych.data.get().addToLast({
+            flips: flip_counter
+          });
+          flip_counter = 1;
+        }
+      }
 
     }
 
