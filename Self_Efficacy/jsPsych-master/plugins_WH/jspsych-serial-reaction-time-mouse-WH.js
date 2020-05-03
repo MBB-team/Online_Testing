@@ -22,7 +22,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     parameters: {
       target_location: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'target_location',
+        pretty_name: 'Target Location',
         array: true,
         default: undefined,
         description: 'The location of the stimuli. The array should be the [row, column] of the target.'
@@ -70,12 +70,6 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         pretty_name: 'Trial duration',
         default: null,
         description: 'How long to show the trial'
-      },
-      fade_duration: {
-        type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Fade duration',
-        default: null,
-        description: 'If a positive number, the target will progressively change color at the start of the trial, with the transition lasting this many milliseconds.'
       },
       allow_nontarget_responses: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -140,7 +134,6 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
                info.column = e.currentTarget.getAttribute('data-column');
                info.rt = performance.now() - startTime;
                after_response(info);
-               console.log(info);
                response = 1;
             }
           }
@@ -148,13 +141,6 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       }
 
       startTime = performance.now();
-
-      if(trial.fade_duration == null){
-        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1]).style.backgroundColor = trial.target_color;
-      } else {
-        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1]).style.transition = "background-color "+trial.fade_duration;
-        display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1]).style.backgroundColor = trial.target_color;
-      }
 
 			if(trial.trial_duration !== null){
 				jsPsych.pluginAPI.setTimeout(endTrial, trial.trial_duration);

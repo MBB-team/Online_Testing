@@ -26,8 +26,10 @@ Per trial:
   <script   src  = 'jsPsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspysch-animation-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider.js'></script>
   <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
   <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
+  <script   src  = 'SE.js'></script>
 
 </head>
 <body>
@@ -49,8 +51,8 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+               nbTrials:       1,
+               nbBlocks:       1};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -152,31 +154,37 @@ Per trial:
 
     }
 
-    exp_timeline.push(firstFullscreen)
-
-    // Execute the experiment
-    var instructions = {
-      type: 'instructions',
-      pages: instrImg_html,
-      show_clickable_nav: true
-    };
-
-    //exp_timeline.push(instructions);
-
     function startExperiment(){
-    jsPsych.init({
-      timeline: exp_timeline,
-      show_progress_bar: true,
-      on_finish: function() {
-        //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
-        jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-        //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+
+      exp_timeline.push(firstFullscreen)
+
+      // Execute the experiment
+      var instructions = {
+        type: 'instructions',
+        pages: instrImg_html,
+        show_clickable_nav: true
+      };
+
+      //exp_timeline.push(instructions);
+
+      var task = SE(exp.nbBlocks, exp.nbTrials);
+      for (var i = 0; i < task.length; i++) {
+        exp_timeline.push(task[i]);
       }
-    });
-  } // end of startExperiment
-} // end of browser checking
+
+      jsPsych.init({
+        timeline: exp_timeline,
+        show_progress_bar: true,
+        on_finish: function() {
+          //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
+          jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+          //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+        }
+      });
+    } // end of startExperiment
+  } // end of browser checking
 
 
 
-    </script>
-    </html>
+</script>
+</html>
