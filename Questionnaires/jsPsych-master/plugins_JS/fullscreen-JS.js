@@ -103,7 +103,7 @@ jsPsych.plugins.fullscreen = (function() {
           "rt": 999,
           "stimulus": "999",
           "key_press": 999,
-          "response": "999",
+          "response": JSON.stringify({Q0 : "999"}),
         };
 
         jsPsych.finishTrial(trial_data);

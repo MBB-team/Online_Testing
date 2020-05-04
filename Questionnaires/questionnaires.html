@@ -105,7 +105,7 @@
                   show_progress_bar: true,
                   on_trial_finish: function() {
                         jsPsych.data.addProperties({subject_id: subject_id});
-                        //saveData(); // edit out if not on server
+                        saveData(); // edit out if not on server
                   },
                   on_finish: function() {
                         jsPsych.data.displayData(); // Disable once online, use to look at data while coding

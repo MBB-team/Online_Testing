@@ -92,7 +92,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
         "rt": response.rt,
         "stimulus": trial.stimulus,
         "key_press": response.key,
-        "response": "999",
+        "response": JSON.stringify({Q0 : "999"}),
       };
 
       // clear the display

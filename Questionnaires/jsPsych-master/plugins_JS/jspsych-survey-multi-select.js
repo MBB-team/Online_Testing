@@ -151,7 +151,7 @@ jsPsych.plugins['survey-multi-select'] = (function() {
         input.setAttribute('type', "checkbox");
         input.setAttribute('name', input_name);
         input.setAttribute('id', input_id);
-        input.setAttribute('value', question.options[j])
+        input.setAttribute('value', [j])
         form.appendChild(label)
         form.insertBefore(input, label)
       }

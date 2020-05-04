@@ -38,7 +38,8 @@ function quest() {
 		{prompt: "11) Vous sentez-vous moins concern\351(e) qu'avant par certaines choses?", options: apathy_scale, required:true, horizontal: true},
 		{prompt: "12) Avez-vous besoin d'\352tre stimul\351(e) pour commencer \340 faire quelque chose?", options: apathy_scale, required:true, horizontal: true},
 		{prompt: "13) Ressentez-vous moins fortement les \351motions?", options: apathy_scale, required:true, horizontal: true},
-		{prompt: "14) Vous-considereriez-vous comme apathique?", options: apathy_scale, required:true, horizontal: true}],
+		{prompt: "14) Si vous avez bien lu cette question, r\351pondez 'un peu' ", options: apathy_scale, required:true, horizontal: true},
+		{prompt: "15) Vous-considereriez-vous comme apathique?", options: apathy_scale, required:true, horizontal: true}],
 		preamble: ["Au cours des quatre semaines qui viennent de s'\351couler et actuellement"],
 		data:{ test_part: 'apathy',
 		trial_type: 'quest',
@@ -98,6 +99,7 @@ function quest() {
 		choices: [32],
 		data: {
 			test_part: 'questinstruction',
+			trial_type: 'quest',
 
 		}
 	};
@@ -118,7 +120,7 @@ function quest() {
 	var confinement1 = ["Compl\351tement d'accord","Assez d'accord","Ni d'accord, ni par d'accord","Plut\364t en d\351saccord","Compl\350tement en d\351saccord"];
 	var confinement2 = ["Tr\350s satisfait","Plut\364t satisfait","Ni satisfait, ni pas satisfait","Plut\364t pas satisfait","Pas satisfait du tout"];
 	var confinement3 = ["Tr\350s claires et coh\351rentes","Assez claires et coh\351rentes","Ni claires, ni floues","Plut\364t floues ou contradictoire","Tr\350s floues ou contradictoires"];
-	var confinement4 = ["Je suis confin\351(e) \340 mon domicile et je suis contamin\351(e)","Je suis confin\351(e) \340 mon domicile sans personne contamin\351e","Je suis en contact direct avec des personnes ou du mat\351riel suspect\351es d'\352tre contamin\351(es) \340 l'ext\351rieur ","Je suis en contact direct avec des personnes \340 l'ext\351rieur de mon domicile (au travail par exemple) ","Je sors de mon domicile mais ne suis pas en contact direct avec des personnes ext\351rieures (sur une exploitation agricole par exemple)"];
+	var confinement4 = ["Je suis confin\351(e) \340 mon domicile et je suis contamin\351(e)","Je suis confin\351(e) \340 mon domicile sans personne contamin\351e","Je suis en contact direct avec des personnes ou du mat\351riel suspect\351es d'\352tre contamin\351(es) \340 l'ext\351rieur ","Je suis en contact direct avec des personnes \340 l'ext\351rieur de mon domicile","Je sors de mon domicile mais ne suis pas en contact direct avec des personnes ext\351rieures"];
 	var confinement5 = ["Non","Plut\364t non","Plut\364t oui","Oui"];
 	var confinement6 = ["Non, je ne suis pas inquiet \340 ce sujet","Oui, je m'inqui\350te mais j'ai actuellement acc\350s \340 tout ce dont j'ai besoin","Oui, je m'inqui\350te et je n'ai actuellement pas acc\350s \340 tout ce dont j'ai besoin"];
 
@@ -128,8 +130,9 @@ function quest() {
 		{prompt: "2) Etes-vous satisfait de votre niveau d'information sur les mesures du confinement ? ", options: confinement2, required:true},
 		{prompt: "3) Avez vous trouv\351 les informations officielles suffisamment claires sur le coronavirus (mode de transmission, pr\351vention, ...) ? ", options: confinement3, required:true},
 		{prompt: "4) Etes-vous en contact avec une ou des personnes susceptible(s) d'\352tre contamin\351e(s) par le coronavirus ? ", options: confinement4, required:true},
-		{prompt: "5) Est-ce que le manque d'acc\350s aux mat\351riels de protections (masques, gels hydroalcooliques) vous pr\351occupe ? ", options: confinement5, required:true},
-		{prompt: "6) Est-ce que l'acc\350s aux produits de premi\350re n\351cessit\351 vous pr\351occupe actuellement ? ", options: confinement6, required:true}],
+		{prompt: "5) Si vous avez bien lu cette question, r\351pondez 'oui' ", options: confinement5, required:true},
+		{prompt: "6) Est-ce que le manque d'acc\350s aux mat\351riels de protections (masques, gels hydroalcooliques) vous pr\351occupe ? ", options: confinement5, required:true},
+		{prompt: "7) Est-ce que l'acc\350s aux produits de premi\350re n\351cessit\351 vous pr\351occupe actuellement ? ", options: confinement6, required:true}],
 		preamble: [""],
 		data:{
 			test_part: 'confinement',
@@ -153,7 +156,7 @@ function quest() {
 	var situation3 = ["Tr\350s probablement ","Probablement","Probablement pas","Certainement pas "];
 
 	var covid_situation = {
-		type: ['survey-multi-choice'],
+		type: 'survey-multi-choice',
 		questions:  [{prompt: "1) Actuellement, travaillez-vous ? ", options: situation1, required:true},
 		{prompt: "2) Si oui, quelle est votre charge de travail (travail + devoirs domestiques) ?  ", options: situation2, required:true},
 		{prompt: "3) La p\351riode de confinement va-t-elle avoir des r\351percussions financi\350res sur votre budget ?  ", options: situation3, required:true},
@@ -168,7 +171,7 @@ function quest() {
 	var difficulty1 = ["Maintenir un rythme veille /sommeil satisfaisant (dormir \340 des horaires r\351guliers...)","Vous endormir ","Vous sentir repos\351","Manger au moins 2 repas par jour ", "Ne pas grignoter davantage qu'\340 votre habitude ", "Etablir de nouvelles routines", "Conserver des relations sereines avec mes proches", "Aucune difficult\351 particuli\350re"];
 
 	var covid_difficulty = {
-		type: ['survey-multi-select'],
+		type: 'survey-multi-select',
 		questions:  [{prompt: "Actuellement, avez-vous des difficult\351s pour : ", options: difficulty1, required:true}],
 		//preamble: ["Actuellement, \340 quelle fr\351quence avez-vous des interactions sociales avec votre famille ou des amis qui ne sont pas confin\351s avec vous ?"],
 		data:{
@@ -180,7 +183,7 @@ function quest() {
 	var interaction1 = ["Moins d'une fois par semaine","Une fois par semaine","Plusieurs fois par semaine","Tous les jours"];
 
 	var covid_interaction = {
-		type: ['survey-multi-choice'],
+		type: 'survey-multi-choice',
 		questions:  [{prompt: "1) Directement en face \340 face : ", options: interaction1, required:true},
 		{prompt: "2) Au t\351l\351phone ou sur les r\351seaux sociaux : ", options: interaction1, required:true}],
 		preamble: ["Actuellement, \340 quelle fr\351quence avez-vous des interactions sociales avec votre famille  <br> ou des amis qui ne sont pas confin\351s avec vous ?"],

@@ -83,15 +83,15 @@ jsPsych.plugins['survey-multi-choice'] = (function() {
     html += '<style id="jspsych-survey-multi-choice-css">';
     html += ".jspsych-survey-multi-choice-question { margin-top: 2em; margin-bottom: 2em; text-align: left; }"+
       ".jspsych-survey-multi-choice-text span.required {color: darkred;}"+
-      ".jspsych-survey-multi-choice-horizontal .jspsych-survey-multi-choice-text {  text-align: center;}"+
-      ".jspsych-survey-multi-choice-option { line-height: 2; }"+
+      ".jspsych-survey-multi-choice-horizontal .jspsych-survey-multi-choice-text {  text-align: left;}"+
+      ".jspsych-survey-multi-choice-option { line-height: 2; text-align: left; }"+
       ".jspsych-survey-multi-choice-horizontal .jspsych-survey-multi-choice-option {  display: inline-block;  margin-left: 1em;  margin-right: 1em;  vertical-align: top;}"+
       "label.jspsych-survey-multi-choice-text input[type='radio'] {margin-right: 1em;}";
     html += '</style>';
 
     // show preamble text
     if(trial.preamble !== null){
-      html += '<div id="jspsych-survey-multi-choice-preamble" class="jspsych-survey-multi-choice-preamble">'+trial.preamble+'</div>';
+      html += '<div id="jspsych-survey-multi-choice-preamble" class="jspsych-survey-multi-choice-preamble" style="text-align: left">'+trial.preamble+'</div>';
     }
 
     // form element
@@ -140,8 +140,8 @@ jsPsych.plugins['survey-multi-choice'] = (function() {
 
         // add radio button container
         html += '<div id="'+option_id_name+'" class="jspsych-survey-multi-choice-option">';
+        html += '<input type="radio" name="'+input_name+'" id="'+input_id+'" value="'+[j]+'" '+required_attr+'></input>';
         html += '<label class="jspsych-survey-multi-choice-text" for="'+input_id+'">'+question.options[j]+'</label>';
-        html += '<input type="radio" name="'+input_name+'" id="'+input_id+'" value="'+question.options[j]+'" '+required_attr+'></input>';
         html += '</div>';
       }
 
@@ -186,6 +186,7 @@ jsPsych.plugins['survey-multi-choice'] = (function() {
         "key_press": 999,
         "responses": JSON.stringify(question_data),
       };
+      console.log(question_data)
       display_element.innerHTML = '';
 
       // next trial
