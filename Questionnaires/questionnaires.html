@@ -1,0 +1,117 @@
+<!-- QUESTIONNAIRES for experiment online using JavaScript and jsPsych Library
+            - Author: Juliana Sporrer (juliana.sporrer.18@ucl.ac.uk)
+            - Creation date: May 2020
+
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>  QUESTIONNAIRE </title>
+        <script   src = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
+        <link     href= "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+        <script   src = "jsPsych-master/plugins_JS/jspsych-html-keyboard-response.js"></script>
+        <script   src = "jsPsych-master/plugins_JS/jspsych-survey-text.js"></script>
+        <script   src = "jsPsych-master/plugins_JS/fullscreen-JS.js"></script>
+        <script   src = "jsPsych-master/plugins_JS/jspsych-survey-multi-choice.js"></script>
+        <script   src = "jsPsych-master/plugins_JS/jspsych-survey-multi-select.js"></script>
+        <script   src = "getBrowserInfo.js"></script> <!-- add the external functions-->
+        <script   src = "quest.js"></script>
+    </head>
+    <body>
+          <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+          <canvas class = "canvas" id="myCanvas"></canvas>
+   </body>
+   <script type="application/javascript">
+
+
+// --------------------------------- INITIALISATION  ---------------------------//
+
+    // Checks if the browser is Chrome or Firefox (best compatibility)
+    var browserInfo = getBrowserInfo(); // Call the function that I specified in the head
+
+    if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
+            var wrong_browser = {
+                    type: 'html-keyboard-response',
+                    stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
+                             +'<p> Please re-open the experiment in one of these browsers. </p>',
+            };
+            jsPsych.init({
+                    timeline: [wrong_browser],
+            });
+    }
+
+    else { // If browser is ok, lead on to the experiment
+
+          // Create "Variable/function" that makes sure you remain in FullScreen
+          var firstFullscreen = {
+                type: 'fullscreen', // Call the function "fullscreen" of the plugin "fullscreen_emo"
+                message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
+                button_label: 'Put in Fullscreen',
+                delay_after: 300,
+                check_fullscreen: true,
+                data: {
+                      test_part: 'firstFullscreen',
+                      // Here put all the names of the variables you want to save.
+                      // example:
+                      // blocknumber: null,
+                      // trialnumber: null,
+                },
+          };
+
+          var fullscreenExp = {
+                type: 'fullscreen',
+                message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
+                fullscreen_mode: false,
+                data: {
+                      test_part: 'fullscreenExp',
+                      // blocknumber: null,
+                },
+          };
+
+
+// --------------------------------- Save DATA --------------------------------- //
+          function saveData() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'write_data_quest.php'); // change it to point to php script.
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                      if(xhr.status == 200){
+                           var response = JSON.parse(xhr.responseText); // $.parseJSON
+                     } if(response.success){
+                           console.log("Data saved");
+                     } else {
+                     console.log("Data not saved");}
+                  };
+                  xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
+            }
+
+ // --------------------------------- BEGINING EXPERIMENT  ----------------------//
+
+            var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
+
+            var exp_timeline = [];
+
+            exp_timeline.push(firstFullscreen);
+
+            var questExp            = quest();
+            for(var i = 0; i < questExp.length; i++){
+                   exp_timeline.push(questExp[i]);
+            };
+
+            // Execute the experiment
+            jsPsych.init({
+                  timeline: exp_timeline,
+                  show_progress_bar: true,
+                  on_trial_finish: function() {
+                        jsPsych.data.addProperties({subject_id: subject_id});
+                        //saveData(); // edit out if not on server
+                  },
+                  on_finish: function() {
+                        jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                        //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                  },
+            });
+    }
+</script>
+</html>
