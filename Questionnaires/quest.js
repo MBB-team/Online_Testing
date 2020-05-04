@@ -193,7 +193,6 @@ function quest() {
 
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
-	qns.push(hads);
 
 	var questlist 		= [apathy, hads, covid_qns];
 	var shufflequestlist  	= jsPsych.randomization.shuffle(questlist);
