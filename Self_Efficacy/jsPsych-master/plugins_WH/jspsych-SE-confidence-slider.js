@@ -51,10 +51,15 @@ jsPsych.plugins["SE-confidence-slider"] = (function() {
     var stimulus = plugin.generate_numberline(trial.range, trial.square_size);
     display_element.innerHTML = stimulus;
 
+    // display prompt if there is one
+    if (trial.prompt !== null){
+      display_element.innerHTML += trial.prompt;
+    };
+
+    // clean up stimuli
     var endIndex = trial.range - 1;
     display_element.querySelector('#jspsych-SE-confidence-slider-stimulus-cell-0').style.borderLeft = "2px solid rgb(188,188,188)";
     display_element.querySelector('#jspsych-SE-confidence-slider-stimulus-cell-'+endIndex+'').style.borderRight = "2px solid rgb(188,188,188)";
-
 
     // Initialise slider location
     var sliderLimits_ini = Array(2);
