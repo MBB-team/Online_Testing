@@ -15,7 +15,7 @@ jsPsych.plugins.animation = (function() {
 //  jsPsych.pluginAPI.registerPreload('animation', 'stimuli', 'image');
 
   plugin.info = {
-    name: 'animation',
+    name: 'animation-WH',
     description: '',
     parameters: {
       stimuli: {
