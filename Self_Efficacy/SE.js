@@ -4,6 +4,9 @@ function SE(nbBlocks, nbTrials){
   var timelineTask  = [];
   var trial_counter = 0;
   var flip_counter  = 1;
+  var nCorrect      = 0;
+  var test_counter  = 0;
+  var correct_i     = [0,0,0,0,0,0,0,0];
   var conf_counter  = 0;
   var nbTperB       = nbTrials/nbBlocks;
   var grid_dim = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
@@ -54,7 +57,7 @@ function SE(nbBlocks, nbTrials){
       var SE_conf = {
         type: 'SE-confidence-slider',
         range: 30,
-        prompt: '<p>Position the slider across the interval of flips you think it might take you to achieve the target score. Press Enter to confirm your choice.</p>'
+        prompt: '<p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p>'
       };
 
       // PUSH TO TIMELINE //
@@ -65,7 +68,7 @@ function SE(nbBlocks, nbTrials){
       var flip = {
         type: 'animation-WH',
         stimuli: grid_stimuli[trial_counter],
-        frame_time: 100,//time.flipSpeed,
+        frame_time: time.flipSpeed,
         choices: jsPsych.NO_KEYS
       };
 
@@ -143,9 +146,17 @@ function SE(nbBlocks, nbTrials){
               grid: grid_dim,
               grid_square_size: screen.height/6,
               response_ends_trial: false,
-              trial_duration: 1,//time.responseSpeed,
+              trial_duration: time.responseSpeed,
               allow_nontarget_responses: true,
-              pre_target_duration: 0
+              pre_target_duration: 0,
+              on_finish: function(data){
+                if(data.correct){
+                  nCorrect++
+                  correct_i[test_counter] = 1;
+                }
+                test_counter++
+              }
+
             };
 
             // PUSH TO TIMELINE //
@@ -166,6 +177,30 @@ function SE(nbBlocks, nbTrials){
           // PUSH TO TIMELINE //
           timelineTask.push(fullscreenExp);
           timelineTask.push(confidence);
+
+          // FEEDBACK //
+          var feedback = {
+            type: 'animation-WH',
+            frame_time: time.showFeedback,
+            stimuli: grid_stimuli[trial_counter],
+            choices: jsPsych.NO_KEYS,
+            prompt: function(){
+              var feedback_prompt = '<p>You got: <b>'+nCorrect+'/8!</b>';
+              return feedback_prompt;
+            },
+            feedback: true,
+            correct_responses: function(){return correct_i},
+            on_finish: function(){
+              nCorrect = 0;
+              correct_i = [0,0,0,0,0,0,0,0];
+              test_counter = 0;
+            }
+
+          }
+
+          // PUSH TO TIMELINE //
+          timelineTask.push(fullscreenExp);
+          timelineTask.push(feedback);
 
         } // conf or test loop
 

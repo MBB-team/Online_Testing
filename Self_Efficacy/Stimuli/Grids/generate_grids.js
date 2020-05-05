@@ -33,15 +33,22 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
           for(var j=0; j<grid[i].length; j++){
             var classname = 'jspsych-SE_WH-stimulus-cell';
 
+            if      (i == row_i[0] && j == col_i[0]){var img_present = 1}
+            else if (i == row_i[1] && j == col_i[1]){var img_present = 1}
+            else {var img_present = 0};
+
             stimulus += "<div class='"+classname+"' id='jspsych-SE_WH-stimulus-cell-"+i+"-"+j+"' "+
-            "data-row="+i+" data-column="+j+" "+
+            "data-row="+i+" data-column="+j+" target = _"+img_present+" "+
             "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
 
             if(grid[i][j] == 1){
-              stimulus += "border: 2px solid black;"
+              stimulus += "border: 2px solid black;'"
             }
 
-            stimulus += "'>";
+            // add a tag to indicate stimuli is in this cell
+
+
+            stimulus += ">";
             // first image location
             if(i == row_i[0] && j == col_i[0]){
               stimulus += '<img src="'+numbersImg[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';

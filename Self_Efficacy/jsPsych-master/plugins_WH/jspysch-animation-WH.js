@@ -8,7 +8,7 @@
  * documentation: docs.jspsych.org
  */
 
-jsPsych.plugins.animation = (function() {
+jsPsych.plugins["animation-WH"] = (function() {
 
   var plugin = {};
 
@@ -55,6 +55,20 @@ jsPsych.plugins.animation = (function() {
         pretty_name: 'Prompt',
         default: null,
         description: 'Any content here will be displayed below stimulus.'
+      },
+      feedback: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Feedback',
+        default: false,
+        description: 'Indicates a feedback trial if true. If true, must indicate which responses were correct!'
+      },
+      correct_responses: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Correct Response array',
+        array: true,
+        default: null,
+        description: 'Array indicating which responses were correct.'
+
       }
     }
   }
@@ -90,6 +104,23 @@ jsPsych.plugins.animation = (function() {
     function show_next_frame() {
       // show image
       display_element.innerHTML = trial.stimuli[animate_frame];
+
+      // if feedback trial, highlight correct responses
+      if (trial.feedback){
+
+        targets = display_element.querySelectorAll("div[target = _1]");
+
+        if(trial.correct_responses[animate_frame]){
+          targets[0].style.outline = "5px solid rgb(51, 204, 51)"
+          targets[1].style.outline = "5px solid rgb(51, 204, 51)"
+
+        } else {
+          targets[0].style.outline = "5px solid rgb(255, 0, 0)"
+          targets[1].style.outline = "5px solid rgb(255, 0, 0)"
+
+          }
+      };
+
 
       current_stim = trial.stimuli[animate_frame];
 
