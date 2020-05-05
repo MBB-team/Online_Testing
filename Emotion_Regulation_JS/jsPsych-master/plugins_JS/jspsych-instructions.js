@@ -63,18 +63,6 @@ jsPsych.plugins.instructions = (function() {
           default: false,
           description: 'If true, and clickable navigation is enabled, then Page x/y will be shown between the nav buttons.'
       },
-      button_label_previous: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Button label previous',
-        default: 'Previous',
-        description: 'The text that appears on the button to go backwards.'
-      },
-      button_label_next: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Button label next',
-        default: 'Next',
-        description: 'The text that appears on the button to go forwards.'
-      }
     }
   }
 
@@ -85,6 +73,10 @@ jsPsych.plugins.instructions = (function() {
     var view_history = [];
 
     var start_time = performance.now();
+
+    var button_label_previous = "< Page précédente"
+
+    var button_label_next = "Page Suivante >"
 
     var last_page_update_time = start_time;
 
@@ -112,13 +104,13 @@ jsPsych.plugins.instructions = (function() {
         var nav_html = "<div class='jspsych-instructions-nav' style='padding: 10px 0px;'>";
         if (trial.allow_backward) {
           var allowed = (current_page > 0 )? '' : "disabled='disabled'";
-          nav_html += "<button id='jspsych-instructions-back' class='jspsych-btn' style='margin-right: 5px;' "+allowed+">&lt; "+trial.button_label_previous+"</button>";
+          nav_html += "<button id='jspsych-instructions-back' class='jspsych-btn' style='margin-right: 5px;' "+allowed+">&lt; "+button_label_previous+"</button>";
         }
         if (trial.pages.length > 1 && trial.show_page_number) {
             nav_html += pagenum_display;
         }
         nav_html += "<button id='jspsych-instructions-next' class='jspsych-btn'"+
-            "style='margin-left: 5px;'>"+trial.button_label_next+
+            "style='margin-left: 5px;'>"+button_label_next+
             " &gt;</button></div>";
 
         html += nav_html;
@@ -169,8 +161,8 @@ jsPsych.plugins.instructions = (function() {
       var page_view_time = current_time - last_page_update_time;
 
       view_history.push({
-        page_index: current_page,
-        viewing_time: page_view_time
+        page: current_page,
+        time: page_view_time
       });
 
       last_page_update_time = current_time;
@@ -185,11 +177,11 @@ jsPsych.plugins.instructions = (function() {
       display_element.innerHTML = '';
 
       var trial_data = {
-        "view_history": JSON.stringify(view_history),
-        "rt": performance.now() - start_time
+        "rt": performance.now() - start_time,
+        "stimulus": "999",
+        "responses": JSON.stringify(view_history),
+        "key_press": 999
       };
-
-      console.log(trial_data)
 
       jsPsych.finishTrial(trial_data);
     }

@@ -4,8 +4,8 @@
 
             Data Output (as in MySQL)
                   - rt (double)
-                  - stimulus (varchar(25))
-                  - responses: for the questions (varchar(25))
+                  - stimulus (varchar(250))
+                  - responses: for the questions & instructions (varchar(100))
                   - key_press: [79,78] for oui [o] and non [n] (int(3))
                   - test_part (varchar(25))
                   - blockNb (int(3))
@@ -22,6 +22,7 @@
                   - time_elapsed (int(25))
                   - internal_node_id (varchar(25))
                   - subject_id (int(7))
+                  - date (varchar(25))
 
 -->
 <!DOCTYPE html>
@@ -32,6 +33,7 @@
         <script  src = "jsPsych-master/jspsych.js"></script>
         <link    href= "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
         <script  src = "jsPsych-master/plugins_JS/fullscreen-emo.js"></script>
+        <script  src = "jsPsych-master/plugins_JS/jspsych-instructions.js"></script>
         <script  src = "jsPsych-master/plugins_JS/html-keyboard-response-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/survey-text-emo.js"></script>
         <script  src = "jsPsych-master/plugins_JS/image-keyboard-response-emo.js"></script>
@@ -52,15 +54,15 @@
 
     var nbBlocksPrac      = 2; // 2
     var nbTrialsPrac      = 6; // 6
-    var nbBlocksExp       = 4; // 12
-    var nbTrialsExp       = 6; // 18
+    var nbBlocksExp       = 10; // 12
+    var nbTrialsExp       = 30; // 18
 
     var setSize           = 15; // 15
     var imageDuration     = 70; // in ms
     var fixation_time     = 1000;
 
     var nbInstr           = 12; // how many Instr Slides (12)
-    var debug             = true; // if true, skips details, instructions and practice
+    var debug             = false; // if true, skips details, instructions and practice
 
 // --------------------------------- INITIALISATION  ---------------------------//
 
@@ -127,56 +129,6 @@
                 },
           };
 
-          // Ask the participants to enter details
-          // var subdetails = {
-          //       type: 'survey-text',
-          //       preamble: ['<p style = "text-align: center; font-size: 28px">Please enter the following:</p>'],
-          //       questions: [{prompt: "Worker ID?", rows: 3, columns: 40}],
-          //       data: {
-          //             test_part: 'subdetails',
-          //             blockNb: 999,
-          //             trialNb: 999,
-          //             condiEmoBlock: 999,
-          //             condiEmoTrial: 999,
-          //             condiRwd: 999,
-          //             posCritDist: 999,
-          //             posTarget: 999,
-          //       },
-          //       on_start: function(){
-          //             var res = cursornone.replace("none", "default");
-          //             document.getElementById("cursornone").innerHTML = res;
-          //       },
-          //       on_finish: function(){
-          //             var res = cursornone.replace("default", "none");
-          //             document.getElementById("cursornone").innerHTML = res;
-          //       },
-          // };
-
-          // var subdetails2 = {
-          //       type: 'survey-text',
-          //       preamble: ['<p style = "text-align: center; font-size: 28px">Remplissez les informations suivantes:</p>'],
-          //       questions: [{prompt: "Genre (F/H)?", rows: 3, columns: 40}, {prompt: "Age?", rows: 3, columns: 40}],
-          //       data: {
-          //             test_part: 'subdetails2',
-          //             blockNb: 999,
-          //             trialNb: 999,
-          //             condiEmoBlock: 999,
-          //             condiEmoTrial: 999,
-          //             condiRwd: 999,
-          //             posCritDist: 999,
-          //             distractor: 999,
-          //             posTarget: 999,
-          //             target: 999,
-          //       },
-          //       on_start: function(){
-          //             var res = cursornone.replace("none", "default");
-          //             document.getElementById("cursornone").innerHTML = res;
-          //       },
-          //       on_finish: function(){
-          //             var res = cursornone.replace("default", "none");
-          //             document.getElementById("cursornone").innerHTML = res;
-          //       },
-          // };
 
 // --------------------------------- PRE-LOAD ANY MEDIA  -----------------------//
           var instrImg = [];
@@ -216,8 +168,41 @@
                 //console.log('Loaded '+percentcomplete+'% of images');
           }
 
-// --------------------------------- SAVING DATA  ----------------------------//
+// --------------------------------- instructions  ----------------------------//
 
+      var firstInstr = {
+            type: 'instructions',
+            pages: ['<img src="'+instrImg[0]+'" id="image-instructions" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[1]+'" id="image-instructions2" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[7]+'" id="image-instructions3" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[8]+'" id="image-instructions4" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[2]+'" id="image-instructions5" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[9]+'" id="image-instructions6" style="height:'+screen.height/1.5+'px" ></img>',],
+            show_clickable_nav: true,
+            show_page_number: true,
+            on_start: function(){
+                  var res = cursornone.replace("none", "default");
+                  document.getElementById("cursornone").innerHTML = res;
+            },
+            on_finish: function(){
+                  var res = cursornone.replace("default", "none");
+                  document.getElementById("cursornone").innerHTML = res;
+            },
+            data: {
+                  test_part: "instr",
+                  blockNb: 999,
+                  trialNb: 999,
+                  condiEmoBlock: 999,
+                  condiEmoTrial: 999,
+                  condiRwd: 999,
+                  posCritDist: 999,
+                  distractor: 999,
+                  posTarget: 999,
+                  target: 999,
+            },
+      }
+
+// --------------------------------- SAVING DATA  ----------------------------//
           function saveData() {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'write_data.php'); // change it to point to php script.
@@ -249,13 +234,7 @@
             exp_timeline.push(firstFullscreen);
 
             if(debug == false){
-                  //exp_timeline.push(subdetails);
-                  //exp_timeline.push(subdetails2);
-
-                  var firstInstr    = instr([0,1,7,8,2,9]);
-                  for(var i = 0; i < firstInstr.length; i++){
-                         exp_timeline.push(firstInstr[i]);
-                  };
+                  exp_timeline.push(firstInstr);
 
                   var practice      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
                   for(var i = 0; i < practice.length; i++){
@@ -286,7 +265,7 @@
                         show_progress_bar: true,
                         on_trial_finish: function() {
                               jsPsych.data.addProperties({subject_id: subject_id, date: date});
-                              saveData(); // edit out if not on server
+                              //saveData(); // edit out if not on server
                         },
                         on_finish: function() {
                               //jsPsych.data.displayData(); // Disable once online, use to look at data while coding

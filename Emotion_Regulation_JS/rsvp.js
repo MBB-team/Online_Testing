@@ -7,7 +7,7 @@ function rsvp(nbBlocks, nbTrials, training)
       var timelineTask = [];
 
       [conditionRwd, condition] = createCondiMatrix(nbBlocks, nbTrials, training);
-      //console.log(JSON.parse(JSON.stringify(conditionRwd)))
+       //console.log(condition)
 
       /////////////////////////////////
       ////// Start of the Block //////
@@ -93,7 +93,7 @@ function rsvp(nbBlocks, nbTrials, training)
                   // First, fixation
                   var fixation = {
                         type:'html-keyboard-response',
-                        stimulus: '<div style="font-size:70px;">+</div>',
+                        stimulus: '<div style="font-size:75px;">+</div>',
                         choices: jsPsych.NO_KEYS,
                         condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                         reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
