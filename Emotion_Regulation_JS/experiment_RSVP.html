@@ -218,8 +218,6 @@
 
 // --------------------------------- SAVING DATA  ----------------------------//
 
-//CODE TO SAVE FULLDATA AT THE END
-
           function saveData() {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'write_data.php'); // change it to point to php script.
@@ -236,7 +234,9 @@
 
 // --------------------------------- BEGINING EXPERIMENT  --------------------//
 
-            var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
+            var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
+            var today = new Date();
+            var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
             //console.log("The subject ID is "+subject_id)
 
@@ -285,7 +285,7 @@
                         timeline: exp_timeline,
                         show_progress_bar: true,
                         on_trial_finish: function() {
-                              jsPsych.data.addProperties({subject_id: subject_id});
+                              jsPsych.data.addProperties({subject_id: subject_id, date: date});
                               saveData(); // edit out if not on server
                         },
                         on_finish: function() {
