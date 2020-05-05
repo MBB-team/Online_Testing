@@ -129,6 +129,17 @@ function SE(nbBlocks, nbTrials){
 
         } else {
 
+          var test_phase = {
+            type: 'html-button-response-WH',
+            stimulus: '<p>You will now be asked to recall the items.</p><p><b>Get ready!</b></p>',
+            choices: [],
+            trial_duration: time.fixation
+          };
+
+          // PUSH TO TIMELINE //
+          timelineTask.push(fullscreenExp);
+          timelineTask.push(test_phase);
+
           // TESTING PHASE //
           for (var test_i = 0; test_i < numbersImg.length; test_i++) {
 
