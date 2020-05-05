@@ -15,19 +15,16 @@ Per trial:
   <title> Self-Efficacy </title>
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-  <script   src  = "jsPsych-master/plugins/jspsych-html-keyboard-response.js"></script>  <!-- every plugin that you use needs to be added in the head -->
-  <script   src  = "jsPsych-master/plugins/jspsych-survey-text.js"></script>
-  <script   src  = "jsPsych-master/plugins/jspsych-image-keyboard-response.js"></script>
-  <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
   <script   src  = "instr.js"></script>
-  <script   src  = 'jsPsych-master/plugins/jspsych-instructions.js'></script>
-  <script   src  = 'jsPsych-master/plugins/jspsych-html-button-response.js'></script>
-  <script   src  = 'jsPsych-master/plugins/jspsych-html-slider-response.js'></script>
-  <script   src  = 'jsPsych-master/plugins/jspsych-vsl-grid-scene.js'></script>
+  <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-vsl-grid-scene-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspysch-animation-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
   <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
   <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
   <script   src  = 'SE.js'></script>
@@ -52,15 +49,15 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+               nbTrials:       2,
+               nbBlocks:       1};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
-                responseSpeed: 3000,
+  const time = {flipSpeed:     10, // in ms so 1 sec
+                responseSpeed: 30,
                 SEconf:        10000,
                 highlight:     500,
-                showFeedback:  2000,
+                showFeedback:  20,
                 rewatch:       3000};
 
   // instructions
@@ -91,7 +88,7 @@ Per trial:
 
     // Create "Variable/function" that makes sure you remain in FullScreen
     var firstFullscreen =	{
-          type: 'fullscreen',
+          type: 'fullscreen-WH',
           message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
           button_label: 'Put in Fullscreen',
           delay_after: 300,
@@ -99,7 +96,7 @@ Per trial:
         };
 
     var fullscreenExp = {
-          type: 'fullscreen',
+          type: 'fullscreen-WH',
           message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
           fullscreen_mode: false
         };
@@ -183,7 +180,7 @@ Per trial:
 
       // Execute the experiment
       var instructions = {
-        type: 'instructions',
+        type: 'instructions-WH',
         pages: instrImg_html,
         show_clickable_nav: true
       };

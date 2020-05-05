@@ -2,12 +2,12 @@
 * Example plugin template
 */
 
-jsPsych.plugins["SE-confidence-slider"] = (function() {
+jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: "SE-confidence-slider",
+    name: "SE-confidence-slider-WH",
     description: 'Creates a number line along which participants can move the position and range of a slider.',
     parameters: {
       range: {

@@ -8,12 +8,12 @@
  *
  **/
 
-jsPsych.plugins["html-button-response"] = (function() {
+jsPsych.plugins["html-button-response-WH"] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: 'html-button-response',
+    name: 'html-button-response-WH',
     description: '',
     parameters: {
       stimulus: {
@@ -159,6 +159,7 @@ jsPsych.plugins["html-button-response"] = (function() {
         "rt": response.rt,
         "stimulus": trial.stimulus,
         "button_pressed": response.button,
+        "flips": 999
       };
 
       // clear the display

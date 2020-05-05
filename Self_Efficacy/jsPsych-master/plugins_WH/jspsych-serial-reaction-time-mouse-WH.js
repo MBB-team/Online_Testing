@@ -17,7 +17,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
   var plugin = {};
 
   plugin.info = {
-    name: 'serial-reaction-time-mouse',
+    name: 'serial-reaction-time-mouse-WH',
     description: '',
     parameters: {
       target_location: {

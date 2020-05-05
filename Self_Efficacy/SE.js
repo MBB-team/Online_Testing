@@ -32,7 +32,7 @@ function SE(nbBlocks, nbTrials){
 
     // BLOCK NUMBER //
     var block_number = {
-      type: 'html-button-response',
+      type: 'html-button-response-WH',
       stimulus: '<p>This is the beginning of block <b>'+block_n+'</b>.</p><p>When you are ready to start, click on the button.</p>',
       choices: ['Start']
     }; // block number
@@ -46,7 +46,7 @@ function SE(nbBlocks, nbTrials){
 
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
-        type: 'html-button-response',
+        type: 'html-button-response-WH',
         stimulus: '<p>This is the beginning of trial <b>'+trial_n+'</b> of block <b><p>'+block_n+'</b>.</p></p><p>Your target score for this trial is <b>'+target_scores_all[trial_counter]+'.</b></p><p>When you are ready to start, click on the button.</p>',
         choices: ['Start']
       }; // trial number
@@ -55,7 +55,7 @@ function SE(nbBlocks, nbTrials){
 
       // SE QUESTION //
       var SE_conf = {
-        type: 'SE-confidence-slider',
+        type: 'SE-confidence-slider-WH',
         range: 30,
         prompt: '<p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p>'
       };
@@ -74,7 +74,7 @@ function SE(nbBlocks, nbTrials){
 
       // REWATCH QUESTION //
       var rewatch = {
-        type: 'html-button-response',
+        type: 'html-button-response-WH',
         stimulus: '<p>Do you want to rewatch the stimuli?</p><p>The target score for this trial is: <b>'+target_scores_all[trial_counter]+'</b>.',
         prompt: function(){
           var rewatch_prompt = '<p>You have seen the stimuli <b>'+flip_counter+'</b> times.';
@@ -86,12 +86,10 @@ function SE(nbBlocks, nbTrials){
             if (response == 0){
               flip_counter++;
             } else {
-              jsPsych.data.get().addToLast({
-                flips: flip_counter
-              });
+              data.flips = flip_counter;
               flip_counter = 1;
             }
-          }
+          },
         } // rewatch
 
         // LOOP THE FLIPS //
@@ -114,7 +112,7 @@ function SE(nbBlocks, nbTrials){
         if (trial_counter == conf_trials_idx[conf_counter]){
 
           var test_conf = {
-            type: 'html-slider-response',
+            type: 'html-slider-response-WH',
             stimulus:'<p>How confident are you that you would have achieved the target score of <b> '+target_scores_all[trial_counter]+'</b>?<p>-100% means completely sure <b>to not have</b> achieved it and +100% means completely sure <b>to have</b> achieved it.',
             labels: ['-100%','0%','100%'],
             min: -100,
@@ -168,7 +166,7 @@ function SE(nbBlocks, nbTrials){
           // CONFIDENCE QUESTION //
 
           var confidence = {
-            type: 'html-button-response',
+            type: 'html-button-response-WH',
             stimulus: '<p></p>',
             choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
             prompt: "<p>How many pairs do you believe you correctly guessed?</p>"

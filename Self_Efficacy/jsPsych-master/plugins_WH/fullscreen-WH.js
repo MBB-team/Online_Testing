@@ -8,13 +8,13 @@
 */
 
 
-jsPsych.plugins.fullscreen = (function() {
+jsPsych.plugins["fullscreen-WH"] = (function() {
 
 
   var plugin = {};
 
   plugin.info = {
-    name: 'fullscreen',
+    name: 'fullscreen-WH',
     description: '',
     parameters: {
       fullscreen_mode: {
@@ -98,7 +98,7 @@ jsPsych.plugins.fullscreen = (function() {
 
       function endTrial() {
         display_element.innerHTML = '';
-        
+
         jsPsych.pluginAPI.setTimeout(function(){
 
           var trial_data = {
