@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2020 at 07:13 PM
+-- Generation Time: May 05, 2020 at 10:11 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -38,7 +38,8 @@ CREATE TABLE `tableQuest` (
   `trial_index` int(25) DEFAULT NULL,
   `time_elapsed` int(25) DEFAULT NULL,
   `internal_node_id` varchar(25) DEFAULT NULL,
-  `subject_id` int(7) DEFAULT NULL
+  `subject_id` int(7) DEFAULT NULL,
+  `date` varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 COMMIT;
 

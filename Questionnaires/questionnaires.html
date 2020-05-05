@@ -83,6 +83,8 @@
  // --------------------------------- BEGINING EXPERIMENT  ----------------------//
 
             var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
+            var today = new Date();
+            var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
             var exp_timeline = [];
 
@@ -98,7 +100,7 @@
                   timeline: exp_timeline,
                   show_progress_bar: true,
                   on_trial_finish: function() {
-                        jsPsych.data.addProperties({subject_id: subject_id});
+                        jsPsych.data.addProperties({subject_id: subject_id, date: date});
                         saveData(); // edit out if not on server
                   },
                   on_finish: function() {
