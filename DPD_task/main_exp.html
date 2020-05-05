@@ -55,7 +55,7 @@
   var fixation_time     = 1000;
 
   var nbInstr           = 7; // how many Instr Slides (12)
-  var nbScreens         = 5;
+  var nbScreens         = 6;
   //var debug             = false; // if true, skips details, instructions and practice
 
   // --------------------------------- INITIALISATION  ---------------------------//
@@ -133,11 +133,14 @@
         pages: instrImg_html,
       };
 
-      var training_screen = {
+      var training_dec_screen = {
           type: 'instructions',
           pages:[screensImg_html[0]]
         };
-
+        var training_pred_screen = {
+            type: 'instructions',
+            pages:[screensImg_html[5]]
+          };
       var end_training_screen  = {
           type: 'instructions',
           pages:[screensImg_html[1]]
@@ -504,8 +507,9 @@
      var timeline = [];
      timeline.push(firstFullscreen);
      timeline.push(instructions);
-     timeline.push(training_screen);
+     timeline.push(training_dec_screen);
      timeline.push(test_procedure_training_dec);
+     timeline.push(training_pred_screen);
      timeline.push(test_procedure_training_pred);
      timeline.push(end_training_screen);
      timeline.push(decision_screen);
