@@ -1,11 +1,8 @@
 function quest() {
 
-
-	//EMPTY ARRAY FOR TIMELINE OF QUESTIONNAIRES
 	var qns = [];
 
 	//INSTRUCTIONS PLUGIN
-
 	var  begin_qns = {
 		type: 'html-keyboard-response',
 		stimulus: "<H3> <p> Questionnaires </p> </H3>" +
@@ -14,10 +11,7 @@ function quest() {
 		"<p> Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \351prouvez, qu'une r\351ponse longuement m\351dit\351e." +
 		"<p> <br> <br> Appuyez sur la barre d'espace pour continuer </p>",
 		choices: [32],
-		data: {
-			test_part: 'questinstruction',
-
-		}
+		data: {test_part: 'questinstruction'}
 	};
 
 	//APATHY PLUGIN
@@ -41,28 +35,26 @@ function quest() {
 		{prompt: "14) Si vous avez bien lu cette question, r\351pondez 'un peu' ", options: apathy_scale, required:true, horizontal: true},
 		{prompt: "15) Vous-considereriez-vous comme apathique?", options: apathy_scale, required:true, horizontal: true}],
 		preamble: ["Au cours des quatre semaines qui viennent de s'\351couler et actuellement"],
-		data:{ test_part: 'apathy',
-		trial_type: 'quest',
-		},
+		data:{ test_part: 'apathy', trial_type: 'quest'},
 
 	};
 
 
-	var anx1 = ["la plupart du temps",  "souvent", "de temps en temps",  "jamais"];
-	var anx2 = ["oui, tr\350s nettement",  "oui, mais ce n'est pas grave", "un peu, mais cela ne m'inqui\350te pas",  "pas du tout"];
-	var anx3 = ["tr\350s souvent",  "assez souvent", "occasionnellement",  "tr\350s occasionnellement"];
-	var anx4 = ["oui, quoi qu'il arrive",  "oui, en g\351n\351ral", "rarement",  "jamais"];
-	var anx5 = ["jamais",  "parfois", "assez souvent",  "tr\350s souvent"];
-	var anx6 = ["oui, c'est tout \340 fait le cas",  "un peu", "pas tellement",  "pas du tout"];
-	var anx7 = ["vraiment tr\350s souvent",  "assez souvent", "pas tr\350s souvent",  "jamais"];
+	var anx1 = ["La plupart du temps",  "Souvent", "De temps en temps",  "Jamais"];
+	var anx2 = ["Oui, tr\350s nettement",  "Oui, mais ce n'est pas grave", "Un peu, mais cela ne m'inqui\350te pas",  "Pas du tout"];
+	var anx3 = ["Tr\350s souvent",  "Assez souvent", "Occasionnellement",  "Tr\350s occasionnellement"];
+	var anx4 = ["Oui, quoi qu'il arrive",  "Oui, en g\351n\351ral", "Rarement",  "Jamais"];
+	var anx5 = ["Jamais",  "Parfois", "Assez souvent",  "Tr\350s souvent"];
+	var anx6 = ["Oui, c'est tout \340 fait le cas",  "Un peu", "pas tellement",  "Pas du tout"];
+	var anx7 = ["Vraiment tr\350s souvent",  "Assez souvent", "Pas tr\350s souvent",  "Jamais"];
 
-	var dep1 = ["oui, tout autant",  "pas autant", "un peu seulement",  "presque plus"];
-	var dep2 = ["autant que par le pass\351",  "plus autant qu'avant", "vraimen moins qu'avant",  "plus du tout"];
-	var dep3 = ["jamais",  "rarement", "assez souvent",  "la plupart du temps"];
-	var dep4 = ["presque toujours",  "tr\350s souvent", "parfois",  "jamais"];
-	var dep5 = ["plus du tout",  "je n'y accorde pas autant d'attention que je le devrais", "il se peut que je n'y fasse plus autant attention",  "j'y pr\352te autant d'attention que par le pass\351"];
-	var dep6 = ["autant qu'auparavant",  "un peu moins qu'avant", "bien moins qu'avant",  "presque jamais"];
-	var dep7 = ["souvent",  "parfois", "rarement",  "tr\350s rarement"];
+	var dep1 = ["Oui, tout autant",  "Pas autant", "Un peu seulement",  "Presque plus"];
+	var dep2 = ["Autant que par le pass\351",  "Plus autant qu'avant", "Vraiment moins qu'avant",  "Plus du tout"];
+	var dep3 = ["Jamais",  "Rarement", "Assez souvent",  "La plupart du temps"];
+	var dep4 = ["Presque toujours",  "Tr\350s souvent", "Parfois",  "Jamais"];
+	var dep5 = ["Plus du tout",  "Je n'y accorde pas autant d'attention que je le devrais", "Il se peut que je n'y fasse plus autant attention",  "J'y pr\352te autant d'attention que par le pass\351"];
+	var dep6 = ["Autant qu'auparavant",  "Un peu moins qu'avant", "Bien moins qu'avant",  "Presque jamais"];
+	var dep7 = ["Souvent",  "Parfois", "Rarement",  "Tr\350s rarement"];
 
 
 	var hads = {
@@ -83,10 +75,7 @@ function quest() {
 		{prompt: "14) Je me r\351jouis d'avance \340 l'id\351e de faire certaines choses: ", options: dep6, required:true},
 		{prompt: "15) Je peux prendres plaisir \340 un bon livre ou \340 une bonne \351mission radio ou de t\351l\351vision: ", options: dep7, required:true}],
 		preamble: ["Dans la s\351rie de questions ci-dessous, cochez la r\351ponse qui exprime le mieux ce que vous avez \351prouv\351  <br> au cours de la semaine qui vient de s'\351couler."],
-		data:{
-			test_part: 'hads',
-			trial_type: 'quest',
-		},
+		data:{test_part: 'hads',trial_type: 'quest'},
 	};
 
 
@@ -97,11 +86,7 @@ function quest() {
 		"<p> Merci du temps que vous consacrerez \340 y r\351pondre : il sera pr\351cieux pour mieux comprendre les effets psychologiques de cette p\351riode. </p>" +
 		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
 		choices: [32],
-		data: {
-			test_part: 'questinstruction',
-			trial_type: 'quest',
-
-		}
+		data: {test_part: 'questinstruction',trial_type: 'quest'}
 	};
 
 	var covid_stress1 = [0,1,2,3,4,5,6,7,8,9,10];
@@ -111,10 +96,7 @@ function quest() {
 		{prompt: "2) Niveau de stress li\351 \340 la vie personnelle :", options: covid_stress1, required:true, horizontal: true},
 		{prompt: "3) Niveau de stress en g\351n\351ral: ", options: covid_stress1, required:true, horizontal: true}],
 		preamble: ["Sur une \351chelle allant de 0 (absence totale de stress) \340 10 (stress maximal imaginable) <br> quel est votre niveau de stress concernant ces 3 diff\351rents domaines  <br> depuis le d\351but de la p\351riode de confinement ?"],
-		data:{
-			test_part: 'covid_stress',
-			trial_type: 'quest',
-		},
+		data:{ test_part: 'covid_stress', trial_type: 'quest'},
 	};
 
 	var confinement1 = ["Compl\351tement d'accord","Assez d'accord","Ni d'accord, ni par d'accord","Plut\364t en d\351saccord","Compl\350tement en d\351saccord"];
@@ -134,9 +116,7 @@ function quest() {
 		{prompt: "6) Est-ce que le manque d'acc\350s aux mat\351riels de protections (masques, gels hydroalcooliques) vous pr\351occupe ? ", options: confinement5, required:true},
 		{prompt: "7) Est-ce que l'acc\350s aux produits de premi\350re n\351cessit\351 vous pr\351occupe actuellement ? ", options: confinement6, required:true}],
 		preamble: [""],
-		data:{
-			test_part: 'confinement',
-			trial_type: 'quest', },
+		data:{test_part: 'confinement', trial_type: 'quest', },
 
 	};
 
@@ -146,10 +126,8 @@ function quest() {
 			{prompt: "Combien de personnes partagent votre logement actuellement (vous inclus) ?", rows: 3, columns: 40, required:true},
 			{prompt: "Des membres de votre famille habitent-ils actuellement avec vous, en dehors de votre/vos enfant(s) ? (Oui / Non)", rows: 3, columns: 40, required:true},
 			{prompt: "Combien de personnes vivent avec vous en dehors de vos enfants ?", rows: 3, columns: 40, required:true}],
-		data:{
-			test_part: 'covid_people',
-			trial_type: 'quest', },
-		};
+		data:{test_part: 'covid_people', trial_type: 'quest'},
+	};
 
 	var situation1 = ["Oui, je suis en t\351l\351travail","Oui, je travaille \340 l'ext\351rieur de mon domicile exclusivement ","Oui, je travaille en partie en t\351l\351travail et sur mon site de travail","Non, je suis en ch\364mage partiel","Non, je suis en arr\352t maladie", "Non, je suis en cong\351s ou en arr\352t pour garde d'enfant(s)","Non, je suis en recherche d'emploi"];
 	var situation2 = ["Moins importante qu'avant le confinement","Pareille qu'avant le confinement","Plus importante qu'avant le confinement","Tr\350s variable et d'\351volution impr\351visible"];
@@ -162,10 +140,7 @@ function quest() {
 		{prompt: "3) La p\351riode de confinement va-t-elle avoir des r\351percussions financi\350res sur votre budget ?  ", options: situation3, required:true},
 		{prompt: "4) Cela risque-t-il de vous mettre en situation de pr\351carit\351 ?  ", options: situation3, required:true}],
 		preamble: [""],
-		data:{
-			test_part: 'covid_situation',
-			trial_type: 'quest', },
-
+		data:{test_part: 'covid_situation',trial_type: 'quest'},
 	};
 
 	var difficulty1 = ["Maintenir un rythme veille /sommeil satisfaisant (dormir \340 des horaires r\351guliers...)","Vous endormir ","Vous sentir repos\351","Manger au moins 2 repas par jour ", "Ne pas grignoter davantage qu'\340 votre habitude ", "Etablir de nouvelles routines", "Conserver des relations sereines avec mes proches", "Aucune difficult\351 particuli\350re"];
@@ -173,12 +148,8 @@ function quest() {
 	var covid_difficulty = {
 		type: 'survey-multi-select',
 		questions:  [{prompt: "Actuellement, avez-vous des difficult\351s pour : ", options: difficulty1, required:true}],
-		//preamble: ["Actuellement, \340 quelle fr\351quence avez-vous des interactions sociales avec votre famille ou des amis qui ne sont pas confin\351s avec vous ?"],
-		data:{
-			test_part: 'covid_difficulty',
-			trial_type: 'quest', },
-
-		};
+		data:{test_part: 'covid_difficulty', trial_type: 'quest'},
+	};
 
 	var interaction1 = ["Moins d'une fois par semaine","Une fois par semaine","Plusieurs fois par semaine","Tous les jours"];
 
@@ -187,27 +158,31 @@ function quest() {
 		questions:  [{prompt: "1) Directement en face \340 face : ", options: interaction1, required:true},
 		{prompt: "2) Au t\351l\351phone ou sur les r\351seaux sociaux : ", options: interaction1, required:true}],
 		preamble: ["Actuellement, \340 quelle fr\351quence avez-vous des interactions sociales avec votre famille  <br> ou des amis qui ne sont pas confin\351s avec vous ?"],
-		data:{
-			test_part: 'covid_interaction',
-			trial_type: 'quest', },
-
-		};
+		data:{test_part: 'covid_interaction', trial_type: 'quest'},
+	};
 
 
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
+	qns.push(fullscreenExp);
 
 	var questlist 		= [apathy, hads, covid_qns];
 	var shufflequestlist  	= jsPsych.randomization.shuffle(questlist);
 
 	for(var i = 0; i < shufflequestlist.length; i++){
 		qns.push(shufflequestlist[i]);
+		qns.push(fullscreenExp);
 		if (shufflequestlist[i] == covid_qns){
 			qns.push(covid_stress);
+			qns.push(fullscreenExp);
 			qns.push(confinement);
+			qns.push(fullscreenExp);
 			qns.push(covid_people);
+			qns.push(fullscreenExp);
 			qns.push(covid_situation);
+			qns.push(fullscreenExp);
 			qns.push(covid_difficulty);
+			qns.push(fullscreenExp);
 			qns.push(covid_interaction);
 		}
 	};
