@@ -1,0 +1,508 @@
+<!-- DPD TASK - Task to evaluate the Recognition and Alignment of Attitudes and Biases.
+      Experiment online using JavaScript and jsPsych Library
+            - Author: Cynthia Cabañas (cynthia.cabanas@gmail.com)
+            - Creation date: 24 April 2020
+            - Last update: 5 May 2020
+====================================================================================
+            Data Output (as in MySQL)
+                  - rt (double)
+                  - stimulus (varchar(25))
+                  - responses: for the questions (varchar(25))
+                  - key_press: [79,78] for oui [o] and non [n] (int(3))
+                  - test_part (varchar(25))
+                  - blockNb (int(3))
+                  - trialNb (int(3))
+                  - condiEmoBlock: 1 = DC, 2 == BC (int(3))
+                  - condiEmoTrial: 1 = DC_male, 2 = DC_female, 3 = CC_male, 4 = CC_female, 5 = BC_male , 6 = BC_female (int(3))
+                  - condiRwd: 1 = Small rwd, 2 = Large rwd (int(3))
+                  - posCritDist: between 4 and 8 included (int(3))
+                  - distractor (int(3))
+                  - posTarget: either 1 or 3 images after the distractor (int(3))
+                  - target (int(3))
+                  - trial_type (varchar(25))
+                  - trial_index (int(25))
+                  - time_elapsed (int(25))
+                  - internal_node_id (varchar(25))
+                  - subject_id (int(7))
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> DPD task </title>
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
+    <script src="jspsych-6.1.0/plugins_CC/html+image-button-response-CC.js"></script>
+    <script src="jspsych-6.1.0/plugins_CC/fullscreen-CC.js"></script>
+    <script src="jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    <script  src = "getBrowserInfo.js"></script>
+    <script  src = "mat_conditions.js"></script>
+    <script  src = "random_name.js"></script>
+  </head>
+  <body></body>
+  <script>
+
+  // --------------------------------- PARAMETERS --------------------------------//
+
+  var setSize           = 15; // 15
+  var imageDuration     = 70; // in ms
+  var fixation_time     = 1000;
+
+  var nbInstr           = 7; // how many Instr Slides (12)
+  var debug             = false; // if true, skips details, instructions and practice
+
+  // --------------------------------- INITIALISATION  ---------------------------//
+
+      // Checks if the browser is Chrome or Firefox (best compatibility)
+      var browserInfo = getBrowserInfo();
+
+      if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
+            var wrong_browser = {
+                  type: 'html-keyboard-response',
+                  stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
+                  +'<p> Please re-open the experiment in one of these browsers. </p>',
+            };
+            jsPsych.init({
+                  timeline: [wrong_browser],
+            });
+      }
+
+      else { // If browser is ok, lead on to the experimentIF BROWSER IS OK, LEAD ON TO THE EXPERIMENT
+
+            // General function that is needed
+            function randi(min, max) { // min and max included (acts like randi of Matlab)
+                  return Math.floor(Math.random() * (max - min + 1) + min);
+            }
+
+            // Create "Variable/function" that makes sure you remain in FullScreen
+            var firstFullscreen =	{
+                  type: 'fullscreen',
+                  message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
+                  button_label: 'Put in Fullscreen',
+                  delay_after: 300,
+                  check_fullscreen: true,
+                  data: {
+                        test_part: 'firstFullscreen',
+                  },
+            };
+
+            var fullscreenExp = {
+                  type: 'fullscreen',
+                  message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
+                  fullscreen_mode: false,
+                  data: {
+                        test_part: 'fullscreenExp',
+                  },
+            };
+
+// ------------------------------- PRE-LOAD MEDIA ----------------------------//
+            // Instructions
+            var instrImg = [];
+            var instrImg_html = [];
+            for (var t=1; t <= nbInstr; t++){
+              instrImg[t-1] = 'stimuli/instructions/instructionsDPD-'+t+'.png'; // pre-load all instructions
+              instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"></img>';
+            };
+
+// --------------------------------- BEGINING EXPERIMENT  --------------------//
+
+          var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
+          //console.log("The subject ID is "+subject_id)
+          // if(debug == false){
+          //   // var firstInstr    = instr([0,1,7,8,2,9]);
+          //   // var training      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
+          //   // for(var i = 0; i < practice.length; i++){
+          //   //       exp_timeline.push(practice[i]);
+          //   //};
+          //
+          // } // end debug
+
+    /* test trials */
+    var test_stimuli = mat_conditions()
+
+      var instructions = {
+        type: 'instructions',
+        pages: instrImg_html,
+      };
+
+      for (var t=8; t <= 12; t++){
+        otherinstrImg[t-1] = 'stimuli/instructions/instructionsDPD-'+t+'.png'; // pre-load all instructions
+        otherinstrImg_html[t-1] = '<img src="'+otherinstrImg[t-1]+'"></img>';
+      };
+      var training_screen = {
+          type: 'instructions',
+          pages:'<img src="'+otherinstrImg[8]+'"></img>',
+        };
+
+      var end_training_screen  = {
+          type: 'instructions',
+          pages:'<img src="'+otherinstrImg[9]+'"></img>',
+        };
+
+      var decision_screen      = {
+          type: 'instructions',
+          pages:'<img src="'+otherinstrImg[10]+'"></img>',
+        }
+      var prediction_screen    = {
+          type: 'instructions',
+          pages:'<img src="'+otherinstrImg[11]+'"></img>',
+        };
+      var debrief_message      = {
+          type: 'instructions',
+          pages:'<img src="'+otherinstrImg[12]+'"></img>',
+        }
+
+    var fixation = {
+      type: 'html-keyboard-response',
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: jsPsych.NO_KEYS,
+      trial_duration:500,
+      data: {test_part: 'fixation'} //tag that indicates which part of the experiment
+    }
+      var test_decision = {
+        type: "html+image-button-response",
+        phase: 'Decision',
+        prompt: "Vous recevez une somme initiale de 50 euros. Prenez une décision!",
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['Je choisis cette option!', 'Je choisis cette option!'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data') // tag with test_part and correct_response
+        }
+
+      var list_random_names =  random_name();
+      var trial_index_pred1 = 0;
+      var test_prediction_1 = {
+        type: "html+image-button-response",
+        dummy: 1,
+        phase: 'Prediction',
+        prompt:'<div>DUMMY1'+list_random_names[0] +' receives 50 virtual euros. What will he /she choose?</div>',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
+        on_finish: function(data){
+          //adds a "correct" property to data
+          //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
+         data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy1;
+         return trial_index_pred1 += 1
+        }
+      }
+      var trial_index_pred2 = 0;
+      var test_prediction_2 = {
+        type: "html+image-button-response",
+        phase: 'Prediction',
+        dummy: 2,
+        prompt:'<div>DUMMY2'+list_random_names[1]+' receives 50 virtual euros. What will he /she choose?</div>',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
+        on_finish: function(data){
+          //adds a "correct" property to data
+          //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
+          data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy2;
+          return trial_index_pred2 += 1
+        }
+      }
+      var trial_index_pred3 = 0;
+      var test_prediction_3 = {
+        type: "html+image-button-response",
+        phase: 'Prediction',
+        dummy: 3,
+        prompt:'<div> DUMMY3'+list_random_names[2]+' receives 50 virtual euros. What will he /she choose?</div>',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
+        on_finish: function(data){
+          //adds a "correct" property to data
+          //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
+          return trial_index_pred3 += 1
+          data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy3;
+        }
+      }
+      var trial_index_pred4 = 0;
+      var test_prediction_4 = {
+        type: "html+image-button-response",
+        phase: 'Prediction',
+        dummy: 4,
+        prompt:'<div>DUMMY4'+list_random_names[3]+' receives 50 virtual euros. What will he /she choose?</div>',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
+        on_finish: function(data){
+          //adds a "correct" property to data
+          //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
+          return trial_index_pred4 += 1
+          data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy4;
+        }
+      }
+      var feedback_CR = {
+      type: 'html-keyboard-response',
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 1500,
+      stimulus: function(){
+        var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
+        if(last_trial_correct){
+          return "<p>Bien joué! Il / Elle a effectivement choisi cette option!</p>";
+          correct_text: "<p class='prompt'>Correct! This person is a %ANS%.</p>",
+          console.log('Correct feedback')
+        } else {
+          return "<p>Désolé, il / elle a choisi l'autre option.</p>"
+        }
+      }
+    }
+
+    var feedback_noCR = {
+    type: 'html-keyboard-response',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 1500,
+    stimulus: function(){
+      var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+      if(last_trial_correct){
+        return "<p>Bien joué! Il / Elle a effectivement choisi cette option!</p>";
+        correct_text: "<p class='prompt'>Correct! This person is a %ANS%.</p>",
+        console.log('Correct feedback')
+      } else {
+        return "<p>Désolé, il / elle a choisi l'autre option.</p>"
+      }
+    }
+  }
+  var confidence_slider = {
+    type: 'html-slider-response',
+    stimulus: 'A quel point êtes-vous confiant(e) en votre prédiction?',
+    start: Math.floor(Math.random()*100), // to start at a random place everytime
+    labels: ["<p>Pas du tout !</p>"+"<p>(Je choisi au hazard)</p>","<p>Complètement</p>"+"<p>(Je suis 100% sûr(e))</p>"],
+    slider_width: 1000,
+    button_label: 'Continuer',
+    require_movement: true,
+  }
+
+    var test_procedure_decision = {
+      timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
+      timeline_variables: test_stimuli// add in a different JS
+    }
+
+    var if_confidence_pred1= {
+        timeline: [confidence_slider],
+        conditional_function: function(){
+          if( trial_index_pred1 == 2 || trial_index_pred1 == 4 || trial_index_pred1 == 6 ) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    var if_confidence_pred2= {
+        timeline: [confidence_slider],
+        conditional_function: function(){
+          if( trial_index_pred2 == 2 || trial_index_pred2 == 4 || trial_index_pred2 == 6 ) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    var if_confidence_pred3= {
+        timeline: [confidence_slider],
+        conditional_function: function(){
+          if( trial_index_pred3 == 2 || trial_index_pred3 == 4 || trial_index_pred3 == 6 ) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    var if_confidence_pred4= {
+        timeline: [confidence_slider],
+        conditional_function: function(){
+            if( trial_index_pred4 == 2 || trial_index_pred4 == 4 || trial_index_pred4 == 6 ) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    var if_feedback_CR_pred1= {
+        timeline: [feedback_CR],
+        conditional_function: function(){
+            if(trial_index_pred1 == 2 || trial_index_pred1 == 4 || trial_index_pred1 == 6) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    var if_feedback_noCR_pred1= {
+        timeline: [feedback_noCR],
+        conditional_function: function(){
+            if(trial_index_pred1 == 2 || trial_index_pred1 == 4 || trial_index_pred1 == 6) { //Confidence ratings every 4 trials
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    var if_feedback_CR_pred2= {
+        timeline: [feedback_CR],
+        conditional_function: function(){
+            if(trial_index_pred2 == 2 || trial_index_pred2 == 4 || trial_index_pred2 == 6) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    var if_feedback_noCR_pred2= {
+        timeline: [feedback_noCR],
+        conditional_function: function(){
+            if(trial_index_pred2 == 2 || trial_index_pred2 == 4 || trial_index_pred2 == 6) { //Confidence ratings every 4 trials
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    var if_feedback_CR_pred3= {
+        timeline: [feedback_CR],
+        conditional_function: function(){
+            if(trial_index_pred3 == 2 || trial_index_pred3 == 4 || trial_index_pred3 == 6) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    var if_feedback_noCR_pred3= {
+        timeline: [feedback_noCR],
+        conditional_function: function(){
+            if(trial_index_pred3 == 2 || trial_index_pred3 == 4 || trial_index_pred3 == 6) { //Confidence ratings every 4 trials
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    var if_feedback_CR_pred4= {
+        timeline: [feedback_CR],
+        conditional_function: function(){
+            if(trial_index_pred4 == 2 || trial_index_pred4 == 4 || trial_index_pred4 == 6) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    var if_feedback_noCR_pred4= {
+        timeline: [feedback_noCR],
+        conditional_function: function(){
+            if(trial_index_pred4 == 2 || trial_index_pred4 == 4 || trial_index_pred4 == 6) { //Confidence ratings every 4 trials
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+    var test_procedure_prediction_1 = {
+      timeline: [setCR, fixation, test_prediction_1, if_confidence_pred1, if_feedback_CR_pred1, if_feedback_noCR_pred1],
+      timeline_variables: test_stimuli,// add in a different JS
+      sample: {
+        type: 'custom',
+        fn: function my_order(t){
+            //var myorder = [1,1,1]
+            var myorder = [161,57,118,4,78,89,23,135,166,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+            return myorder;
+          }
+        }
+      }
+
+    var test_procedure_prediction_2 = {
+      timeline: [fixation, test_prediction_2, if_confidence_pred2, if_feedback_CR_pred2, if_feedback_noCR_pred2],
+      timeline_variables: test_stimuli,// add in a different JS
+      sample: {
+        type: 'custom',
+        fn: function my_order(t){
+          var myorder = [161,57,118,4,78,89,23,135,166,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+            return myorder;
+          }
+        }
+      }
+    var test_procedure_prediction_3 = {
+      timeline: [fixation, test_prediction_3, if_confidence_pred3, if_feedback_CR_pred3, if_feedback_noCR_pred3],
+      timeline_variables: test_stimuli,// add in a different JS
+      sample: {
+        type: 'custom',
+        fn: function my_order(t){
+          var myorder = [161,57,118,4,78,89,23,135,166,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+            return myorder;
+          }
+        }
+      }
+    var test_procedure_prediction_4 = {
+      timeline: [fixation, test_prediction_4, if_confidence_pred4, if_feedback_CR_pred4, if_feedback_noCR_pred4],
+      timeline_variables: test_stimuli,// add in a different JS
+      sample: {
+        type: 'custom',
+        fn: function my_order(t){
+          var myorder = [161,57,118,4,78,89,23,135,166,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+            return myorder;
+          }
+        }
+      }
+
+    var prediction_phase = [
+      test_procedure_prediction_1, test_procedure_prediction_2, test_procedure_prediction_3, test_procedure_prediction_4
+    ];
+     shuffled_prediction_phase = jsPsych.randomization.repeat(prediction_phase, 1);
+
+
+     /* create timeline */
+     var timeline = [];
+     timeline.push(firstFullscreen);
+     timeline.push(instructions);
+     timeline.push(training_screen)
+     timeline.push(training)
+     timeline.push(end_training_screen)
+     timeline.push(decision_screen)
+     timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
+     timeline.push(prediction_screen)
+     timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
+     timeline.push(decision_screen)
+     timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
+     timeline.push(prediction_screen)
+     timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
+     timeline.push(decision_screen)
+     timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
+     timeline.push(prediction_screen)
+     timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
+     timeline.push(decision_screen)
+     timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
+     timeline.push(prediction_screen)
+     timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
+     timeline.push(decision_screen)
+     timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+     timeline.push(debrief_message)
+
+     // Execute the experiment
+     jsPsych.init({
+       timeline: timeline,
+       show_progress_bar: true,
+       // on_trial_finish: function() {
+       //       jsPsych.data.addProperties({subject_id: subject_id});
+       //       saveData(); // edit out if not on server
+       // },
+       on_finish: function() {
+         jsPsych.data.displayData();
+         document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+         }
+       });
+
+
+  </script>
+  </html>
