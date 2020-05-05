@@ -142,7 +142,29 @@ Per trial:
       console.log('Loaded '+percentcomplete+'% of images');
     }
 
-    // ------------------------------ BEGIN EXPERIMENT --------------------------- //
+// --------------------------------- SAVING DATA  ----------------------------//
+
+    //CODE TO SAVE FULLDATA AT THE END
+
+              function saveData() {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'write_data_SE.php'); // change it to point to php script.
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onload = function() {
+                          if(xhr.status == 200){
+                               console.log(xhr)
+                               var response = JSON.parse(xhr.responseText); // $.parseJSON
+                         } if(response.success){ console.log("Data saved");
+                         } else {console.log("Data not saved");}
+                   };
+                   xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
+             }
+
+// ------------------------------ BEGIN EXPERIMENT --------------------------- //
+
+    var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
+    var today = new Date();
+    var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
     var exp_timeline = [];
 
@@ -176,8 +198,11 @@ Per trial:
       jsPsych.init({
         timeline: exp_timeline,
         show_progress_bar: true,
+        on_trial_finish: function() {
+             jsPsych.data.addProperties({subject_id: subject_id, date: date});
+             //saveData(); // edit out if not on server
+       },
         on_finish: function() {
-          //jsPsych.data.localSave('emo' + subject_id + 'local.csv', 'csv');
           jsPsych.data.displayData(); // Disable once online, use to look at data while coding
           //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
         }

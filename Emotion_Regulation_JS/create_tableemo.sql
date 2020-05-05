@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2020 at 02:52 PM
+-- Generation Time: May 05, 2020 at 10:18 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `tableemo` (
   `rt` double DEFAULT NULL,
-  `stimulus` varchar(25) DEFAULT NULL,
+  `stimulus` varchar(250) DEFAULT NULL,
   `responses` varchar(25) DEFAULT NULL,
   `key_press` int(3) DEFAULT NULL,
   `test_part` varchar(25) DEFAULT NULL,
@@ -47,7 +47,8 @@ CREATE TABLE `tableemo` (
   `trial_index` int(25) DEFAULT NULL,
   `time_elapsed` int(25) DEFAULT NULL,
   `internal_node_id` varchar(25) DEFAULT NULL,
-  `subject_id` int(7) NOT NULL
+  `subject_id` int(7) NOT NULL,
+  `date` varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 COMMIT;
 
