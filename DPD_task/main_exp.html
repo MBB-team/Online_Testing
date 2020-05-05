@@ -268,7 +268,7 @@
       var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
       if(last_trial_correct){
         return "<p>Bien joué! Il / Elle a effectivement choisi cette option!</p>";
-        correct_text: "<p class='prompt'>Correct! This person is a %ANS%.</p>",
+        correct_text: "<p class='prompt'>Correct!.</p>",
         console.log('Correct feedback')
       } else {
         return "<p>Désolé, il / elle a choisi l'autre option.</p>"
@@ -279,14 +279,14 @@
     type: 'html-slider-response',
     stimulus: 'A quel point êtes-vous confiant(e) en votre prédiction?',
     start: Math.floor(Math.random()*100), // to start at a random place everytime
-    labels: ["<p>Pas du tout !</p>"+"<p>(Je choisi au hazard)</p>","<p>Complètement</p>"+"<p>(Je suis 100% sûr(e))</p>"],
+    labels: ["<p>Pas du tout !</p>"+"<p>(Je choisis au hazard)</p>","<p>Complètement</p>"+"<p>(Je suis 100% sûr(e))</p>"],
     slider_width: 1000,
     button_label: 'Continuer',
     require_movement: true,
   }
 
   var test_procedure_training_dec = {
-    timeline: [fixation, test_decision, test_prediction_1],  // 32 trials (+2 catch trials)
+    timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
     timeline_variables: test_stimuli,// add in a different JS
     sample: {
       type: 'custom',
