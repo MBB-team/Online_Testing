@@ -2,12 +2,14 @@ function SE(nbBlocks, nbTrials){
 
   // INITIALISATION //
   var timelineTask  = [];
-  var trial_counter = 0;
-  var flip_counter  = 1;
-  var nCorrect      = 0;
-  var test_counter  = 0;
-  var correct_i     = [0,0,0,0,0,0,0,0];
-  var conf_counter  = 0;
+  var trial_counter = 0; // counting the number of trials
+  var flip_counter  = 1; // counting the number of flips on a trial
+  var nCorrect      = 0; // the number of correct responses given by the pts
+  var test_counter  = 0; // counter for looping through test trials during execution
+  var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
+  var clicked_i     = Array(8); // for indexing the location of the participants click
+  var target_i      = Array(8); // for indexing the location of the target image
+  var conf_counter  = 0; // counter for looping through confidence trials
   var nbTperB       = nbTrials/nbBlocks;
   var grid_dim = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
 
@@ -47,7 +49,7 @@ function SE(nbBlocks, nbTrials){
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>This is the beginning of trial <b>'+trial_n+'</b> of block <b><p>'+block_n+'</b>.</p></p><p>Your target score for this trial is <b>'+target_scores_all[trial_counter]+'.</b></p><p>When you are ready to start, click on the button.</p>',
+        stimulus: '<p>This is the beginning of trial <b>'+trial_n+'</b> of block <b><p>'+block_n+'</b>.</p></p><p>Your target score for this trial is <b>'+target_scores_all[trial_counter]+'</b>.</p><p>When you are ready to start, click on the button.</p>',
         choices: ['Start']
       }; // trial number
 
@@ -57,7 +59,7 @@ function SE(nbBlocks, nbTrials){
       var SE_conf = {
         type: 'SE-confidence-slider-WH',
         range: 30,
-        prompt: '<p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p>'
+        prompt: '<p>Target Score: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p>'
       };
 
       // PUSH TO TIMELINE //
@@ -143,19 +145,24 @@ function SE(nbBlocks, nbTrials){
               target_image: numbersImg[test_i],
               grid: grid_dim,
               grid_square_size: screen.height/6,
-              response_ends_trial: false,
-              trial_duration: time.responseSpeed,
+              response_ends_trial: true,
+              highlight: time.highlight,
               allow_nontarget_responses: true,
+              prompt: '<p><b>Click</b> on the location of the matching pair.</p>',
               pre_target_duration: 0,
               on_finish: function(data){
                 if(data.correct){
                   nCorrect++
                   correct_i[test_counter] = 1;
                 }
+                var clicked = [data.response_row, data.response_column];
+                clicked_i[test_counter] = clicked;
                 test_counter++
               }
 
             };
+
+            target_i[test_i] = target_location;
 
             // PUSH TO TIMELINE //
             timelineTask.push(fullscreenExp);
@@ -167,9 +174,8 @@ function SE(nbBlocks, nbTrials){
 
           var confidence = {
             type: 'html-button-response-WH',
-            stimulus: '<p></p>',
+            stimulus: '<p>How many pairs do you believe you correctly guessed?</p>',
             choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
-            prompt: "<p>How many pairs do you believe you correctly guessed?</p>"
           };
 
           // PUSH TO TIMELINE //
@@ -181,6 +187,8 @@ function SE(nbBlocks, nbTrials){
             type: 'animation-WH',
             frame_time: time.showFeedback,
             stimuli: grid_stimuli[trial_counter],
+            clicked: clicked_i,
+            target: target_i,
             choices: jsPsych.NO_KEYS,
             prompt: function(){
               var feedback_prompt = '<p>You got: <b>'+nCorrect+'/8!</b>';
@@ -188,10 +196,12 @@ function SE(nbBlocks, nbTrials){
             },
             feedback: true,
             correct_responses: function(){return correct_i},
-            on_finish: function(){
-              nCorrect = 0;
-              correct_i = [0,0,0,0,0,0,0,0];
-              test_counter = 0;
+            on_finish: function(){ // reset counters
+              nCorrect      = 0;
+              correct_i     = [0,0,0,0,0,0,0,0];
+              test_counter  = 0;
+              clicked_i     = Array(8);
+              target_i      = Array(8);
             }
 
           }

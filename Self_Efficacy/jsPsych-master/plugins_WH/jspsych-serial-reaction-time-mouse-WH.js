@@ -83,6 +83,12 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         default: null,
         description: 'Any content here will be displayed below the stimulus'
       },
+      highlight: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Highlight Time',
+        default: 500,
+        description: 'How long to highlight the response for'
+      },
     }
   }
 
@@ -99,6 +105,11 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     var stimulus = this.stimulus(trial.grid, trial.grid_square_size, trial.target_location, trial.target_image);
     display_element.innerHTML = stimulus;
 
+    //show prompt if there is one
+    if (trial.prompt !== null) {
+      display_element.innerHTML += trial.prompt;
+    }
+
 		if(trial.pre_target_duration <= 0){
 			showTarget();
 		} else {
@@ -106,11 +117,6 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 				showTarget();
 			}, trial.pre_target_duration);
 		}
-
-		//show prompt if there is one
-    if (trial.prompt !== null) {
-      display_element.innerHTML += trial.prompt;
-    }
 
 		function showTarget(){
       var resp_targets;
@@ -129,7 +135,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
           } else {
             if (response == 0) {
                var info = {}
-               e.currentTarget.style.outline = "5px solid yellow"
+               e.currentTarget.style.outline = "5px solid yellow";
+               e.currentTarget.setAttribute('clicked', '_1');
                info.row = e.currentTarget.getAttribute('data-row');
                info.column = e.currentTarget.getAttribute('data-column');
                info.rt = performance.now() - startTime;
@@ -182,7 +189,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       //display_element.querySelectorAll('.jspsych-serial-reaction-time-stimulus-cell').removeEventListener('mousedown', responseListener());
 
       if (trial.response_ends_trial) {
-        endTrial();
+        jsPsych.pluginAPI.setTimeout(function(){endTrial()}, trial.highlight);
       }
     };
 
@@ -196,7 +203,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         var classname = 'jspsych-serial-reaction-time-stimulus-cell';
 
         stimulus += "<div class='"+classname+"' id='jspsych-serial-reaction-time-stimulus-cell-"+i+"-"+j+"' "+
-          "data-row="+i+" data-column="+j+" "+
+          "data-row="+i+" data-column="+j+" clicked='_0' "+
           "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
 
         if(grid[i][j] == 1){

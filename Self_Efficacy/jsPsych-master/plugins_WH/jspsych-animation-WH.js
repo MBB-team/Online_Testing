@@ -1,18 +1,18 @@
 /**
- * jsPsych plugin for showing animations and recording keyboard responses
- * Josh de Leeuw
- *
- * MODIFIED by William Hopper
- *
- *
- * documentation: docs.jspsych.org
- */
+* jsPsych plugin for showing animations and recording keyboard responses
+* Josh de Leeuw
+*
+* MODIFIED by William Hopper
+*
+*
+* documentation: docs.jspsych.org
+*/
 
 jsPsych.plugins["animation-WH"] = (function() {
 
   var plugin = {};
 
-//  jsPsych.pluginAPI.registerPreload('animation', 'stimuli', 'image');
+  //  jsPsych.pluginAPI.registerPreload('animation', 'stimuli', 'image');
 
   plugin.info = {
     name: 'animation-WH',
@@ -68,7 +68,20 @@ jsPsych.plugins["animation-WH"] = (function() {
         array: true,
         default: null,
         description: 'Array indicating which responses were correct.'
-
+      },
+      clicked: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Location of click',
+        default: null,
+        array: true,
+        description: 'Grid indexes of where the participant responded.'
+      },
+      target: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Location of target',
+        default: null,
+        array: true,
+        description: 'Grid indexes of where the target was.'
       }
     }
   }
@@ -107,18 +120,14 @@ jsPsych.plugins["animation-WH"] = (function() {
 
       // if feedback trial, highlight correct responses
       if (trial.feedback){
-
-        targets = display_element.querySelectorAll("div[target = _1]");
-
+        var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.clicked[animate_frame][0]+'-'+trial.clicked[animate_frame][1])
+        var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[animate_frame][0]+'-'+trial.target[animate_frame][1])
         if(trial.correct_responses[animate_frame]){
-          targets[0].style.outline = "5px solid rgb(51, 204, 51)"
-          targets[1].style.outline = "5px solid rgb(51, 204, 51)"
-
+          square_clicked.style.outline = "5px solid rgb(51, 204, 51)";
         } else {
-          targets[0].style.outline = "5px solid rgb(255, 0, 0)"
-          targets[1].style.outline = "5px solid rgb(255, 0, 0)"
-
-          }
+          square_clicked.style.outline = "5px solid rgb(255, 0, 0)";
+        }
+        square_target.style.outline = "5px solid yellow";
       };
 
 

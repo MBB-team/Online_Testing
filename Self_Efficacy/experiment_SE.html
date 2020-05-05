@@ -53,11 +53,11 @@ Per trial:
                nbBlocks:       1};
 
   // Timings
-  const time = {flipSpeed:     10, // in ms so 1 sec
-                responseSpeed: 30,
-                SEconf:        10000,
-                highlight:     500,
-                showFeedback:  20,
+  const time = {flipSpeed:     100, // in ms so 1 sec
+                responseSpeed: 3000,
+                SEconf:        180000,
+                highlight:     50,
+                showFeedback:  2000,
                 rewatch:       3000};
 
   // instructions
@@ -165,8 +165,6 @@ Per trial:
 
     var exp_timeline = [];
 
-//    var instruction = instr([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]);
-
     if (cfg.debug == false) {
       jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, greySquare],
       function(){ startExperiment();},
@@ -181,11 +179,11 @@ Per trial:
       // Execute the experiment
       var instructions = {
         type: 'instructions-WH',
-        pages: instrImg_html,
+        pages: [instrImg_html[0]],
         show_clickable_nav: true
       };
 
-      //exp_timeline.push(instructions);
+      exp_timeline.push(instructions);
 
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
