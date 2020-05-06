@@ -174,8 +174,6 @@
         choices: ['Je choisis cette option!', 'Je choisis cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
         data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
-        on_finish: function(data){
-        }
       }
 
       var list_random_names =  random_name();
@@ -254,11 +252,15 @@
       stimulus: function(){
         var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
         if(last_trial_correct){
-          return "<p>Bien joué! Il / Elle a effectivement choisi cette option!</p>";
-          correct_text: "<p class='prompt'>Correct! This person is a %ANS%.</p>",
-          console.log('Correct feedback')
+          var correct = "<p> Bien joué! Il / Elle a effectivement choisi cette option!</p>"
+          var color_correct = correct.fontcolor("green");
+          color_correct = color_correct.bold(); // makes text bold
+          return color_correct;
         } else {
-          return "<p>Désolé, il / elle a choisi l'autre option.</p>"
+          incorrect = "<p>Désolé, il / elle a choisi l'autre option</p>"
+          var color_incorrect = incorrect.fontcolor("red");
+          color_incorrect = color_incorrect.bold(); // makes text bold
+          return color_incorrect;
         }
       }
     }
@@ -270,11 +272,15 @@
     stimulus: function(){
       var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
       if(last_trial_correct){
-        return "<p>Bien joué! Il / Elle a effectivement choisi cette option!</p>";
-        correct_text: "<p class='prompt'>Correct!.</p>",
-        console.log('Correct feedback')
+        var correct = "<p> Bien joué! Il / Elle a effectivement choisi cette option!</p>"
+        var color_correct = correct.fontcolor("green");
+        color_correct = color_correct.bold(); // makes text bold
+        return color_correct;
       } else {
-        return "<p>Désolé, il / elle a choisi l'autre option.</p>"
+        incorrect = "<p>Désolé, il / elle a choisi l'autre option</p>"
+        var color_incorrect = incorrect.fontcolor("red");
+        color_incorrect = color_incorrect.bold(); // makes text bold
+        return color_incorrect;
       }
     }
   }
