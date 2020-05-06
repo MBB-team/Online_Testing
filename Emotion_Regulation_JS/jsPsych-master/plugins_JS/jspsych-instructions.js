@@ -74,7 +74,7 @@ jsPsych.plugins.instructions = (function() {
 
     var start_time = performance.now();
 
-    var button_label_previous = "< Page précédente"
+    var button_label_previous = "< Page Précédente"
 
     var button_label_next = "Page Suivante >"
 

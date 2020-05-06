@@ -54,8 +54,8 @@
 
     var nbBlocksPrac      = 2; // 2
     var nbTrialsPrac      = 6; // 6
-    var nbBlocksExp       = 10; // 12
-    var nbTrialsExp       = 30; // 18
+    var nbBlocksExp       = 4; // 12
+    var nbTrialsExp       = 6; // 24
 
     var setSize           = 15; // 15
     var imageDuration     = 70; // in ms
@@ -174,10 +174,10 @@
             type: 'instructions',
             pages: ['<img src="'+instrImg[0]+'" id="image-instructions" style="height:'+screen.height/1.5+'px" ></img>',
             '<img src="'+instrImg[1]+'" id="image-instructions2" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[7]+'" id="image-instructions3" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[8]+'" id="image-instructions4" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[2]+'" id="image-instructions5" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[9]+'" id="image-instructions6" style="height:'+screen.height/1.5+'px" ></img>',],
+            '<img src="'+instrImg[2]+'" id="image-instructions3" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[3]+'" id="image-instructions4" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[4]+'" id="image-instructions5" style="height:'+screen.height/1.5+'px" ></img>',
+            '<img src="'+instrImg[5]+'" id="image-instructions6" style="height:'+screen.height/1.5+'px" ></img>',],
             show_clickable_nav: true,
             show_page_number: true,
             on_start: function(){
@@ -241,7 +241,7 @@
                         exp_timeline.push(practice[i]);
                   };
 
-                  var endPract      = instr([10]);
+                  var endPract      = instr([6]);
                   for(var i = 0; i < endPract.length; i++){
                          exp_timeline.push(endPract[i]);
                   };

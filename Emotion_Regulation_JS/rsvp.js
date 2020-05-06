@@ -7,7 +7,6 @@ function rsvp(nbBlocks, nbTrials, training)
       var timelineTask = [];
 
       [conditionRwd, condition] = createCondiMatrix(nbBlocks, nbTrials, training);
-       //console.log(condition)
 
       /////////////////////////////////
       ////// Start of the Block //////
@@ -18,18 +17,18 @@ function rsvp(nbBlocks, nbTrials, training)
             // Put here the parameters that need to be randomised every block
             var instrCondiImg = "";
             if (conditionRwd[block][1] == 1 ){
-                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[3]}
-                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[4]}
+                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[7]} // DC Small Rwd
+                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[8]} // DC Large Rwd
             }
             else if (conditionRwd[block][1] == 2){
-                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[5]}
-                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[6]}
+                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[9]} // BC Small Rwd
+                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[10]} // BC Small Rwd
             };
 
             var instrCondi = {
                   type: "image-keyboard-response",
                   stimulus: instrCondiImg,
-                  stimulus_height: screen.height/2, // Size of the instruction depending on the size of the participants' screen
+                  stimulus_height: screen.height/1.5, // Size of the instruction depending on the size of the participants' screen
                   choices: [32],
                   data: {
                         test_part: "instrCondi",
@@ -161,7 +160,7 @@ function rsvp(nbBlocks, nbTrials, training)
                         condition: conditionRwd[block][1], // 1 = DC, 2 = BC
                         reward: conditionRwd[block][0], // 1 = small rwd, 2 = large rwd
                         training: training,
-                        choices: [79,78], //[37, 39], left and right arrows
+                        choices: [78, 79], //[37, 39], left and right arrows
                         response_ends_trial: true,
                         //post_trial_gap : 1000,
                         data: {
