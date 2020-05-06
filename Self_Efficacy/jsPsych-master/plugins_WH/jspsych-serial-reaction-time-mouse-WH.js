@@ -164,11 +164,13 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       var trial_data = {
         "rt": response.rt,
 				"grid": JSON.stringify(trial.grid),
-				"target_location": JSON.stringify(trial.target_location),
-        "correct_location": JSON.stringify(trial.correct_location),
+				"target_row": trial.target_location[0],
+        "target_col": trial.target_location[1],
+        "correct_row": trial.correct_location[0],
+        "correct_col": trial.correct_location[1],
         "target_image": trial.target_image,
         "response_row": response.row,
-        "response_column": response.column,
+        "response_col": response.column,
         "correct": response.row == trial.correct_location[0] && response.column == trial.correct_location[1]
       };
 

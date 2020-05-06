@@ -166,14 +166,14 @@ function SE(nbBlocks, nbTrials){
                   nCorrect++
                   correct_i[test_counter] = 1;
                 }
-                var clicked = [data.response_row, data.response_column];
+                var clicked = [data.response_row, data.response_col];
+                var target =  [data.target_row,   data.target_col];
                 clicked_i[test_counter] = clicked;
+                target_i[test_counter]  = target;
                 test_counter++
               }
-
             };
 
-            target_i[test_i] = target_location;
 
             // PUSH TO TIMELINE //
             timelineTask.push(fullscreenExp);
@@ -208,11 +208,15 @@ function SE(nbBlocks, nbTrials){
             feedback: true,
             correct_responses: function(){return correct_i},
             on_finish: function(){ // reset counters
-              nCorrect      = 0;
-              correct_i     = [0,0,0,0,0,0,0,0];
-              test_counter  = 0;
-              clicked_i     = Array(8);
-              target_i      = Array(8);
+              nCorrect       = 0;
+              correct_i      = [0,0,0,0,0,0,0,0];
+              test_counter   = 0;
+              clicked_i      = Array(8);
+              target_i       = Array(8);
+
+            },
+            on_start: function(){
+              console.log(target_i)
             }
 
           }

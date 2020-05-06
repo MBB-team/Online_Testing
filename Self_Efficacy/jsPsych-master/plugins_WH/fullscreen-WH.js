@@ -102,8 +102,19 @@ jsPsych.plugins["fullscreen-WH"] = (function() {
         jsPsych.pluginAPI.setTimeout(function(){
 
           var trial_data = {
-            "rt": null,
-            "stimulus": null,
+            "rt":               null,
+            "stimulus":         null,
+            "button_pressed":   null,
+            "flips":            null,
+            "conf_response":    null,
+            "responses":        null,
+            "SE_max":           null,
+            "SE_min":           null,
+            "SE_max_ini":       null,
+            "SE_min_ini":       null,
+            "response_row":     null,
+            "response_column":  null,
+            "correct":          null
           };
 
           jsPsych.finishTrial(trial_data);

@@ -53,10 +53,10 @@ Per trial:
                nbBlocks:       5};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
+  const time = {flipSpeed:     10, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
-                highlight:     500,
+                highlight:     50,
                 showFeedback:  2000,
                 fixation:      1000,
                 rewatch:       3000};
@@ -126,7 +126,7 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var grid_indexes_shuffled = grid_indexes;///jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
     var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes_shuffled, square_size);
 
@@ -137,7 +137,7 @@ Per trial:
 
     function updateLoadedCount(nLoaded){
       var percentcomplete = nLoaded / (instrImg.length + numbersImg.length + 1)  * 100;
-      console.log('Loaded '+percentcomplete+'% of images');
+      //console.log('Loaded '+percentcomplete+'% of images');
     }
 
 // --------------------------------- SAVING DATA  ----------------------------//

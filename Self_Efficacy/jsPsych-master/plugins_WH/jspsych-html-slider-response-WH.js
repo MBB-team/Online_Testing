@@ -163,7 +163,7 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
       // save data
       var trialdata = {
         "rt": response.rt,
-        "response": response.response,
+        "conf_response": response.response,
         "stimulus": trial.stimulus
       };
 

@@ -146,10 +146,10 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
       // data saving
       var trial_data = {
         "rt": response.rt,
-        "max": sliderLimits[1]+1,
-        "min": sliderLimits[0]+1,
-        "max_ini": sliderLimits_ini[1]+1,
-        "min_ini": sliderLimits_ini[0]+1
+        "SE_max": sliderLimits[1]+1,
+        "SE_min": sliderLimits[0]+1,
+        "SE_max_ini": sliderLimits_ini[1]+1,
+        "SE_min_ini": sliderLimits_ini[0]+1
       };
 
       // clear the display

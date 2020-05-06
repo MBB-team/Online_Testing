@@ -120,6 +120,8 @@ jsPsych.plugins["animation-WH"] = (function() {
 
       // if feedback trial, highlight correct responses
       if (trial.feedback){
+        console.log(trial.target[animate_frame])
+        console.log(animate_frame)
         var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.clicked[animate_frame][0]+'-'+trial.clicked[animate_frame][1])
         var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[animate_frame][0]+'-'+trial.target[animate_frame][1])
         if(trial.correct_responses[animate_frame]){
@@ -184,9 +186,21 @@ jsPsych.plugins["animation-WH"] = (function() {
 
       jsPsych.pluginAPI.cancelKeyboardResponse(response_listener);
 
+      // gather trial data
       var trial_data = {
-        "animation_sequence": JSON.stringify(animation_sequence),
-        "responses": JSON.stringify(responses)
+        "rt":               null,
+        "stimulus":         JSON.stringify(animation_sequence),
+        "button_pressed":   null,
+        "flips":            null,
+        "conf_response":    null,
+        "responses":        null,
+        "SE_max":           null,
+        "SE_min":           null,
+        "SE_max_ini":       null,
+        "SE_min_ini":       null,
+        "response_row":     null,
+        "response_column":  null,
+        "correct":          null
       };
 
       jsPsych.finishTrial(trial_data);

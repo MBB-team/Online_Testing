@@ -185,7 +185,7 @@ jsPsych.plugins["instructions-WH"] = (function() {
       display_element.innerHTML = '';
 
       var trial_data = {
-        "view_history": JSON.stringify(view_history),
+        "responses": JSON.stringify(view_history),
         "rt": performance.now() - start_time
       };
 
