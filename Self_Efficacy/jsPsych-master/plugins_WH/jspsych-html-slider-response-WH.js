@@ -184,7 +184,7 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
       display_element.innerHTML = '';
 
       // next trial
-      jsPsych.finishTrial(trialdata);
+      jsPsych.finishTrial(trial_data);
     }
 
     if (trial.stimulus_duration !== null) {

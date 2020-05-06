@@ -7,8 +7,8 @@ function SE(nbBlocks, nbTrials){
   var nCorrect      = 0; // the number of correct responses given by the pts
   var test_counter  = 0; // counter for looping through test trials during execution
   var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
-  var clicked_i     = Array(8); // for indexing the location of the participants click
-  var target_i      = Array(8); // for indexing the location of the target image
+  var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
+  var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var conf_counter  = 0; // counter for looping through confidence trials
   var nbTperB       = nbTrials/nbBlocks;
   var grid_dim = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
@@ -40,8 +40,7 @@ function SE(nbBlocks, nbTrials){
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
-        TinB: 999,
-        testNb: 999
+        TinB: 999
       }
     }; // block number
 
@@ -71,6 +70,7 @@ function SE(nbBlocks, nbTrials){
       var SE_conf = {
         type: 'SE-confidence-slider-WH',
         range: 30,
+        trial_duration: time.SEconf,
         prompt: '<p>Target Score: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p><p>You have <b>3 minutes</b> to make a response</p>',
         data: {
           blockNb: block_i,
@@ -182,37 +182,48 @@ function SE(nbBlocks, nbTrials){
           timelineTask.push(fullscreenExp);
           timelineTask.push(test_phase);
 
+          var target_location  = Array(8);
+          var correct_location = Array(8);
+          var test_trials      = [];
+
           // TESTING PHASE //
           for (var test_i = 0; test_i < numbersImg.length; test_i++) {
 
             var pair_1st = randi(0,1); // randomly select which of pair is shown and which is hidden
             var pair_2nd = 1 - pair_1st;
 
-            var target_location  = grid_indexes_shuffled[trial_counter][test_i][pair_1st].map(function(v){return (v - 1)});
-            var correct_location = grid_indexes_shuffled[trial_counter][test_i][pair_2nd].map(function(v){return (v - 1)});
+            target_i[test_i] = grid_indexes_shuffled[trial_counter][test_i][pair_1st].map(function(v){return (v - 1)})
+
+            test_trials.push({
+              target_location:  target_i[test_i],
+              correct_location: grid_indexes_shuffled[trial_counter][test_i][pair_2nd].map(function(v){return (v - 1)}),
+              target_image:     numbersImg[test_i]
+            });
+
+
+          }
 
             var test = {
               type: 'serial-reaction-time-mouse-WH',
-              target_location: target_location,
-              correct_location: correct_location,
-              target_image: numbersImg[test_i],
+              timeline: test_trials,
               grid: grid_dim,
-              grid_square_size: screen.height/6,
+              grid_square_size: screen.height/7,
               response_ends_trial: true,
               highlight: time.highlight,
               allow_nontarget_responses: true,
-              prompt: '<p><b>Click</b> on the location of the matching pair.</p>',
+              prompt: '<p id = "jspsych-prompt" style="margin:0px"><b>Click</b> on the location of the matching pair.</p>',
               pre_target_duration: 0,
+              choices: ['I do not know, show me the next pair', 'I think I have reached the target score, please give me feedback'],
+              on_start: function(){var clicked = [null,null]},
               on_finish: function(data){
-                if(data.correct){
+                if (data.correct){
                   nCorrect++
                   correct_i[test_counter] = 1;
                 }
-                var clicked = [data.response_row, data.response_col];
-                var target =  [data.target_row,   data.target_col];
+                clicked = [data.response_row, data.response_col];
                 clicked_i[test_counter] = clicked;
-                target_i[test_counter]  = target;
                 test_counter++
+                if (data.button_pressed == 1){jsPsych.endCurrentTimeline();}
               },
               data: {
                 blockNb: block_i,
@@ -222,12 +233,22 @@ function SE(nbBlocks, nbTrials){
               }
             };
 
+            // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
+            var if_test = {
+              timeline: [test],
+              conditional_function: function(){
+                var data = jsPsych.data.get().last(2).values()[0];
+                if (data.button_pressed == 1){
+                  return false;
+                } else {
+                  return true;
+                }
+              }
+            }
 
             // PUSH TO TIMELINE //
             timelineTask.push(fullscreenExp);
-            timelineTask.push(test);
-
-          }; // test loop
+            timelineTask.push(if_test);
 
           // CONFIDENCE QUESTION //
 
@@ -252,7 +273,7 @@ function SE(nbBlocks, nbTrials){
             type: 'animation-WH',
             frame_time: time.showFeedback,
             stimuli: grid_stimuli[trial_counter],
-            clicked: clicked_i,
+          //  clicked: function(){clicked_i},
             target: target_i,
             choices: jsPsych.NO_KEYS,
             prompt: function(){
@@ -261,13 +282,15 @@ function SE(nbBlocks, nbTrials){
             },
             feedback: true,
             correct_responses: function(){return correct_i},
+            on_start: function(feedback){
+              console.log(clicked_i)
+              feedback.clicked = clicked_i;
+            },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
               correct_i      = [0,0,0,0,0,0,0,0];
               test_counter   = 0;
-              clicked_i      = Array(8);
-              target_i       = Array(8);
-
+              clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];;
             },
             data: {
               blockNb: block_i,
@@ -276,6 +299,8 @@ function SE(nbBlocks, nbTrials){
               testNb: 999
             }
           };
+
+          target_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];; // reset
 
           // PUSH TO TIMELINE //
           timelineTask.push(fullscreenExp);
