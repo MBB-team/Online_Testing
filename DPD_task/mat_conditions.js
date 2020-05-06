@@ -85,8 +85,6 @@ var test_stimuli = [
   { stimulus: "Gagner 45 euros", probabilities: 2, trial_type: 1, data:{test_part: 'test_gain', frame: 1,  prob_win: 0.89,correct_Dummy1: 2, correct_Dummy2:1,correct_Dummy3:1,correct_Dummy4: 1}},
   { stimulus: "Gagner 45 euros ", probabilities: 1, trial_type: 1, data:{test_part: 'test_gain', frame: 1, prob_win: 0.90, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:2,correct_Dummy4: 1}},
   { stimulus: "Gagner 25 euros", probabilities: 0, trial_type: 11, data:{test_part: 'test_gain', frame: 1, prob_win: 0.95, correct_Dummy1: 2, correct_Dummy2:1,correct_Dummy3:2,correct_Dummy4: 1}},
-
-
   { stimulus: "Perdre 25 euros", probabilities: 82, trial_type: 10, data: {test_part: 'test_loss', frame: 0, prob_win: 0.05, correct_Dummy1: 1, correct_Dummy2:2,correct_Dummy3:1,correct_Dummy4: 2}},
   { stimulus: "Perdre 45 euros ", probabilities: 81, trial_type: 4, data: {test_part: 'test_loss', frame: 0, prob_win: 0.10, correct_Dummy1: 1, correct_Dummy2:2,correct_Dummy3:1,correct_Dummy4: 2}},
   { stimulus: "Perdre 45 euros", probabilities: 80, trial_type: 4, data: {test_part: 'test_loss', frame: 0,  prob_win: 0.11,correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:1,correct_Dummy4: 2}},
