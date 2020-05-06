@@ -120,16 +120,20 @@ jsPsych.plugins["animation-WH"] = (function() {
 
       // if feedback trial, highlight correct responses
       if (trial.feedback){
-        var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.clicked[animate_frame][0]+'-'+trial.clicked[animate_frame][1])
+    //    console.log(trial.clicked[animate_frame])
+        if (trial.clicked[animate_frame] !== null){
+          var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.clicked[animate_frame][0]+'-'+trial.clicked[animate_frame][1])
+        }
         var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[animate_frame][0]+'-'+trial.target[animate_frame][1])
-        if(trial.correct_responses[animate_frame]){
-          square_clicked.style.outline = "5px solid rgb(51, 204, 51)";
-        } else {
-          square_clicked.style.outline = "5px solid rgb(255, 0, 0)";
+        if (square_clicked !== null){
+          if(trial.correct_responses[animate_frame]){
+            square_clicked.style.outline = "5px solid rgb(51, 204, 51)";
+          } else {
+            square_clicked.style.outline = "5px solid rgb(255, 0, 0)";
+          }
         }
         square_target.style.outline = "5px solid yellow";
-      };
-
+      }
 
       current_stim = trial.stimuli[animate_frame];
 

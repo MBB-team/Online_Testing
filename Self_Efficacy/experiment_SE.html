@@ -137,7 +137,7 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var grid_indexes_shuffled = grid_indexes;///jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var grid_indexes_shuffled = grid_indexes;//jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
     var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes_shuffled, square_size);
 
@@ -201,7 +201,7 @@ Per trial:
         }
       };
 
-      exp_timeline.push(instructions);
+    //  exp_timeline.push(instructions);
 
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
