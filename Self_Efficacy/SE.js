@@ -283,7 +283,6 @@ function SE(nbBlocks, nbTrials){
             feedback: true,
             correct_responses: function(){return correct_i},
             on_start: function(feedback){
-              console.log(clicked_i)
               feedback.clicked = clicked_i;
             },
             on_finish: function(){ // reset counters
