@@ -16,7 +16,7 @@ Per trial:
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
-  <script   src  = "instr.js"></script>
+  <script   src  = "jsPsych-master/plugins/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
@@ -52,11 +52,11 @@ Per trial:
                nbBlocks:       1};
 
   // Timings
-  const time = {flipSpeed:     10, // in ms so 1 sec
+  const time = {flipSpeed:     1000, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
-                highlight:     50,
-                showFeedback:  200,
+                highlight:     500,
+                showFeedback:  2000,
                 fixation:      1000,
                 rewatch:       3000};
 
@@ -70,7 +70,8 @@ Per trial:
 
   if (browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox') {
     var wrong_browser = {
-      type: 'html-keyboard-response',
+      type: 'html-button-response-WH',
+      choices: [],
       stimulus: '<p> This experiment is only supported in Google Chrome or Mozilla FireFox. </p>'
                +'<p> Please re-open the experiment in one of these browsers. </p>'
              };
@@ -88,17 +89,27 @@ Per trial:
 
     // Create "Variable/function" that makes sure you remain in FullScreen
     var firstFullscreen =	{
-          type: 'fullscreen-WH',
-          message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
-          button_label: 'Put in Fullscreen',
-          delay_after: 300,
-          check_fullscreen: true
-        };
+      type: 'fullscreen-WH',
+      message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
+      button_label: 'Put in Fullscreen',
+      delay_after: 300,
+      check_fullscreen: true,
+      data: {
+        blockNb: 999,
+        trialNb: 999,
+        TinB: 999,
+        testNb: 999
+    };
 
     var fullscreenExp = {
           type: 'fullscreen-WH',
           message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
-          fullscreen_mode: false
+          fullscreen_mode: false,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999
         };
 
 
@@ -179,8 +190,13 @@ Per trial:
       // Execute the experiment
       var instructions = {
         type: 'instructions-WH',
-        pages: [instrImg_html[0]],
-        show_clickable_nav: true
+        pages: instrImg_html,
+        show_clickable_nav: true,
+        data: {
+          blockNb: 999,
+          trialNb: 999,
+          TinB: 999,
+          testNb: 999
       };
 
       exp_timeline.push(instructions);
@@ -204,8 +220,5 @@ Per trial:
       });
     } // end of startExperiment
   } // end of browser checking
-
-
-
 </script>
 </html>

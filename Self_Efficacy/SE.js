@@ -36,7 +36,13 @@ function SE(nbBlocks, nbTrials){
     var block_number = {
       type: 'html-button-response-WH',
       stimulus: '<p>This is the beginning of block <b>'+block_n+'</b>.</p><p>When you are ready to start, click on the button.</p>',
-      choices: ['Start']
+      choices: ['Start'],
+      data: {
+        blockNb: block_i,
+        trialNb: trial_counter,
+        TinB: 999,
+        testNb: 999
+      }
     }; // block number
 
     timelineTask.push(block_number)
@@ -50,7 +56,13 @@ function SE(nbBlocks, nbTrials){
       var trial_number = {
         type: 'html-button-response-WH',
         stimulus: '<p>This is the beginning of trial <b>'+trial_n+'</b> of block <b><p>'+block_n+'</b>.</p></p><p>Your target score for this trial is <b>'+target_scores_all[trial_counter]+'</b>.</p><p>When you are ready to start, click on the button.</p>',
-        choices: ['Start']
+        choices: ['Start'],
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999
+        }
       }; // trial number
 
       timelineTask.push(trial_number)
@@ -59,7 +71,13 @@ function SE(nbBlocks, nbTrials){
       var SE_conf = {
         type: 'SE-confidence-slider-WH',
         range: 30,
-        prompt: '<p>Target Score: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p>'
+        prompt: '<p>Target Score: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p><p>You have <b>3 minutes</b> to make a response</p>',
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999
+        }
       };
 
       // PUSH TO TIMELINE //
@@ -71,7 +89,13 @@ function SE(nbBlocks, nbTrials){
         type: 'animation-WH',
         stimuli: grid_stimuli[trial_counter],
         frame_time: time.flipSpeed,
-        choices: jsPsych.NO_KEYS
+        choices: jsPsych.NO_KEYS,
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999
+        }
       };
 
       // REWATCH QUESTION //
@@ -92,6 +116,12 @@ function SE(nbBlocks, nbTrials){
               flip_counter = 1;
             }
           },
+          data: {
+            blockNb: block_i,
+            trialNb: trial_counter,
+            TinB: trial_i,
+            testNb: 999
+          }
         } // rewatch
 
         // LOOP THE FLIPS //
@@ -120,7 +150,13 @@ function SE(nbBlocks, nbTrials){
             min: -100,
             max: 100,
             start: function(){return randi(-100,100);},
-            require_movement: true
+            require_movement: true,
+            data: {
+              blockNb: block_i,
+              trialNb: trial_counter,
+              TinB: trial_i,
+              testNb: 999
+            }
           };
 
           // PUSH TO TIMELINE //
@@ -133,7 +169,13 @@ function SE(nbBlocks, nbTrials){
             type: 'html-button-response-WH',
             stimulus: '<p>You will now be asked to recall the items.</p><p><b>Get ready!</b></p>',
             choices: [],
-            trial_duration: time.fixation
+            trial_duration: time.fixation,
+            data: {
+              blockNb: block_i,
+              trialNb: trial_counter,
+              TinB: trial_i,
+              testNb: 999
+            }
           };
 
           // PUSH TO TIMELINE //
@@ -171,6 +213,12 @@ function SE(nbBlocks, nbTrials){
                 clicked_i[test_counter] = clicked;
                 target_i[test_counter]  = target;
                 test_counter++
+              },
+              data: {
+                blockNb: block_i,
+                trialNb: trial_counter,
+                TinB: trial_i,
+                testNb: test_i
               }
             };
 
@@ -187,6 +235,12 @@ function SE(nbBlocks, nbTrials){
             type: 'html-button-response-WH',
             stimulus: '<p>How many pairs do you believe you correctly guessed?</p>',
             choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+            data: {
+              blockNb: block_i,
+              trialNb: trial_counter,
+              TinB: trial_i,
+              testNb: 999
+            }
           };
 
           // PUSH TO TIMELINE //
@@ -214,6 +268,12 @@ function SE(nbBlocks, nbTrials){
               clicked_i      = Array(8);
               target_i       = Array(8);
 
+            },
+            data: {
+              blockNb: block_i,
+              trialNb: trial_counter,
+              TinB: trial_i,
+              testNb: 999
             }
           };
 
@@ -231,7 +291,13 @@ function SE(nbBlocks, nbTrials){
     var finish = {
       type: 'html-button-response-WH',
       stimulus: '<pYou have completed the main experiment!</p><p><b>Thank you for your valuable participation</b></p>',
-      choices: ['Finish']
+      choices: ['Finish'],
+      data: {
+        blockNb: block_i,
+        trialNb: trial_counter,
+        TinB: trial_i,
+        testNb: 999
+      }
     }
 
     // PUSH TO TIMELINE //
