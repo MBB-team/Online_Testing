@@ -214,12 +214,8 @@ function SE(nbBlocks, nbTrials){
               clicked_i      = Array(8);
               target_i       = Array(8);
 
-            },
-            on_start: function(){
-              console.log(target_i)
             }
-
-          }
+          };
 
           // PUSH TO TIMELINE //
           timelineTask.push(fullscreenExp);
@@ -231,6 +227,15 @@ function SE(nbBlocks, nbTrials){
 
       }; // trial
     }; // block
+
+    var finish = {
+      type: 'html-button-response-WH',
+      stimulus: '<pYou have completed the main experiment!</p><p><b>Thank you for your valuable participation</b></p>',
+      choices: ['Finish']
+    }
+
+    // PUSH TO TIMELINE //
+    timelineTask.push(finish)
 
     return timelineTask;
 

@@ -21,7 +21,6 @@ Per trial:
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-vsl-grid-scene-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
@@ -49,15 +48,15 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+               nbTrials:       2,
+               nbBlocks:       1};
 
   // Timings
   const time = {flipSpeed:     10, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     50,
-                showFeedback:  2000,
+                showFeedback:  200,
                 fixation:      1000,
                 rewatch:       3000};
 

@@ -161,10 +161,24 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // save data
-      var trialdata = {
-        "rt": response.rt,
-        "conf_response": response.response,
-        "stimulus": trial.stimulus
+      var trial_data = {
+        "rt":               response.rt,   // integer
+        "stimulus":         trial.stimulus,  // string
+        "button_pressed":   999,   // integer
+        "flips":            999,   // integer
+        "conf_response":    response.response,   // integer
+        "responses":       "999",  // string
+        "SE_max":           999,   // integer
+        "SE_min":           999,   // integer
+        "SE_max_ini":       999,   // integer
+        "SE_min_ini":       999,   // integer
+        "response_row":     999,   // integer
+        "response_col":     999,   // integer
+        "target_row":       999,   // integer
+        "target_col":       999,   // integer
+        "correct_row":      999,   // integer
+        "correct_col":      999,   // integer
+        "correct":          null   // BOOL
       };
 
       display_element.innerHTML = '';

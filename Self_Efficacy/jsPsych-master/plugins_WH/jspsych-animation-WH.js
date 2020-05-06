@@ -120,8 +120,6 @@ jsPsych.plugins["animation-WH"] = (function() {
 
       // if feedback trial, highlight correct responses
       if (trial.feedback){
-        console.log(trial.target[animate_frame])
-        console.log(animate_frame)
         var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.clicked[animate_frame][0]+'-'+trial.clicked[animate_frame][1])
         var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[animate_frame][0]+'-'+trial.target[animate_frame][1])
         if(trial.correct_responses[animate_frame]){
@@ -188,19 +186,23 @@ jsPsych.plugins["animation-WH"] = (function() {
 
       // gather trial data
       var trial_data = {
-        "rt":               null,
-        "stimulus":         JSON.stringify(animation_sequence),
-        "button_pressed":   null,
-        "flips":            null,
-        "conf_response":    null,
-        "responses":        null,
-        "SE_max":           null,
-        "SE_min":           null,
-        "SE_max_ini":       null,
-        "SE_min_ini":       null,
-        "response_row":     null,
-        "response_column":  null,
-        "correct":          null
+        "rt":               999,   // integer
+        "stimulus":         JSON.stringify(animation_sequence),  // string
+        "button_pressed":   999,   // integer
+        "flips":            999,   // integer
+        "conf_response":    999,   // integer
+        "responses":       "999",  // string
+        "SE_max":           999,   // integer
+        "SE_min":           999,   // integer
+        "SE_max_ini":       999,   // integer
+        "SE_min_ini":       999,   // integer
+        "response_row":     999,   // integer
+        "response_col":     999,   // integer
+        "target_row":       999,   // integer
+        "target_col":       999,   // integer
+        "correct_row":      999,   // integer
+        "correct_col":      999,   // integer
+        "correct":          null   // BOOL
       };
 
       jsPsych.finishTrial(trial_data);

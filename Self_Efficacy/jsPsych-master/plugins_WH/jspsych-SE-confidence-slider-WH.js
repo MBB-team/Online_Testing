@@ -145,11 +145,23 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
 
       // data saving
       var trial_data = {
-        "rt": response.rt,
-        "SE_max": sliderLimits[1]+1,
-        "SE_min": sliderLimits[0]+1,
-        "SE_max_ini": sliderLimits_ini[1]+1,
-        "SE_min_ini": sliderLimits_ini[0]+1
+        "rt":               response.rt,   // integer
+        "stimulus":        "999",  // string
+        "button_pressed":   999,   // integer
+        "flips":            999,   // integer
+        "conf_response":    999,   // integer
+        "responses":       "999",  // string
+        "SE_max":           sliderLimits[1]+1,   // integer
+        "SE_min":           sliderLimits[0]+1,   // integer
+        "SE_max_ini":       sliderLimits_ini[1]+1,   // integer
+        "SE_min_ini":       sliderLimits_ini[0]+1,   // integer
+        "response_row":     999,   // integer
+        "response_col":     999,   // integer
+        "target_row":       999,   // integer
+        "target_col":       999,   // integer
+        "correct_row":      999,   // integer
+        "correct_col":      999,   // integer
+        "correct":          null   // BOOL
       };
 
       // clear the display

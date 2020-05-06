@@ -75,37 +75,3 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
     return flip_stimuli;
 
 }; // function
-
-//function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled){
-//
-//  var flip_stimuli = Array(nbTrials*8);// = jsPsych.randomization.repeat(flip_stimuli_base, nbTrials); // create nbTrials grids
-//  var grid_counter = 0;
-//
-//  for (var grid_i = 0; grid_i <= nbTrials-1; grid_i++){ // for each grid
-//
-//    for (var pair_i = 0; pair_i <= numbersImg.length-1; pair_i++) { // and for each pair on the grid
-//
-//          var flip_stimuli_base = [[greySquare, greySquare, greySquare, greySquare],
-//                                   [greySquare, greySquare, greySquare, greySquare],
-//                                   [greySquare, greySquare, greySquare, greySquare],
-//                                   [greySquare, greySquare, greySquare, greySquare]];
-//
-//      for (var number_i = 0; number_i < 2; number_i++){ // for each number in the pair
-//
-//        var row_i = grid_indexes_shuffled[grid_i][pair_i][number_i][0] - 1; // row index
-//        var col_i = grid_indexes_shuffled[grid_i][pair_i][number_i][1] - 1; // column index
-//
-//        flip_stimuli_base[row_i][col_i] = numbersImg[pair_i];
-//
-//      }
-//
-//      flip_stimuli[grid_counter] = flip_stimuli_base;
-//      grid_counter = grid_counter + 1;
-//
-//    }
-//
-//  }
-//
-//  return flip_stimuli;
-//
-//}
