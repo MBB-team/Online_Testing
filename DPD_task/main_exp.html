@@ -33,13 +33,13 @@
     <script src="jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
     <script src="jspsych-6.1.0/plugins_CC/html+image-button-response-CC.js"></script>
+    <script src="jspsych-6.1.0/plugins_CC/control-html+image-button-response-CC.js"></script>
     <script src="jspsych-6.1.0/plugins_CC/fullscreen-CC.js"></script>
     <script src="jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
     <script  src = "getBrowserInfo.js"></script>
     <script  src = "mat_conditions.js"></script>
+    <script  src = "mat_conditions_control.js"></script>
     <script  src = "random_name.js"></script>
-    <script  src = "instr.js"></script>
-
     <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   </head>
   <body>
@@ -56,6 +56,7 @@
 
   var nbInstr           = 7; // how many Instr Slides (12)
   var nbScreens         = 6;
+  var nbControlInstr    = 3;
   //var debug             = false; // if true, skips details, instructions and practice
 
   // --------------------------------- INITIALISATION  ---------------------------//
@@ -111,6 +112,13 @@
               screensImg[t-1] = 'stimuli/instructions/screensDPD/screensDPD-'+t+'.png'; // pre-load all instructions
               screensImg_html[t-1] = '<img src="'+screensImg[t-1]+'"id= "image-instructions" style="height:'+screen.height/1.25+'px"></img>';
              };
+             // Control Instructions (Training, Decision and prediction screens and debriefing)
+             var control_instrImg = [];
+             var control_instrImg_html = [];
+             for (var t=1; t <= nbControlInstr; t++){
+               control_instrImg[t-1] = 'stimuli/instructions/control-instructionsDPD/control-instructionsDPD-'+t+'.png'; // pre-load all instructions
+               control_instrImg_html[t-1] = '<img src="'+control_instrImg[t-1]+'"id= "image-control-instructions" style="height:'+screen.height/1.25+'px"></img>';
+              };
 
 // --------------------------------- BEGINING EXPERIMENT  --------------------//
 
@@ -125,27 +133,26 @@
           //
           // } // end debug
 
-    /* test trials */
+// --------------------------- TEST TRIALS - PLUGINS  ------------------------//
     var test_stimuli = mat_conditions()
+    var test_stimuli_control= mat_conditions_control()
 
       var instructions = {
         type: 'instructions',
         pages: instrImg_html,
       };
-
       var training_dec_screen = {
           type: 'instructions',
           pages:[screensImg_html[0]]
         };
-        var training_pred_screen = {
-            type: 'instructions',
-            pages:[screensImg_html[5]]
-          };
+      var training_pred_screen = {
+          type: 'instructions',
+          pages:[screensImg_html[5]]
+        };
       var end_training_screen  = {
           type: 'instructions',
           pages:[screensImg_html[1]]
         };
-
       var decision_screen      = {
           type: 'instructions',
           pages:[screensImg_html[2]]
@@ -158,6 +165,10 @@
           type: 'instructions',
           pages:[screensImg_html[4]]
         }
+        var control_instructions = {
+            type: 'instructions',
+            pages:control_instrImg_html
+          }
 
     var fixation = {
       type: 'html-keyboard-response',
@@ -177,12 +188,27 @@
       }
 
       var list_random_names =  random_name();
+      var test_prediction_0 = {
+        type: "html+image-button-response",
+        dummy: 0,
+        phase: 'Prediction',
+        prompt:'<div> Samuel reçoit une somme initiale de 50 euros virtuels. Quelle option va-t''il choisir?</div>',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
+        on_finish: function(data){
+          //adds a "correct" property to data
+          //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
+         data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy1;
+        }
+      }
       var trial_index_pred1 = 0;
       var test_prediction_1 = {
         type: "html+image-button-response",
         dummy: 1,
         phase: 'Prediction',
-        prompt:'<div>DUMMY1 '+list_random_names[0] +' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>DUMMY1 '+list_random_names[0] +'reçoit une somme initiale de 50 euros virtuels. Quelle option va-t''il/elle choisir?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -245,6 +271,24 @@
           return trial_index_pred4 += 1
         }
       }
+
+      var trial_index_control = 0;
+      var test_control = {
+        type: "control-html+image-button-response",
+        phase: 'Control',
+        prompt:'<div> Les deux écosystèmes commencent avec 80 plantes.</div>'+'<div> Dans an un, lequel de ces deux ecosystèmes aura le plus grand nombre de plantes?</div>',
+        //prompt:'<p> Les deux écosystèmes commencent avec 80 plantes.</p>'+'<p> Dans an un, lequel de ces deux ecosystèmes aura le plus grand nombre de plantes?</p>',
+        stimulus_1: jsPsych.timelineVariable('stimulus'),
+        choices: ['Ecosystème 1', 'Ecosystème 2'],
+        probabilities: jsPsych.timelineVariable('probabilities'),
+        data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
+        on_finish: function(data){
+          //adds a "correct" property to data
+          //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
+         data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy1;
+         return trial_index_control += 1
+        }
+      }
       var feedback_CR = {
       type: 'html-keyboard-response',
       choices: jsPsych.NO_KEYS,
@@ -257,14 +301,13 @@
           color_correct = color_correct.bold(); // makes text bold
           return color_correct;
         } else {
-          incorrect = "<p>Désolé, il / elle a choisi l'autre option</p>"
+          incorrect = "<p>Désolé, il / elle a choisi l'autre option.</p>"
           var color_incorrect = incorrect.fontcolor("red");
           color_incorrect = color_incorrect.bold(); // makes text bold
           return color_incorrect;
         }
       }
     }
-
     var feedback_noCR = {
     type: 'html-keyboard-response',
     choices: jsPsych.NO_KEYS,
@@ -277,13 +320,52 @@
         color_correct = color_correct.bold(); // makes text bold
         return color_correct;
       } else {
-        incorrect = "<p>Désolé, il / elle a choisi l'autre option</p>"
+        incorrect = "<p>Désolé, il / elle a choisi l'autre option.</p>"
         var color_incorrect = incorrect.fontcolor("red");
         color_incorrect = color_incorrect.bold(); // makes text bold
         return color_incorrect;
       }
     }
   }
+
+  var feedback_CR_control = {
+  type: 'html-keyboard-response',
+  choices: jsPsych.NO_KEYS,
+  trial_duration: 1500,
+  stimulus: function(){
+    var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
+    if(last_trial_correct){
+      var correct = "<p> Bien joué! Cette année, cet écosystème a plus de plantes!</p>"
+      var color_correct = correct.fontcolor("green");
+      color_correct = color_correct.bold(); // makes text bold
+      return color_correct;
+    } else {
+      incorrect = "<p>Désolé, cette année, c’est en fait l’autre écosystème qui a plus de plantes.</p>"
+      var color_incorrect = incorrect.fontcolor("red");
+      color_incorrect = color_incorrect.bold(); // makes text bold
+      return color_incorrect;
+    }
+  }
+}
+var feedback_noCR_control = {
+type: 'html-keyboard-response',
+choices: jsPsych.NO_KEYS,
+trial_duration: 1500,
+stimulus: function(){
+  var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+  if(last_trial_correct){
+    var correct = "<p> Bien joué! Cette année, cet écosystème a plus de plantes!</p>"
+    var color_correct = correct.fontcolor("green");
+    color_correct = color_correct.bold(); // makes text bold
+    return color_correct;
+  } else {
+    incorrect = "<p>Désolé, cette année, c’est en fait l’autre écosystème qui a plus de plantes.</p>"
+    var color_incorrect = incorrect.fontcolor("red");
+    color_incorrect = color_incorrect.bold(); // makes text bold
+    return color_incorrect;
+  }
+}
+}
   var confidence_slider = {
     type: 'html-slider-response',
     stimulus: 'A quel point êtes-vous confiant(e) en votre prédiction?',
@@ -293,50 +375,22 @@
     button_label: 'Continuer',
     require_movement: true,
   }
-
-  var test_procedure_training_dec = {
-    timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
-    timeline_variables: test_stimuli,// add in a different JS
-    sample: {
-      type: 'custom',
-      fn: function my_order(t){
-        var myorder = [4,50,100]
-          return myorder;
-          counter
-        }
-      }
-  }
-  var test_procedure_training_pred = {
-    timeline: [fixation, test_prediction_1, confidence_slider,feedback_CR],  // 32 trials (+2 catch trials)
-    timeline_variables: test_stimuli,// add in a different JS
-    sample: {
-      type: 'custom',
-      fn: function my_order(t){
-        var myorder = [30,4,78]
-          return myorder;
-          counter
-        }
-      }
-  }
-
-    var test_procedure_decision = {
-      timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
-      timeline_variables: test_stimuli,// add in a different JS
-      sample: {
-        type: 'custom',
-        fn: function my_order(t){
-          var myorder = [161,57,118,4,78,89,23,135,165,119]
-          //ar myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152,27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
-            return myorder;
-            counter
-          }
-        }
-    }
-
+// ---------------------- CONFIDENCE TRIALS + FEEDBACK -----------------------//
     var if_confidence_pred1= {
         timeline: [confidence_slider],
         conditional_function: function(){
           if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    var if_confidence_control= {
+        timeline: [confidence_slider],
+        conditional_function: function(){
+          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -457,7 +511,64 @@
             }
         }
     }
-    var test_procedure_prediction_1 = {
+    var if_feedback_CR_control= {
+        timeline: [feedback_CR_control],
+        conditional_function: function(){
+          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    var if_feedback_noCR_control= {
+        timeline: [feedback_noCR_control],
+        conditional_function: function(){
+          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+// --------------------------------- BLOCK PROCEDURES  ---------------------------//
+var test_procedure_training_dec = {
+  timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
+  timeline_variables: test_stimuli,// add in a different JS
+  sample: {
+    type: 'custom',
+    fn: function my_order(t){
+      var myorder = [4,50,100]
+        return myorder;
+        counter
+      }
+    }
+}
+var test_procedure_training_pred = {
+  timeline: [fixation, test_prediction_0, confidence_slider,feedback_CR],  // 32 trials (+2 catch trials)
+  timeline_variables: test_stimuli,// add in a different JS
+  sample: {
+    type: 'custom',
+    fn: function my_order(t){
+      var myorder = [30,4,78]
+        return myorder;
+      }
+    }
+}
+
+  var test_procedure_decision = {
+    timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
+    timeline_variables: test_stimuli,// add in a different JS
+    sample: {
+      type: 'custom',
+      fn: function my_order(t){
+        var myorder = [161,57,118,4,78,89,23,135,165,119]
+        //ar myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152,27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+          return myorder;
+        }
+      }
+  }
+  var test_procedure_prediction_1 = {
       timeline: [fixation, test_prediction_1, if_confidence_pred1, if_feedback_CR_pred1, if_feedback_noCR_pred1],
       timeline_variables: test_stimuli,// add in a different JS
       sample: {
@@ -484,7 +595,7 @@
       }
     var test_procedure_prediction_3 = {
       timeline: [fixation, test_prediction_3, if_confidence_pred3, if_feedback_CR_pred3, if_feedback_noCR_pred3],
-      timeline_variables: test_stimuli,// add in a different JS
+      timeline_variables: test_stimuli,
       sample: {
         type: 'custom',
         fn: function my_order(t){
@@ -496,7 +607,7 @@
       }
     var test_procedure_prediction_4 = {
       timeline: [fixation, test_prediction_4, if_confidence_pred4, if_feedback_CR_pred4, if_feedback_noCR_pred4],
-      timeline_variables: test_stimuli,// add in a different JS
+      timeline_variables: test_stimuli,
       sample: {
         type: 'custom',
         fn: function my_order(t){
@@ -506,40 +617,52 @@
           }
         }
       }
+      var test_procedure_control = {
+        timeline: [fixation, test_control, if_confidence_control, if_feedback_CR_control, if_feedback_noCR_control],
+        timeline_variables: test_stimuli,
+        sample: {
+          type: 'custom',
+          fn: function my_order(t){
+            var myorder = [161,57,118,4,78,89,23,135,165,119]
+            //var myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+              return myorder;
+            }
+          }
+        }
 
-    var prediction_phase = [
-      test_procedure_prediction_1, test_procedure_prediction_2, test_procedure_prediction_3, test_procedure_prediction_4
-    ];
+    var prediction_phase = [test_procedure_prediction_1, test_procedure_prediction_2, test_procedure_prediction_3, test_procedure_prediction_4];
      shuffled_prediction_phase = jsPsych.randomization.repeat(prediction_phase, 1);
 
 
      /* create timeline */
      var timeline = [];
      timeline.push(firstFullscreen);
-     timeline.push(instructions);
-     timeline.push(training_dec_screen);
-     timeline.push(test_procedure_training_dec);
-     timeline.push(training_pred_screen);
-     timeline.push(test_procedure_training_pred);
-     timeline.push(end_training_screen);
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+     // timeline.push(instructions);
+     // timeline.push(training_dec_screen);
+     // timeline.push(test_procedure_training_dec);
+     // timeline.push(training_pred_screen);
+     // timeline.push(test_procedure_training_pred);
+     // timeline.push(end_training_screen);
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+     timeline.push(control_instructions);
+     timeline.push(test_procedure_control); //Control task
      timeline.push(debrief_message);
 
      // Execute the experiment
