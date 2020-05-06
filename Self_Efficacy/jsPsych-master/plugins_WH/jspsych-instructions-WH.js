@@ -184,9 +184,25 @@ jsPsych.plugins["instructions-WH"] = (function() {
 
       display_element.innerHTML = '';
 
+      // gather trial data
       var trial_data = {
-        "view_history": JSON.stringify(view_history),
-        "rt": performance.now() - start_time
+        "rt":               performance.now() - start_time,   // integer
+        "stimulus":        "999",  // string
+        "button_pressed":   999,   // integer
+        "flips":            999,   // integer
+        "conf_response":    999,   // integer
+        "responses":        JSON.stringify(view_history),  // string
+        "SE_max":           999,   // integer
+        "SE_min":           999,   // integer
+        "SE_max_ini":       999,   // integer
+        "SE_min_ini":       999,   // integer
+        "response_row":     999,   // integer
+        "response_col":     999,   // integer
+        "target_row":       999,   // integer
+        "target_col":       999,   // integer
+        "correct_row":      999,   // integer
+        "correct_col":      999,   // integer
+        "correct":          null   // BOOL
       };
 
       jsPsych.finishTrial(trial_data);

@@ -162,14 +162,23 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
       // gather the data to store for the trial
       var trial_data = {
-        "rt": response.rt,
-				"grid": JSON.stringify(trial.grid),
-				"target_location": JSON.stringify(trial.target_location),
-        "correct_location": JSON.stringify(trial.correct_location),
-        "target_image": trial.target_image,
-        "response_row": response.row,
-        "response_column": response.column,
-        "correct": response.row == trial.correct_location[0] && response.column == trial.correct_location[1]
+        "rt":               response.rt,   // integer
+        "stimulus":        "999",  // string
+        "button_pressed":   999,   // integer
+        "flips":            999,   // integer
+        "conf_response":    999,   // integer
+        "responses":       "999",  // string
+        "SE_max":           999,   // integer
+        "SE_min":           999,   // integer
+        "SE_max_ini":       999,   // integer
+        "SE_min_ini":       999,   // integer
+        "response_row":     response.row,   // integer
+        "response_col":     response.column,   // integer
+        "target_row":       trial.target_location[0],   // integer
+        "target_col":       trial.target_location[1],   // integer
+        "correct_row":      trial.correct_location[0],   // integer
+        "correct_col":      trial.correct_location[1],   // integer
+        "correct":          response.row == trial.correct_location[0] && response.column == trial.correct_location[1]   // BOOL
       };
 
       // clear the display

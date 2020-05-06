@@ -21,7 +21,6 @@ Per trial:
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-vsl-grid-scene-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
@@ -49,15 +48,15 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+               nbTrials:       2,
+               nbBlocks:       1};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
+  const time = {flipSpeed:     10, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
-                highlight:     500,
-                showFeedback:  2000,
+                highlight:     50,
+                showFeedback:  200,
                 fixation:      1000,
                 rewatch:       3000};
 
@@ -126,7 +125,7 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var grid_indexes_shuffled = grid_indexes;///jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
     var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes_shuffled, square_size);
 
@@ -137,7 +136,7 @@ Per trial:
 
     function updateLoadedCount(nLoaded){
       var percentcomplete = nLoaded / (instrImg.length + numbersImg.length + 1)  * 100;
-      console.log('Loaded '+percentcomplete+'% of images');
+      //console.log('Loaded '+percentcomplete+'% of images');
     }
 
 // --------------------------------- SAVING DATA  ----------------------------//
