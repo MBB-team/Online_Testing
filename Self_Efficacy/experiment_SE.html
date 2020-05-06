@@ -16,7 +16,6 @@ Per trial:
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
-  <script   src  = "jsPsych-master/plugins/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
@@ -48,8 +47,8 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "exp_01",
-               nbTrials:       2,
-               nbBlocks:       1};
+               nbTrials:       30,
+               nbBlocks:       5};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -99,6 +98,7 @@ Per trial:
         trialNb: 999,
         TinB: 999,
         testNb: 999
+      }
     };
 
     var fullscreenExp = {
@@ -110,6 +110,7 @@ Per trial:
             trialNb: 999,
             TinB: 999,
             testNb: 999
+          }
         };
 
 
@@ -197,6 +198,7 @@ Per trial:
           trialNb: 999,
           TinB: 999,
           testNb: 999
+        }
       };
 
       exp_timeline.push(instructions);
