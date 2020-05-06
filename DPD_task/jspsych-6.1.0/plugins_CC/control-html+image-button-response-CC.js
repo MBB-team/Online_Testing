@@ -116,7 +116,7 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
 
     // display stimulus
     var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 280px; right: 700px;">'+trial.stimulus_1+'</div>';
-    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 180px; right: 220px;">'+trial.stimulus_2+'</div>';
+    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 180px; right: 700px;">'+trial.stimulus_2+'</div>';
     new_html +=  '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 100px; right: 740px;">'+trial.stimulus_3+'</div>';
 
     //display buttons
@@ -141,12 +141,12 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
 
     //show prompt if there is one
     if (trial.prompt !== null) {
-      new_html += '<div id:"myPrompt" style="position:absolute; top: 50px; right: 600px;">'+trial.prompt+'</div>';
+      new_html += '<div id:"myPrompt" style="position:absolute; top: 70px; right: 600px;">'+trial.prompt+'</div>';
     }
 
     // add piechart with probabilities
     if (trial.probabilities !== null){
-      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 100px; right: 220px;" ></img>';
+      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 150px; right: 220px;" ></img>';
     }
 
 

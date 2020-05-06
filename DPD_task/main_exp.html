@@ -135,7 +135,7 @@
 
 // --------------------------- TEST TRIALS - PLUGINS  ------------------------//
     var test_stimuli = mat_conditions()
-    var test_stimuli_control= mat_conditions_control()
+    //var test_stimuli_control= mat_conditions_control()
 
       var instructions = {
         type: 'instructions',
@@ -192,7 +192,7 @@
         type: "html+image-button-response",
         dummy: 0,
         phase: 'Prediction',
-        prompt:'<div> Samuel reçoit une somme initiale de 50 euros virtuels. Quelle option va-t''il choisir?</div>',
+        prompt:'Samuel reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il choisir?',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -208,7 +208,7 @@
         type: "html+image-button-response",
         dummy: 1,
         phase: 'Prediction',
-        prompt:'<div>DUMMY1 '+list_random_names[0] +'reçoit une somme initiale de 50 euros virtuels. Quelle option va-t''il/elle choisir?</div>',
+        prompt:'<div>DUMMY1 '+list_random_names[0] +'reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -276,16 +276,15 @@
       var test_control = {
         type: "control-html+image-button-response",
         phase: 'Control',
-        prompt:'<div> Les deux écosystèmes commencent avec 80 plantes.</div>'+'<div> Dans an un, lequel de ces deux ecosystèmes aura le plus grand nombre de plantes?</div>',
-        //prompt:'<p> Les deux écosystèmes commencent avec 80 plantes.</p>'+'<p> Dans an un, lequel de ces deux ecosystèmes aura le plus grand nombre de plantes?</p>',
-        stimulus_1: jsPsych.timelineVariable('stimulus'),
+        prompt:'<div> Les deux écosystèmes commencent avec 80 plantes. Dans un an,</div>'+'<div>lequel de ces deux ecosystèmes aura le plus grand nombre de plantes?</div>',
+        stimulus_1: jsPsych.timelineVariable('plantes'),
         choices: ['Ecosystème 1', 'Ecosystème 2'],
         probabilities: jsPsych.timelineVariable('probabilities'),
         data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
         on_finish: function(data){
           //adds a "correct" property to data
           //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
-         data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy1;
+         data.correct = parseInt(data.button_pressed)+1 == data.correct_ecosystem;
          return trial_index_control += 1
         }
       }
@@ -637,30 +636,30 @@ var test_procedure_training_pred = {
      /* create timeline */
      var timeline = [];
      timeline.push(firstFullscreen);
-     // timeline.push(instructions);
-     // timeline.push(training_dec_screen);
-     // timeline.push(test_procedure_training_dec);
-     // timeline.push(training_pred_screen);
-     // timeline.push(test_procedure_training_pred);
-     // timeline.push(end_training_screen);
-     // timeline.push(decision_screen);
-     // timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
-     // timeline.push(prediction_screen);
-     // timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
-     // timeline.push(decision_screen);
-     // timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
-     // timeline.push(prediction_screen);
-     // timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
-     // timeline.push(decision_screen);
-     // timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
-     // timeline.push(prediction_screen);
-     // timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
-     // timeline.push(decision_screen);
-     // timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
-     // timeline.push(prediction_screen);
-     // timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
-     // timeline.push(decision_screen);
-     // timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+     timeline.push(instructions);
+     timeline.push(training_dec_screen);
+     timeline.push(test_procedure_training_dec);
+     timeline.push(training_pred_screen);
+     timeline.push(test_procedure_training_pred);
+     timeline.push(end_training_screen);
+     timeline.push(decision_screen);
+     timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
+     timeline.push(prediction_screen);
+     timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
+     timeline.push(decision_screen);
+     timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
+     timeline.push(prediction_screen);
+     timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
+     timeline.push(decision_screen);
+     timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
+     timeline.push(prediction_screen);
+     timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
+     timeline.push(decision_screen);
+     timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
+     timeline.push(prediction_screen);
+     timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
+     timeline.push(decision_screen);
+     timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
      timeline.push(control_instructions);
      timeline.push(test_procedure_control); //Control task
      timeline.push(debrief_message);
