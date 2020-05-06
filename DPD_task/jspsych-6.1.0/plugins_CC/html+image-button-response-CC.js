@@ -210,7 +210,8 @@ jsPsych.plugins["html+image-button-response"] = (function() {
         "rt": response.rt,
         "stimulus": trial.stimulus,
         "button_pressed": response.button,
-        "dummy_number": trial.dummy
+        "dummy_number": trial.dummy,
+        "phase" : trial.phase
       };
 
       // clear the display
