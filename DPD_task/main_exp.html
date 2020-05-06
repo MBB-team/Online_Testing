@@ -182,7 +182,7 @@
         type: "html+image-button-response",
         dummy: 1,
         phase: 'Prediction',
-        prompt:'<div>DUMMY1'+list_random_names[0] +' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>DUMMY1 '+list_random_names[0] +' receives 50 virtual euros. What will he /she choose?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -199,7 +199,7 @@
         type: "html+image-button-response",
         phase: 'Prediction',
         dummy: 2,
-        prompt:'<div>DUMMY2'+list_random_names[1]+' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>DUMMY2 '+list_random_names[1]+' receives 50 virtual euros. What will he /she choose?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -216,7 +216,7 @@
         type: "html+image-button-response",
         phase: 'Prediction',
         dummy: 3,
-        prompt:'<div> DUMMY3'+list_random_names[2]+' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div> DUMMY3 '+list_random_names[2]+' receives 50 virtual euros. What will he /she choose?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -224,8 +224,8 @@
         on_finish: function(data){
           //adds a "correct" property to data
           //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
-          return trial_index_pred3 += 1
           data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy3;
+          return trial_index_pred3 += 1
         }
       }
       var trial_index_pred4 = 0;
@@ -233,7 +233,7 @@
         type: "html+image-button-response",
         phase: 'Prediction',
         dummy: 4,
-        prompt:'<div>DUMMY4'+list_random_names[3]+' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>DUMMY4 '+list_random_names[3]+' receives 50 virtual euros. What will he /she choose?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -241,8 +241,8 @@
         on_finish: function(data){
           //adds a "correct" property to data
           //If correct answer matches subject answer (data.button_pressed) then data.correct will be true. Otherwise, it will be false.
-          return trial_index_pred4 += 1
           data.correct = parseInt(data.button_pressed)+1 == data.correct_Dummy4;
+          return trial_index_pred4 += 1
         }
       }
       var feedback_CR = {
@@ -552,7 +552,7 @@
        // },
        on_finish: function() {
          jsPsych.data.displayData();
-         document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>');
+         //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>');
          }
        });
      } // end of browser checking
