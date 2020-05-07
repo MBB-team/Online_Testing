@@ -82,7 +82,7 @@ function getAvailableTask($taskID="")
         // Get all opened tasks
         $sql = "SELECT * FROM task, taskSession WHERE taskID = task_taskID AND openingTime < NOW() AND closingTime > NOW()";
         //if $taskID is supplied. Filter only this task
-        if($task!="")
+        if($taskID!="")
         {
             $sql.=" AND taskID = '". $taskID ."'";
         }
@@ -105,7 +105,7 @@ function getAvailableTask($taskID="")
             }
             else
             {
-                $openedTask[$key]["done"] = false;
+                $openedTasks[$key]["done"] = false;
             }
         }
 
@@ -121,7 +121,7 @@ function getAvailableTask($taskID="")
     return $openedTasks;
 }
 
-function startTask($taskID) //if everything allright, add a line to run table, set Session variable and return true. //otherwise return false
+function prepareTask($taskID) //if everything allright, add a line to run table, set Session variable and return true. //otherwise return false
 {
     //check if user can do the task
     $availableTasks = getAvailableTask($taskID);
@@ -145,7 +145,7 @@ function startTask($taskID) //if everything allright, add a line to run table, s
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // insert a new run
-        $sql = "INSERT INTO run ('startTime', 'participant_participantID', 'taskSession_taskSessionID') ";
+        $sql = "INSERT INTO run (startTime, participant_participantID, taskSession_taskSessionID) ";
         $sql.= "VALUES (NOW(),'".$_SESSION["participantID"]."',".$availableTasks[0]["taskSessionID"].")";
 
         $addRunStmt = $conn->prepare($sql);
@@ -155,30 +155,90 @@ function startTask($taskID) //if everything allright, add a line to run table, s
         //Get runID
         $sql = "SELECT LAST_INSERT_ID()";
         $runIDStmt = $conn->prepare($sql);
-        $runIDStmt->execute();
+        if($runIDStmt->execute())
+        {
+                $_SESSION["runID"] = $runIDStmt->fetchColumn();
+                $_SESSION["taskID"] = $taskID;
+                $_SESSION["taskSessionID"] = $availableTasks[0]["taskSessionID"];
+                $_SESSION["taskUrl"] = $availableTasks[0]["url"];
 
-        $_SESSION["runID"] = $runIDStmt->fetchColumn();
-        $_SESSION["taskID"] = $taskID;
-        $_SESSION["taskSessionID"] = $availableTasks[0]["taskSessionID"];
+                return true;
+        }
+        else
+        {
+            clearRunSession();
+            return false;
+        }
 
     }
     catch(PDOException $e)
     {
         
         print "Erreur !:" . $e->getMessage() . "<br/>";
+        clearRunSession();
+        return false;
     }
 
 }
 
+function isPreparedTask()
+{
+    if(array_key_exists('runID', $_SESSION))
+    {
+        return(true);
+    }
+    else
+    {
+        return(false);
+    }
+}
+
+//update a run with doneTime to NOW(), return true on success
 function endTask()
 {
+    if(!array_key_exists('runID', $_SESSION))
+    {
+        //no run started in this session environement
+        return false;
+    }
     //update current run with doneTime
+    try {
 
+        // this path should point to your configuration file.
+        include('database_config_session.php');
+        // connect to database
+        $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        // update run with doneTime
+        $sql = "UPDATE run SET doneTime=NOW() WHERE runID='".$_SESSION["runID"]."'";
+
+        $addRunStmt = $conn->prepare($sql);
+
+        $addRunSucces = $addRunStmt->execute();
+
+        if($addRunSucces)
+        {
+            clearRunSession();
+        }
+        return $addRunSucces;
+    }
+    catch(PDOException $e)
+    {
+        
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return false;
+    }
+
+    
+}
+
+function clearRunSession()
+{
     //clear session variables
     unset($_SESSION['runID']);
     unset($_SESSION['taskID']);
     unset($_SESSION['taskSessionID']);
-    
+    unset($_SESSION["taskUrl"]);
 }
 ?>

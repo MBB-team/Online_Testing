@@ -1,40 +1,62 @@
 
-<html>
-<body>
-<p>MBB Online Testing</p>
 <?php
 include("portailLib/session.php");
 
 //declare empty variables
-$participantID = $action = "";
+$formParticipantID = $formAction = $formTask = "";
+
 
 $connectError = false; //flag to display an error message in the html form
 
 //form processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $participantID = test_input($_POST["participantID"]);
-    $action = test_input($_POST["action"]);
-
-    switch($action)
+    $formParticipantID = test_input("participantID");
+    $formAction = test_input("action");
+    $formTask = test_input("task");
+    //echo"<p>formAction:".$formAction."</p>";
+    switch($formAction)
     {
         case "connect":
             if(!isIdentified())
             {
-                identify($participantID);
+                identify($formParticipantID);
                 if(!isIdentified())
                 {
                     $connectError = true;
                 }
             }
         break;
+        case "runtask":
+            if(isIdentified())
+            {
+                $prepareTaskSucces = prepareTask($formTask);
+                if($prepareTaskSucces)
+                {
+                    //redirect to task
+                    header("Location: ".$_SESSION["taskUrl"]);
+                    exit();
+                }
+                
+            }
+        break;
         case "disconnect":
+            //echo"<p>disconnect</p>";
             unIdentify();
         break;
     }
 }
 
+//html header
+echo '<html>
+    <body>
+    <p>MBB Online Testing</p>
+    ';
+
 if(isIdentified())
 {
+
+    
+
     echo "<p>Bonjour utilisateur " . getParticipantID()."</p>";
 
 
@@ -85,14 +107,22 @@ else // not identified. Display login form
     </form>";
 }
 
+echo '
+</body>
+</html>
+';
+
 function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+    //return content of $_POST["$data"] with a bit of security
+    //return empty string if $data is not found in $_POST
+    if(!array_key_exists($data, $_POST))
+    { return "";}
+
+    $returnData = trim($_POST["$data"]);
+    $returnData = stripslashes($returnData);
+    $returnData = htmlspecialchars($returnData);
+    return $returnData;
   }
 ?>
 
-</body>
-</html>
 
