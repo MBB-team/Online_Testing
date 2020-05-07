@@ -8,25 +8,37 @@
  * author of modification: Cynthia Cabañas (cynthiacabanas@gmail.com)
  **/
 
-jsPsych.plugins["html+image-button-response"] = (function() {
+jsPsych.plugins["control-html+image-button-response"] = (function() {
 
   var plugin = {};
   // --------------------------------- PRE-LOAD MEDIA  -----------------------//
     // Example
       var piechart = [];
       for(var t=0;t < 82+1;t++){
-        piechart[t] = 'stimuli/img_piechart/piechart ('+t+').png'; // Pre-load all the jpg files in this folder
+        piechart[t] = 'stimuli/img_piechart_control/piechart ('+t+').png'; // Pre-load all the jpg files in this folder
       };
   // ---------------------------------------------------------------------------------//
 
   plugin.info = {
-    name: 'html+image-button-response',
+    name: 'control-html+image-button-response',
     description: '',
     parameters: {
-      stimulus: {
+      stimulus_1: {
         type: jsPsych.plugins.parameterType.HTML_STRING,
         pretty_name: 'Stimulus',
         default: undefined,
+        description: 'The HTML string to be displayed'
+      },
+      stimulus_2: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        pretty_name: 'Stimulus sure opt',
+        default: "Aucun contact avec les herbivores",
+        description: 'The HTML string to be displayed'
+      },
+      stimulus_3: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        pretty_name: 'Stimulus risky opt',
+        default: "Toutes les plantes sont fertiles",
         description: 'The HTML string to be displayed'
       },
       phase: {
@@ -76,7 +88,7 @@ jsPsych.plugins["html+image-button-response"] = (function() {
       margin_horizontal: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin horizontal',
-        default: '150px',
+        default: '170px',
         description: 'The horizontal margin of the button.'
       },
       response_ends_trial: {
@@ -103,7 +115,9 @@ jsPsych.plugins["html+image-button-response"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     // display stimulus
-    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 280px; right: 740px;">'+trial.stimulus+'</div>';
+    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 280px; right: 700px;">'+trial.stimulus_1+'</div>';
+    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 180px; right: 700px;">'+trial.stimulus_2+'</div>';
+    new_html +=  '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 100px; right: 740px;">'+trial.stimulus_3+'</div>';
 
     //display buttons
     var buttons = [];
@@ -127,12 +141,12 @@ jsPsych.plugins["html+image-button-response"] = (function() {
 
     //show prompt if there is one
     if (trial.prompt !== null) {
-      new_html += '<div id:"myPrompt" style="position:absolute; top: 50px; right: 600px;">'+trial.prompt+'</div>';
+      new_html += '<div id:"myPrompt" style="position:absolute; top: 70px; right: 600px;">'+trial.prompt+'</div>';
     }
 
     // add piechart with probabilities
     if (trial.probabilities !== null){
-      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 100px; right: 220px;" ></img>';
+      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 150px; right: 220px;" ></img>';
     }
 
 

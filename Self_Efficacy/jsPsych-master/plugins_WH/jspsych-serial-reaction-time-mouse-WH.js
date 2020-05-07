@@ -89,6 +89,20 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         default: 500,
         description: 'How long to highlight the response for'
       },
+      choices: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Choices',
+        default: undefined,
+        array: true,
+        description: 'The labels for the buttons.'
+      },
+      button_html: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Button HTML',
+        default: '<button class="jspsych-btn">%choice%</button>',
+        array: true,
+        description: 'The html of the button. Can create own style.'
+      }
     }
   }
 
@@ -101,14 +115,44 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       column: null
     }
 
-    // display stimulus
-    var stimulus = this.stimulus(trial.grid, trial.grid_square_size, trial.target_location, trial.target_image);
-    display_element.innerHTML = stimulus;
-
     //show prompt if there is one
     if (trial.prompt !== null) {
       display_element.innerHTML += trial.prompt;
     }
+
+    // display stimulus
+    var stimulus = this.stimulus(trial.grid, trial.grid_square_size, trial.target_location, trial.target_image);
+    display_element.innerHTML += stimulus;
+
+    //display buttons
+    var buttons = [];
+    if (Array.isArray(trial.button_html)) {
+      if (trial.button_html.length == trial.choices.length) {
+        buttons = trial.button_html;
+      } else {
+        console.error('Error in html-button-response plugin. The length of the button_html array does not equal the length of the choices array');
+      }
+    } else {
+      for (var i = 0; i < trial.choices.length; i++) {
+        buttons.push(trial.button_html);
+      }
+    }
+    display_element.innerHTML += '<div id="jspsych-html-button-response-btngroup">';
+    for (var i = 0; i < trial.choices.length; i++) {
+      var str = buttons[i].replace(/%choice%/g, trial.choices[i]);
+      display_element.innerHTML += '<div class="jspsych-html-button-response-button" style="display: inline-block; margin:8px;" id="jspsych-html-button-response-button-' + i +'" data-choice="'+i+'">'+str+'</div>';
+    }
+    display_element.innerHTML += '</div>';
+
+    // add event listeners to buttons
+    for (var i = 0; i < trial.choices.length; i++) {
+      display_element.querySelector('#jspsych-html-button-response-button-' + i).addEventListener('click', function(e){
+        var choice = e.currentTarget.getAttribute('data-choice'); // don't use dataset for jsdom compatibility
+        after_response_btn(choice);
+      });
+    }
+
+
 
 		if(trial.pre_target_duration <= 0){
 			showTarget();
@@ -140,7 +184,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
                info.row = e.currentTarget.getAttribute('data-row');
                info.column = e.currentTarget.getAttribute('data-column');
                info.rt = performance.now() - startTime;
-               after_response(info);
+               after_response_click(info);
                response = 1;
             }
           }
@@ -164,7 +208,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       var trial_data = {
         "rt":               response.rt,   // integer
         "stimulus":        "999",  // string
-        "button_pressed":   999,   // integer
+        "button_pressed":   response.button,   // integer
         "flips":            999,   // integer
         "conf_response":    999,   // integer
         "responses":       "999",  // string
@@ -172,8 +216,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         "SE_min":           999,   // integer
         "SE_max_ini":       999,   // integer
         "SE_min_ini":       999,   // integer
-        "response_row":     response.row,   // integer
-        "response_col":     response.column,   // integer
+        "response_row":     parseInt(response.row),   // integer
+        "response_col":     parseInt(response.column),   // integer
         "target_row":       trial.target_location[0],   // integer
         "target_col":       trial.target_location[1],   // integer
         "correct_row":      trial.correct_location[0],   // integer
@@ -189,8 +233,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
     };
 
-    // function to handle responses by the subject
-    function after_response(info) {
+    // function to handle click responses by the subject
+    function after_response_click(info) {
 
 			// only record first response
       response = response.rt == null ? info : response;
@@ -199,6 +243,27 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
       if (trial.response_ends_trial) {
         jsPsych.pluginAPI.setTimeout(function(){endTrial()}, trial.highlight);
+      }
+    };
+
+    // function to handle button responses by the subject
+    function after_response_btn(choice) {
+
+      // measure rt
+      var end_time = performance.now();
+      var rt = end_time - startTime;
+      response.button = choice;
+      response.rt = rt;
+
+      // disable all the buttons after a response
+      var btns = document.querySelectorAll('.jspsych-html-button-response-button button');
+      for(var i=0; i<btns.length; i++){
+        //btns[i].removeEventListener('click');
+        btns[i].setAttribute('disabled', 'disabled');
+      }
+
+      if (trial.response_ends_trial) {
+        endTrial();
       }
     };
 
