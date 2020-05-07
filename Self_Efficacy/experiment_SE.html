@@ -11,33 +11,31 @@ Per trial:
 
 <!DOCTYPE html>
 <html>
-<head>
-  <title> Self-Efficacy </title>
-  <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
-  <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
-  <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
-  <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
-  <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
-  <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
-  <script   src  = 'SE.js'></script>
+      <head>
+            <meta charset="utf-8"/>
+            <title> Self-Efficacy </title>
+            <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
+            <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+            <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
+            <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
+            <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
+            <script   src  = 'SE.js'></script>
+      </head>
+      <body>
+            <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+            <canvas class = "canvas" id="myCanvas"></canvas>
+      </body>
 
-</head>
-<body>
-  <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
-  <canvas class = "canvas" id="myCanvas"></canvas>
-</body>
-
-<script>
+<script type="application/javascript">
 
   // --------------------------------- PARAMETERS --------------------------------//
-
-  // Put here all your parameters, they will be global.
 
   // What to do
   const cfg = {debug:          false,
@@ -47,8 +45,8 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+               nbTrials:       3,
+               nbBlocks:       1};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -97,7 +95,8 @@ Per trial:
         blockNb: 999,
         trialNb: 999,
         TinB: 999,
-        testNb: 999
+        testNb: 999,
+        target_score: 999
       }
     };
 
@@ -109,7 +108,8 @@ Per trial:
             blockNb: 999,
             trialNb: 999,
             TinB: 999,
-            testNb: 999
+            testNb: 999,
+            target_score: 999
           }
         };
 
@@ -137,7 +137,7 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var grid_indexes_shuffled = grid_indexes;//jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
     var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, grid_indexes_shuffled, square_size);
 
@@ -155,25 +155,26 @@ Per trial:
 
     //CODE TO SAVE FULLDATA AT THE END
 
-              function saveData() {
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'write_data_SE.php'); // change it to point to php script.
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.onload = function() {
-                          if(xhr.status == 200){
-                               console.log(xhr)
-                               var response = JSON.parse(xhr.responseText); // $.parseJSON
-                         } if(response.success){ console.log("Data saved");
-                         } else {console.log("Data not saved");}
-                   };
-                   xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
-             }
+    function saveData() {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', 'write_data_SE.php'); // change it to point to php script.
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.onload = function() {
+                if(xhr.status == 200){
+                     console.log(xhr);
+                     var response = JSON.parse(xhr.responseText); // $.parseJSON
+                     console.log(response);
+               } if(response.success){ console.log("Data saved");
+               } else {console.log("Data not saved");}
+         };
+         xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
+   }
 
 // ------------------------------ BEGIN EXPERIMENT --------------------------- //
 
-    var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
-    var today = new Date();
-    var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+    var subject_id      = Math.floor(Math.random()*9000000) + 1000000;
+    var today           = new Date();
+    var date            = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
     var exp_timeline = [];
 
@@ -197,11 +198,12 @@ Per trial:
           blockNb: 999,
           trialNb: 999,
           TinB: 999,
-          testNb: 999
+          testNb: 999,
+          target_score: 999
         }
       };
 
-    //  exp_timeline.push(instructions);
+      exp_timeline.push(instructions);
 
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
@@ -213,7 +215,7 @@ Per trial:
         show_progress_bar: true,
         on_trial_finish: function() {
              jsPsych.data.addProperties({subject_id: subject_id, date: date});
-             //saveData(); // edit out if not on server
+             saveData(); // edit out if not on server
        },
         on_finish: function() {
           jsPsych.data.displayData(); // Disable once online, use to look at data while coding
