@@ -184,6 +184,7 @@
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Je choisis cette option!', 'Je choisis cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
+        post_trial_gap: 500,
         data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
       }
 
@@ -374,22 +375,21 @@ stimulus: function(){
     button_label: 'Continuer',
     require_movement: true,
   }
+  var explicit_question = {
+    type: 'html-slider-response',
+    stimulus: "Le/la participant(e) que vous venez d'observer \351tait-il/elle plus ou moins prudent que la moyenne?",
+    start: Math.floor(Math.random()*100), // to start at a random place everytime
+    labels: ["<p>Il/elle est d\351finitivement </p>"+"plus prudent(e) que la moyenne</p>","<p>Il/elle est aussi prudent(e) que la moyenne</p>","<p>Il/elle est d\351finitivement </p>"+"moins prudent(e) que la moyenne</p>"],
+    slider_width: 1000,
+    button_label: 'Continuer',
+    require_movement: true,
+  }
+
 // ---------------------- CONFIDENCE TRIALS + FEEDBACK -----------------------//
     var if_confidence_pred1= {
         timeline: [confidence_slider],
         conditional_function: function(){
           if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    var if_confidence_control= {
-        timeline: [confidence_slider],
-        conditional_function: function(){
-          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -423,6 +423,16 @@ stimulus: function(){
         timeline: [confidence_slider],
         conditional_function: function(){
           if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 || trial_index_pred4 == 20 || trial_index_pred4 == 24 || trial_index_pred4 == 28|| trial_index_pred4 == 32) { //Confidence ratings every 4 trials
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    var if_confidence_control= {
+        timeline: [confidence_slider],
+        conditional_function: function(){
+          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -513,7 +523,7 @@ stimulus: function(){
     var if_feedback_CR_control= {
         timeline: [feedback_CR_control],
         conditional_function: function(){
-          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -523,11 +533,52 @@ stimulus: function(){
     var if_feedback_noCR_control= {
         timeline: [feedback_noCR_control],
         conditional_function: function(){
-          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
                 return false;
             } else {
                 return true;
             }
+        }
+    }
+
+    var if_explicit_question_pred1= {
+        timeline: [explicit_question],
+        conditional_function: function(){
+          if( trial_index_pred1 == 34) { //Explicit question at the end of each prediction phase
+              return true;
+          } else {
+              return false;
+          }
+        }
+    }
+    var if_explicit_question_pred2= {
+        timeline: [explicit_question],
+        conditional_function: function(){
+          if( trial_index_pred2 == 34) { //Explicit question at the end of each prediction phase
+              return true;
+          } else {
+              return false;
+          }
+        }
+    }
+    var if_explicit_question_pred3= {
+        timeline: [explicit_question],
+        conditional_function: function(){
+          if( trial_index_pred3 == 34) { //Explicit question at the end of each prediction phase
+              return true;
+          } else {
+              return false;
+          }
+        }
+    }
+    var if_explicit_question_pred4= {
+        timeline: [explicit_question],
+        conditional_function: function(){
+          if( trial_index_pred4 == 34) { //Explicit question at the end of each prediction phase
+              return true;
+          } else {
+              return false;
+          }
         }
     }
 // --------------------------------- BLOCK PROCEDURES  ---------------------------//
@@ -561,6 +612,7 @@ var test_procedure_training_pred = {
     sample: {
       type: 'custom',
       fn: function my_order(t){
+        //var myorder = [1,2,3]
         var myorder = pseudorandomize_conditions ()
         console.log(myorder)
           return myorder;
@@ -568,11 +620,12 @@ var test_procedure_training_pred = {
       }
   }
   var test_procedure_prediction_1 = {
-      timeline: [fixation, test_prediction_1, if_confidence_pred1, if_feedback_CR_pred1, if_feedback_noCR_pred1],
+      timeline: [fixation, test_prediction_1, if_confidence_pred1, if_feedback_CR_pred1, if_feedback_noCR_pred1, if_explicit_question_pred1], //if_explicit_question_pred1
       timeline_variables: test_stimuli,// add in a different JS
       sample: {
         type: 'custom',
         fn: function my_order(t){
+          //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
           console.log(myorder)
             return myorder;
@@ -581,11 +634,12 @@ var test_procedure_training_pred = {
       }
 
     var test_procedure_prediction_2 = {
-      timeline: [fixation, test_prediction_2, if_confidence_pred2, if_feedback_CR_pred2, if_feedback_noCR_pred2],
+      timeline: [fixation, test_prediction_2, if_confidence_pred2, if_feedback_CR_pred2, if_feedback_noCR_pred2, if_explicit_question_pred2],
       timeline_variables: test_stimuli,// add in a different JS
       sample: {
         type: 'custom',
         fn: function my_order(t){
+          //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
           console.log(myorder)
             return myorder;
@@ -593,11 +647,12 @@ var test_procedure_training_pred = {
         }
       }
     var test_procedure_prediction_3 = {
-      timeline: [fixation, test_prediction_3, if_confidence_pred3, if_feedback_CR_pred3, if_feedback_noCR_pred3],
+      timeline: [fixation, test_prediction_3, if_confidence_pred3, if_feedback_CR_pred3, if_feedback_noCR_pred3, if_explicit_question_pred3],
       timeline_variables: test_stimuli,
       sample: {
         type: 'custom',
         fn: function my_order(t){
+          //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
           console.log(myorder)
             return myorder;
@@ -605,11 +660,12 @@ var test_procedure_training_pred = {
         }
       }
     var test_procedure_prediction_4 = {
-      timeline: [fixation, test_prediction_4, if_confidence_pred4, if_feedback_CR_pred4, if_feedback_noCR_pred4],
+      timeline: [fixation, test_prediction_4, if_confidence_pred4, if_feedback_CR_pred4, if_feedback_noCR_pred4, if_explicit_question_pred4],
       timeline_variables: test_stimuli,
       sample: {
         type: 'custom',
         fn: function my_order(t){
+          //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
           console.log(myorder)
             return myorder;
@@ -637,15 +693,15 @@ var test_procedure_training_pred = {
      /* create timeline */
      var timeline = [];
      timeline.push(firstFullscreen);
-     timeline.push(instructions);
-     timeline.push(training_dec_screen);
-     timeline.push(test_procedure_training_dec);
-     timeline.push(training_pred_screen);
-     timeline.push(test_procedure_training_pred);
-     timeline.push(end_training_screen);
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
-     timeline.push(prediction_screen);
+     // timeline.push(instructions);
+     // timeline.push(training_dec_screen);
+     // timeline.push(test_procedure_training_dec);
+     // timeline.push(training_pred_screen);
+     // timeline.push(test_procedure_training_pred);
+     // timeline.push(end_training_screen);
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
+     // timeline.push(prediction_screen);
      timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
      timeline.push(decision_screen);
      timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
