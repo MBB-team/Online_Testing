@@ -41,6 +41,7 @@ function SE(nbBlocks, nbTrials){
         blockNb: block_i,
         trialNb: trial_counter,
         TinB: 999,
+        testNb: 999,
         target_score: target_scores_all[trial_counter]
       }
     }; // block number
