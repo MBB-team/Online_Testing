@@ -66,10 +66,10 @@
 
       if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
             var wrong_browser = {
-                  type: 'html-keyboard-response',
-                  stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
-                  +'<p> Please re-open the experiment in one of these browsers. </p>',
-            };
+              type: 'html-keyboard-response',
+              stimulus: "<p> Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p> "
+                   + "<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>",
+        };
             jsPsych.init({
                   timeline: [wrong_browser],
             });
@@ -78,8 +78,8 @@
             // Create "Variable/function" that makes sure you remain in FullScreen
             var firstFullscreen =	{
                   type: 'fullscreen',
-                  message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
-                  button_label: 'Put in Fullscreen',
+                  message:"<p> Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer.</p>",
+                  button_label: 'Mettre en plein \351cran',
                   delay_after: 300,
                   check_fullscreen: true,
                   data: {
@@ -89,7 +89,8 @@
 
             var fullscreenExp = {
                   type: 'fullscreen',
-                  message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
+                  message: "<p>Vous devez \352tre en mode plein \351cran pour continuer lexp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>"",
+
                   fullscreen_mode: false,
                   data: {
                         test_part: 'fullscreenExp',
@@ -179,7 +180,7 @@
       var test_decision = {
         type: "html+image-button-response",
         phase: 'Decision',
-        prompt: 'Vous recevez une somme initiale de 50 euros. Prenez une décision!',
+        prompt: 'Vous recevez une somme initiale de 50 euros. Prenez une d\351cision!',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Je choisis cette option!', 'Je choisis cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -207,7 +208,7 @@
         type: "html+image-button-response",
         dummy: 1,
         phase: 'Prediction',
-        prompt:'<div>DUMMY1 '+list_random_names[0] +'reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
+        prompt:'<div>'+list_random_names[0] +'reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -224,7 +225,7 @@
         type: "html+image-button-response",
         phase: 'Prediction',
         dummy: 2,
-        prompt:'<div>DUMMY2 '+list_random_names[1]+' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>'+list_random_names[1]+' reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -241,7 +242,7 @@
         type: "html+image-button-response",
         phase: 'Prediction',
         dummy: 3,
-        prompt:'<div> DUMMY3 '+list_random_names[2]+' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>'+list_random_names[2]+' reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -258,7 +259,7 @@
         type: "html+image-button-response",
         phase: 'Prediction',
         dummy: 4,
-        prompt:'<div>DUMMY4 '+list_random_names[3]+' receives 50 virtual euros. What will he /she choose?</div>',
+        prompt:'<div>'+list_random_names[3]+' reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
         probabilities: jsPsych.timelineVariable('probabilities'),
@@ -275,9 +276,9 @@
       var test_control = {
         type: "control-html+image-button-response",
         phase: 'Control',
-        prompt:'<div> Les deux écosystèmes commencent avec 80 plantes. Dans un an,</div>'+'<div>lequel de ces deux ecosystèmes aura le plus grand nombre de plantes?</div>',
+        prompt:'<div> Les deux \351cosyst\350mes commencent avec 80 plantes. Dans un an,</div>'+'<div>lequel de ces deux \351cosyst\350mes aura le plus grand nombre de plantes?</div>',
         stimulus_1: jsPsych.timelineVariable('plantes'),
-        choices: ['Ecosystème 1', 'Ecosystème 2'],
+        choices: ['Ecosyst\350me 1', 'Ecosyst\350me 2'],
         probabilities: jsPsych.timelineVariable('probabilities'),
         data: jsPsych.timelineVariable('data'), // tag with test_part and correct_response
         on_finish: function(data){
@@ -294,12 +295,12 @@
       stimulus: function(){
         var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
         if(last_trial_correct){
-          var correct = "<p> Bien joué! Il / Elle a effectivement choisi cette option!</p>"
+          var correct = "<p> Bien jou\351! Il / Elle a effectivement choisi cette option!</p>"
           var color_correct = correct.fontcolor("green");
           color_correct = color_correct.bold(); // makes text bold
           return color_correct;
         } else {
-          incorrect = "<p>Désolé, il / elle a choisi l'autre option.</p>"
+          incorrect = "<p>D\351sol\351, il / elle a choisi l'autre option.</p>"
           var color_incorrect = incorrect.fontcolor("red");
           color_incorrect = color_incorrect.bold(); // makes text bold
           return color_incorrect;
@@ -313,12 +314,12 @@
     stimulus: function(){
       var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
       if(last_trial_correct){
-        var correct = "<p> Bien joué! Il / Elle a effectivement choisi cette option!</p>"
+        var correct = "<p> Bien jou\351! Il / Elle a effectivement choisi cette option!</p>"
         var color_correct = correct.fontcolor("green");
         color_correct = color_correct.bold(); // makes text bold
         return color_correct;
       } else {
-        incorrect = "<p>Désolé, il / elle a choisi l'autre option.</p>"
+        incorrect = "<p>D\351sol\351, il / elle a choisi l'autre option.</p>"
         var color_incorrect = incorrect.fontcolor("red");
         color_incorrect = color_incorrect.bold(); // makes text bold
         return color_incorrect;
@@ -333,12 +334,12 @@
   stimulus: function(){
     var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
     if(last_trial_correct){
-      var correct = "<p> Bien joué! Cette année, cet écosystème a plus de plantes!</p>"
+      var correct = "<p> Bien jou\351! Cette ann\351e, cet \351cosyst\350me a plus de plantes!</p>"
       var color_correct = correct.fontcolor("green");
       color_correct = color_correct.bold(); // makes text bold
       return color_correct;
     } else {
-      incorrect = "<p>Désolé, cette année, c’est en fait l’autre écosystème qui a plus de plantes.</p>"
+      incorrect = "<p>D\351sol\351, cette ann\351e, c’est en fait l’autre \351cosyst\350me qui a plus de plantes.</p>"
       var color_incorrect = incorrect.fontcolor("red");
       color_incorrect = color_incorrect.bold(); // makes text bold
       return color_incorrect;
@@ -352,12 +353,12 @@ trial_duration: 1500,
 stimulus: function(){
   var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
   if(last_trial_correct){
-    var correct = "<p> Bien joué! Cette année, cet écosystème a plus de plantes!</p>"
+    var correct = "<p> Bien jou\351! Cette ann\351e, cet \351cosyst\350me a plus de plantes!</p>"
     var color_correct = correct.fontcolor("green");
     color_correct = color_correct.bold(); // makes text bold
     return color_correct;
   } else {
-    incorrect = "<p>Désolé, cette année, c’est en fait l’autre écosystème qui a plus de plantes.</p>"
+    incorrect = "<p>D\351sol\351, cette ann\351e, c’est en fait l’autre \351cosyst\350me qui a plus de plantes.</p>"
     var color_incorrect = incorrect.fontcolor("red");
     color_incorrect = color_incorrect.bold(); // makes text bold
     return color_incorrect;
@@ -366,9 +367,9 @@ stimulus: function(){
 }
   var confidence_slider = {
     type: 'html-slider-response',
-    stimulus: 'A quel point êtes-vous confiant(e) en votre prédiction?',
+    stimulus: 'A quel point \352tes-vous confiant(e) en votre pr\351diction?',
     start: Math.floor(Math.random()*100), // to start at a random place everytime
-    labels: ["<p>Pas du tout !</p>"+"<p>(Je choisis au hazard)</p>","<p>Complètement</p>"+"<p>(Je suis 100% sûr(e))</p>"],
+    labels: ["<p>Pas du tout !</p>"+"<p>(Je choisis au hazard)</p>","<p>Compl\350tement</p>"+"<p>(Je suis 100% s\373r(e))</p>"],
     slider_width: 1000,
     button_label: 'Continuer',
     require_movement: true,
