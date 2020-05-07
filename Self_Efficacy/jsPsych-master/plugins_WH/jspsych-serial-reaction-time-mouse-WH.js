@@ -108,6 +108,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var CorB = 0;
     var startTime = -1;
     var response = {
       rt: null,
@@ -201,6 +202,12 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
     function endTrial() {
 
+      var button_response     = 999;
+
+      if (CorB == 2) {
+        button_response = parseInt(response.button);
+      }
+
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -208,7 +215,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       var trial_data = {
         "rt":               response.rt,   // integer
         "stimulus":        "999",  // string
-        "button_pressed":   response.button,   // integer
+        "button_pressed":   button_response,   // integer
         "flips":            999,   // integer
         "conf_response":    999,   // integer
         "responses":       "999",  // string
@@ -236,6 +243,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     // function to handle click responses by the subject
     function after_response_click(info) {
 
+      CorB = 1; // click
+
 			// only record first response
       response = response.rt == null ? info : response;
 
@@ -248,6 +257,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
     // function to handle button responses by the subject
     function after_response_btn(choice) {
+
+      CorB = 2;
 
       // measure rt
       var end_time = performance.now();
