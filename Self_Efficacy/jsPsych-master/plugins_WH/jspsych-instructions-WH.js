@@ -169,8 +169,8 @@ jsPsych.plugins["instructions-WH"] = (function() {
       var page_view_time = current_time - last_page_update_time;
 
       view_history.push({
-        page_index: current_page,
-        viewing_time: page_view_time
+        page: current_page,
+        time: page_view_time
       });
 
       last_page_update_time = current_time;
