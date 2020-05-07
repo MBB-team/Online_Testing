@@ -35,8 +35,8 @@ function SE(nbBlocks, nbTrials){
     // BLOCK NUMBER //
     var block_number = {
       type: 'html-button-response-WH',
-      stimulus: '<p>This is the beginning of block <b>'+block_n+'</b>.</p><p>When you are ready to start, click on the button.</p>',
-      choices: ['Start'],
+      stimulus: '<p>C&#39est le de&#769but du bloc <b>'+block_n+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+      choices: ['C&#39est parti !'],
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
@@ -56,8 +56,8 @@ function SE(nbBlocks, nbTrials){
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>This is the beginning of trial <b>'+trial_n+'</b> of block <b><p>'+block_n+'</b>.</p></p><p>Your target score for this trial is <b>'+target_scores_all[trial_counter]+'</b>.</p><p>When you are ready to start, click on the button.</p>',
-        choices: ['Start'],
+        stimulus: '<p>C&#39est le de&#769but de l&#39essai <b>'+trial_n+'</b> du bloc <b><p>'+block_n+'</b>.</p></p><p style="font-size:30px">Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+        choices: ['C&#39est parti !'],
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -74,7 +74,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Target Score: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Position the slider across the interval of flips you think it might take you to achieve the target score.<p>Use the left and right arrows to position the red bars. Use the up and down arrows to length or shorten the red bars.</p><p> Press Enter to confirm your choice.</p><p>You have <b>3 minutes</b> to make a response</p>',
+        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Positionnez la barre en fonction du nombre de fois dont vous pensez avoir besoin de voir la grille pour atteindre le score cible.<p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>1 minute</b> pour re&#769pondre.</p>',
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -106,7 +106,7 @@ function SE(nbBlocks, nbTrials){
       // REWATCH QUESTION //
       var rewatch = {
         type: 'html-button-response-WH',
-        stimulus: '<p>Souhaitez-vous revoir la grille?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p>',
+        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p>',
         prompt: function(){
           var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.';
           return rewatch_prompt;},
@@ -151,7 +151,7 @@ function SE(nbBlocks, nbTrials){
 
           var test_conf = {
             type: 'html-slider-response-WH',
-            stimulus:'<p>How confident are you that you would have achieved the target score of <b> '+target_scores_all[trial_counter]+'</b>?<p>-100% means completely sure <b>to not have</b> achieved it and +100% means completely sure <b>to have</b> achieved it.',
+            stimulus:'<p>A&#768 quel point auriez-vous e&#769te&#769 confiant d&#39avoir atteint le score cible de <b>'+target_scores_all[trial_counter]+'</b>, si vous aviez e&#769te&#769 teste&#769 ?</p><p>-100% = <b>certainement pas </b> et 100% = <b>certainement oui</b>',
             labels: ['-100%','0%','100%'],
             min: -100,
             max: 100,
@@ -174,7 +174,7 @@ function SE(nbBlocks, nbTrials){
 
           var test_phase = {
             type: 'html-button-response-WH',
-            stimulus: '<p>You will now be asked to recall the items.</p><p><b>Get ready!</b></p>',
+            stimulus: '<p>La phase de test est sur le point de commencer.</p><p><b>Sois pre&#770t.e !</b></p>',
             choices: [],
             trial_duration: time.fixation,
             data: {
@@ -221,7 +221,7 @@ function SE(nbBlocks, nbTrials){
               allow_nontarget_responses: true,
               prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
               pre_target_duration: 0,
-              choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test!'],
+              choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
               on_start: function(){var clicked = [null,null]},
               on_finish: function(data){
                 if (data.correct){
@@ -244,7 +244,7 @@ function SE(nbBlocks, nbTrials){
 
             // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
             var if_test = {
-              timeline: [test],
+              timeline: [fullscreenExp, test],
               conditional_function: function(){
                 var data = jsPsych.data.get().last(2).values()[0];
                 if (data.button_pressed == 1){
@@ -263,7 +263,7 @@ function SE(nbBlocks, nbTrials){
 
           var confidence = {
             type: 'html-button-response-WH',
-            stimulus: '<p>How many pairs do you believe you correctly guessed?</p>',
+            stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement deviné ?</p>',
             choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
             data: {
               blockNb: block_i,
@@ -287,7 +287,7 @@ function SE(nbBlocks, nbTrials){
             target: target_i,
             choices: jsPsych.NO_KEYS,
             prompt: function(){
-              var feedback_prompt = '<p>You got: <b>'+nCorrect+'/8!</b>';
+              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b>';
               return feedback_prompt;
             },
             feedback: true,
@@ -325,7 +325,7 @@ function SE(nbBlocks, nbTrials){
 
     var finish = {
       type: 'html-button-response-WH',
-      stimulus: '<p>You have completed the main experiment!</p><p><b>Thank you for your valuable participation</b></p>',
+      stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
       choices: ['Finish'],
       data: {
         blockNb: block_i,
