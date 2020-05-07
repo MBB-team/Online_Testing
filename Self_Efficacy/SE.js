@@ -40,7 +40,9 @@ function SE(nbBlocks, nbTrials){
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
-        TinB: 999
+        TinB: 999,
+        testNb: 999,
+        target_score: target_scores_all[trial_counter]
       }
     }; // block number
 
@@ -60,7 +62,8 @@ function SE(nbBlocks, nbTrials){
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
-          testNb: 999
+          testNb: 999,
+          target_score: target_scores_all[trial_counter]
         }
       }; // trial number
 
@@ -76,7 +79,8 @@ function SE(nbBlocks, nbTrials){
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
-          testNb: 999
+          testNb: 999,
+          target_score: target_scores_all[trial_counter]
         }
       };
 
@@ -94,7 +98,8 @@ function SE(nbBlocks, nbTrials){
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
-          testNb: 999
+          testNb: 999,
+          target_score: target_scores_all[trial_counter]
         }
       };
 
@@ -120,7 +125,8 @@ function SE(nbBlocks, nbTrials){
             blockNb: block_i,
             trialNb: trial_counter,
             TinB: trial_i,
-            testNb: 999
+            testNb: 999,
+            target_score: target_scores_all[trial_counter]
           }
         } // rewatch
 
@@ -155,7 +161,8 @@ function SE(nbBlocks, nbTrials){
               blockNb: block_i,
               trialNb: trial_counter,
               TinB: trial_i,
-              testNb: 999
+              testNb: 999,
+              target_score: target_scores_all[trial_counter]
             }
           };
 
@@ -174,7 +181,8 @@ function SE(nbBlocks, nbTrials){
               blockNb: block_i,
               trialNb: trial_counter,
               TinB: trial_i,
-              testNb: 999
+              testNb: 999,
+              target_score: target_scores_all[trial_counter]
             }
           };
 
@@ -229,7 +237,8 @@ function SE(nbBlocks, nbTrials){
                 blockNb: block_i,
                 trialNb: trial_counter,
                 TinB: trial_i,
-                testNb: test_i
+                testNb: test_i,
+                target_score: target_scores_all[trial_counter]
               }
             };
 
@@ -260,7 +269,8 @@ function SE(nbBlocks, nbTrials){
               blockNb: block_i,
               trialNb: trial_counter,
               TinB: trial_i,
-              testNb: 999
+              testNb: 999,
+              target_score: target_scores_all[trial_counter]
             }
           };
 
@@ -283,7 +293,6 @@ function SE(nbBlocks, nbTrials){
             feedback: true,
             correct_responses: function(){return correct_i},
             on_start: function(feedback){
-              console.log(clicked_i)
               feedback.clicked = clicked_i;
             },
             on_finish: function(){ // reset counters
@@ -296,7 +305,8 @@ function SE(nbBlocks, nbTrials){
               blockNb: block_i,
               trialNb: trial_counter,
               TinB: trial_i,
-              testNb: 999
+              testNb: 999,
+              target_score: target_scores_all[trial_counter]
             }
           };
 
@@ -321,7 +331,8 @@ function SE(nbBlocks, nbTrials){
         blockNb: block_i,
         trialNb: trial_counter,
         TinB: trial_i,
-        testNb: 999
+        testNb: 999,
+        target_score: target_scores_all[trial_counter]
       }
     }
 
