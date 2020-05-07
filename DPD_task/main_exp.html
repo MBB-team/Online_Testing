@@ -38,7 +38,7 @@
     <script src="jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
     <script  src = "getBrowserInfo.js"></script>
     <script  src = "mat_conditions.js"></script>
-    <script  src = "mat_conditions_control.js"></script>
+    <script  src = "pseudorandomize_conditions.js"></script>
     <script  src = "random_name.js"></script>
     <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   </head>
@@ -135,7 +135,6 @@
 
 // --------------------------- TEST TRIALS - PLUGINS  ------------------------//
     var test_stimuli = mat_conditions()
-    //var test_stimuli_control= mat_conditions_control()
 
       var instructions = {
         type: 'instructions',
@@ -561,8 +560,8 @@ var test_procedure_training_pred = {
     sample: {
       type: 'custom',
       fn: function my_order(t){
-        var myorder = [161,57,118,4,78,89,23,135,165,119]
-        //ar myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152,27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+        var myorder = pseudorandomize_conditions ()
+        console.log(myorder)
           return myorder;
         }
       }
@@ -573,8 +572,8 @@ var test_procedure_training_pred = {
       sample: {
         type: 'custom',
         fn: function my_order(t){
-            var myorder = [161,57,118,4,78,89,23,135,165,119]
-            //var myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152,27,141,101,70,15,164,135,90,24,63,42,121,1,127,34,101,57,149,97,79,123]
+          var myorder = pseudorandomize_conditions ()
+          console.log(myorder)
             return myorder;
           }
         }
@@ -586,8 +585,8 @@ var test_procedure_training_pred = {
       sample: {
         type: 'custom',
         fn: function my_order(t){
-          var myorder = [161,57,118,4,78,89,23,135,165,119]
-          //var myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+          var myorder = pseudorandomize_conditions ()
+          console.log(myorder)
             return myorder;
           }
         }
@@ -598,8 +597,8 @@ var test_procedure_training_pred = {
       sample: {
         type: 'custom',
         fn: function my_order(t){
-          var myorder = [161,57,118,4,78,89,23,135,165,119]
-          //var myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+          var myorder = pseudorandomize_conditions ()
+          console.log(myorder)
             return myorder;
           }
         }
@@ -610,8 +609,8 @@ var test_procedure_training_pred = {
       sample: {
         type: 'custom',
         fn: function my_order(t){
-          var myorder = [161,57,118,4,78,89,23,135,165,119]
-          //var myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+          var myorder = pseudorandomize_conditions ()
+          console.log(myorder)
             return myorder;
           }
         }
@@ -622,12 +621,13 @@ var test_procedure_training_pred = {
         sample: {
           type: 'custom',
           fn: function my_order(t){
-            var myorder = [161,57,118,4,78,89,23,135,165,119]
-            //var myorder = [161,57,118,4,78,89,23,135,165,119,5,45,152, 27,141,101,70,15,164,135, 90, 24, 63, 42,121,1,127, 34,101, 57,149, 97, 79,123]
+            var myorder = pseudorandomize_conditions ()
+            console.log(myorder)
               return myorder;
             }
           }
         }
+
 
     var prediction_phase = [test_procedure_prediction_1, test_procedure_prediction_2, test_procedure_prediction_3, test_procedure_prediction_4];
      shuffled_prediction_phase = jsPsych.randomization.repeat(prediction_phase, 1);
