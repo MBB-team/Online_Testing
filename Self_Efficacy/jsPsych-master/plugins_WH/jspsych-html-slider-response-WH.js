@@ -166,7 +166,7 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
         "stimulus":         trial.stimulus,  // string
         "button_pressed":   999,   // integer
         "flips":            999,   // integer
-        "conf_response":    response.response,   // integer
+        "conf_response":    parseInt(response.response),   // integer
         "responses":       "999",  // string
         "SE_max":           999,   // integer
         "SE_min":           999,   // integer

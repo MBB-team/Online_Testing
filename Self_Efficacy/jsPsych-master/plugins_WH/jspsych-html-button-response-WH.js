@@ -158,7 +158,7 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
       var trial_data = {
         "rt":               response.rt,   // integer
         "stimulus":         trial.stimulus,  // string
-        "button_pressed":   response.button,   // integer
+        "button_pressed":   parseInt(response.button),   // integer
         "flips":            999,   // integer
         "conf_response":    999,   // integer
         "responses":       "999",  // string

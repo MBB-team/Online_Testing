@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2020 at 10:18 AM
+-- Generation Time: May 07, 2020 at 12:00 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.2
 
@@ -25,29 +25,37 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tableEmo`
+-- Table structure for table `tableSE`
 --
 
-CREATE TABLE `tableEmo` (
+CREATE TABLE `tableSE` (
   `rt` double DEFAULT NULL,
   `stimulus` text DEFAULT NULL,
+  `button_pressed` int(3) DEFAULT NULL,
+  `flips` int(3) DEFAULT NULL,
+  `conf_response` int(3) DEFAULT NULL,
   `responses` text DEFAULT NULL,
-  `key_press` int(3) DEFAULT NULL,
-  `test_part` text DEFAULT NULL,
+  `SE_max` int(3) DEFAULT NULL,
+  `SE_min` int(3) DEFAULT NULL,
+  `SE_max_ini` int(3) DEFAULT NULL,
+  `SE_min_ini` int(3) DEFAULT NULL,
+  `response_row` int(3) DEFAULT NULL,
+  `response_col` int(3) DEFAULT NULL,
+  `target_row` int(3) DEFAULT NULL,
+  `target_col` int(3) DEFAULT NULL,
+  `correct_row` int(3) DEFAULT NULL,
+  `correct_col` int(3) DEFAULT NULL,
+  `correct` tinyint(1) DEFAULT NULL,
   `blockNb` int(3) DEFAULT NULL,
   `trialNb` int(3) DEFAULT NULL,
-  `condiEmoBlock` int(3) DEFAULT NULL,
-  `condiEmoTrial` int(3) DEFAULT NULL,
-  `condiRwd` int(3) DEFAULT NULL,
-  `posCritDist` int(3) DEFAULT NULL,
-  `distractor` int(3) DEFAULT NULL,
-  `posTarget` int(3) DEFAULT NULL,
-  `target` int(3) DEFAULT NULL,
+  `TinB` int(3) DEFAULT NULL,
+  `testNb` int(3) DEFAULT NULL,
+  `target_score` int(3) NOT NULL,
   `trial_type` text DEFAULT NULL,
   `trial_index` int(25) DEFAULT NULL,
-  `time_elapsed` int(25) DEFAULT NULL,
+  `time_elapsed` int(50) DEFAULT NULL,
   `internal_node_id` text DEFAULT NULL,
-  `subject_id` int(7) NOT NULL,
+  `subject_id` int(7) DEFAULT NULL,
   `date` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 COMMIT;
