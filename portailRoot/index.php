@@ -3,7 +3,7 @@
 <body>
 <p>MBB Online Testing</p>
 <?php
-include("php/session.php");
+include("portailLib/session.php");
 
 //declare empty variables
 $participantID = $action = "";
