@@ -21,6 +21,7 @@ services:
       MYSQL_DATABASE: databaseEmo
     volumes:
       - ./Emotion_Regulation_JS:/docker-entrypoint-initdb.d # excute all SQL files in this folder
+      - /save/dumps:/tmp/dumps # Save dump
     ports: # Enable access to local SQL IDE
       - "53506:3306"
     expose: # Enable access from php image
