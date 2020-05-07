@@ -106,11 +106,11 @@ function SE(nbBlocks, nbTrials){
       // REWATCH QUESTION //
       var rewatch = {
         type: 'html-button-response-WH',
-        stimulus: '<p>Do you want to rewatch the stimuli?</p><p>The target score for this trial is: <b>'+target_scores_all[trial_counter]+'</b>.',
+        stimulus: '<p>Souhaitez-vous revoir la grille?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p>',
         prompt: function(){
-          var rewatch_prompt = '<p>You have seen the stimuli <b>'+flip_counter+'</b> times.';
+          var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.';
           return rewatch_prompt;},
-          choices: ['Yes','No'],
+          choices: ['Oui','Non'],
           trial_duration: time.rewatch,
           on_finish: function(data){
             response = data.button_pressed;
@@ -219,9 +219,9 @@ function SE(nbBlocks, nbTrials){
               response_ends_trial: true,
               highlight: time.highlight,
               allow_nontarget_responses: true,
-              prompt: '<p id = "jspsych-prompt" style="margin:0px"><b>Click</b> on the location of the matching pair.</p>',
+              prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
               pre_target_duration: 0,
-              choices: ['I do not know, show me the next pair', 'I think I have reached the target score, please give me feedback'],
+              choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test!'],
               on_start: function(){var clicked = [null,null]},
               on_finish: function(data){
                 if (data.correct){
@@ -325,7 +325,7 @@ function SE(nbBlocks, nbTrials){
 
     var finish = {
       type: 'html-button-response-WH',
-      stimulus: '<pYou have completed the main experiment!</p><p><b>Thank you for your valuable participation</b></p>',
+      stimulus: '<p>You have completed the main experiment!</p><p><b>Thank you for your valuable participation</b></p>',
       choices: ['Finish'],
       data: {
         blockNb: block_i,
