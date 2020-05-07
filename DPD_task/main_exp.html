@@ -55,7 +55,7 @@
   var imageDuration     = 70; // in ms
   var fixation_time     = 1000;
 
-  var nbInstr           = 7; // how many Instr Slides (12)
+  var nbInstr           = 8; // how many Instr Slides (12)
   var nbScreens         = 6;
   var nbControlInstr    = 3;
   //var debug             = false; // if true, skips details, instructions and practice
@@ -693,15 +693,15 @@ var test_procedure_training_pred = {
      /* create timeline */
      var timeline = [];
      timeline.push(firstFullscreen);
-     // timeline.push(instructions);
-     // timeline.push(training_dec_screen);
-     // timeline.push(test_procedure_training_dec);
-     // timeline.push(training_pred_screen);
-     // timeline.push(test_procedure_training_pred);
-     // timeline.push(end_training_screen);
-     // timeline.push(decision_screen);
-     // timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
-     // timeline.push(prediction_screen);
+     timeline.push(instructions);
+     timeline.push(training_dec_screen);
+     timeline.push(test_procedure_training_dec);
+     timeline.push(training_pred_screen);
+     timeline.push(test_procedure_training_pred);
+     timeline.push(end_training_screen);
+     timeline.push(decision_screen);
+     timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
+     timeline.push(prediction_screen);
      timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
      timeline.push(decision_screen);
      timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
