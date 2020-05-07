@@ -9,7 +9,7 @@ services:
     volumes:
       - ./Emotion_Regulation_JS/:/var/www/html/
     ports: # Enable access to local browser
-      - "52481:80"
+      - "80:80"
     stdin_open: true
     tty: true
 
