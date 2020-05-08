@@ -3,6 +3,7 @@ Codes for Online Testing Using JavaScript and JsPsych
 
 # Installation
 ```bash
+# Copy .env.tpl to .env. Then :
 docker system prune --all --force # Reset docker
 docker-compose up --force-recreate # Start docker images : see docker-compose.yml
 ```

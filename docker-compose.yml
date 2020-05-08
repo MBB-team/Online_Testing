@@ -17,8 +17,8 @@ services:
     image: mariadb
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 67jyt645ez5LFJIyrege456g48r
-      MYSQL_DATABASE: databaseEmo
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - ./Emotion_Regulation_JS:/docker-entrypoint-initdb.d # excute all SQL files in this folder
       - /save/dumps:/tmp/dumps # Save dump
