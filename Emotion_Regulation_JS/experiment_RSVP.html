@@ -136,25 +136,25 @@
                 instrImg[t-1] = 'instructions/instructionsDiapo/Slide'+t+'.jpg';
           };
 
-          var imgWFF = []; var scrambleWFF = [];
+          var imgWFF = []; var scrambleWFF = [];//
           for(var t=1;t < 36+1;t++){
                 imgWFF[t-1] = 'imgJS/WFF_'+t+'.jpg';
                 scrambleWFF[t-1] = 'imgJS/WFF_scramble_'+t+'.jpg';
           };
 
-          var imgWFN = []; var scrambleWFN = [];
+          var imgWFN = []; var scrambleWFN = [];//
           for(var t=1;t < 86+1;t++){
                 imgWFN[t-1] = 'imgJS/WFN_'+t+'.jpg';
                 scrambleWFN[t-1] = 'imgJS/WFN_scramble_'+t+'.jpg';
           };
 
-          var imgWMF = []; var scrambleWMF = [];
+          var imgWMF = []; var scrambleWMF = [];//
           for(var t=1;t < 29+1;t++){
                 imgWMF[t-1] = 'imgJS/WMF_'+t+'.jpg';
                 scrambleWMF[t-1] = 'imgJS/WMF_scramble_'+t+'.jpg';
           };
 
-          var imgWMN = []; var scrambleWMN = [];
+          var imgWMN = []; var scrambleWMN = [];//
           for(var t=1;t < 91+1;t++){
                 imgWMN[t-1] = 'imgJS/WMN_'+t+'.jpg';
                 scrambleWMN[t-1] = 'imgJS/WMN_scramble_'+t+'.jpg';
@@ -164,7 +164,10 @@
           imgRwd    = ['imgJS/cent.jpg', 'imgJS/euro.jpg'];
 
           function updateLoadedCount(nLoaded){
-                var percentcomplete = nLoaded / (instrImg.length + imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length + imgCondi.length + imgRwd.length)  * 100;
+                var percentcomplete = nLoaded / (instrImg.length +
+                imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length +
+                scrambleWFF.length + scrambleWFN.length + scrambleWMF.length + scrambleWMN.length +
+                imgCondi.length + imgRwd.length)  * 100;
                 //console.log('Loaded '+percentcomplete+'% of images');
           }
 
@@ -228,9 +231,12 @@
 
             var exp_timeline = [];
 
-            jsPsych.pluginAPI.preloadImages([instrImg, imgWFF, imgWFN, imgWMF, imgWMN, imgCondi, imgRwd],
-            function(){ startExperiment();},
-            function(nLoaded) {updateLoadedCount(nLoaded);});
+            jsPsych.pluginAPI.preloadImages(    [instrImg,
+                                                imgWFF, imgWFN, imgWMF, imgWMN, 
+                                                scrambleWFF, scrambleWFN, scrambleWMF, scrambleWMN,
+                                                imgCondi, imgRwd],
+                                                function(){ startExperiment();},
+                                                function(nLoaded) {updateLoadedCount(nLoaded);} );
 
             exp_timeline.push(firstFullscreen);
 
