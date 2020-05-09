@@ -195,9 +195,9 @@ function isPreparedTask()
 
 function getRunID()
 {
-    if(array_key_exists('RunID', $_SESSION))
+    if(array_key_exists('runID', $_SESSION))
     {
-        return($_SESSION['RunID']);
+        return($_SESSION['runID']);
     }
     else
     {
