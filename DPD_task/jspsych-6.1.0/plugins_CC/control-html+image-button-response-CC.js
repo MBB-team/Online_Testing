@@ -115,9 +115,9 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     // display stimulus
-    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 280px; right: 700px;">'+trial.stimulus_1+'</div>';
-    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 180px; right: 700px;">'+trial.stimulus_2+'</div>';
-    new_html +=  '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 100px; right: 740px;">'+trial.stimulus_3+'</div>';
+    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 200px; right: 760px;">'+trial.stimulus_1+'</div>'; //"X plantes sont fertiles"
+    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 350px; right: 720px;">'+trial.stimulus_2+'</div>'; // "Aucun contact avec les herbivores",
+    new_html +=  '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 180px; right: 300px;">'+trial.stimulus_3+'</div>'; // "Toutes les plantes sont fertiles"
 
     //display buttons
     var buttons = [];
@@ -141,12 +141,12 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
 
     //show prompt if there is one
     if (trial.prompt !== null) {
-      new_html += '<div id:"myPrompt" style="position:absolute; top: 70px; right: 600px;">'+trial.prompt+'</div>';
+      new_html += '<div id:"myPrompt" style="position:absolute; top: 70px; right: 325px;">'+trial.prompt+'</div>';
     }
 
     // add piechart with probabilities
     if (trial.probabilities !== null){
-      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 150px; right: 220px;" ></img>';
+      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:relative; top: -850px; right: -230px;" ></img>';
     }
 
 

@@ -164,7 +164,10 @@
           imgRwd    = ['imgJS/cent.jpg', 'imgJS/euro.jpg'];
 
           function updateLoadedCount(nLoaded){
-                var percentcomplete = nLoaded / (instrImg.length + imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length + imgCondi.length + imgRwd.length)  * 100;
+                var percentcomplete = nLoaded / (instrImg.length +
+                imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length +
+                scrambleWFF.length + scrambleWFN.length + scrambleWMF.length + scrambleWMN.length +
+                imgCondi.length + imgRwd.length)  * 100;
                 //console.log('Loaded '+percentcomplete+'% of images');
           }
 
@@ -228,9 +231,12 @@
 
             var exp_timeline = [];
 
-            jsPsych.pluginAPI.preloadImages([instrImg, imgWFF, imgWFN, imgWMF, imgWMN, imgCondi, imgRwd],
-            function(){ startExperiment();},
-            function(nLoaded) {updateLoadedCount(nLoaded);});
+            jsPsych.pluginAPI.preloadImages(    [instrImg,
+                                                imgWFF, imgWFN, imgWMF, imgWMN, 
+                                                scrambleWFF, scrambleWFN, scrambleWMF, scrambleWMN,
+                                                imgCondi, imgRwd],
+                                                function(){ startExperiment();},
+                                                function(nLoaded) {updateLoadedCount(nLoaded);} );
 
             exp_timeline.push(firstFullscreen);
 
