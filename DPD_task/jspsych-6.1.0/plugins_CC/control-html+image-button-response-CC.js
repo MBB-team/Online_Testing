@@ -41,12 +41,6 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
         default: "Toutes les plantes sont fertiles",
         description: 'The HTML string to be displayed'
       },
-      phase: {
-        type: jsPsych.plugins.parameterType.HTML_STRING,
-        pretty_name: 'Phase',
-        default: null,
-        description: 'What phase is it doing? [Decision/Prediction]'
-      },
       choices: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Choices',
@@ -223,9 +217,9 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
       var trial_data = {
         "rt": response.rt,
         "stimulus": trial.stimulus,
-        "button_pressed": response.button,
+        "response": parseInt(response.button),
         "dummy_number": trial.dummy,
-        "phase" : trial.phase
+        "start_point": 999
       };
 
       // clear the display

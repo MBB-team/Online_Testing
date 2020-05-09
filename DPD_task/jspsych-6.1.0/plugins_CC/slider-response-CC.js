@@ -12,6 +12,10 @@
 jsPsych.plugins['slider-response'] = (function() {
 
   var plugin = {};
+  // General function that is needed
+  function randi(min, max) { // min and max included (acts like randi of Matlab)
+        return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 
   plugin.info = {
     name: 'html-slider-response',
@@ -38,7 +42,7 @@ jsPsych.plugins['slider-response'] = (function() {
       start: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Slider starting value',
-        default: 50,
+        default: Math.floor(Math.random()*100),
         description: 'Sets the starting value of the slider',
       },
       step: {
@@ -103,6 +107,12 @@ jsPsych.plugins['slider-response'] = (function() {
         default: true,
         description: 'If true, trial will end when user makes a response.'
       },
+      dummy: {
+        type: jsPsych.plugins.parameterType.INT, // interval with probabilities
+        pretty_name: 'Dummy number',
+        default: null,
+        description: 'Dummy number to check later for parameters'
+      }
     }
   }
 
@@ -164,9 +174,8 @@ jsPsych.plugins['slider-response'] = (function() {
       var trialdata = {
         "rt": response.rt,
         "stimulus": trial.stimulus,
-        "stimulus2": "null",
-        "key_press": 999,
-        "response": response.response,
+        "response": parseInt(response.response),
+        "dummy_number": 999,
         "start_point": trial.start,
       };
 

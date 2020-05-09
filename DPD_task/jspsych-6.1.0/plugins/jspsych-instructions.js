@@ -106,7 +106,7 @@ jsPsych.plugins.instructions = (function() {
           pagenum_display = "<span style='margin: 0 1em;' class='"+
           "jspsych-instructions-pagenum'>Page "+(current_page+1)+"/"+trial.pages.length+"</span>";
       }
-     
+
       if (trial.show_clickable_nav) {
 
         var nav_html = "<div class='jspsych-instructions-nav' style='padding: 10px 0px;'>";
@@ -132,10 +132,10 @@ jsPsych.plugins.instructions = (function() {
         if (trial.show_page_number && trial.pages.length > 1) {
           // page numbers for non-mouse navigation
           html += "<div class='jspsych-instructions-pagenum'>"+pagenum_display+"</div>"
-        } 
+        }
         display_element.innerHTML = html;
       }
-      
+
     }
 
     function next() {
@@ -185,8 +185,11 @@ jsPsych.plugins.instructions = (function() {
       display_element.innerHTML = '';
 
       var trial_data = {
-        "view_history": JSON.stringify(view_history),
-        "rt": performance.now() - start_time
+        "rt": performance.now() - start_time,
+        "stimulus": "999",
+        "response": JSON.stringify(view_history),
+        "dummy_number": trial.dummy,
+        "start_point": 999
       };
 
       jsPsych.finishTrial(trial_data);
