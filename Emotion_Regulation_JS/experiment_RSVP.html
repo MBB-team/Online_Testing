@@ -21,7 +21,7 @@
                   - trial_index (int(25))
                   - time_elapsed (int(25))
                   - internal_node_id (varchar(25))
-                  - subject_id (int(7))
+                  - (run_id (int(7)), directly get this value in write_data using PHP session)
                   - date (varchar(25))
 
 -->
@@ -223,11 +223,8 @@
 
 // --------------------------------- BEGINING EXPERIMENT  --------------------//
 
-            var subject_id    = Math.floor(Math.random()*9000000) + 1000000;
             var today = new Date();
             var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-
-            //console.log("The subject ID is "+subject_id)
 
             var exp_timeline = [];
 
@@ -271,12 +268,12 @@
                         timeline: exp_timeline,
                         show_progress_bar: true,
                         on_trial_finish: function() {
-                              jsPsych.data.addProperties({subject_id: subject_id, date: date});
+                              jsPsych.data.addProperties({date: date});
                               saveData(); // edit out if not on server
                         },
                         on_finish: function() {
                               //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                              document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                              document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>')
                         },
                   });
             }
