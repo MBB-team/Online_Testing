@@ -7,7 +7,7 @@ services:
     environment:
       XDEBUG_CONFIG: remote_host=172.17.1.100 remote_port=9000 remote_enable=1 # todo : replace 172.17.1.100 with your docker ip
     volumes:
-      - ./Emotion_Regulation_JS/:/var/www/html/
+      - ./portailRoot/:/var/www/html/
     ports: # Enable access to local browser
       - "52481:80"
     stdin_open: true
@@ -20,7 +20,7 @@ services:
       MYSQL_ROOT_PASSWORD: 67jyt645ez5LFJIyrege456g48r
       MYSQL_DATABASE: databaseEmo
     volumes:
-      - ./Emotion_Regulation_JS:/docker-entrypoint-initdb.d # excute all SQL files in this folder
+      - ./portailRoot/portailLib:/docker-entrypoint-initdb.d # excute all SQL files in this folder
     ports: # Enable access to local SQL IDE
       - "53506:3306"
     expose: # Enable access from php image
