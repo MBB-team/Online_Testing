@@ -46,7 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 //html header
-echo '<html>
+echo '<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    </head>
     <body>
     <p>MBB Online Testing</p>
     ';
@@ -97,10 +101,10 @@ else // not identified. Display login form
 {
     if($connectError)
     {
-        echo "<p style='color:red'>Num&eacutero de sujet inconnu</p>";
+        echo "<p style='color:red'>Numéro de sujet inconnu</p>";
     }
     echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-    <p>Votre num&eacutero de sujet : <input type='text' name='participantID' /></p>
+    <p>Votre numéro de sujet : <input type='text' name='participantID' /></p>
     <p><input type='submit' value='OK'></p>
     <input type='hidden' name='action' value='connect'>
     </form>";

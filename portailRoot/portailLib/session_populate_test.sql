@@ -1,3 +1,5 @@
+SET NAMES utf8;
+
 INSERT INTO `participant` (`participantID`) VALUES ('user1');
 INSERT INTO `participant` (`participantID`) VALUES ('user2');
 INSERT INTO `participant` (`participantID`) VALUES ('user3');

@@ -11,11 +11,8 @@ function identify($participantID)
     
     try {
         
-        // this path should point to your configuration file.
-        include('database_config_session.php');
         // connect to database
-        $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = sessionOpenDataBase();
 
         $sql = "SELECT COUNT(participantID) FROM participant WHERE participantID = '".$participantID."'";
         $userInDatabaseStmt = $conn->prepare($sql);
@@ -73,11 +70,8 @@ function getAvailableTask($taskID="")
     $openedTasks = array();
     try {
 
-        // this path should point to your configuration file.
-        include('database_config_session.php');
         // connect to database
-        $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = sessionOpenDataBase();
 
         // Get all opened tasks
         $sql = "SELECT * FROM task, taskSession WHERE taskID = task_taskID AND openingTime < NOW() AND closingTime > NOW()";
@@ -138,11 +132,8 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
 
     try {
 
-        // this path should point to your configuration file.
-        include('database_config_session.php');
         // connect to database
-        $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = sessionOpenDataBase();
 
         // insert a new run
         $sql = "INSERT INTO run (startTime, participant_participantID, taskSession_taskSessionID) ";
@@ -216,11 +207,8 @@ function endTask()
     //update current run with doneTime
     try {
 
-        // this path should point to your configuration file.
-        include('database_config_session.php');
         // connect to database
-        $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = sessionOpenDataBase();
 
         // update run with doneTime
         $sql = "UPDATE run SET doneTime=NOW() WHERE runID='".getRunID()."'";
@@ -252,5 +240,15 @@ function clearRunSession()
     unset($_SESSION['taskID']);
     unset($_SESSION['taskSessionID']);
     unset($_SESSION["taskUrl"]);
+}
+
+function sessionOpenDataBase()
+{
+    // this path should point to your configuration file.
+    include('database_config_session.php');
+    //connect and set charset to utf8
+    $_conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+    $_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    return $_conn;
 }
 ?>
