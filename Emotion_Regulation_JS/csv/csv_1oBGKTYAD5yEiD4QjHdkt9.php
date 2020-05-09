@@ -116,24 +116,30 @@ function getArrayCsv($arrayHeader, $arrayBody) {
 
 /**
  * Basic authentification.
+ * @param [string] $sentUsername The username sent.
+ * @param [string] $sentPassword The password sent.
  *
  * @return void
  */
-function basicAuth($allowedUsername = "O5hTfPF3NcG2oxzvSmRL", $allowdePassword = "a7JuexhYOxotH8G6QE9PUX") {
+function basicAuth() {
     if (!isset($_SERVER['PHP_AUTH_USER'])) {
         header('WWW-Authenticate: Basic realm="My Realm"');
         header('HTTP/1.0 401 Unauthorized');
-        echo 'Texte utilisé si le visiteur utilise le bouton d\'annulation';
+        echo 'Authentification canceled.';
         exit;
     } else {
-        $username = $_SERVER['PHP_AUTH_USER'];
-        $password = $_SERVER['PHP_AUTH_PW'];
+        $correctUsernameHash = '$2y$12$1AeDe3mR3d26MwPugSn67euzz9ZXdS.GKRZ5UE2pUCEUMt4.8leai'; // Generate a new (password / username) hash with $sentUsernameHash = password_hash($sentUsername, PASSWORD_DEFAULT, ['cost' => 12]);
+        $correctPasswordHash = '$2y$12$ilBHqpwp9ntDaHswpyVxHO8Mr51Iqiba5ncidBh3/snDjLhpoQakO';
+        $sentUsername = $_SERVER['PHP_AUTH_USER'];
+        $sentPassword = $_SERVER['PHP_AUTH_PW'];
+        $isUsernameCorrect = password_verify($sentUsername, $correctUsernameHash);
+        $isPasswordCorrect = password_verify($sentPassword, $correctPasswordHash);
         $logout = false;
-        if ($username != $allowedUsername) {
-            echo "<p>Bad userName ({$username}).</p>";
+        if (!$isUsernameCorrect) {
+            echo "<p>Bad userName ({$sentUsername}).</p>";
             $logout = true;
-        } else if ($password != $allowdePassword) {
-            echo "<p>Correct userName ({$username}), but bad password ({$password}).</p>";
+        } else if (!$isPasswordCorrect) {
+            echo "<p>Correct userName ({$sentUsername}), but bad password ({$sentPassword}).</p>";
             $logout = true;
         }
         if ($logout) {
