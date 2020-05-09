@@ -66,13 +66,13 @@ jsPsych.plugins["instructions-WH"] = (function() {
       button_label_previous: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Button label previous',
-        default: 'Previous',
+        default: 'Dernier',
         description: 'The text that appears on the button to go backwards.'
       },
       button_label_next: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Button label next',
-        default: 'Next',
+        default: 'Prochain',
         description: 'The text that appears on the button to go forwards.'
       }
     }

@@ -103,7 +103,7 @@ jsPsych.plugins["html+image-button-response"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     // display stimulus
-    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 280px; right: 740px;">'+trial.stimulus+'</div>';
+    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 300px; right: 820px;">'+trial.stimulus+'</div>';
 
     //display buttons
     var buttons = [];
@@ -127,7 +127,7 @@ jsPsych.plugins["html+image-button-response"] = (function() {
 
     //show prompt if there is one
     if (trial.prompt !== null) {
-      new_html += '<div id:"myPrompt" style="position:absolute; top: 50px; right: 600px;">'+trial.prompt+'</div>';
+      new_html += '<div id:"myPrompt" style="position:absolute; top: 70px; right: 325px;">'+trial.prompt+'</div>';
     }
 
     // add piechart with probabilities
