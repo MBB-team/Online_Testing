@@ -193,10 +193,22 @@ function isPreparedTask()
     }
 }
 
+function getRunID()
+{
+    if(array_key_exists('RunID', $_SESSION))
+    {
+        return($_SESSION['RunID']);
+    }
+    else
+    {
+        return("");
+    }
+}
+
 //update a run with doneTime to NOW(), return true on success
 function endTask()
 {
-    if(!array_key_exists('runID', $_SESSION))
+    if(!isPreparedTask())
     {
         //no run started in this session environement
         return false;
@@ -211,7 +223,7 @@ function endTask()
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // update run with doneTime
-        $sql = "UPDATE run SET doneTime=NOW() WHERE runID='".$_SESSION["runID"]."'";
+        $sql = "UPDATE run SET doneTime=NOW() WHERE runID='".getRunID()."'";
 
         $addRunStmt = $conn->prepare($sql);
 
