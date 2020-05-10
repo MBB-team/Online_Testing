@@ -92,6 +92,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
         "rt": 999,
         "stimulus": trial.stimulus,
         "response": 999,
+        "dummy_number": 999,
         "start_point": 999
       };
 

@@ -188,7 +188,7 @@ jsPsych.plugins.instructions = (function() {
         "rt": performance.now() - start_time,
         "stimulus": "999",
         "response": JSON.stringify(view_history),
-        "dummy_number": trial.dummy,
+        "dummy_number": 999,
         "start_point": 999
       };
 
