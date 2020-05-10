@@ -82,13 +82,13 @@ function getAvailableTask($taskID="")
                 task tsk
             LEFT JOIN taskSession tsn ON tsn.task_taskID = tsk.taskID
             WHERE
-                openingTime < NOW()
-                AND closingTime > NOW()
+                tsn.openingTime < NOW()
+                AND tsn.closingTime > NOW()
         ";
         //if $taskID is supplied. Filter only this task
         if($taskID!="")
-            $sql.=" AND taskID = '". $taskID ."'";
-        $sql .= "ORDER BY tsk.taskName ASC;";
+            $sql.=" AND tsk.taskID = '". $taskID ."'";
+        $sql .= " ORDER BY tsk.taskName ASC;";
 
         $openedTasksStmt = $conn->prepare($sql);
         $openedTasksStmt->execute();

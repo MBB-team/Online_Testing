@@ -34,6 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     //redirect to task
                     header("Location: ".$_SESSION["taskUrl"]);
                     exit();
+                } else {
+                    echo '<p>Only one session can be opened for one task at a time.</p>';
+                    exit();
                 }
                 
             }
