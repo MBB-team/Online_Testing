@@ -47,7 +47,7 @@ CREATE TABLE `tableEmo` (
   `trial_index` int(25) DEFAULT NULL,
   `time_elapsed` int(25) DEFAULT NULL,
   `internal_node_id` text DEFAULT NULL,
-  `subject_id` int(7) NOT NULL,
+  `run_id` int(7) NOT NULL,
   `date` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 COMMIT;
