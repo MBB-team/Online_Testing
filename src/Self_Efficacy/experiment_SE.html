@@ -49,7 +49,7 @@ Per trial:
                nbBlocks:       5};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
+  const time = {flipSpeed:     4000, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        60000,
                 highlight:     500,
@@ -58,7 +58,7 @@ Per trial:
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 38;
+  const nbInstr              = 45;
 
   // --------------------------------- INITIALISATION  --------------------------- //
 
@@ -218,7 +218,7 @@ Per trial:
              saveData(); // edit out if not on server
        },
         on_finish: function() {
-          jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+        //  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
           //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
         }
       });
