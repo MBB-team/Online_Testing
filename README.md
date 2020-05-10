@@ -28,7 +28,7 @@ To debug sql, use Dbeaver.
 
 # Information
 https://github.com/MBB-team/Online_Testing   
-experiment_RSVP.html : main app entry point.   
-write_data.php : get data and write to db.   
-create_tableemo.sql : create table.   
-jsPsych-master : web framework.   
+sql : all sql files executed on start.   
+src/index.php : main app entry point.   
+src/task : tasks.   
+src/task/jsPsych-master : web framework.   

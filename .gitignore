@@ -1,5 +1,5 @@
 
 .DS_Store
 .env
-portailRoot/portailLib/database_config_session.php
-Emotion_Regulation_JS/database_config.php
+src/portailLib/database_config_session.php
+src/Emotion_Regulation_JS/database_config.php
