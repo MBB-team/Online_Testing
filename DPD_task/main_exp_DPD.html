@@ -219,7 +219,10 @@
             correct_Dummy2: 999,
             correct_Dummy3: 999,
             correct_Dummy4: 999,
+<<<<<<< HEAD
+=======
             correct_ecosystem: 999,
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'training_pred_screen';
@@ -481,6 +484,9 @@
           color_incorrect = color_incorrect.bold(); // makes text bold
           return color_incorrect;
         }
+<<<<<<< HEAD
+      }
+=======
       },
       data: jsPsych.timelineVariable('data'),
       on_finish: function(data){//adds a "correct" property to data
@@ -488,6 +494,7 @@
       data.decision_phase = 999;
       data.correct = 999;
      }
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
     }
     var feedback_noCR = {
     type: 'html-keyboard-response',
@@ -506,6 +513,9 @@
         color_incorrect = color_incorrect.bold(); // makes text bold
         return color_incorrect;
       }
+<<<<<<< HEAD
+    }
+=======
     },
     data: jsPsych.timelineVariable('data'),
     on_finish: function(data){//adds a "correct" property to data
@@ -513,6 +523,7 @@
     data.decision_phase = 999;
     data.correct = 999;
    }
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
   }
 
   var feedback_CR_control = {
@@ -532,6 +543,9 @@
       color_incorrect = color_incorrect.bold(); // makes text bold
       return color_incorrect;
     }
+<<<<<<< HEAD
+  }
+=======
   },
   data: jsPsych.timelineVariable('data'),
   on_finish: function(data){//adds a "correct" property to data
@@ -539,6 +553,7 @@
   data.decision_phase = 999;
   data.correct = 999;
  }
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
 }
 var feedback_noCR_control = {
 type: 'html-keyboard-response',
@@ -557,16 +572,23 @@ stimulus: function(){
     color_incorrect = color_incorrect.bold(); // makes text bold
     return color_incorrect;
   }
+<<<<<<< HEAD
+=======
 },
 data: jsPsych.timelineVariable('data'),
 on_finish: function(data){//adds a "correct" property to data
 data.test_part = 'feedback_noCR_control';
 data.decision_phase = 999;
 data.correct = 999;
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
 }
 }
   var confidence_slider = {
     type: 'html-slider-response',
+<<<<<<< HEAD
+    dummy: 999,
+=======
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
     stimulus: 'A quel point \352tes-vous confiant(e) en votre pr\351diction?',
     labels: ["<p>Pas du tout !</p>"+"<p>(Je choisis au hazard)</p>","<p>Compl\350tement</p>"+"<p>(Je suis 100% s\373r(e))</p>"],
     slider_width: 1000,
@@ -901,9 +923,15 @@ var test_procedure_training_pred = {
 
      /* create timeline */
      var timeline = [];
+<<<<<<< HEAD
+     // timeline.push(firstFullscreen);
+     // timeline.push(instructions);
+     // timeline.push(training_dec_screen);
+=======
      timeline.push(firstFullscreen);
      timeline.push(instructions);
      timeline.push(training_dec_screen);
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
      timeline.push(test_procedure_training_dec);
      timeline.push(training_pred_screen);
      timeline.push(test_procedure_training_pred);
@@ -914,6 +942,20 @@ var test_procedure_training_pred = {
      timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
      timeline.push(decision_screen);
      timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
+<<<<<<< HEAD
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+=======
      timeline.push(prediction_screen);
      timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
      timeline.push(decision_screen);
@@ -926,6 +968,7 @@ var test_procedure_training_pred = {
      timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
      timeline.push(decision_screen);
      timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+>>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
      timeline.push(control_instructions);
      timeline.push(test_procedure_control); //Control task
      timeline.push(debrief_message);
