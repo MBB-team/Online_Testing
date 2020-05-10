@@ -216,9 +216,9 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
       // gather the data to store for the trial
       var trial_data = {
         "rt": response.rt,
-        "stimulus": trial.stimulus,
+        "stimulus": trial.stimulus_1,
         "response": parseInt(response.button),
-        "dummy_number": trial.dummy,
+        "dummy_number": 999,
         "start_point": 999
       };
 
