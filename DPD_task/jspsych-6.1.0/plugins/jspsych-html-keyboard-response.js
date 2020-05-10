@@ -92,10 +92,7 @@ jsPsych.plugins["html-keyboard-response"] = (function() {
         "rt": 999,
         "stimulus": trial.stimulus,
         "response": 999,
-<<<<<<< HEAD
-=======
         "dummy_number": 999,
->>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
         "start_point": 999
       };
 

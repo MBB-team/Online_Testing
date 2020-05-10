@@ -188,11 +188,7 @@ jsPsych.plugins.instructions = (function() {
         "rt": performance.now() - start_time,
         "stimulus": "999",
         "response": JSON.stringify(view_history),
-<<<<<<< HEAD
-        "dummy_number": trial.dummy,
-=======
         "dummy_number": 999,
->>>>>>> parent of d433e7b... Merge branch 'master' of https://github.com/MBB-team/Online_Testing
         "start_point": 999
       };
 
