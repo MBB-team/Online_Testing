@@ -98,12 +98,15 @@ jsPsych.plugins.fullscreen = (function() {
 
       function endTrial() {
         display_element.innerHTML = '';
-        
+
         jsPsych.pluginAPI.setTimeout(function(){
 
           var trial_data = {
-            "rt": null,
-            "stimulus": null,
+            "rt": 999,
+            "stimulus": 999,
+            "response": 999,
+            "dummy_number": 999,
+            "start_point": 999
           };
 
           jsPsych.finishTrial(trial_data);
