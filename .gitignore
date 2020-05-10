@@ -1,2 +1,4 @@
 
 .DS_Store
+src/portailLib/database_config_session.php
+.env
