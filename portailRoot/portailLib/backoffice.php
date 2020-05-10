@@ -10,8 +10,8 @@ function exportCSV($table, $onlyDone = false)
         $conn = backofficeOpenDataBase();
 
         // Get all opened tasks
-        $sql = "SELECT * FROM participant, run, taskSession, ".$table;
-        $sql.= " WHERE runID=run_id AND participantID=participant_participantID AND taskSessionID=taskSession_taskSessionID";
+        $sql = "SELECT * FROM ".$table;
+        // $sql.= " WHERE runID=run_id AND participantID=participant_participantID AND taskSessionID=taskSession_taskSessionID";
         //if $taskID is supplied. Filter only this task
         if($onlyDone)
         {

@@ -74,14 +74,23 @@ function getAvailableTask($taskID="")
         $conn = sessionOpenDataBase();
 
         // Get all opened tasks
-        $sql = "SELECT * FROM task, taskSession WHERE taskID = task_taskID AND openingTime < NOW() AND closingTime > NOW()";
+        $sql = "
+            SELECT
+                tsk.*,
+                tsn.*
+            FROM
+                task tsk
+            LEFT JOIN taskSession tsn ON tsn.task_taskID = tsk.taskID
+            WHERE
+                openingTime < NOW()
+                AND closingTime > NOW()
+        ";
         //if $taskID is supplied. Filter only this task
         if($taskID!="")
-        {
             $sql.=" AND taskID = '". $taskID ."'";
-        }
-        $openedTasksStmt = $conn->prepare($sql);
+        $sql .= "ORDER BY tsk.taskName ASC;";
 
+        $openedTasksStmt = $conn->prepare($sql);
         $openedTasksStmt->execute();
         $openedTasks = $openedTasksStmt->fetchAll();
 
