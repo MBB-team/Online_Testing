@@ -76,7 +76,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Positionnez la barre en fonction du nombre de fois dont vous pensez avoir besoin de voir la grille pour atteindre le score cible.<p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>1 minute</b> pour re&#769pondre.</p>',
+        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Positionnez la barre en fonction du nombre de fois dont vous pensez avoir besoin de voir la grille pour atteindre le score cible.<p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
