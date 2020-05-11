@@ -218,7 +218,7 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
         "rt": response.rt,
         "stimulus": trial.stimulus_1,
         "response": parseInt(response.button),
-        "dummy_number": trial.dummy,
+        "dummy_number": 999,
         "start_point": 999
       };
 
