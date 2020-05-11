@@ -7,7 +7,7 @@
                   - stimulus (varchar(250))
                   - responses: for the questions & instructions (varchar(100))
                   - key_press: [79,78] for oui [o] and non [n] (int(3))
-                  - test_part (varchar(25))
+                  - test_part (text)
                   - blockNb (int(3))
                   - trialNb (int(3))
                   - condiEmoBlock: 1 = DC, 2 == BC (int(3))
@@ -17,12 +17,12 @@
                   - distractor (int(3))
                   - posTarget: either 1 or 3 images after the distractor (int(3))
                   - target (int(3))
-                  - trial_type (varchar(25))
+                  - trial_type (text)
                   - trial_index (int(25))
                   - time_elapsed (int(25))
-                  - internal_node_id (varchar(25))
+                  - internal_node_id (text)
                   - (run_id (int(7)), directly get this value in write_data using PHP session)
-                  - date (varchar(25))
+                  - date (text)
 
 -->
 <!DOCTYPE html>
@@ -72,8 +72,8 @@
     if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
           var wrong_browser = {
                 type: 'html-keyboard-response',
-                stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
-                +'<p> Please re-open the experiment in one of these browsers. </p>',
+                stimulus: "<p> Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p> "
+                    + "<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>",
           };
           jsPsych.init({
                 timeline: [wrong_browser],
@@ -93,8 +93,8 @@
           // Create "Variable/function" that makes sure you remain in FullScreen
           var firstFullscreen =	{
                 type: 'fullscreen',
-                message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
-                button_label: 'Put in Fullscreen',
+                message:"<p> Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer.</p>",
+                button_label: 'Mettre en plein \351cran',
                 delay_after: 300,
                 check_fullscreen: true,
                 data: {
@@ -113,7 +113,7 @@
 
           var fullscreenExp = {
                 type: 'fullscreen',
-                message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
+                message: "<p> Vous devez \352tre en mode plein \351cran pour continuer lexp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
                 fullscreen_mode: false,
                 data: {
                       test_part: 'fullscreenExp',
@@ -175,12 +175,12 @@
 
       var firstInstr = {
             type: 'instructions',
-            pages: ['<img src="'+instrImg[0]+'" id="image-instructions" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[1]+'" id="image-instructions2" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[2]+'" id="image-instructions3" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[3]+'" id="image-instructions4" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[4]+'" id="image-instructions5" style="height:'+screen.height/1.5+'px" ></img>',
-            '<img src="'+instrImg[5]+'" id="image-instructions6" style="height:'+screen.height/1.5+'px" ></img>',],
+            pages: ['<img src="'+instrImg[0]+'" id="image-instructions" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[1]+'" id="image-instructions2" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[2]+'" id="image-instructions3" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[3]+'" id="image-instructions4" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[4]+'" id="image-instructions5" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[5]+'" id="image-instructions6" style="height:'+screen.height/1.25+'px" ></img>',],
             show_clickable_nav: true,
             show_page_number: true,
             on_start: function(){
@@ -229,7 +229,7 @@
             var exp_timeline = [];
 
             jsPsych.pluginAPI.preloadImages(    [instrImg,
-                                                imgWFF, imgWFN, imgWMF, imgWMN, 
+                                                imgWFF, imgWFN, imgWMF, imgWMN,
                                                 scrambleWFF, scrambleWFN, scrambleWMF, scrambleWMN,
                                                 imgCondi, imgRwd],
                                                 function(){ startExperiment();},
@@ -273,7 +273,7 @@
                         },
                         on_finish: function() {
                               //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                              document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>')
+                              //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>')
                               endTask();
                         },
                   });
@@ -299,13 +299,13 @@
                         console.log(response);
                         //redirect to home page after 5 secs if error
                         setTimeout(function () {
-                                                window.location.replace("/"); 
+                                                window.location.replace("/");
                                           },
                                     5000);
                   }
-                  
+
       };
-      xhr.send(); 
+      xhr.send();
 }
     } // End of the experiment (end of checking browser)
 </script>

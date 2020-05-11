@@ -38,7 +38,7 @@ CREATE TABLE `tableQuest` (
   `trial_index` int(25) DEFAULT NULL,
   `time_elapsed` int(25) DEFAULT NULL,
   `internal_node_id` varchar(25) DEFAULT NULL,
-  `subject_id` int(7) DEFAULT NULL,
+  `run_id` int(7) NOT NULL,
   `date` varchar(25) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 COMMIT;

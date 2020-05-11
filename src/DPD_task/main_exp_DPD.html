@@ -5,27 +5,27 @@
             - Last update: 11 May 2020
 ====================================================================================
             Data Output (as in MySQL)
-
                   - rt (double)
-              		- stimulus (int(3))
-              		- response (int(3))
-              		- dummy_number (int(3))
-              		- start_point (int(3))
-              		- test_frame (varchar(25))
-              		- frame (int(3))
-              		- prob_win (int(3))
-              		- correct_Dummy1 (int(3))
-              		- correct_Dummy2 (int(3))
-              		- correct_Dummy3 (int(3))
-              		- correct_Dummy4 (int(3))
-              		- correct_ecosystem (int(3))
-              		- trial_type (varchar(25))
-              		- trial_index (int(25))
-              		- time_elapsed  (int(25))
-              		- internal_node_id (varchar(25))
-              		- test_part (varchar(25))
-              		- decision_phase (int(3))
-              		- correct (int(3))
+                  - stimulus (int(3))
+                  - response (int(3))
+                  - dummy_number (int(3))
+                  - start_point (int(3))
+                  - test_frame (text)
+                  - frame (int(3))
+                  - prob_win (int(3))
+                  - correct_Dummy1 (int(3))
+                  - correct_Dummy2 (int(3))
+                  - correct_Dummy3 (int(3))
+                  - correct_Dummy4 (int(3))
+                  - correct_ecosystem (int(3))
+                  - trial_type (text)
+                  - trial_index (int(25))
+                  - time_elapsed  (int(25))
+                  - internal_node_id (text)
+                  - test_part (text)
+                  - decision_phase (int(3))
+                  - correct (int(3))
+                  - date
 
 -->
 <!DOCTYPE html>
@@ -39,7 +39,7 @@
     <script src="jspsych-6.1.0/plugins_CC/html+image-button-response-CC.js"></script>
     <script src="jspsych-6.1.0/plugins_CC/control-html+image-button-response-CC.js"></script>
     <script src="jspsych-6.1.0/plugins_CC/fullscreen-CC.js"></script>
-    <script src="jsPsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <script src="jsPsych-6.1.0/plugins_CC/jspsych-instructions.js"></script>
     <script  src = "getBrowserInfo.js"></script>
     <script  src = "mat_conditions.js"></script>
     <script  src = "pseudorandomize_conditions.js"></script>
@@ -50,7 +50,7 @@
     <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
     <canvas class = "canvas" id="myCanvas"></canvas>
 </body>
-  <script>
+  <script type="application/javascript">
 
   // --------------------------------- PARAMETERS --------------------------------//
 
@@ -148,18 +148,6 @@
                control_instrImg_html[t-1] = '<img src="'+control_instrImg[t-1]+'"id= "image-control-instructions" style="height:'+screen.height/1.25+'px"></img>';
               };
 
-// --------------------------------- BEGINING EXPERIMENT  --------------------//
-
-          var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
-          //console.log("The subject ID is "+subject_id)
-          // if(debug == false){
-          //   // var firstInstr    = instr([0,1,7,8,2,9]);
-          //   // var training      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
-          //   // for(var i = 0; i < practice.length; i++){
-          //   //       exp_timeline.push(practice[i]);
-          //   //};
-          //
-          // } // end debug
 
 // --------------------------- TEST TRIALS - PLUGINS  ------------------------//
     var test_stimuli = mat_conditions()
@@ -822,7 +810,7 @@ var test_procedure_training_pred = {
       fn: function my_order(t){
         //var myorder = [1,2,3]
         var myorder = pseudorandomize_conditions ()
-        console.log(myorder)
+        //console.log(myorder)
           return myorder;
         }
       }
@@ -835,7 +823,7 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          console.log(myorder)
+          //console.log(myorder)
             return myorder;
           }
         }
@@ -849,7 +837,7 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          console.log(myorder)
+          //console.log(myorder)
             return myorder;
           }
         }
@@ -862,7 +850,7 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          console.log(myorder)
+          //console.log(myorder)
             return myorder;
           }
         }
@@ -875,7 +863,7 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          console.log(myorder)
+          //console.log(myorder)
             return myorder;
           }
         }
@@ -887,7 +875,7 @@ var test_procedure_training_pred = {
           type: 'custom',
           fn: function my_order(t){
             var myorder = pseudorandomize_conditions ()
-            console.log(myorder)
+            //console.log(myorder)
               return myorder;
             }
           }
@@ -912,34 +900,55 @@ var test_procedure_training_pred = {
      timeline.push(prediction_screen);
      timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
      timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
-     timeline.push(control_instructions);
+     // timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+     // timeline.push(control_instructions);
      timeline.push(test_procedure_control); //Control task
      timeline.push(debrief_message);
+
+// --------------------------------- SAVING DATA  ----------------------------//
+     function saveData() {
+           var xhr = new XMLHttpRequest();
+           xhr.open('POST', 'write_data_DPD.php'); // change it to point to php script.
+           xhr.setRequestHeader('Content-Type', 'application/json');
+           xhr.onload = function() {
+                 if(xhr.status == 200){
+                       console.log(xhr);
+                       var response = JSON.parse(xhr.responseText);
+                       console.log(response);
+                 } if(response.success){ console.log("Data saved");
+           } else {console.log("Data not saved");}
+            };
+           xhr.send(jsPsych.data.getLastTrialData().json());
+      }
+
+// --------------------------------- BEGINING EXPERIMENT  --------------------//
+
+     var today = new Date();
+     var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
      // Execute the experiment
      jsPsych.init({
        timeline: timeline,
        show_progress_bar: true,
-      // on_trial_finish: function() {
-      //         jsPsych.data.addProperties({subject_id: subject_id});
-      //         saveData(); // edit out if not on server
-      // },
+       on_trial_finish: function() {
+             jsPsych.data.addProperties({date: date});
+             saveData(); // edit out if not on server
+       },
        on_finish: function() {
-         jsPsych.data.displayData();
-         //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>');
+             jsPsych.data.displayData();// Disable once online, use to look at data while coding
+            //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>')
          }
        });
      } // end of browser checking
