@@ -42,7 +42,8 @@ function SE(nbBlocks, nbTrials){
         trialNb: trial_counter,
         TinB: 999,
         testNb: 999,
-        target_score: target_scores_all[trial_counter]
+        target_score: target_scores_all[trial_counter],
+        test_part: 'blockNb'
       }
     }; // block number
 
@@ -63,7 +64,8 @@ function SE(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: target_scores_all[trial_counter]
+          target_score: target_scores_all[trial_counter],
+          test_part: 'trialNb'
         }
       }; // trial number
 
@@ -80,7 +82,8 @@ function SE(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: target_scores_all[trial_counter]
+          target_score: target_scores_all[trial_counter],
+          test_part: 'SE_slider'
         }
       };
 
@@ -99,7 +102,8 @@ function SE(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: target_scores_all[trial_counter]
+          target_score: target_scores_all[trial_counter],
+          test_part: 'flip'
         }
       };
 
@@ -126,7 +130,8 @@ function SE(nbBlocks, nbTrials){
             trialNb: trial_counter,
             TinB: trial_i,
             testNb: 999,
-            target_score: target_scores_all[trial_counter]
+            target_score: target_scores_all[trial_counter],
+            test_part: 'rewatch'
           }
         } // rewatch
 
@@ -162,7 +167,8 @@ function SE(nbBlocks, nbTrials){
               trialNb: trial_counter,
               TinB: trial_i,
               testNb: 999,
-              target_score: target_scores_all[trial_counter]
+              target_score: target_scores_all[trial_counter],
+              test_part: 'test_conf'
             }
           };
 
@@ -182,7 +188,8 @@ function SE(nbBlocks, nbTrials){
               trialNb: trial_counter,
               TinB: trial_i,
               testNb: 999,
-              target_score: target_scores_all[trial_counter]
+              target_score: target_scores_all[trial_counter],
+              test_part: 'fixation'
             }
           };
 
@@ -238,7 +245,8 @@ function SE(nbBlocks, nbTrials){
                 trialNb: trial_counter,
                 TinB: trial_i,
                 testNb: test_i,
-                target_score: target_scores_all[trial_counter]
+                target_score: target_scores_all[trial_counter],
+                test_part: 'test'
               }
             };
 
@@ -270,7 +278,8 @@ function SE(nbBlocks, nbTrials){
               trialNb: trial_counter,
               TinB: trial_i,
               testNb: 999,
-              target_score: target_scores_all[trial_counter]
+              target_score: target_scores_all[trial_counter],
+              test_part: 'post_test_conf'
             }
           };
 
@@ -306,7 +315,8 @@ function SE(nbBlocks, nbTrials){
               trialNb: trial_counter,
               TinB: trial_i,
               testNb: 999,
-              target_score: target_scores_all[trial_counter]
+              target_score: target_scores_all[trial_counter],
+              test_part: 'feedback'
             }
           };
 
@@ -332,7 +342,8 @@ function SE(nbBlocks, nbTrials){
         trialNb: trial_counter,
         TinB: trial_i,
         testNb: 999,
-        target_score: target_scores_all[trial_counter]
+        target_score: target_scores_all[trial_counter],
+        test_part: 'Fin'
       }
     }
 
