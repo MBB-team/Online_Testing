@@ -81,8 +81,10 @@ vim src/portailLib/database_config_session.php
 
 ## 5. Configure letsencrypt
 cd Online_Testing/   
-sudo rm -rf docker/letsencrypt
+docker-compose down --rmi all --volumes --remove-orphans   
 docker system prune --all --force
+docker volume prune -f
+sudo rm -rf docker/letsencrypt
 docker-compose -f docker-compose-prod.yml up --force-recreate
 sudo vim /home/ec2-user/Online_Testing/docker/letsencrypt/nginx/site-confs/default
 Change :
