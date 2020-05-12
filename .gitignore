@@ -2,3 +2,4 @@
 .DS_Store
 .env
 src/portailLib/database_config_session.php
+docker/letsencrypt/*

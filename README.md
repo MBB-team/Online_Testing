@@ -3,9 +3,10 @@ Codes for Online Testing Using JavaScript and JsPsych
 
 # Installation
 1. Copy Online_Testing/.env.tpl to Online_Testing/.env   
-2. Copy Online_Testing/Emotion_Regulation_JS/database_config_template.php to Online_Testing/Emotion_Regulation_JS/database_config.php   
+2. Copy Online_Testing/portailLib/database_config_template.php to Online_Testing/portailLib/database_config.php   
 3. Execute this :   
 ```bash
+cd Online_Testing
 docker system prune --all --force # Reset docker
 docker-compose up --force-recreate # Start docker images : see docker-compose.yml
 ```
@@ -13,7 +14,8 @@ docker-compose up --force-recreate # Start docker images : see docker-compose.ym
 mariadb-docker_1  | 2020-05-06 11:24:35 0 [Note] mysqld: ready for connections.   
 5. Connect with a browser
 ```bash
-firefox http://localhost:80/experiment_RSVP.html
+firefox http://localhost:80/index.php
+firefox http://localhost:80/Emotion_Regulation_JS/index.php
 ```
 
 # Command line to php or mariadb
