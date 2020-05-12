@@ -87,7 +87,8 @@ docker-compose -f docker-compose-prod.yml up --force-recreate
 sudo vim /home/ec2-user/Online_Testing/docker/letsencrypt/nginx/site-confs/default
 Change :
 location / {
-  proxy_pass http://your_app:9000/;
+try_files $uri $uri/ /index.html /index.php?$args =404;
+}
 To :
 location / {
   proxy_pass http://php-docker:80/;
