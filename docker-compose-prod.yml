@@ -19,7 +19,7 @@ services:
     image: mariadb
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PROD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
