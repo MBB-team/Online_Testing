@@ -9,7 +9,9 @@ services:
     volumes:
       - ./src/:/var/www/html/
     ports: # Enable access to local browser
-      - "80:80"
+      - "9000:80"
+    expose: # Enable access from php image
+      - "9000"
     stdin_open: true
     tty: true
 
@@ -30,23 +32,17 @@ services:
   # Provides https with Let's encrypt.
   # The image comes with a default nginx setup.
   # https://medium.com/@gardenvariety/easy-https-with-letsencrypt-and-docker-compose-168df411e2d2
-  # letsencrypt-docker:
-  #   image: linuxserver/letsencrypt
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   volumes:
-  #     - ./docker/letsencrypt:/config
-  #   environment:
-  #     - EMAIL=${LETSENCRYPT_EMAIL} # EMAIL is optional, but if present, will be used for certificate-related notifications (registrations, renewals)
-  #     - URL=${LETSENCRYPT_URL}
-  #     - VALIDATION=http
-  #     - TZ=Europe/Stockholm
-  #     - PUID=0 # When using volumes (-v flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID. Use `id username` to find this id.
-  #     - PGID=0
-
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 54781:8080
+  letsencrypt-docker:
+    image: linuxserver/letsencrypt
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./docker/letsencrypt:/config
+    environment:
+      - EMAIL=${LETSENCRYPT_EMAIL} # EMAIL is optional, but if present, will be used for certificate-related notifications (registrations, renewals)
+      - URL=${LETSENCRYPT_URL_PROD}
+      - VALIDATION=http
+      - TZ=Europe/Stockholm
+      - PUID=993 # When using volumes (-v flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID. Use `id username` to find this id.
+      - PGID=993

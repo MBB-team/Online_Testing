@@ -7,6 +7,7 @@ Codes for Online Testing Using JavaScript and JsPsych
 3. Execute this :   
 ```bash
 cd Online_Testing
+sudo rm -rf Online_Testing/docker/letsencrypt
 docker system prune --all --force # Reset docker
 docker-compose up --force-recreate # Start docker images : see docker-compose.yml
 ```
@@ -34,3 +35,78 @@ sql : all sql files executed on start.
 src/index.php : main app entry point.   
 src/task : tasks.   
 src/task/jsPsych-master : web framework.   
+
+
+# AWS
+## 1. Config sur console aws
+Amazon Linux 2 AMI (HVM), SSD Volume Type -(64-bit x86) / (64-bit Arm)   
+t2-medium   
+Network = ICONICS_VPC  
+Subnet ICONICS_SUB_FRONT   
+Auto assign pulic ip : Enabled (required for internet connection)   
+8Go ssd (default)   
+Security group : ICONICS_SG_WEB_FRONT   
+Key pair : econics-staging : iconics-staging.pem   
+Elastic ip : associer l'adresse
+
+## 2. SSH
+ssh -i "iconics-staging.pem" ec2-user@172.21.2.249 # replace ip with private ip
+### Install and start Docker
+sudo yum update -y   
+sudo amazon-linux-extras install docker -y   
+sudo service docker start   
+### Add ec2-user to the Docker group
+sudo usermod -a -G docker ec2-user  
+sudo systemctl enable docker   
+### Install Docker-Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose   
+sudo chmod +x /usr/local/bin/docker-compose   
+docker-compose --version   
+### Set Timezone
+sudo rm /etc/localtime   
+sudo ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
+### Install git
+sudo yum install -y git
+
+## 3. Clone source code
+git clone https://github.com/MBB-team/Online_Testing   
+cd Online_Testing/   
+git checkout aws
+
+## 4. Config
+cp .env.tpl .env
+vim .env
+cp src/portailLib/database_config_session_template.php src/portailLib/database_config_session.php
+vim src/portailLib/database_config_session.php
+
+## 5. Configure letsencrypt
+sudo rm -rf Online_Testing/docker/letsencrypt
+docker system prune --all --force # Reset docker
+docker-compose up --force-recreate # Start docker images : see docker-compose.yml
+sudo vim /home/ec2-user/Online_Testing/docker/letsencrypt/nginx/site-confs/default
+Change :
+location / {
+  proxy_pass http://your_app:9000/;
+To :
+location / {
+  proxy_pass http://php-docker:9000/;
+
+## 5. Run docker-compose
+Exit ssh and reconnect.   
+cd ~/Online_Testing   
+docker-compose up -d
+
+## 6. Open ports on aws
+New security group -> Allow http and mariadb port   
+Assign security group
+
+## 7. Connect to the url
+firefox http://34.255.60.185/experiment_RSVP.html   
+
+# Deploy a new version
+cd ~/Online_Testing   
+docker-compose down
+git checkout aws   
+git pull   
+docker-compose up -d   
+
