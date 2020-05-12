@@ -80,21 +80,22 @@ cp src/portailLib/database_config_session_template.php src/portailLib/database_c
 vim src/portailLib/database_config_session.php
 
 ## 5. Configure letsencrypt
-sudo rm -rf Online_Testing/docker/letsencrypt
-docker system prune --all --force # Reset docker
-docker-compose up --force-recreate # Start docker images : see docker-compose.yml
+cd Online_Testing/   
+sudo rm -rf docker/letsencrypt
+docker system prune --all --force
+docker-compose -f docker-compose-prod.yml up --force-recreate
 sudo vim /home/ec2-user/Online_Testing/docker/letsencrypt/nginx/site-confs/default
 Change :
 location / {
   proxy_pass http://your_app:9000/;
 To :
 location / {
-  proxy_pass http://php-docker:9000/;
-
-## 5. Run docker-compose
-Exit ssh and reconnect.   
-cd ~/Online_Testing   
-docker-compose up -d
+  proxy_pass http://php-docker:80/;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+Then restart docker-compose :
+docker-compose -f docker-compose-prod.yml up --force-recreate
 
 ## 6. Open ports on aws
 New security group -> Allow http and mariadb port   

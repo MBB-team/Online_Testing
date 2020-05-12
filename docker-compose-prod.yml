@@ -9,9 +9,9 @@ services:
     volumes:
       - ./src/:/var/www/html/
     ports: # Enable access to local browser
-      - "9000:80"
+      - "50371:80"
     expose: # Enable access from php image
-      - "9000"
+      - "80"
     stdin_open: true
     tty: true
 
