@@ -71,7 +71,7 @@ sudo yum install -y git
 ## 3. Clone source code
 git clone https://github.com/MBB-team/Online_Testing   
 cd Online_Testing/   
-git checkout aws
+git checkout prod
 
 ## 4. Config
 cp .env.tpl .env
@@ -97,6 +97,13 @@ location / {
   proxy_set_header X-Real-IP $remote_addr;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
+Delete section
+location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include /etc/nginx/fastcgi_params;
+}
 Then restart docker-compose :
 docker-compose -f docker-compose-prod.yml up --force-recreate
 
@@ -105,12 +112,11 @@ New security group -> Allow http and mariadb port
 Assign security group
 
 ## 7. Connect to the url
-firefox http://34.255.60.185/experiment_RSVP.html   
+firefox https://mbb-sondage.icm-institute.org/
 
 # Deploy a new version
 cd ~/Online_Testing   
 docker-compose down
-git checkout aws   
+git checkout prod   
 git pull   
 docker-compose up -d   
-
