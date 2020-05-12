@@ -108,11 +108,23 @@ Then restart docker-compose :
 docker-compose -f docker-compose-prod.yml up --force-recreate
 
 ## 6. Open ports on aws
-New security group -> Allow http and mariadb port   
+New security group -> Allow https and mariadb port   
 Assign security group
 
 ## 7. Connect to the url
 firefox https://mbb-sondage.icm-institute.org/
+
+
+# Create dump
+docker-compose exec -T mariadb-docker bash -c "mysqldump -u root --password=${SQLpassword} databaseEmo > /save/dumps/${NOW}_refresh_dump.sql"
+
+# Restaure dump
+docker-compose exec -T mariadb-docker bash -c "mysqladmin -u root --password=${SQLpassword} -h localhost drop databaseEmo --force"
+sleep 10
+docker-compose exec -T mariadb-docker bash -c "mysql -u root --password=${SQLpassword} -h localhost -e 'create database databaseEmo;'"
+sleep 3
+docker-compose exec -T mariadb-docker bash -c "mysql -u root --password=${SQLpassword} -h localhost databaseEmo < /save/dumps/${NOW}_refresh_dump.sql"
+countverifafter=`docker-compose exec -T mariadb-docker bash -c "mysql -u root --password=${SQLpassword} -h localhost -e 'select count(*) from databaseEmo.tableEmo;'" |tail -1`
 
 # Deploy a new version
 cd ~/Online_Testing   
