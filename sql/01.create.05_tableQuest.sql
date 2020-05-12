@@ -30,16 +30,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `tableQuest` (
   `rt` float DEFAULT NULL,
-  `stimulus` varchar(250) DEFAULT NULL,
+  `stimulus` text DEFAULT NULL,
   `key_press` int(3) DEFAULT NULL,
-  `responses` varchar(250) DEFAULT NULL,
-  `test_part` varchar(25) DEFAULT NULL,
-  `trial_type` varchar(25) DEFAULT NULL,
+  `responses` text DEFAULT NULL,
+  `test_part` text DEFAULT NULL,
+  `trial_type` text DEFAULT NULL,
   `trial_index` int(25) DEFAULT NULL,
   `time_elapsed` int(25) DEFAULT NULL,
-  `internal_node_id` varchar(25) DEFAULT NULL,
+  `internal_node_id` text DEFAULT NULL,
   `run_id` int(7) NOT NULL,
-  `date` varchar(25) DEFAULT NULL
+  `date` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 COMMIT;
 
