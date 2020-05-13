@@ -101,20 +101,38 @@ function exportCSV($sql, $csvFilename="export")
     }
 }
 
-//return names of tables containing tasks data 
+//return an array taskName=>dataTableName  
 function getDataTaskTables()
 {
-    //Note : Might be better and flexible to add a field in task with the associated data table name
+    try {
 
-    $tableList = array( "table_DPD",
-                        "tableSE",
-                        "tableQuest",
-                        "tableEmo",
-                        "tableConstance"
-                      );
-    return $tableList;
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // Get all tables in database
+        $sql = "SELECT taskName, dataTableName from task ";
+        $sql.= "WHERE dataTableName IS NOT NULL";
+        $tablesListStmt = $conn->prepare($sql);
+
+        $tablesListStmt->execute();
+
+        $tablesFetch = $tablesListStmt->fetchAll(PDO::FETCH_ASSOC);
+        $tablesList = array();
+
+        // parse each line to form a simpler array taskName=>dataTableName
+        foreach($tablesFetch as $table)
+        {
+            $tablesList[$table['taskName']] = $table['dataTableName'];
+        }
+        return $tablesList;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
 }
 
+// Return an array of all tables
 function getAllTables()
 {
     try {

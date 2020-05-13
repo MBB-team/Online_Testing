@@ -71,14 +71,21 @@ if($table!="")
     echo '</body>
     </html>';
 
+// display a dropdown list from array
+// if array's key is a string, use it as label 
 function displayDropDownList($fieldName, $items)
 {
-    echo "<select name='".$fieldName."'>";
-    foreach($items as $item)
+    echo "<select name='".$fieldName."'>\n";
+    foreach($items as $key => $item)
     {
-        echo "<option value='".$item."'>".$item."</option>";
+        echo "<option value='".$item."'>";
+        if(is_string($key))
+            echo $key;
+        else
+            echo $item;
+        echo "</option>\n";
     }
-    echo "</select>";
+    echo "</select>\n";
 }
 
 function test_input($data) {
