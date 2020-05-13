@@ -15,8 +15,8 @@ docker-compose up --force-recreate # Start docker images : see docker-compose.ym
 mariadb-docker_1  | 2020-05-06 11:24:35 0 [Note] mysqld: ready for connections.   
 5. Connect with a browser
 ```bash
-firefox http://localhost:80/index.php
-firefox http://localhost:80/Emotion_Regulation_JS/index.php
+firefox http://localhost:50195/index.php
+firefox http://localhost:50195/Emotion_Regulation_JS/index.php
 ```
 
 # SQL

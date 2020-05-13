@@ -1,5 +1,19 @@
 version: "3.7"
 services:
+  mariadb-docker:
+    image: mariadb:10.4.12-bionic
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PROD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
+      - /save/dumps:/tmp/dumps # Save dump
+    ports: # Enable access to local SQL IDE
+      - "53506:3306"
+    expose: # Enable access from php image
+      - "3306"
+
   php-docker:
     build: ./docker
     depends_on:
@@ -15,25 +29,13 @@ services:
     stdin_open: true
     tty: true
 
-  mariadb-docker:
-    image: mariadb
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PROD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-    volumes:
-      - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
-      - /save/dumps:/tmp/dumps # Save dump
-    ports: # Enable access to local SQL IDE
-      - "53506:3306"
-    expose: # Enable access from php image
-      - "3306"
-
   # Provides https with Let's encrypt.
   # The image comes with a default nginx setup.
   # https://medium.com/@gardenvariety/easy-https-with-letsencrypt-and-docker-compose-168df411e2d2
   letsencrypt-docker:
-    image: linuxserver/letsencrypt
+    image: linuxserver/letsencrypt:1.4.0-ls115
+    depends_on:
+      - php-docker
     ports:
       - 80:80
       - 443:443

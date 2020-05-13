@@ -9,12 +9,12 @@ services:
     volumes:
       - ./src/:/var/www/html/
     ports: # Enable access to local browser
-      - "80:80"
+      - "50195:80"
     stdin_open: true
     tty: true
 
   mariadb-docker:
-    image: mariadb
+    image: mariadb:10.4.12-bionic
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
