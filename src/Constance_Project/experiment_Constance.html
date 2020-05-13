@@ -4,21 +4,22 @@
 
       Data Output: (as in MySQL)
             - rt (float)
-            - stimulus (varchar(50))
+            - stimulus (text)
             - button_pressed: 0 = OUI, 1 = NON (int(3))
-            - responses: for the questions (varchar(25))
+            - responses: for the questions (text)
             - key_press (int(3))
-            - test_part: the name we give to the trial, e.g. "quest_pract" (varchar(25))
+            - test_part: the name we give to the trial, e.g. "quest_pract" (text)
             - trialNb (int(3))
-            - effort: the effort sentence (varchar(50))
+            - effort: the effort sentence (text)
             - condiEffort (int(3))
-            - rwd: the reward sentence (varchar(50))
+            - rwd: the reward sentence (text)
             - condiRwd (int(3))
-            - trial_type (varchar(25))
+            - trial_type (text)
             - trial_index (int(25))
             - time_elapsed (int(25))
-            - internal_node_id (varchar(25))
-            - subject_id (int(7))
+            - internal_node_id (text)
+            - run_id (int(7))
+            - date (text)
 -->
 
 <!DOCTYPE html>
@@ -62,8 +63,8 @@
       if(browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox'){
             var wrong_browser = {
                   type: 'html-keyboard-response',
-                  stimulus: '<p> This experiment only has support for Google Chrome or Mozilla Firefox. </p>'
-                  +'<p> Please re-open the experiment in one of these browsers. </p>',
+                  stimulus: "<p> Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p> "
+                      + "<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>",
             };
             jsPsych.init({
                   timeline: [wrong_browser],
@@ -74,8 +75,8 @@
 
             var firstFullscreen =	{
                   type: 'fullscreen',
-                  message:'<p> To take part in the experiment, your browser must be in fullscreen mode. </p> <p>Exiting fullscreen mode will pause the experiment. </p> <p> Please click the button below to enable fullscreen mode and continue.</p>',
-                  button_label: 'Put in Fullscreen',
+                  message:"<p> Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer.</p>",
+                  button_label: 'Mettre en plein \351cran',
                   delay_after: 300,
                   check_fullscreen: true,
                   data: {
@@ -90,7 +91,7 @@
 
             var fullscreenExp = {
                   type: 'fullscreen',
-                  message: '<p>You need to be in fullscreen mode to continue the experiment! <br></br> Please click the button below to enter fullscreen mode.<br></br><p>',
+                  message: "<p> Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
                   fullscreen_mode: false,
                   data: {
                         test_part: 'fullscreenExp',
@@ -118,19 +119,6 @@
                   }
             };
 
-            var subdetails = {
-                  type: 'survey-text',
-                  preamble: ['<p style = "text-align: center; font-size: 28px">Remplissez les informations suivantes:</p>'],
-                  questions: [{prompt: "Genre (F/H)?", rows: 3, columns: 40}, {prompt: "Age?", rows: 3, columns: 40}],
-                  data: {
-                        test_part: 'subdetails',
-                        trialNb: "999",
-                        effort:"999",
-                        condiEffort: 999,
-                        rwd: "999",
-                        condiRwd: 999,
-                  },
-            };
 
 // --------------------------------- SAVING DATA  ----------------------------//
 
@@ -152,14 +140,14 @@
 
 // --------------------------------- BEGINING EXPERIMENT  --------------------------------- //
 
-            var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
+            var today = new Date();
+            var date = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
             var exp_timeline = [];
             var firstInstr    = instr_Constance();
 
             if(debug == false){
                   exp_timeline.push(firstFullscreen);
-                  exp_timeline.push(subdetails);
                   for(var i = 0; i < firstInstr.length; i++){
                         exp_timeline.push(firstInstr[i]);
                   };
@@ -175,14 +163,42 @@
             jsPsych.init({
                   timeline: exp_timeline,
                   on_trial_finish: function() {
-                        jsPsych.data.addProperties({subject_id: subject_id});
+                        jsPsych.data.addProperties({date: date});
                         saveData();
                   },
                   on_finish: function() {
                         //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                        document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                        document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>');
+                        endTask();
                   },
             });
+
+            function endTask() {
+                  var xhr = new XMLHttpRequest();
+                  xhr.open('POST', 'endTask.php');
+                  xhr.onload = function() {
+                        var reponse = "";
+                        if(xhr.status == 200) {
+                              var response = JSON.parse(xhr.responseText); // $.parseJSON
+                        }
+                        if(response.success) {
+                              console.log("run updated");
+                              window.location.replace("/"); //redirect to home page
+                        }
+                        else {
+                              console.log("error on update run");
+                              console.log(xhr);
+                              console.log(response);
+                              //redirect to home page after 5 secs if error
+                              setTimeout(function () {
+                                    window.location.replace("/");
+                              },
+                              5000);
+                        }
+                  };
+                  xhr.send();
+            }
+
       } // End of the experiment (end of checking browser)
 </script>
 </html>

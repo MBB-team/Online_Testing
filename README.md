@@ -15,9 +15,14 @@ docker-compose up --force-recreate # Start docker images : see docker-compose.ym
 mariadb-docker_1  | 2020-05-06 11:24:35 0 [Note] mysqld: ready for connections.   
 5. Connect with a browser
 ```bash
-firefox http://localhost:80/index.php
-firefox http://localhost:80/Emotion_Regulation_JS/index.php
+firefox http://localhost:50195/index.php
+firefox http://localhost:50195/Emotion_Regulation_JS/index.php
 ```
+
+# SQL
+Exemple 1 : I want to INSERT new data in an existing table. => Use /sql/02.insert.xx_test.sql with INSERT statements.
+Exemple 2 : I want to CREATE a new table. => Use /sql/01.create.xx_newtable.sql with CREATE statements.
+Exemple 3 : I want to add or remove a column from an existing table. => Use /migration/01.alter.xx_alter.sql with ALTER statements.
 
 # Command line to php or mariadb
 ```bash

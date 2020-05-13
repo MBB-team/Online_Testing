@@ -4,7 +4,7 @@ services:
     image: mariadb:10.4.12-bionic
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_PROD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD_STAGING}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
@@ -43,8 +43,9 @@ services:
       - ./docker/letsencrypt:/config
     environment:
       - EMAIL=${LETSENCRYPT_EMAIL} # EMAIL is optional, but if present, will be used for certificate-related notifications (registrations, renewals)
-      - URL=${LETSENCRYPT_URL_PROD}
+      - URL=${LETSENCRYPT_URL_STAGING}
       - VALIDATION=http
       - TZ=Europe/Stockholm
       - PUID=993 # When using volumes (-v flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID. Use `id username` to find this id.
       - PGID=993
+      - STAGING=true # Set to true to retrieve certs in staging mode. Rate limits will be much higher, but the resulting cert will not pass the browser's security test. Only to be used for testing purposes.

@@ -151,6 +151,10 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
     // function to end trial when it is time
     function end_trial() {
 
+          if(response.button == null){
+                response.button = 20
+          }
+
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 

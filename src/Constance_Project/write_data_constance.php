@@ -1,5 +1,8 @@
 <?php
 
+//include PHP session management and fonctions to interract with user part of database
+include('../portailLib/session.php');
+
 // this path should point to your configuration file.
 include('database_config_constance.php');
 
@@ -8,8 +11,7 @@ include('database_config_constance.php');
 $data_array = json_decode(file_get_contents('php://input'), true);
 
 try {
-  $conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password);
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $conn = sessionOpenDataBase();
 
   // First stage is to get all column names from the table and store them in $col_names array.
   $stmt = $conn->prepare("SHOW COLUMNS FROM `$table`");
@@ -35,7 +37,10 @@ try {
   for($i=0; $i < count($data_array); $i++){
     for($j = 0; $j < count($col_names); $j++){
       $colname = $col_names[$j];
-      if(!isset($data_array[$i][$colname])){
+      if( ($colname == "run_id") && isPreparedTask()){
+        $insertstmt->bindValue(":$colname", getRunID() );
+      }
+      else if(!isset($data_array[$i][$colname])){
         $insertstmt->bindValue(":$colname", null, PDO::PARAM_NULL);
       } else {
         $insertstmt->bindValue(":$colname", $data_array[$i][$colname]);
@@ -45,7 +50,7 @@ try {
   }
   echo '{"success": true}';
 } catch(PDOException $e) {
-  echo '{"success": false, "message": ' . $e->getMessage();
+  echo '{"success": false, "message": ' . '"'. $e->getMessage() . '"}';
 }
 $conn = null;
 ?>

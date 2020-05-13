@@ -9,5 +9,4 @@
 
   $db = new mysqli($servername, $username, $password, $dbname) or die("Unable to connect");
 
-
 ?>
