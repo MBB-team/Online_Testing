@@ -83,6 +83,8 @@ cp .env.tpl .env
 vim .env
 cp src/portailLib/database_config_session_template.php src/portailLib/database_config_session.php
 vim src/portailLib/database_config_session.php
+cp src/portailLib/backofficeSecrets_template.php src/portailLib/backofficeSecrets.php
+vim src/portailLib/backofficeSecrets.php
 
 ## 5. Configure letsencrypt
 cd Online_Testing/   
