@@ -1,5 +1,6 @@
 <?php
-// set authorised pairs of user/password for backoffice 
+// Set authorised pairs of user/password for backoffice 
+// and save as backofficeSecrets.php
 //
 // example:
 //
