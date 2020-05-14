@@ -1,0 +1,30 @@
+/**************/
+/* tasks menu */
+/**************/
+
+.playButton, .checkmark
+{
+    width:30px;
+    height:30px;
+}
+
+.taskList
+{
+    font-weight: bold;
+}
+.taskList td.taskDone
+{
+    color:grey;
+}
+
+/* line backgroung color */
+.taskList tr:nth-child(even) > td:nth-child(1)
+{
+    background: white;
+}
+.taskList tr:nth-child(odd) > td:nth-child(1)
+{
+    background: rgb(230, 230, 230);
+}
+
+/****************/

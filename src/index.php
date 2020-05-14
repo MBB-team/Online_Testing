@@ -53,6 +53,7 @@ echo '<!DOCTYPE html>
 <html>
     <head>
     <meta charset="UTF-8">
+    <link href="css/portail.css" rel="stylesheet" type="text/css">
     </head>
     <body>
     <p>MBB Online Testing</p>
@@ -70,24 +71,26 @@ if(isIdentified())
     $availableTasks = getAvailableTask();
 
     echo "<p style='font-weight: bold; font-size:200%'>Tâches disponibles</p>\n";
-    echo "<table>\n";
+    echo "<table class='taskList'>\n";
     foreach($availableTasks as $availableTask)
     {
         
-        echo "<tr>
-        <td style='font-weight: bold'>" . $availableTask['taskName']."</td>\n";
+        echo "<tr>\n";
         if($availableTask["done"])
         {
-            echo "<td>Fait</td>";
+            echo "<td class='taskDone'>".$availableTask['taskName']."</td>";
+            echo "<td><img class='checkmark' src='img/checkmark.png'></td>";
+            
         }
         else
         {
-            //echo "<a href='".$availableTask["url"]."'>Cliquer ici pour faire la tache</a>";
+            echo "<td>".$availableTask['taskName']."</td>";
             echo "<td><form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
             <input type='hidden' name='action' value='runtask'>
-            <input type='hidden' name='task' value='".$availableTask['taskID']."'>
-            <input type='submit' value='Faire la tâche'>
-            </form></td>";
+            <input type='hidden' name='task' value='".$availableTask['taskID']."'>\n";
+            echo "<input class='playButton' type='image' alt='Faire la tâche' src='img/playButton.png'
+                   onmouseover=\"this.src='img/playButtonHL.png';\" onmouseout=\"this.src='img/playButton.png';\" >";
+            echo "</form></td>";
         }
         echo "</tr>\n";
     }
