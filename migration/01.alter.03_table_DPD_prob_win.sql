@@ -1,0 +1,3 @@
+SET NAMES utf8;
+
+ALTER TABLE `table_DPD` CHANGE `prob_win` `prob_win` DECIMAL(3,3) NULL DEFAULT NULL;
