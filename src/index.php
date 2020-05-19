@@ -67,35 +67,29 @@ if(isIdentified())
     echo "<p>Bonjour utilisateur " . getParticipantID()."</p>";
 
 
-    //Display available task
+    //get tasks
     $availableTasks = getAvailableTask();
-
-    echo "<p style='font-weight: bold; font-size:200%'>Tâches disponibles</p>\n";
-    echo "<table class='taskList'>\n";
-    foreach($availableTasks as $availableTask)
-    {
-        
-        echo "<tr>\n";
-        if($availableTask["done"])
-        {
-            echo "<td class='taskDone'>".$availableTask['taskName']."</td>";
-            echo "<td><img class='checkmark' src='img/checkmark.png'></td>";
-            
-        }
-        else
-        {
-            echo "<td>".$availableTask['taskName']."</td>";
-            echo "<td><form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-            <input type='hidden' name='action' value='runtask'>
-            <input type='hidden' name='task' value='".$availableTask['taskID']."'>\n";
-            echo "<input class='playButton' type='image' alt='Faire la tâche' src='img/playButton.png'
-                   onmouseover=\"this.src='img/playButtonHL.png';\" onmouseout=\"this.src='img/playButton.png';\" >";
-            echo "</form></td>";
-        }
-        echo "</tr>\n";
-    }
-    echo "</table>\n";
+    //display not done tasks
+    echo "<p class='taskMenuTitle'>Tâches disponibles</p>\n";
+    echo "<div class='centerArea'>\n";
+    $notDoneCount = displayTasks($availableTasks,false);
+    if($notDoneCount < 1)
+        echo "<p>Toutes les tâches disponibles sont terminées.<br>Vous serez contacté par e-mail pour la prochaine session</p>\n";
+    echo "</div>";
     
+    //is there done tasks
+    if( (count($availableTasks) - $notDoneCount) > 0)
+    {
+        echo "<hr class='separator'>\n";
+
+        //display done tasks
+        echo "<p class='taskMenuTitle'>Tâches terminées</p>\n";
+        echo "<div class='centerArea'>\n";
+        displayTasks($availableTasks,true);
+        echo "</div>";
+    }
+
+
     //disconnect button
     echo "<br>
     <form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
@@ -120,6 +114,25 @@ echo '
 </body>
 </html>
 ';
+
+function displayTasks($tasks, $doneStatus)
+{
+    echo "<div class='centerArea'>\n<table class='taskTable'>";
+    $itemCount = 0;
+    foreach($tasks as $task)
+    {
+        if($task["done"] != $doneStatus)
+            continue;
+        $itemCount++;
+        echo "<tr>\n<td>\n";
+        echo "<form class='taskButtonOuter'>\n";
+        echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='Faire la tâche'".($doneStatus ? " disabled" : "").">\n";
+        echo "<div class='taskButtonText inline-block'>".$task['taskName']."</div><i class='material-icons inline-block'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
+        echo "</button>\n</form>\n</td>\n</tr>\n";
+    }
+    echo "</table>\n</div>\n";
+    return $itemCount;
+}
 
 function test_input($data) {
     //return content of $_POST["$data"] with a bit of security
