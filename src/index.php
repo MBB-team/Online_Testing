@@ -115,6 +115,8 @@ echo '
 </html>
 ';
 
+//display tasks button in a table filtered by done status
+//return number of tasks displayed
 function displayTasks($tasks, $doneStatus)
 {
     echo "<div class='centerArea'>\n<table class='taskTable'>";
@@ -125,7 +127,8 @@ function displayTasks($tasks, $doneStatus)
             continue;
         $itemCount++;
         echo "<tr>\n<td>\n";
-        echo "<form class='taskButtonOuter'>\n";
+        echo "<form class='taskButtonOuter' method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
+        echo "<input type='hidden' name='action' value='runtask'>\n<input type='hidden' name='task' value='".$task['taskID']."'>\n";
         echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='Faire la tâche'".($doneStatus ? " disabled" : "").">\n";
         echo "<div class='taskButtonText inline-block'>".$task['taskName']."</div><i class='material-icons inline-block'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
         echo "</button>\n</form>\n</td>\n</tr>\n";
