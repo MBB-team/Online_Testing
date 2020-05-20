@@ -49,29 +49,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 //html header
-echo '<!DOCTYPE html>
+echo "<!DOCTYPE html>
 <html>
-    <head>
-    <meta charset="UTF-8">
-    <link href="css/portail.css" rel="stylesheet" type="text/css">
-    </head>
-    <body>
-    <p>MBB Online Testing</p>
-    ';
+<head>
+<meta charset='UTF-8'>
+<link href='css/portail.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<p class='title'>MBB Online Testing</p>\n";
 
 if(isIdentified())
 {
 
-    
-
-    echo "<p>Bonjour utilisateur " . getParticipantID()."</p>";
-
-
     //get tasks
     $availableTasks = getAvailableTask();
     //display not done tasks
+    echo "<div class='taskArea'>\n";
     echo "<p class='taskMenuTitle'>Tâches disponibles</p>\n";
-    echo "<div class='centerArea'>\n";
     $notDoneCount = displayTasks($availableTasks,false);
     if($notDoneCount < 1)
         echo "<p>Toutes les tâches disponibles sont terminées.<br>Vous serez contacté par e-mail pour la prochaine session</p>\n";
@@ -80,34 +74,44 @@ if(isIdentified())
     //is there done tasks
     if( (count($availableTasks) - $notDoneCount) > 0)
     {
-        echo "<hr class='separator'>\n";
+        echo "<hr class='taskAreaSeparator'>\n";
 
         //display done tasks
+        echo "<div class='taskArea'>\n";
         echo "<p class='taskMenuTitle'>Tâches terminées</p>\n";
-        echo "<div class='centerArea'>\n";
         displayTasks($availableTasks,true);
         echo "</div>";
     }
 
 
     //disconnect button
-    echo "<br>
+    echo "<div class='logout'>
     <form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
+    <div>
+    <div class='username'>".getParticipantID()."</div>
     <input type='hidden' name='action' value='disconnect'>
-    <input type='submit' value='Se déconnecter'>
-    </form>";
+    <button title='Se déconnecter'><i class='material-icons'>close</i></button>
+    </div>
+    </form>
+    </div>";
 }
 else // not identified. Display login form
 {
+    echo "<div class='login'>\n";
+    echo "<p>Entrez votre identifiant pour poursuivre</p>\n";
     if($connectError)
     {
-        echo "<p style='color:red'>Numéro de sujet inconnu</p>";
+        echo "<p style='color:red'>Identifiant inconnu</p>\n";
     }
-    echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-    <p>Votre numéro de sujet : <input type='text' name='participantID' /></p>
-    <p><input type='submit' value='OK'></p>
-    <input type='hidden' name='action' value='connect'>
-    </form>";
+    echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
+    echo "<div>\n";
+    echo "<input type='text' name='participantID' placeholder='Identifiant'/>
+    <button title='Se connecter'><div>Se connecter</div><i class='material-icons'>exit_to_app</i>
+    </button>
+    <input type='hidden' name='action' value='connect'>\n";
+    echo "</div>\n";
+    echo "</form>\n";
+    echo "</div>\n";
 }
 
 echo '
@@ -119,21 +123,21 @@ echo '
 //return number of tasks displayed
 function displayTasks($tasks, $doneStatus)
 {
-    echo "<div class='centerArea'>\n<table class='taskTable'>";
     $itemCount = 0;
     foreach($tasks as $task)
     {
         if($task["done"] != $doneStatus)
             continue;
         $itemCount++;
-        echo "<tr>\n<td>\n";
         echo "<form class='taskButtonOuter' method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
+        echo "<div>\n";
         echo "<input type='hidden' name='action' value='runtask'>\n<input type='hidden' name='task' value='".$task['taskID']."'>\n";
         echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='Faire la tâche'".($doneStatus ? " disabled" : "").">\n";
-        echo "<div class='taskButtonText inline-block'>".$task['taskName']."</div><i class='material-icons inline-block'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
-        echo "</button>\n</form>\n</td>\n</tr>\n";
+        echo "<div class='taskButtonText'>".$task['taskName']."</div><i class='material-icons'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
+        echo "</button>\n";
+        echo "</div>\n";
+        echo "</form>\n";
     }
-    echo "</table>\n</div>\n";
     return $itemCount;
 }
 
