@@ -8,8 +8,10 @@ session_start();
 
 function identify($participantID)
 {
-    
-    if(checkFailedAttemptIP(5,10) != false) //check 5 failed in 10 minutes
+    $maxAttemptByIP = 5;
+    $periodAttemptByIP = 15; //minutes
+
+    if(checkFailedAttemptIP($maxAttemptByIP,$periodAttemptByIP) != false) //check failed attempts
     {
         unset($_SESSION['participantID']); //clear in session
         return; //do not even try to login if banned IP
@@ -27,6 +29,7 @@ function identify($participantID)
         if($userCount>0) //found valid user ID
         {
             $_SESSION['participantID'] = $participantID; //save in session
+            cleanOldFailedAttemptIP($periodAttemptByIP);
         }
         else //not found
         {
@@ -303,6 +306,28 @@ function checkFailedAttemptIP($minCount, $period)
         else
             return false;
 
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return true; //safer than return null (null == false is true)
+    }
+}
+
+// bruteforce IP ban : clean
+function cleanOldFailedAttemptIP($period)
+{
+    try {
+
+        // connect to database
+        $conn = sessionOpenDataBase();
+
+        // clean failedAttempt older than $period minutes
+        $sql = "DELETE FROM failedAttemptIP WHERE timestamp < NOW() - INTERVAL " . $period . " MINUTE";
+
+        $cleanFailedAttemptStmt = $conn->prepare($sql);
+
+        $cleanFailedAttemptStmt->execute();
     }
     catch(PDOException $e)
     {
