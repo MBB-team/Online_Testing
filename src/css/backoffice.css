@@ -1,0 +1,39 @@
+@import 'material-icons.css';
+
+div.taskSessionClose
+{
+    background-color: rgb(255, 210, 210);
+}
+
+div.taskSessionOpen
+{
+    background-color: rgb(160, 255, 160);
+}
+
+div.taskSessionNotOpen
+{
+    background-color: rgb(230, 230, 230);
+}
+
+.taskSession
+{
+    display:inline-block;
+    text-align: center;
+}
+
+span.sessionName
+{
+    font-size: 1.1em;
+    width: 100%;
+}
+
+
+td.sessionCell span, td.sessionCell span .material-icons
+{
+    vertical-align: middle;
+}
+
+.legend span, .legend span .material-icons
+{
+    vertical-align: middle;
+}
