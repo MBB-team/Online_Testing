@@ -172,6 +172,9 @@ function SE(nbBlocks, nbTrials){
             }
           };
 
+          // INCREMENT THE conf_counter
+          conf_counter++;
+
           // PUSH TO TIMELINE //
           timelineTask.push(fullscreenExp);
           timelineTask.push(test_conf);
