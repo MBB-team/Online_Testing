@@ -109,8 +109,8 @@ function SE(nbBlocks, nbTrials){
 
       // REWATCH QUESTION //
       var rewatch = {
+        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>5 secondes</b> pour re&#769pondre!</p>',
         type: 'html-button-response-WH',
-        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p>',
         prompt: function(){
           var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.';
           return rewatch_prompt;},
