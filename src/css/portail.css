@@ -28,10 +28,27 @@ body{
     background-position: center;
 }
 
+.titleContainer
+{
+    margin: 3em auto;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    text-align: center;
+}
+
 .title
 {
     text-align: center;
     font-size: 3em;
+    letter-spacing: 0.2em;
+}
+
+.subTitle
+{
+    text-align: center;
+    font-size: 1.5em;
+    margin-top: -0.2em;
 }
 
 /*****************/

@@ -57,7 +57,10 @@ echo "<!DOCTYPE html>
 <link href='css/portail.css' rel='stylesheet' type='text/css'>
 </head>
 <body>
-<p class='title'>MBB Online Testing</p>\n";
+<div class='titleContainer'>
+<div class='title'>COGMOOD</div>
+<div class='subTitle'>Humeur, anxiété et cognition</div>
+</div>\n";
 
 if(isIdentified())
 {
