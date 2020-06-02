@@ -31,12 +31,13 @@ if($table!="")
 
 
     //display form
-    echo '<!DOCTYPE html>
+    echo "<!DOCTYPE html>
     <html>
         <head>
-        <meta charset="UTF-8">
+        <meta charset='UTF-8'>
         </head>
-        <body>';
+        <body>
+        <a href='backofficeDashboard.php'>Tableau de bord</a><br>";
 
     if($errorMessage!="")
     {
