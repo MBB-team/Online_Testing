@@ -1,5 +1,6 @@
 <?php
 include("portailLib/session.php");
+include("portailLib/portail.php");
 
 //declare empty variables
 $formParticipantID = $formAction = $formTask = "";
@@ -95,23 +96,40 @@ if(isIdentified())
     </form>
     </div>";
 }
-else // not identified. Display login form
+else // not identified.
 {
-    echo "<div class='login'>\n";
-    echo "<p>Entrez votre identifiant pour poursuivre</p>\n";
-    if($connectError)
+    if(isMobile() || !isCompatibleBrowser()) //Check desktop computer and browser
     {
-        echo "<p style='color:red'>Identifiant inconnu</p>\n";
+        // Display infos to get a compatible browser
+        ?>
+<div id='requierment'>
+Pour le bon fonctionnement du site, l'utilisation d'un ordinateur (fixe ou portable) ainsi que d'un des navigateurs compatibles suivant est nécessaire :<br>
+<ul>
+<li><img class='navigatorIcon' src='img/Firefox_Icon.svg'>  Mozilla Firefox (Aide d'installation : pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-windows" target="_blank">Microsoft Windows</a>, pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-mac" target="_blank">Apple Mac OS</a>, pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-linux" target="_blank">Linux</a>)</li>
+<li><img class='navigatorIcon' src='img/Chrome_Icon.svg'>  Google Chrome (Aide d'installation : pour <a href="https://support.google.com/chrome/answer/95346#install_win" target="_blank">Microsoft Windows</a>, pour <a href="https://support.google.com/chrome/answer/95346#install_mac" target="_blank">Apple Mac OS</a>, pour <a href="https://support.google.com/chrome/answer/95346#install_linux" target="_blank">Linux</a>)</li>
+</ul>
+Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <span class='rawLink'><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?></span> dans la barre d'adresse.
+</div>
+        <?php
     }
-    echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
-    echo "<div>\n";
-    echo "<input type='text' name='participantID' placeholder='Identifiant'/>
-    <button title='Se connecter'><div>Se connecter</div><i class='material-icons'>exit_to_app</i>
-    </button>
-    <input type='hidden' name='action' value='connect'>\n";
-    echo "</div>\n";
-    echo "</form>\n";
-    echo "</div>\n";
+    else // Display login form if brower compatible
+    {
+        echo "<div class='login'>\n";
+        echo "<p>Entrez votre identifiant pour poursuivre</p>\n";
+        if($connectError)
+        {
+            echo "<p style='color:red'>Identifiant inconnu</p>\n";
+        }
+        echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
+        echo "<div>\n";
+        echo "<input type='text' name='participantID' placeholder='Identifiant'/>
+        <button title='Se connecter'><div>Se connecter</div><i class='material-icons'>exit_to_app</i>
+        </button>
+        <input type='hidden' name='action' value='connect'>\n";
+        echo "</div>\n";
+        echo "</form>\n";
+        echo "</div>\n";
+    }
 }
 
 echo '

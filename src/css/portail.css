@@ -13,6 +13,14 @@
     font-size: 18px;
 }
 
+@media screen and (min-width:0\0)
+{
+    :root
+    {
+        font-family: 'Raleway'; /*hard code font for IE*/
+    }
+}
+
 body{
     background-image: url(../img/background.jpg);
     background-repeat: no-repeat;
@@ -145,6 +153,34 @@ hr.taskAreaSeparator
     width: 50%;
     color: var(--inactive-color);
     margin-top: 1.5em;
+}
+
+/****************/
+
+/****************/
+/* Requierement */
+/****************/
+
+#requierment
+{
+    text-align:center;
+}
+
+#requierment ul
+{
+    display: table;
+    margin: 1em auto;
+}
+
+#requierment img.navigatorIcon
+{
+    height:1.5em;
+}
+
+#requierment span.rawLink
+{
+    font-family:monospace,Courrier;
+    background:#e6e6e6;
 }
 
 /****************/
