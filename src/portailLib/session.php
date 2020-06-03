@@ -349,6 +349,19 @@ function getRemoteIP()
         return $_SERVER['REMOTE_ADDR'];
 }
 
+/* if behind a nginx reverse proxy configured with :
+ *   proxy_set_header X-Forwarded-Host $host;
+ * return the HTTP_X_FORWARDED_HOST value
+ * else return the classic HTTP_HOST value
+*/
+function getServerHost()
+{
+    if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+        return $_SERVER['HTTP_X_FORWARDED_HOST'];
+    else
+        return $_SERVER['HTTP_HOST'];
+}
+
 function sessionOpenDataBase()
 {
     // this path should point to your configuration file.

@@ -111,7 +111,7 @@ Pour le bon fonctionnement du site, l'utilisation d'un ordinateur (fixe ou porta
 <li><img class='navigatorIcon' src='img/Firefox_Icon.svg'>  Mozilla Firefox (Aide d'installation : pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-windows" target="_blank">Microsoft Windows</a>, pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-mac" target="_blank">Apple Mac OS</a>, pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-linux" target="_blank">Linux</a>)</li>
 <li><img class='navigatorIcon' src='img/Chrome_Icon.svg'>  Google Chrome (Aide d'installation : pour <a href="https://support.google.com/chrome/answer/95346#install_win" target="_blank">Microsoft Windows</a>, pour <a href="https://support.google.com/chrome/answer/95346#install_mac" target="_blank">Apple Mac OS</a>, pour <a href="https://support.google.com/chrome/answer/95346#install_linux" target="_blank">Linux</a>)</li>
 </ul>
-Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <span class='rawLink'><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?></span> dans la barre d'adresse.
+Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <span class='rawLink'><?php echo htmlspecialchars(getServerHost()); ?></span> dans la barre d'adresse.
 </div>
         <?php
     }
