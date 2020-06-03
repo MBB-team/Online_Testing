@@ -1,0 +1,61 @@
+@import 'material-icons.css';
+
+div.taskSessionClose
+{
+    background-color: rgb(255, 210, 210);
+}
+
+div.taskSessionOpen
+{
+    background-color: rgb(160, 255, 160);
+}
+
+div.taskSessionNotOpen
+{
+    background-color: rgb(230, 230, 230);
+}
+
+.taskSession
+{
+    display:inline-block;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    text-align: center;
+}
+
+span.sessionName
+{
+    font-size: 1.1em;
+    width: 100%;
+}
+
+
+td.sessionCell span, td.sessionCell span .material-icons
+{
+    vertical-align: middle;
+}
+
+.legend span, .legend span .material-icons
+{
+    vertical-align: middle;
+}
+
+.vis-item.itemCellSessionClose
+{
+    background-color: rgb(255, 210, 210);
+    border-color: rgb(255, 175, 175);
+
+}
+
+.vis-item.itemCellSessionOpen
+{
+    background-color: rgb(160, 255, 160);
+    border-color: rgb(100, 255, 100);
+}
+
+.vis-item.itemCellSessionNotOpen
+{
+    background-color: rgb(230, 230, 230);
+    border-color: rgb(192, 192, 192);
+}
