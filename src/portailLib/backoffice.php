@@ -225,6 +225,76 @@ function getAllTables()
 
 }
 
+// return task(s) sessions ordered by task ID and by openning time  
+// only for $taskID, if is supplied 
+function getAllTaskSessions($taskID="")
+{
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // Get task session
+        $sql = "SELECT * from taskSession";
+        //filter by $taskID
+        if($taskID!="")
+            $sql.= " WHERE task_taskID='".$taskID."'";
+        //order
+        $sql.= " ORDER BY task_taskID, openingTime";
+
+        $taskSessionStmt = $conn->prepare($sql);
+
+        $taskSessionStmt->execute();
+
+        $taskSessionFetch = $taskSessionStmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $taskSessionFetch;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
+// return an array of number of user has done/started run ordered by taskSession
+// $doneStatus = true :  count users with done run 
+// $doneStatus = false : count users with started but not done run
+// array format :
+//      taskSessionID => runCount
+function getRunCountByTaskSessions($status=true)
+{
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // Get run Count
+        $sql = "SELECT COUNT(*) AS runCount, t.taskSessionID as taskSessionID
+        FROM (
+        SELECT participant_participantID AS participantID, MAX(doneTime) AS doneTime, taskSession_taskSessionID as taskSessionID FROM `run` GROUP BY participant_participantID, taskSession_taskSessionID
+        ) AS t
+        WHERE t.doneTime IS " . ($status?"NOT ":" ") . "NULL GROUP BY t.taskSessionID";
+
+        $countRunStmt = $conn->prepare($sql);
+
+        $countRunStmt->execute();
+
+        $countRuns = $countRunStmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $taskSessionRunCount = array();
+        foreach($countRuns as $countRun)
+        {
+            $taskSessionRunCount[$countRun['taskSessionID']] = $countRun['runCount'];
+        }
+
+        return $taskSessionRunCount;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
 function backofficeOpenDataBase()
 {
     // this path should point to your configuration file.
