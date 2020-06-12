@@ -66,7 +66,7 @@ function http_digest_parse($txt)
 function exportCSVSimpleTable($table)
 {
     //check if table exist
-    if(!in_array($table, getAllTables()))
+    if(!isTableInArray($table, getAllTables()))
         return $table." n'existe pas dans la base de données";
 
     //SQL request for one table
@@ -76,20 +76,29 @@ function exportCSVSimpleTable($table)
 
 // If no error, echo a CSV file for a data task table joined with run and taskSession if no error.
 // Else return an error string.
-function exportCSVJoinedTable($table, $onlyDone=false)
+function exportCSVJoinedTable($table, $onlyDone=false, $sessionID="")
 {
     //check if table is a data task table
-    if(!in_array($table, getDataTaskTables()))
+    if(!isTableInArray($table, getDataTaskTables()))
         return $table." n'existe pas dans la base de données";
     //SQL request for this table joined with run and taskSession
     $sql = "SELECT * FROM run, taskSession, ".$table;
     $sql.= " WHERE runID=run_id AND taskSessionID=taskSession_taskSessionID";
+
+    //if sessionID supplied, select only this session
+    if(!empty($sessionID))
+    {
+        $sql.= " AND taskSessionID='".$sessionID."'";
+    }
     //if $onlyDone. Filter only done run
     if($onlyDone)
     {
         $sql.=" AND 'doneTime' IS NOT NULL";
     }
-    return exportCSV($sql, $table."_joined"."_".date('Y-m-d_H-i-s'));
+    $filename = $table."_joined";
+    $filename.=(empty($sessionID))?("_allSessions"):("_".getSessionName($sessionID));
+    $filename.= "_".date('Y-m-d_H-i-s');
+    return exportCSV($sql, $filename);
 }
 
 // subfunction to export CSV.
@@ -162,7 +171,7 @@ function exportCSV($sql, $csvFilename="export")
     }
 }
 
-//return an array taskName=>dataTableName  
+//return an array taskName=>['dataTableName','taskID']
 function getDataTaskTables()
 {
     try {
@@ -171,19 +180,22 @@ function getDataTaskTables()
         $conn = backofficeOpenDataBase();
 
         // Get all tables in database
-        $sql = "SELECT taskName, dataTableName from task ";
+        $sql = "SELECT taskName, dataTableName, taskID from task ";
         $sql.= "WHERE dataTableName IS NOT NULL";
         $tablesListStmt = $conn->prepare($sql);
 
         $tablesListStmt->execute();
 
         $tablesFetch = $tablesListStmt->fetchAll(PDO::FETCH_ASSOC);
-        $tablesList = array();
+        $tablesList = [];
 
-        // parse each line to form a simpler array taskName=>dataTableName
+        // parse each line to form a simpler array taskName=>'dataTableName','taskID'
         foreach($tablesFetch as $table)
         {
-            $tablesList[$table['taskName']] = $table['dataTableName'];
+            $task = [];
+            $task['dataTableName'] = $table['dataTableName'];
+            $task['taskID'] = $table['taskID'];
+            $tablesList[$table['taskName']] = $task;
         }
         return $tablesList;
     }
@@ -193,7 +205,7 @@ function getDataTaskTables()
     }
 }
 
-// Return an array of all tables
+// Return an array of all tables n=>['dataTableName']
 function getAllTables()
 {
     try {
@@ -209,12 +221,14 @@ function getAllTables()
 
         $tablesFetch = $tablesListStmt->fetchAll(PDO::FETCH_NUM);
 
-        $tablesList = array();
+        $tablesList = [];
 
-        //parse each line to form a simpler array
+        //parse each line to form a simpler array n=>['dataTableName']
         foreach($tablesFetch as $table)
         {
-            array_push($tablesList,$table[0]);
+            $tableObj = [];
+            $tableObj['dataTableName'] = $table[0];
+            array_push($tablesList,$tableObj);
         }
         return $tablesList;
     }
@@ -256,6 +270,17 @@ function getAllTaskSessions($taskID="")
     }
 }
 
+//return true if $tableName is found in the array returned by getAllTables() or getAllTaskSessions()
+function isTableInArray($tableName, $tableArray)
+{
+    foreach($tableArray as $item)
+    {
+        if($item['dataTableName'] == $tableName)
+            return true;
+    }
+    return false;
+}
+
 // return an array of number of user has done/started run ordered by taskSession
 // $doneStatus = true :  count users with done run 
 // $doneStatus = false : count users with started but not done run
@@ -288,6 +313,28 @@ function getRunCountByTaskSessions($status=true)
         }
 
         return $taskSessionRunCount;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
+function getSessionName($sessionID)
+{
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // Get sessionName
+        $sql = "SELECT sessionName FROM taskSession WHERE taskSessionID = ".$sessionID;
+
+        $sessionNameStmt = $conn->prepare($sql);
+        $sessionNameStmt->execute();
+        $sessionName = $sessionNameStmt->fetchColumn();
+
+        return $sessionName;
     }
     catch(PDOException $e)
     {
