@@ -27,7 +27,7 @@ $onlyStartedRuns = getRunCountByTaskSessions(false);
 /* Display legends + Usage */
 /***************************/
 ?>
-<br>
+<div style='display:flex'>
 <div class='legend'>
 Legende : 
 <table><tr>
@@ -38,14 +38,12 @@ Legende :
 <span>Nombre d'utilisateurs ayant </span><span><i class='material-icons' style='color:green'>done</i>complété la tâche</span><span> <i class='material-icons'>remove</i></span>
 <span><i class='material-icons' style='color:red'>priority_high</i>débuté la tache sans la complété</span><br>
 </div>
-<br>
 <div class='usage'>
     Commandes : <br>
     Zoom : Curseur sur le graphique chronologique, Ctrl + molette de la souris<br>
     Déplacement : clic + glisser sur le graphique chronologique
 </div>
-<br>
-
+</div>
 <?php
 /*****************************/
 /* Display all task sessions */
@@ -80,9 +78,9 @@ foreach($taskSessions as $key=>$taskSession)
         echo "groups.add({
             id: ".$idGroup.",\n";
         if(!empty($dataTaskTableName))
-            echo "content: '".$taskSession["task_taskID"]."<br><button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>',\n";
+            echo "content: '<div class=\\'groupTask\\'>".$taskSession["task_taskID"]."<br><button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button></div>',\n";
         else
-        echo "content: '".$taskSession["task_taskID"]."<br><button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>',\n";
+            echo "content: '<div class=\\'groupTask\\'>".$taskSession["task_taskID"]."<br><button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button></div>',\n";
         echo "order: ".$idGroup."
         });\n";
     }
@@ -123,6 +121,10 @@ foreach($taskSessions as $key=>$taskSession)
     $itemContent .= "<span><i class='material-icons' style='color:green'>done</i>".$doneRun."</span><span> <i class='material-icons'>remove</i></span>\n";
     $onlyStartedRun = isset($onlyStartedRuns[$taskSession['taskSessionID']])?$onlyStartedRuns[$taskSession['taskSessionID']]:"0";
     $itemContent .= "<span><i class='material-icons' style='color:red'>priority_high</i>".$onlyStartedRun."</span><br>\n";
+    if(!empty($dataTaskTableName))
+        $itemContent .= "<button class='download' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."' onClick='showDownloadSessionData();' title='Exporter les données de la session ".$taskSession["sessionName"]." uniquement'><i class='material-icons' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."'>get_app</i></button>\n";
+    else
+        $itemContent .= "<button class='download' title='Cette tâche ne sauvegarde pas de données' disabled><i class='material-icons'>get_app</i></button>\n";
     $itemContent .= "</div>";
     $itemContent = str_replace("'", "\\'", $itemContent);
     $itemContent = str_replace("\n", "\\\n", $itemContent);
@@ -133,7 +135,6 @@ foreach($taskSessions as $key=>$taskSession)
 ?>
 var options = {
             stack: false,
-            maxHeight: 640,
             horizontalScroll: false,
             verticalScroll: false,
             zoomKey: "ctrlKey",
@@ -168,7 +169,6 @@ function showDownloadTaskData(e)
     noteDiv.style.display = "block";
     noteDiv.style.left = (x + 20) + "px";
     noteDiv.style.top = (y) + "px";
-    console.log(e);
     document.getElementById("downloadTaskDatatableName").value=e.target.getAttribute("tableName");
 }
 
@@ -176,22 +176,61 @@ function HideDownloadTaskData()
 {
     document.getElementById("downloadTaskData").style.display = "none";
 }
+
+function showDownloadSessionData(e)
+{
+    var x = 0,
+        y = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    var noteDiv = document.getElementById("downloadSessionData");
+    noteDiv.style.display = "block";
+    noteDiv.style.left = (x + 20) + "px";
+    noteDiv.style.top = (y) + "px";
+    document.getElementById("downloadSessionDatatableName").value=e.target.getAttribute("tableName");
+    document.getElementById("downloadSessionID").value=e.target.getAttribute("sessionID");
+}
+
+function HideDownloadSessionData()
+{
+    document.getElementById("downloadSessionData").style.display = "none";
+}
 </script>
 <div id='downloadTaskData'>
-    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideDownloadTaskData()"><i class='material-icons'>close</i></span>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideDownloadTaskData()"><i class='material-icons'>close</i></button>
     </div>
     <br clear="all">
     <div id='downloadTaskDataContent'>
         <form method='post' action='backofficeExport.php'>
             <input type='hidden' name='exportType' value='joined'>
             <input id='downloadTaskDatatableName' type='hidden' name='table' value=''>
-            <input type='hidden' name="sessionMode" value="All">
+            <input type='hidden' name='sessionMode' value='All'>
             <p>Exclure les run incomplets : <input type='checkbox' name='onlyDone'></p>
             <button>Exporter</button>
         </form>
     </div>
 </div>
-
+<div id='downloadSessionData'>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideDownloadSessionData()"><i class='material-icons'>close</i></button>
+    </div>
+    <br clear="all">
+    <div id='downloadTaskDataContent'>
+        <form method='post' action='backofficeExport.php'>
+            <input type='hidden' name='exportType' value='joined'>
+            <input id='downloadSessionDatatableName' type='hidden' name='table' value=''>
+            <input type='hidden' name='sessionMode' value='One'>
+            <input type='hidden' id='downloadSessionID' name='sessionID' value=''>
+            <p>Exclure les run incomplets : <input type='checkbox' name='onlyDone'></p>
+            <button>Exporter</button>
+        </form>
+    </div>
+</div>
 <?php
 echo "</body>
 </html>";
