@@ -19,69 +19,10 @@ echo "<!DOCTYPE html>
 
 // get datas
 $taskSessions = getAllTaskSessions();
-//var_dump($taskSessions);
-
+$dataTaskTables = getDataTaskTables();
 $doneRuns = getRunCountByTaskSessions(true);
 $onlyStartedRuns = getRunCountByTaskSessions(false);
-//var_dump($doneRuns);
-//var_dump($onlyStartedRuns);
 
-/*****************************/
-/* Display all task sessions */
-/*****************************/
-/*
-$lastTaskID = "";
-echo "<table>\n";
-foreach($taskSessions as $key=>$taskSession)
-{
-    if($taskSession["task_taskID"] != $lastTaskID)
-    {
-
-        if($lastTaskID != "")
-        {
-            //close previous table
-            echo "</tr>\n";
-        }
-        $lastTaskID = $taskSession["task_taskID"];
-        //create a new table
-        echo "<tr>\n";
-        echo "<th>".$taskSession["task_taskID"]."</th>";
-    }
-
-    // get status of taskSession
-    $openingTime = strtotime($taskSession["openingTime"]);
-    $closingTime = strtotime($taskSession["closingTime"]);
-    $now = strtotime("now");
-
-    $status = "taskSessionOpen";
-    if($closingTime<$now)
-    {
-        $status = "taskSessionClose";
-    }
-    if($openingTime>$now)
-    {
-        $status = "taskSessionNotOpen";
-    }
-
-    // display session infos
-    echo "<td class='sessionCell'><div class='taskSession ".$status."'>\n";
-    echo "<span class='sessionName'>".$taskSession["sessionName"]."</span><br>\n";
-    echo "<span><i class='material-icons' style='color:green'>play_arrow</i>".$taskSession["openingTime"]."</span><br>\n";
-    echo "<span><i class='material-icons' style='color:red'>stop</i>".$taskSession["closingTime"]."</span><br>\n";
-    $doneRun = isset($doneRuns[$taskSession['taskSessionID']])?$doneRuns[$taskSession['taskSessionID']]:"0";
-    echo "<span><i class='material-icons' style='color:green'>done</i>".$doneRun."</span><span> <i class='material-icons'>remove</i></span>\n";
-    $onlyStartedRun = isset($onlyStartedRuns[$taskSession['taskSessionID']])?$onlyStartedRuns[$taskSession['taskSessionID']]:"0";
-    echo "<span><i class='material-icons' style='color:red'>priority_high</i>".$onlyStartedRun."</span><br>\n";
-    echo "</div></td>\n";
-}
-
-//final table closing
-if($lastTaskID != "")
-{
-    //close previous table
-    echo "</tr>\n</table>\n";
-}
-*/
 /***************************/
 /* Display legends + Usage */
 /***************************/
@@ -106,7 +47,10 @@ Legende :
 <br>
 
 <?php
-/* visjs/vis-timeline version */
+/*****************************/
+/* Display all task sessions */
+/*       in a timeline       */
+/*****************************/
 ?>
 
 
@@ -119,6 +63,7 @@ var items = new vis.DataSet();
 $lastTaskID = "";
 $idGroup = -1;
 $idItem = -1;
+$dataTaskTable="";
 foreach($taskSessions as $key=>$taskSession)
 {
     if($taskSession["task_taskID"] != $lastTaskID)
@@ -129,12 +74,16 @@ foreach($taskSessions as $key=>$taskSession)
             //close previous group
         }
         $lastTaskID = $taskSession["task_taskID"];
+        $dataTaskTableName = getDataTaskTableName($dataTaskTables, $lastTaskID);
         //new group
         $idGroup += 1;
         echo "groups.add({
-            id: ".$idGroup.",
-            content: '".$taskSession["task_taskID"]."',
-            order: ".$idGroup."
+            id: ".$idGroup.",\n";
+        if(!empty($dataTaskTableName))
+            echo "content: '".$taskSession["task_taskID"]."<br><button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>',\n";
+        else
+        echo "content: '".$taskSession["task_taskID"]."<br><button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>',\n";
+        echo "order: ".$idGroup."
         });\n";
     }
 
@@ -202,13 +151,60 @@ var options = {
 // create a Timeline
 var container = document.getElementById('visualization');
 timeline = new vis.Timeline(container, items, groups, options);
-/*timeline.setGroups(groups);
-timeline.setItems(items);*/
+
+function showDownloadTaskData(e)
+{
+    var x = 0,
+        y = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    var noteDiv = document.getElementById("downloadTaskData");
+    noteDiv.style.display = "block";
+    noteDiv.style.left = (x + 20) + "px";
+    noteDiv.style.top = (y) + "px";
+    console.log(e);
+    document.getElementById("downloadTaskDatatableName").value=e.target.getAttribute("tableName");
+}
+
+function HideDownloadTaskData()
+{
+    document.getElementById("downloadTaskData").style.display = "none";
+}
 </script>
+<div id='downloadTaskData'>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideDownloadTaskData()"><i class='material-icons'>close</i></span>
+    </div>
+    <br clear="all">
+    <div id='downloadTaskDataContent'>
+        <form method='post' action='backofficeExport.php'>
+            <input type='hidden' name='exportType' value='joined'>
+            <input id='downloadTaskDatatableName' type='hidden' name='table' value=''>
+            <input type='hidden' name="sessionMode" value="All">
+            <p>Exclure les run incomplets : <input type='checkbox' name='onlyDone'></p>
+            <button>Exporter</button>
+        </form>
+    </div>
+</div>
 
 <?php
 echo "</body>
 </html>";
+
+function getDataTaskTableName($dataTaskTables, $taskID)
+{
+    foreach($dataTaskTables as $dataTaskTable)
+    {
+        if($dataTaskTable["taskID"]==$taskID)
+            return $dataTaskTable["dataTableName"];
+    }
+    return "";
+}
 
 function test_input($data) {
     //return content of $_POST["$data"] with a bit of security
