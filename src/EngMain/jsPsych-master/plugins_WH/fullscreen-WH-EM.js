@@ -54,19 +54,19 @@ jsPsych.plugins["fullscreen-WH-EM"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    let cursornone = document.getElementById("cursornone").innerHTML;
+  //  let cursornone = document.getElementById("cursornone").innerHTML;
 
-   function mousefullscreen1 (){
-      var res = cursornone.replace("none", "default");
-      document.getElementById("cursornone").innerHTML = res;}
+  // function mousefullscreen1 (){
+  //    var res = cursornone.replace("none", "default");
+  //    document.getElementById("cursornone").innerHTML = res;}
 
-    function mousefullscreen2 (){
-       var res = cursornone.replace("default", "none");
-       document.getElementById("cursornone").innerHTML = res;}
+    //function mousefullscreen2 (){
+    //   var res = cursornone.replace("default", "none");
+    //   document.getElementById("cursornone").innerHTML = res;}
 
     // if(trial.check_fullscreen = false){
       if(trial.fullscreen_mode){
-        mousefullscreen1();
+    //    mousefullscreen1();
         display_element.innerHTML = trial.message + '<button id="jspsych-fullscreen-btn" class="jspsych-btn">'+trial.button_label+'</button>';
         var listener = display_element.querySelector('#jspsych-fullscreen-btn').addEventListener('click', function() {
           var element = document.documentElement;
@@ -84,7 +84,7 @@ jsPsych.plugins["fullscreen-WH-EM"] = (function() {
       }
 
           if (!document.fullscreenElement || !document.mozFullScreenElement || !document.webkitFullscreenElement || !document.msFullscreenElement) {
-            mousefullscreen1();
+    //        mousefullscreen1();
             display_element.innerHTML = trial.message + '<button id="jspsych-fullscreen-btn" class="jspsych-btn">'+trial.button_label+'</button>';
             var listener = display_element.querySelector('#jspsych-fullscreen-btn').addEventListener('click', function() {
               var element = document.documentElement;
@@ -108,7 +108,7 @@ jsPsych.plugins["fullscreen-WH-EM"] = (function() {
 
     function endTrial() {
       display_element.innerHTML = '';
-      mousefullscreen2();
+    //  mousefullscreen2();
 
       jsPsych.pluginAPI.setTimeout(function(){
 

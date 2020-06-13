@@ -20,7 +20,9 @@ Per trial:
   <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH-EM.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH-EM.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH-EM.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-keyboard-response-WH-EM.js'></script>
 
+  <script   src  = 'rsvpEM.js'></script>
 
 </head>
 <body>
@@ -39,7 +41,13 @@ Per trial:
                training:     false};
 
   // Configuration parameters of experiment
-  const exp = {nbTrials:     48};
+  const exp = {nbTrials:     32};
+
+  // Timings of the experiment
+  const time = {stim_dur:    350}
+
+  // instructions
+  const nbInstr = 1;
 
 
   // --------------------------------- INITIALISATION  --------------------------- //
@@ -93,7 +101,7 @@ Per trial:
     };
 
     function updateLoadedCount(nLoaded){
-      var percentcomplete = nLoaded / (instrImg.length + numbersImg.length + 1)  * 100;
+      var percentcomplete = nLoaded / (instrImg.length + 1)  * 100;
       //console.log('Loaded '+percentcomplete+'% of images');
     }
 
@@ -141,13 +149,13 @@ Per trial:
         show_clickable_nav: true
       };
 
-      if (cfg.instructions == TRUE){
+      if (cfg.instructions){
         exp_timeline.push(instructions);
       };
 
 
       // Generate trials
-      var task = rsvpEM();
+      var task = rsvpEM(exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
       };
