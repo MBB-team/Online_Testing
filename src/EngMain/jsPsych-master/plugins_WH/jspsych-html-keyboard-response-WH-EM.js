@@ -81,7 +81,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     var new_html = this.stimulus(trial.grid, trial.grid_square_size, trial.target, trial.stimulus);
-
+console.log(trial.stimulus)
 
     // add prompt
     if(trial.prompt !== null){

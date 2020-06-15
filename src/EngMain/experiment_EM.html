@@ -21,7 +21,7 @@ Per trial:
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH-EM.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH-EM.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-keyboard-response-WH-EM.js'></script>
-
+  <script   src  = 'Stimuli/Target_Indexes/target_indexes.js'></script>
   <script   src  = 'rsvpEM.js'></script>
 
 </head>
@@ -72,6 +72,17 @@ Per trial:
     // General function that is needed
     function randi(min, max) { // min and max included (acts like randi of Matlab)
           return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    // Function to generate random string of symbols
+    function randstr(length){
+      var result = '';
+      var length = (typeof length == 'undefined') ? 32 : length;
+      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjklmnopqrstuvwxyz';
+      for(var i = 0; i<length; i++){
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return result;
     }
 
     // Create "Variable/function" that makes sure you remain in FullScreen
