@@ -60,7 +60,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         pretty_name: 'Target side',
         array: true,
         default: undefined,
-        description: 'The side that the target stimulus is currently expected to appear'
+        description: 'The side that the target stimulus is currently expected to appear. 0 = left; 1 = right'
       },
       grid: {
         type: jsPsych.plugins.parameterType.BOOL,
@@ -81,7 +81,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     var new_html = this.stimulus(trial.grid, trial.grid_square_size, trial.target, trial.stimulus);
-console.log(trial.stimulus)
+
 
     // add prompt
     if(trial.prompt !== null){
