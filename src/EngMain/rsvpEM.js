@@ -22,18 +22,26 @@ function rsvpEM(nbTrials){
     var tar_side = tar_side_ini;
 
     // FOR EACH DIFFICULTY STEP //
-    for (var diff_step = 0; diff_step < 7; diff_step++){
+    for (var diff_step = 0; diff_step < 8; diff_step++){
+
+      var target_counter = 0; // counter for number targets shown in this difficulty step
 
       var tar_index = target_indexes[trialCondition[trial_i]][diff_step].map(function(v){return (v - 1)});
-      var NofSwi = tar_index.length - 5;
-      var target_pop = [7, 7, 7, 7, 7];
+      var NofSwi = tar_index.length - exp.nbTar;
+      var target_pop = Array(exp.nbTar).fill([7]).flat();
       target_pop.push(Array(NofSwi).fill([3]).flat());
       target_pop = target_pop.flat();
       var target_order = jsPsych.randomization.shuffle(target_pop); // shuffle targets/switches
 
+      // if a target is in the last position, swap with the ultimate switch to avoid keyboard resposne issues at end of trial (not long enough response window)
+      if (target_order[target_order.length - 1] == 7){
+        target_order[target_order.lastIndexOf(3)] = 7;
+        target_order[target_order.length - 1] = 3;
+      };
+
       // generate string for target/switch streams
-      var tar_str = randstr(35).split('');
-      var swi_str = randstr(35).split('');
+      var tar_str = randstr(exp.nbStim).split('');
+      var swi_str = randstr(exp.nbStim).split('');
 
       // loop through and insert targets/switches into strings
       for (var tar_i = 0; tar_i < target_order.length; tar_i++){
@@ -47,14 +55,23 @@ function rsvpEM(nbTrials){
       var distr_str = [];
       // Generate distraction streams
       for (var distr_str_i = 0; distr_str_i < 7; distr_str_i++){
-        distr_str[distr_str_i] = randstr(35).split('');
+        distr_str[distr_str_i] = randstr(exp.nbStim).split('');
       }; // generate distraction strings
 
+      // Target stimuli indexes
+      var index_of_7 = getAllIndexes(tar_str, 7);
+
+      var target_stim_index = [index_of_7[0],index_of_7[0]+1,index_of_7[0]+2],
+                              [index_of_7[1],index_of_7[1]+1,index_of_7[1]+2],
+                              [index_of_7[2],index_of_7[2]+1,index_of_7[2]+2],
+                              [index_of_7[3],index_of_7[3]+1,index_of_7[3]+2];
 
       // FOR EACH DISPLAYED STIMULUS //
-      for (var stim_i = 0; stim_i < tar_str.length-1; stim_i++){
+      for (var stim_i = 0; stim_i < tar_str.length; stim_i++){
 
-        if (tar_str[stim_i] == 3){tar_side = 1 - tar_side;};
+        if (target_stim_index.some(function(e){return e == stim_i;}))
+
+        if (swi_str[stim_i] == 3){tar_side = 1 - tar_side;};
 
         // SHOW STIMULUS //
         var one_stim = {
@@ -65,7 +82,8 @@ function rsvpEM(nbTrials){
           response_ends_trial: false,
           target: tar_side,
           grid: [[0,3,0,3,0],[3,1,2,1,3],[0,3,0,3,0]],
-          grid_square_size: 100
+          grid_square_size: 100,
+          target_trial: target_trial
         }; // show stim
 
       timelineTask.push(one_stim);

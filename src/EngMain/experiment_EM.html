@@ -41,7 +41,9 @@ Per trial:
                training:     false};
 
   // Configuration parameters of experiment
-  const exp = {nbTrials:     32};
+  const exp = {nbTrials:     32,
+               nbStim:       42,
+               nbTar:         4};
 
   // Timings of the experiment
   const time = {stim_dur:    350}
@@ -84,7 +86,7 @@ Per trial:
       }
       return result;
     }
-    
+
     // Function to find indexes of an element within arrays
     function getAllIndexes(arr, val) {
       var indexes = [], i;

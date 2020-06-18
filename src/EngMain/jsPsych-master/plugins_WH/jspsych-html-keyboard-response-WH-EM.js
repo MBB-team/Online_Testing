@@ -75,6 +75,13 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         default: 100,
         description: 'The width and height in pixels of each square in the grid.'
       },
+      target_trial: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Target Trial Indicator',
+        array: true,
+        default: undefined,
+        description: 'Indicates if this trial falls within the three trial response window'
+      },
     }
   }
 
@@ -91,6 +98,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
     // draw
     display_element.innerHTML = new_html;
 
+    // align text appropriately
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-1").style.verticalAlign = "bottom";
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-0").style.textAlign     = "right";
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-1").style.verticalAlign = "top";
@@ -98,6 +106,20 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-4").style.textAlign     = "left";
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-3").style.verticalAlign = "top";
 
+    var distractor_streams = display_element.querySelectorAll("div[stream = distractor]");
+
+
+    // insert distractor content
+    for (var distr_i = 0; distr_i < distractor_streams.length; distr_i++){
+      distractor_streams[distr_i].innerHTML = trial.stimulus[distr_i+3];
+    }
+
+    // insert switch Content
+    display_element.querySelector("div[stream = switch]").innerHTML = trial.stimulus[1];
+
+    // insert target streams content
+    display_element.querySelectorAll("div[stream = target]")[trial.target].innerHTML = trial.stimulus[0];
+    display_element.querySelectorAll("div[stream = target]")[1 - trial.target].innerHTML = trial.stimulus[2];
 
     // store response
     var response = {
@@ -175,7 +197,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
   };
 
   plugin.stimulus = function(grid, square_size, target, string){
-    var stim_c = 0;
     var stimulus = "<div id='jspsych-RSVP-EM-stimulus' style='margin:auto; display:table; table-layout:fixed; border-spacing:"+square_size/4+"px'>";
     for(var i=0; i<grid.length; i++){
       stimulus += "<div class='jspsych-RSVP-EM-stimulus-row' style='display:table-row;'>";
@@ -197,11 +218,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         }
 
         stimulus += ">";
-
-        if(grid[i][j] != 0){
-        stimulus += ""+string[stim_c]+""
-        stim_c++;
-      }
 
         stimulus += "</div>";
       }
