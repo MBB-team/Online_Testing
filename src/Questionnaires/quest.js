@@ -81,8 +81,8 @@ function quest() {
 
 	var  covid_qns = {
 		type: 'html-keyboard-response',
-		stimulus: "<H3> <p> Evaluation du bien-\352tre durant le confinement en lien avec le COVID-19.</p> </H3>" +
-		"<p> Ce questionnaire \351tudie les facteurs pouvant avoir un impact sur votre v\351cu du confinement en lien avec l'\351pid\351mie COVID-19.</p>" +
+		stimulus: "<H3> <p> Evaluation du bien-\352tre et lien avec les mesures de sant\351 publique li\351es au COVID-19.</p> </H3>" +
+		"<p> Ce questionnaire \351tudie les facteurs (en particulier: ceux li\351s aux mesures de sant\351 publique) pouvant avoir un impact sur votre bien-\352tre.</p>" +
 		"<p> Merci du temps que vous consacrerez \340 y r\351pondre : il sera pr\351cieux pour mieux comprendre les effets psychologiques de cette p\351riode. </p>" +
 		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
 		choices: [32],
@@ -95,7 +95,7 @@ function quest() {
 		questions:  [{prompt: "1) Niveau de stress li\351 au travail: ", options: covid_stress1, required:true, horizontal: true},
 		{prompt: "2) Niveau de stress li\351 \340 la vie personnelle :", options: covid_stress1, required:true, horizontal: true},
 		{prompt: "3) Niveau de stress en g\351n\351ral: ", options: covid_stress1, required:true, horizontal: true}],
-		preamble: ["Sur une \351chelle allant de 0 (absence totale de stress) \340 10 (stress maximal imaginable) <br> quel est votre niveau de stress concernant ces 3 diff\351rents domaines  <br> depuis le d\351but de la p\351riode de confinement ?"],
+		preamble: ["Sur une \351chelle allant de 0 (absence totale de stress) \340 10 (stress maximal imaginable) <br> quel est votre niveau de stress concernant ces 3 diff\351rents domaines?"],
 		data:{ test_part: 'covid_stress', trial_type: 'quest'},
 	};
 
@@ -108,8 +108,8 @@ function quest() {
 
 	var confinement = {
 		type: 'survey-multi-choice',
-		questions:  [{prompt: "1) Etes-vous en accord avec la mesure de confinement ? ", options: confinement1, required:true},
-		{prompt: "2) Etes-vous satisfait de votre niveau d'information sur les mesures du confinement ? ", options: confinement2, required:true},
+		questions:  [{prompt: "1) Etes-vous en accord avec les mesures actuelles de sant\351 publique li\351es au COVID-19 ? ", options: confinement1, required:true},
+		{prompt: "2) Etes-vous satisfait de votre niveau d'information sur ces mesures ? ", options: confinement2, required:true},
 		{prompt: "3) Avez vous trouv\351 les informations officielles suffisamment claires sur le coronavirus (mode de transmission, pr\351vention, ...) ? ", options: confinement3, required:true},
 		{prompt: "4) Etes-vous en contact avec une ou des personnes susceptible(s) d'\352tre contamin\351e(s) par le coronavirus ? ", options: confinement4, required:true},
 		{prompt: "5) Si vous avez bien lu cette question, r\351pondez 'oui' ", options: confinement5, required:true},
@@ -137,7 +137,7 @@ function quest() {
 		type: 'survey-multi-choice',
 		questions:  [{prompt: "1) Actuellement, travaillez-vous ? ", options: situation1, required:true},
 		{prompt: "2) Si oui, quelle est votre charge de travail (travail + devoirs domestiques) ?  ", options: situation2, required:true},
-		{prompt: "3) La p\351riode de confinement va-t-elle avoir des r\351percussions financi\350res sur votre budget ?  ", options: situation3, required:true},
+		{prompt: "3) Les mesures de sant\351 publiques actuelles vont-elles avoir des r\351percussions financi\350res sur votre budget ?  ", options: situation3, required:true},
 		{prompt: "4) Cela risque-t-il de vous mettre en situation de pr\351carit\351 ?  ", options: situation3, required:true}],
 		preamble: [""],
 		data:{test_part: 'covid_situation',trial_type: 'quest'},
@@ -162,6 +162,19 @@ function quest() {
 	};
 
 
+	var  covid_end = {
+		type: 'html-keyboard-response',
+		stimulus: "<H3> <p> Merci d'avoir pris le temps de r\351pondre \340 l'ensemble de ces questions. </p> </H3>" +
+		"<p> Nous vous souhaitons bon courage pour cette p\351riode.</p>" +
+		"<p> <strong> Vous avez des inquiétudes sur le COVID-19? </strong> </p>" +
+		"<p> Un num\351ro vert r\351pond aux questions 24 heures sur 24 et 7 jours sur 7: 0 800 130 000. </p>" +
+		"<p> <strong> Vous avez besoin d'un soutien psychologique </strong> </p>" +
+		"<p> CovidEcoute est un service gratuit propos\351 \340 toute personne en proie \340 une d\351tresse psychologique li\351e \340 l'\351pid\351mie du COVID-19: https://covidecoute.org </p>" +
+		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
+		choices: [32],
+		data: {test_part: 'questinstruction',trial_type: 'quest'}
+	};
+
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
 	qns.push(fullscreenExp);
@@ -184,6 +197,7 @@ function quest() {
 			qns.push(covid_difficulty);
 			qns.push(fullscreenExp);
 			qns.push(covid_interaction);
+			qns.push(covid_end);
 		}
 	};
 
