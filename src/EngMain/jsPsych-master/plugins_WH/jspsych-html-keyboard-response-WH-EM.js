@@ -80,7 +80,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         pretty_name: 'Target Trial Indicator',
         array: true,
         default: undefined,
-        description: 'Indicates if this trial falls within the three trial response window'
+        description: 'Indicates if this trial falls within the three trial response window and, if yes, the index of the target'
       },
     }
   }
@@ -88,7 +88,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     var new_html = this.stimulus(trial.grid, trial.grid_square_size, trial.target, trial.stimulus);
-
 
     // add prompt
     if(trial.prompt !== null){
@@ -127,6 +126,8 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
       key: null
     };
 
+
+
     // function to end trial when it is time
     var end_trial = function() {
 
@@ -138,12 +139,56 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
-      // gather the data to store for the trial
-      var trial_data = {
-        "rt": response.rt,
-        "stimulus": trial.stimulus,
-        "key_press": response.key
+      // determine response correctness
+      if (trial.target_trial[0]){ // if this is a target trial
+        if (response.key != null){
+          correct = 1; // hit (correct)
+          // if this is not the first stimulus presentation trial, correct the previous one
+          if (trial.target_trial[1] == 1){jsPsych.data.get().addToLast({correct: 4, rt: response.rt + 350*trial.target_trial[1]})}
+        } else {
+          correct = 0; // miss (incorrect)
+        }
+      } else {
+        if (response.key != null){ // if this is not a target trial
+          correct = 2; // false alarm
+        } else {
+          correct = 999; // null (no response expected)
+        }
       };
+
+
+      // check to see if participant correctly responded in the last trial
+      var data = jsPsych.data.getLastTrialData().values()[0];
+      if (data.correct == 1 && trial.target_trial[1] == 1){
+        var trial_data = {
+          "rt": data.rt,
+          "correct": 5,
+          "stimulus": data.stimulus,
+          "key_press": data.key
+        }
+      } else if (data.correct == 5 && trial.target_trial[1] == 2){
+        var trial_data = {
+          "rt": data.rt,
+          "correct": 6,
+          "stimulus": data.stimulus,
+          "key_press": data.key
+        }
+      } else if (data.correct == 1 && trial.target_trial[1] == 2){
+        var trial_data = {
+          "rt": data.rt,
+          "correct": 6,
+          "stimulus": data.stimulus,
+          "key_press": data.key
+        }
+      } else {
+        // gather the data to store for the trial
+        var trial_data = {
+          "rt": response.rt + 350*trial.target_trial[1],
+          "correct": correct,
+          "stimulus": trial.stimulus,
+          "key_press": response.key
+        };
+      }
 
       // clear the display
       display_element.innerHTML = '';

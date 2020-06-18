@@ -41,8 +41,8 @@ Per trial:
                training:     false};
 
   // Configuration parameters of experiment
-  const exp = {nbTrials:     32,
-               nbStim:       42,
+  const exp = {nbTrials:     1,
+               nbStim:       29,
                nbTar:         4};
 
   // Timings of the experiment
@@ -185,10 +185,10 @@ Per trial:
       jsPsych.init({
         timeline: exp_timeline,
         show_progress_bar: true,
-        on_trial_finish: function(){
-          jsPsych.data.addProperties({date: date});
-          saveData();
-        },
+    //    on_trial_finish: function(){
+    //      jsPsych.data.addProperties({date: date});
+    //      saveData();
+    //    },
         on_finish: function(){
           //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
           //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')

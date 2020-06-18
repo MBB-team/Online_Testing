@@ -24,7 +24,7 @@ function rsvpEM(nbTrials){
     // FOR EACH DIFFICULTY STEP //
     for (var diff_step = 0; diff_step < 8; diff_step++){
 
-      var target_counter = 0; // counter for number targets shown in this difficulty step
+      var target_counter = 0; // counting the number of targets seen
 
       var tar_index = target_indexes[trialCondition[trial_i]][diff_step].map(function(v){return (v - 1)});
       var NofSwi = tar_index.length - exp.nbTar;
@@ -61,17 +61,26 @@ function rsvpEM(nbTrials){
       // Target stimuli indexes
       var index_of_7 = getAllIndexes(tar_str, 7);
 
-      var target_stim_index = [index_of_7[0],index_of_7[0]+1,index_of_7[0]+2],
-                              [index_of_7[1],index_of_7[1]+1,index_of_7[1]+2],
-                              [index_of_7[2],index_of_7[2]+1,index_of_7[2]+2],
-                              [index_of_7[3],index_of_7[3]+1,index_of_7[3]+2];
+      // Target stimuli indexes plus the following 2 (350*3 ms response window)
+      var target_stim_index = [[index_of_7[0],index_of_7[0]+1,index_of_7[0]+2],
+                               [index_of_7[1],index_of_7[1]+1,index_of_7[1]+2],
+                               [index_of_7[2],index_of_7[2]+1,index_of_7[2]+2],
+                               [index_of_7[3],index_of_7[3]+1,index_of_7[3]+2]];
 
       // FOR EACH DISPLAYED STIMULUS //
       for (var stim_i = 0; stim_i < tar_str.length; stim_i++){
 
-        if (target_stim_index.some(function(e){return e == stim_i;}))
-
         if (swi_str[stim_i] == 3){tar_side = 1 - tar_side;};
+
+        // if the stim_index corresponds to response window, pass true and the index of the target to the plugin
+        if (target_stim_index.flat().some(e => e == stim_i)){
+          target_trial = [true, stim_i - target_stim_index[target_counter][0]];
+          if (stim_i == target_stim_index[target_counter][2]){
+            if(target_counter != 3){target_counter++};
+          };
+        } else {
+          target_trial = [false, null];
+        };
 
         // SHOW STIMULUS //
         var one_stim = {
@@ -83,12 +92,21 @@ function rsvpEM(nbTrials){
           target: tar_side,
           grid: [[0,3,0,3,0],[3,1,2,1,3],[0,3,0,3,0]],
           grid_square_size: 100,
-          target_trial: target_trial
+          target_trial: target_trial,
+          on_finish: function(data){
+            // check to see if participant correctly responded in the  trial
+          //  var data = jsPsych.data.getLastTrialData().values()[0];
+          if (data.correct == 1){
+            console.log(jsPsych.data.get().values());}
+          }
         }; // show stim
 
       timelineTask.push(one_stim);
 
       } // for each displayed stimulus
+
+      timelineTask.push(fullscreenExp);
+
     } // for each difficulty step
 
 
