@@ -141,10 +141,13 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
 
       // determine response correctness
       if (trial.target_trial[0]){ // if this is a target trial
-        if (response.key != null){
+        if (response.key == 32){
           correct = 1; // hit (correct)
-          // if this is not the first stimulus presentation trial, correct the previous one
-          if (trial.target_trial[1] == 1){jsPsych.data.get().addToLast({correct: 4, rt: response.rt + 350*trial.target_trial[1]})}
+          //    // if this is not the first stimulus presentation trial, correct the previous one
+          //    if (trial.target_trial[1] == 1){jsPsych.data.get().addToLast({correct: 4, rt: response.rt + 350*trial.target_trial[1]})}
+          //    if (trial.target_trial[1] == 2){
+          //      jsPsych.data.get().last(2).addToAll({correct: 4, rt: response.rt + 350*trial.target_trial[1]})
+          //    }
         } else {
           correct = 0; // miss (incorrect)
         }
@@ -156,32 +159,52 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         }
       };
 
+      if (response.key == 13){
+        correct = 5; // opted out
+      }
 
       // check to see if participant correctly responded in the last trial
+      // gather the data to store for the trial
       var data = jsPsych.data.getLastTrialData().values()[0];
-      if (data.correct == 1 && trial.target_trial[1] == 1){
-        var trial_data = {
-          "rt": data.rt,
-          "correct": 5,
-          "stimulus": data.stimulus,
-          "key_press": data.key
-        }
-      } else if (data.correct == 5 && trial.target_trial[1] == 2){
-        var trial_data = {
-          "rt": data.rt,
-          "correct": 6,
-          "stimulus": data.stimulus,
-          "key_press": data.key
-        }
-      } else if (data.correct == 1 && trial.target_trial[1] == 2){
-        var trial_data = {
-          "rt": data.rt,
-          "correct": 6,
-          "stimulus": data.stimulus,
-          "key_press": data.key
+      if (data.key == 32){
+        if (data.correct == 1 && trial.target_trial[1] == 0){
+          var trial_data = {
+            "rt": response.rt + 350*trial.target_trial[1],
+            "correct": correct,
+            "stimulus": trial.stimulus,
+            "key_press": response.key
+          };
+        } else if (data.correct == 1 && trial.target_trial[1] == 1){
+          var trial_data = {
+            "rt": data.rt,
+            "correct": 4,
+            "stimulus": data.stimulus,
+            "key_press": data.key
+          };
+        } else if (data.correct == 1 && trial.target_trial[1] == 2){
+          var trial_data = {
+            "rt": data.rt,
+            "correct": 4,
+            "stimulus": data.stimulus,
+            "key_press": data.key
+          };
+        } else if (data.correct == 4 && trial.target_trial[1] == 2){
+          var trial_data = {
+            "rt": data.rt,
+            "correct": 4,
+            "stimulus": data.stimulus,
+            "key_press": data.key
+          };
+        } else {
+
+          var trial_data = {
+            "rt": response.rt + 350*trial.target_trial[1],
+            "correct": correct,
+            "stimulus": trial.stimulus,
+            "key_press": response.key
+          };
         }
       } else {
-        // gather the data to store for the trial
         var trial_data = {
           "rt": response.rt + 350*trial.target_trial[1],
           "correct": correct,
@@ -189,7 +212,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
           "key_press": response.key
         };
       }
-
       // clear the display
       display_element.innerHTML = '';
 
@@ -202,7 +224,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
 
       // after a valid response, the stimulus will have the CSS class 'responded'
       // which can be used to provide visual feedback that a response was recorded
-    //  display_element.querySelector('#jspsych-html-keyboard-response-stimulus').className += ' responded';
+      //  display_element.querySelector('#jspsych-html-keyboard-response-stimulus').className += ' responded';
 
       // only record the first response
       if (response.key == null) {
@@ -226,11 +248,11 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
     }
 
     // hide stimulus if stimulus_duration is set
-//    if (trial.stimulus_duration !== null) {
-//      jsPsych.pluginAPI.setTimeout(function() {
-//        display_element.querySelector('#jspsych-html-keyboard-response-stimulus').style.visibility = 'hidden';
-//      }, trial.stimulus_duration);
-//    }
+    //    if (trial.stimulus_duration !== null) {
+    //      jsPsych.pluginAPI.setTimeout(function() {
+    //        display_element.querySelector('#jspsych-html-keyboard-response-stimulus').style.visibility = 'hidden';
+    //      }, trial.stimulus_duration);
+    //    }
 
     // end trial if trial_duration is set
     if (trial.trial_duration !== null) {

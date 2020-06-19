@@ -4,15 +4,23 @@ function rsvpEM(nbTrials){
   // INITIALISATION //
   var timelineTask = [];
   var trialCondition = jsPsych.randomization.shuffle([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31])
+  var trial_counter = -1;
+  var optout = !false;
 
   // START OF MAIN //
   for (var trial_i = 0; trial_i < nbTrials; trial_i++) {
+
+
 
     // TRIAL NUMBER //
     var trial_number = {
       type: 'html-button-response-WH-EM',
       stimulus: '<p>C&#39est le de&#769but d&#39essai <b>'+(trial_i+1)+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p> ',
-      choices: ['C&#39est parti !']
+      choices: ['C&#39est parti !'],
+      on_start: function(){
+        optout = !false;
+        trial_counter++;
+      }
     }; // trial number
 
     timelineTask.push(trial_number);
@@ -86,7 +94,7 @@ function rsvpEM(nbTrials){
         var one_stim = {
           type: 'html-keyboard-response-WH-EM',
           stimulus: [tar_str[stim_i], swi_str[stim_i], distr_str[0][stim_i], distr_str[1][stim_i], distr_str[2][stim_i], distr_str[3][stim_i], distr_str[4][stim_i], distr_str[5][stim_i], distr_str[6][stim_i]],
-          choices: [32],
+          choices: [32, 13],
           trial_duration: time.stim_dur,
           response_ends_trial: false,
           target: tar_side,
@@ -94,14 +102,29 @@ function rsvpEM(nbTrials){
           grid_square_size: 100,
           target_trial: target_trial,
           on_finish: function(data){
-            // check to see if participant correctly responded in the  trial
-          //  var data = jsPsych.data.getLastTrialData().values()[0];
-          if (data.correct == 1){
-            console.log(jsPsych.data.get().values());}
+            // check to see if participant opted out
+            if (data.correct == 5){
+              optout = !true;
+            }
+          },
+          data: {
+            trialNb: trial_i,
+            target_trial: target_trial
           }
         }; // show stim
 
-      timelineTask.push(one_stim);
+        // CONDITION THE STIMULUS
+        var stim_optout = {
+          timeline: [one_stim],
+          conditional_function: function(){
+            // if the participant opts out, we should skip all stimuli presentation
+            return optout;
+          }
+        };
+
+
+
+      timelineTask.push(stim_optout);
 
       } // for each displayed stimulus
 
@@ -109,8 +132,30 @@ function rsvpEM(nbTrials){
 
     } // for each difficulty step
 
+    // SHOW FEEDBACK //
+    var feedback = {
+      type: 'html-button-response-WH-EM',
+      stimulus: '',
+      choices: ['Continuer a&#768 la prochaine offre'],
+      on_start: function(trial){
+        var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1}).count();
+        var number_incorrect = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2}).count();
+        trial.stimulus = '<p> Vous avez termine&#769 l&#39essai !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_incorrect+'</b></p>'
+      }
+    };
 
-  }
+    // CONDITION THE FEEDBACK
+    var feedback_optout = {
+      timeline: [feedback],
+      conditional_function: function(){
+        // if the participant opts out, we should skip all stimuli presentation
+        return optout;
+      }
+    };
+
+    timelineTask.push(feedback_optout)
+
+  } // for each trial
 
 
   return timelineTask;
