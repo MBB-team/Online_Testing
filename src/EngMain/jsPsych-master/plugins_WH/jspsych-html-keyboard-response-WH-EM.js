@@ -101,9 +101,20 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-1").style.verticalAlign = "bottom";
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-0").style.textAlign     = "right";
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-1").style.verticalAlign = "top";
-    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-3").style.verticalAlign = "bottom";
-    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-4").style.textAlign     = "left";
-    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-3").style.verticalAlign = "top";
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-5").style.verticalAlign = "bottom";
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-6").style.textAlign     = "left";
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-5").style.verticalAlign = "top";
+
+    // set spacing cells
+    var spacing = ""+sizeInDeg-70+"px"
+    console.log(spacing)
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-2").style.width = spacing;
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-4").style.width = spacing;
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-2").style.width = spacing;
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-4").style.width = spacing;
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-2").style.width = spacing;
+    display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-2-4").style.width = spacing;
+
 
     var distractor_streams = display_element.querySelectorAll("div[stream = distractor]");
 
@@ -264,7 +275,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
   };
 
   plugin.stimulus = function(grid, square_size, target, string){
-    var stimulus = "<div id='jspsych-RSVP-EM-stimulus' style='margin:auto; display:table; table-layout:fixed; border-spacing:"+square_size/4+"px'>";
+    var stimulus = "<div id='jspsych-RSVP-EM-stimulus' style='margin:auto; display:table; table-layout:fixed; border-spacing:0px'>";//"+square_size/4+"px'>";
     for(var i=0; i<grid.length; i++){
       stimulus += "<div class='jspsych-RSVP-EM-stimulus-row' style='display:table-row;'>";
       for(var j=0; j<grid[i].length; j++){
@@ -272,7 +283,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
 
         stimulus += "<div class='"+classname+"' id='jspsych-RSVP-EM-stimulus-cell-"+i+"-"+j+"' "+
         "data-row="+i+" data-column="+j+" "+
-        "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align:center; font-size:"+square_size/2+"px;' ";
+        "style='border:0px solid black; width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align:center; font-size:"+square_size/2+"px;' ";
 
         if(grid[i][j] == 1){
           stimulus += "stream = 'target' "

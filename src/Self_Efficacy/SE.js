@@ -183,7 +183,7 @@ function SE(nbBlocks, nbTrials){
 
           var test_phase = {
             type: 'html-button-response-WH',
-            stimulus: '<p>La phase de test est sur le point de commencer.</p><p><b>Sois pre&#770t.e !</b></p>',
+            stimulus: '<p>La phase de test est sur le point de commencer.</p><p><b>Tenez-vous pre&#770t.e !</b></p>',
             choices: [],
             trial_duration: time.fixation,
             data: {
