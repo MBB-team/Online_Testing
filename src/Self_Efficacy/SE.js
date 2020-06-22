@@ -339,7 +339,7 @@ function SE(nbBlocks, nbTrials){
     var finish = {
       type: 'html-button-response-WH',
       stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
-      choices: ['Finish'],
+      choices: ['Fin'],
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
