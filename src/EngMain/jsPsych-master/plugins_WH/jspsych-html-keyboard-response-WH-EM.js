@@ -107,7 +107,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
 
     // set spacing cells
     var spacing = ""+sizeInDeg-70+"px"
-    console.log(spacing)
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-2").style.width = spacing;
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-0-4").style.width = spacing;
     display_element.querySelector("#jspsych-RSVP-EM-stimulus-cell-1-2").style.width = spacing;

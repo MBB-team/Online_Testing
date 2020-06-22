@@ -11,7 +11,11 @@ function rsvpEM(nbTrials){
   var effort;
   var phase;
   var reward_display;
-  var effort_display
+  var effort_display;
+  var trial_end_time;
+  var trial_remaining_time;
+  var target_trial;
+  var switch_trial;
 
   // START OF MAIN //
   for (var trial_i = 0; trial_i < nbTrials; trial_i++) {
@@ -42,7 +46,7 @@ function rsvpEM(nbTrials){
     // TRIAL NUMBER //
     var trial_number = {
       type: 'html-button-response-WH-EM',
-      stimulus: '<p>C&#39est le de&#769but d&#39essai <b>'+(trial_i+1)+'</b>.</p><p>Bonus : <b>'+reward_display+' &euro;</b></p><p>Niveau d&#39effort : <b>'+effort_display+'</b></p>',
+      stimulus: '<p>C&#39est le de&#769but d&#39essai <b>'+(trial_i+1)+'/'+exp.nbTrials+'</b>.</p><p>Bonus : <b>'+reward_display+' &euro;</b></p><p>Niveau d&#39effort : <b>'+effort_display+'</b></p>',
       choices: ['J&#39accepte', 'Je refuse'],
       post_trial_gap: 500,
       on_start: function(){
@@ -50,6 +54,7 @@ function rsvpEM(nbTrials){
         trial_counter++;
       },
       on_finish: function(data){
+        trial_end_time = Date.now() + 90000;
         if (data.button_pressed == 0){engage = true;}
         if (data.button_pressed == 1){
           data.trial_result = 5; // did not engage
@@ -60,6 +65,25 @@ function rsvpEM(nbTrials){
     }; // trial number
 
     timelineTask.push(trial_number);
+
+    // WAIT SCREEN //
+    var wait_screen = {
+      type: 'html-button-response-WH-EM',
+      stimulus: '<p>Vous avez re&#769fuse&#769 l&#39offre</p><p>Nous allons vous proposer la prochaine offre dans <b>90 secondes</b></p>',
+      trial_duration: 85000,
+      choices: []
+    }
+
+    // CONDITION THE WAIT SCREEN //
+    var wait_conditional = {
+      timeline: [wait_screen],
+      conditional_function: function(){
+        // if the participant opts out, we should skip all stimuli presentation
+        return optout && !engage;
+      }
+    };
+
+    timelineTask.push(wait_conditional);
 
     // PREPARE //
     var prepare = {
@@ -113,14 +137,11 @@ function rsvpEM(nbTrials){
 
     timelineTask.push(initial_arrow_conditional);
 
-    // EXPLICIT OPT OUT QUESTION //
-    var optout_q_index = [randi(7,22), randi(7,22)];
-
     var optout_q = {
       type: 'html-button-response-WH-EM',
       stimulus: "<p style='font-size: 50px'>Voulez-vous arre&#770ter cet essai ?</p>",
       choices: ['Oui'],
-      button_html: '<button class="jspsych-btn" style:"font-size:30px">%choice%</button>',
+      button_html: '<button class="jspsych-btn" style="font-size: 30px">%choice%</button>',
       trial_duration: 4000,
       on_finish: function(data){
         if (data.button_pressed == 0){
@@ -144,7 +165,7 @@ function rsvpEM(nbTrials){
 
       var target_counter = 0; // counting the number of targets seen
 
-      var tar_index = target_indexes[trialCondition[trial_i]][diff_step].map(function(v){return (v - 1)});
+      var tar_index = target_indexes_main[trialCondition[trial_i]][diff_step].map(function(v){return (v - 1)});
       var NofSwi = tar_index.length - exp.nbTar;
       var target_pop = Array(exp.nbTar).fill([7]).flat();
       target_pop.push(Array(NofSwi).fill([3]).flat());
@@ -191,10 +212,30 @@ function rsvpEM(nbTrials){
       [index_of_7[2],index_of_7[2]+1,index_of_7[2]+2],
       [index_of_7[3],index_of_7[3]+1,index_of_7[3]+2]];
 
+
+      // EXPLICIT OPT OUT QUESTION //
+      var target_stim_spacing = [target_stim_index[2][0] - target_stim_index[1][2], target_stim_index[3][0] - target_stim_index[2][2]]
+      var max_spacing_i = target_stim_spacing.indexOf(Math.max(...target_stim_spacing)) + 1;
+
+      var optout_q_index = Math.floor(target_stim_index[max_spacing_i][2] + (Math.max(...target_stim_spacing)/2));
+
+
       // FOR EACH DISPLAYED STIMULUS //
       for (var stim_i = 0; stim_i < tar_str.length; stim_i++){
 
-        if (swi_str[stim_i] == 3){tar_side = 1 - tar_side;};
+        switch_trial = false;
+
+        if (swi_str[stim_i] == 3){
+          switch_trial = true;
+          tar_side = 1 - tar_side;
+          if (effort = 1){ // change from 3 to arrows if difficulty is low
+            if (tar_side == 1){
+              swi_str[stim_i] = '>';
+            } else {
+              swi_str[stim_i] = '<';
+            }
+          }
+        };
 
         // if the stim_index corresponds to response window, pass true and the index of the target to the plugin
         if (target_stim_index.flat().some(e => e == stim_i)){
@@ -225,7 +266,8 @@ function rsvpEM(nbTrials){
           },
           data: {
             trialNb: trial_i,
-            target_trial: target_trial
+            target_trial: target_trial,
+            switch_trial: switch_trial
           }
         }; // show stim
 
@@ -242,8 +284,8 @@ function rsvpEM(nbTrials){
 
         timelineTask.push(stim_optout);
 
-        // PUSH TO TIMELINE IF AT CORRECT POINT (diff_step 3 and 7)
-        if (diff_step == 2 && stim_i == optout_q_index[0]){
+        // PUSH ARROW POST-Q TO TIMELINE IF AT CORRECT POINT (diff_step 3 and 7)
+        if (diff_step == 2 && stim_i == optout_q_index){
 
           // DISPLAY  DIRECTION ARROW //
           switch (tar_side) {
@@ -275,7 +317,7 @@ function rsvpEM(nbTrials){
           timelineTask.push(post_q_arrow_conditional)
         }
 
-        if (diff_step == 6 && stim_i == optout_q_index[1]){
+        if (diff_step == 6 && stim_i == optout_q_index){
 
           // DISPLAY  DIRECTION ARROW //
           switch (tar_side) {
@@ -321,7 +363,7 @@ function rsvpEM(nbTrials){
       on_start: function(trial){
         var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1}).count();
         var number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2}).count();
-        trial.stimulus = '<p> Vous avez termine&#769 l&#39essai !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>'
+        trial.stimulus = '<p>Vous avez termine&#769 l&#39essai !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>';
       },
       on_finish: function(data){
         if (number_correct >= exp.tar_threshold){
@@ -354,8 +396,13 @@ function rsvpEM(nbTrials){
     // IF OPTED OUT //
     var opted_out = {
       type: 'html-button-response-WH-EM',
-      stimulus: '<p>Vous avez choisi arre&#770ter cet essai</p>',
-      choices: ['Continuer a&#768 la prochaine offre'],
+      stimulus: '',
+      choices: [],
+      on_start: function(trial){
+        trial_remaining_time = trial_end_time - Date.now();
+        trial.stimulus = '<p>Vous avez choisi arre&#770ter cet essai</p><p>Nous allons vous proposer la prochaine offre dans: <b>'+Math.round(trial_remaining_time/1000)+' secondes</b></p>'
+        trial.trial_duration = trial_remaining_time;
+      },
       data: {
         trial_result: 4 // opted out! (yay)
       }
@@ -374,6 +421,13 @@ function rsvpEM(nbTrials){
 
   } // for each trial
 
+  var finish = {
+    type: 'html-button-response-WH-EM',
+    stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
+    choices: ['Fin'],
+  }
+
+  timelineTask.push(finish);
 
   return timelineTask;
 }
