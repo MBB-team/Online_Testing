@@ -182,7 +182,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
             "rt":                 response.rt + 350*trial.target_trial[1],
             "correct":            correct,
             "stimulus":           trial.stimulus,
-            "key_press":          response.key
+            "key_press":          response.key,
             "responses":         "999",  // string
             "button_pressed":     999 // integer
           };
@@ -191,7 +191,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
             "rt":                 data.rt,
             "correct":            4,
             "stimulus":           data.stimulus,
-            "key_press":          data.key
+            "key_press":          data.key,
             "responses":         "999",  // string
             "button_pressed":     999 // integer
           };
@@ -200,7 +200,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
             "rt":                data.rt,
             "correct":           4,
             "stimulus":          data.stimulus,
-            "key_press":         data.key
+            "key_press":         data.key,
             "responses":        "999",  // string
             "button_pressed":    999 // integer
           };
@@ -209,7 +209,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
             "rt":                data.rt,
             "correct":           4,
             "stimulus":          data.stimulus,
-            "key_press":         data.key
+            "key_press":         data.key,
             "responses":        "999",  // string
             "button_pressed":    999 // integer
           };
@@ -219,7 +219,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
             "rt":                response.rt + 350*trial.target_trial[1],
             "correct":           correct,
             "stimulus":          trial.stimulus,
-            "key_press":         response.key
+            "key_press":         response.key,
             "responses":        "999",  // string
             "button_pressed":    999 // integer
           };
@@ -229,7 +229,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
           "rt":                 response.rt + 350*trial.target_trial[1],
           "correct":            correct,
           "stimulus":           trial.stimulus,
-          "key_press":          response.key
+          "key_press":          response.key,
           "responses":         "999",  // string
           "button_pressed":     999 // integer
         };
