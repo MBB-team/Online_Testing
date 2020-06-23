@@ -16,6 +16,7 @@ function rsvpEM(nbTrials){
   var trial_remaining_time;
   var target_trial;
   var switch_trial;
+  var stim_counter;
 
   // START OF MAIN //
   for (var trial_i = 0; trial_i < nbTrials; trial_i++) {
@@ -23,6 +24,8 @@ function rsvpEM(nbTrials){
     reward = conditions.reward[trialCondition[trial_i]]
     effort = conditions.effort[trialCondition[trial_i]]
     phase = conditions.phase[trialCondition[trial_i]]
+
+    stim_counter = 1;
 
     //    <p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>
     switch (reward) {
@@ -65,9 +68,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
+        switch_trial: 999,
         trial_result: 999,
-        test_part: 'offer'
+        test_part: 'offer',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     }; // trial number
 
@@ -82,9 +91,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
-        trial_result: 999,
-        test_part: 'wait_screen'
+        switch_trial: 999,
+        trial_result: 5,
+        test_part: 'wait_screen',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     }
 
@@ -108,9 +123,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
+        switch_trial: 999,
         trial_result: 999,
-        test_part: 'prepare'
+        test_part: 'prepare',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     };
 
@@ -148,9 +169,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
+        switch_trial: 999,
         trial_result: 999,
-        test_part: 'initial_arrow'
+        test_part: 'initial_arrow',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     }
 
@@ -180,9 +207,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
+        switch_trial: 999,
         trial_result: 999,
-        test_part: 'explicit_optout'
+        test_part: 'explicit_optout',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     }
 
@@ -258,10 +291,10 @@ function rsvpEM(nbTrials){
       // FOR EACH DISPLAYED STIMULUS //
       for (var stim_i = 0; stim_i < tar_str.length; stim_i++){
 
-        switch_trial = false;
+        switch_trial = 0;
 
         if (swi_str[stim_i] == 3){
-          switch_trial = true;
+          switch_trial = 1;
           tar_side = 1 - tar_side;
           if (effort = 1){ // change from 3 to arrows if difficulty is low
             if (tar_side == 1){
@@ -293,6 +326,7 @@ function rsvpEM(nbTrials){
           grid: [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]],
           grid_square_size: 100,
           target_trial: target_trial,
+          prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet essai a&#768 n&#39importe quel moment <b>en appuyant le bouton << Entre&#769e >> </b>!',
           on_finish: function(data){
             // check to see if participant opted out
             if (data.correct == 5){
@@ -304,7 +338,13 @@ function rsvpEM(nbTrials){
             target_trial: target_trial[1],
             switch_trial: switch_trial,
             trial_result: 999,
-            test_part: 'one_stim'
+            test_part: 'one_stim',
+            reward: reward,
+            effort: effort,
+            phase: phase,
+            training: 0,
+            stim_counter: stim_counter,
+            diff_step: diff_step
           }
         }; // show stim
 
@@ -320,6 +360,7 @@ function rsvpEM(nbTrials){
 
 
         timelineTask.push(stim_optout);
+        stim_counter++;
 
         // PUSH ARROW POST-Q TO TIMELINE IF AT CORRECT POINT (diff_step 3 and 7)
         if (diff_step == 2 && stim_i == optout_q_index){
@@ -342,9 +383,15 @@ function rsvpEM(nbTrials){
             data: {
               trialNb: trial_i,
               target_trial: 999,
-              switch_trial: null,
+              switch_trial: 999,
               trial_result: 999,
-              test_part: 'post_q_arrow'
+              test_part: 'post_q_arrow',
+              reward: reward,
+              effort: effort,
+              phase: phase,
+              training: 0,
+              stim_counter: 999,
+              diff_step: diff_step
             }
           }
 
@@ -381,9 +428,15 @@ function rsvpEM(nbTrials){
             data: {
               trialNb: trial_i,
               target_trial: 999,
-              switch_trial: null,
+              switch_trial: 999,
               trial_result: 999,
-              test_part: 'post_q_arrow'
+              test_part: 'post_q_arrow',
+              reward: reward,
+              effort: effort,
+              phase: phase,
+              training: 0,
+              stim_counter: 999,
+              diff_step: diff_step
             }
           }
 
@@ -412,11 +465,23 @@ function rsvpEM(nbTrials){
       stimulus: '',
       choices: ['Continuer a&#768 la prochaine offre'],
       on_start: function(trial){
-        var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1}).count();
-        var number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2}).count();
+        var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1, training: 0}).count();
+        var number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2, training: 0}).count();
         trial.stimulus = '<p>Vous avez termine&#769 l&#39essai !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>';
+
+        if (number_correct >= exp.tar_threshold && number_FA <= exp.FA_threshold){
+          trial.stimulus += '<p>Vous avez gagne&#769 le bonus de cet essai !</p>';
+        } else if (number_correct < exp.tar_threshold) {
+          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet essai parce que vous avez rate&#769 trop de cibles</p>';
+        } else if (number_correct >= exp.tar_threshold && number_FA > exp.FA_threshold) {
+          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet essai parce que vous avez fait trop de re&#769ponses incorrectes</p>';
+        }
       },
       on_finish: function(data){
+
+        var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1}).count();
+        var number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2}).count();
+
         if (number_correct >= exp.tar_threshold){
           data.trial_result = 1; // success
         };
@@ -430,9 +495,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
+        switch_trial: 999,
         trial_result: 999,
-        test_part: 'feedback'
+        test_part: 'feedback',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     };
 
@@ -460,9 +531,15 @@ function rsvpEM(nbTrials){
       data: {
         trialNb: trial_i,
         target_trial: 999,
-        switch_trial: null,
+        switch_trial: 999,
         trial_result: 4,
-        test_part: 'opted_out'
+        test_part: 'opted_out',
+        reward: reward,
+        effort: effort,
+        phase: phase,
+        training: 0,
+        stim_counter: 999,
+        diff_step: 999
       }
     };
 
@@ -484,11 +561,17 @@ function rsvpEM(nbTrials){
     stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
     choices: ['Fin'],
     data: {
-      trialNb: trial_i,
+      trialNb: 999,
       target_trial: 999,
-      switch_trial: null,
+      switch_trial: 999,
       trial_result: 999,
-      test_part: 'finish'
+      test_part: 'finish',
+      reward: 999,
+      effort: 999,
+      phase: 999,
+      training: 0,
+      stim_counter: 999,
+      diff_step: 999
     }
   }
 

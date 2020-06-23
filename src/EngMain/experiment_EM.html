@@ -41,11 +41,11 @@ Per trial:
     debug:        false,
     cheat:        false,
     instructions: false,
-    training:     true};
+    training:     false};
 
     // Configuration parameters of experiment
     const exp = {
-      nbTrials:       1,   // 32
+      nbTrials:        1,   // 32
       nbTrials_train:  1,   // 4
       nbStim:         29,   // 29
       nbTar:           4,   // 4
@@ -61,8 +61,8 @@ Per trial:
 
 
         const conditions = {
-          reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
-          effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
+          reward: Array(1).fill([1,2]).flat(),
+          effort: Array(1).fill([1, 1, 2, 2]).flat(),
           phase:  Array(2).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
           // for screen display
@@ -129,10 +129,15 @@ Per trial:
               check_fullscreen: true,
               data: {
                 trialNb: 999,
-                target_trial: null,
-                switch_trial: null,
+                target_trial: 999,
+                switch_trial: 999,
                 trial_result: 999,
-                test_part: 'firstFullscreen'
+                test_part: 'firstFullscreen',
+                reward: 999,
+                effort: 999,
+                phase: 999,
+                training: 999,
+                stim_counter: 999
               }
             };
 
@@ -141,11 +146,16 @@ Per trial:
               message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
                 fullscreen_mode: false,
                 data: {
-                  trialNb: trial_i,
-                  target_trial: null,
-                  switch_trial: null,
+                  trialNb: 999,
+                  target_trial: 999,
+                  switch_trial: 999,
                   trial_result: 999,
-                  test_part: 'FullScreen'
+                  test_part: 'FullScreen',
+                  reward: 999,
+                  effort: 999,
+                  phase: 999,
+                  training: 999,
+                  stim_counter: 999
                 }
               }
 
@@ -239,10 +249,15 @@ Per trial:
                 },
                 data: {
                   trialNb: 999,
-                  target_trial: null,
-                  switch_trial: null,
+                  target_trial: 999,
+                  switch_trial: 999,
                   trial_result: 999,
-                  test_part: 'dpi'
+                  test_part: 'dpi',
+                  reward: 999,
+                  effort: 999,
+                  phase: 999,
+                  training: 999,
+                  stim_counter: 999
                 }
 
               };
