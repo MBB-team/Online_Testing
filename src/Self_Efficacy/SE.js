@@ -346,7 +346,7 @@ function SE(nbBlocks, nbTrials){
         TinB: trial_i,
         testNb: 999,
         target_score: target_scores_all[trial_counter],
-        test_part: 'Fin'
+        test_part: 'finish'
       }
     }
 
