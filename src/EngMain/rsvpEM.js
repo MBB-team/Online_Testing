@@ -61,6 +61,13 @@ function rsvpEM(nbTrials){
           engage = false;
 
         }
+      },
+      data: {
+        trialNb: trial_i,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'offer'
       }
     }; // trial number
 
@@ -71,7 +78,14 @@ function rsvpEM(nbTrials){
       type: 'html-button-response-WH-EM',
       stimulus: '<p>Vous avez re&#769fuse&#769 l&#39offre</p><p>Nous allons vous proposer la prochaine offre dans <b>90 secondes</b></p>',
       trial_duration: 85000,
-      choices: []
+      choices: [],
+      data: {
+        trialNb: trial_i,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'wait_screen'
+      }
     }
 
     // CONDITION THE WAIT SCREEN //
@@ -90,7 +104,14 @@ function rsvpEM(nbTrials){
       type: 'html-button-response-WH-EM',
       stimulus: "<p style='font-size: 50px'><b>Pre&#769parez-vous !</b></p>",
       trial_duration: 1000,
-      choices: []
+      choices: [],
+      data: {
+        trialNb: trial_i,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'prepare'
+      }
     };
 
     // CONDITION PREPARE //
@@ -123,7 +144,14 @@ function rsvpEM(nbTrials){
       type: 'html-button-response-WH-EM',
       stimulus: tar_arrow,
       choices: [],
-      trial_duration: 500
+      trial_duration: 500,
+      data: {
+        trialNb: trial_i,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'initial_arrow'
+      }
     }
 
     // CONDITION THE ARROW //
@@ -148,6 +176,13 @@ function rsvpEM(nbTrials){
           optout = !true;
           data.trial_result = 5 // opted out after being asked
         }
+      },
+      data: {
+        trialNb: trial_i,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'explicit_optout'
       }
     }
 
@@ -266,8 +301,10 @@ function rsvpEM(nbTrials){
           },
           data: {
             trialNb: trial_i,
-            target_trial: target_trial,
-            switch_trial: switch_trial
+            target_trial: target_trial[1],
+            switch_trial: switch_trial,
+            trial_result: 999,
+            test_part: 'one_stim'
           }
         }; // show stim
 
@@ -301,7 +338,14 @@ function rsvpEM(nbTrials){
             type: 'html-button-response-WH-EM',
             stimulus: tar_arrow,
             choices: [],
-            trial_duration: 500
+            trial_duration: 500,
+            data: {
+              trialNb: trial_i,
+              target_trial: 999,
+              switch_trial: null,
+              trial_result: 999,
+              test_part: 'post_q_arrow'
+            }
           }
 
           // CONDITION THE ARROW //
@@ -333,7 +377,14 @@ function rsvpEM(nbTrials){
             type: 'html-button-response-WH-EM',
             stimulus: tar_arrow,
             choices: [],
-            trial_duration: 500
+            trial_duration: 500,
+            data: {
+              trialNb: trial_i,
+              target_trial: 999,
+              switch_trial: null,
+              trial_result: 999,
+              test_part: 'post_q_arrow'
+            }
           }
 
           // CONDITION THE ARROW //
@@ -378,7 +429,10 @@ function rsvpEM(nbTrials){
       },
       data: {
         trialNb: trial_i,
-        target_trial: target_trial
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'feedback'
       }
     };
 
@@ -404,7 +458,11 @@ function rsvpEM(nbTrials){
         trial.trial_duration = trial_remaining_time;
       },
       data: {
-        trial_result: 4 // opted out! (yay)
+        trialNb: trial_i,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 4,
+        test_part: 'opted_out'
       }
     };
 
@@ -425,6 +483,13 @@ function rsvpEM(nbTrials){
     type: 'html-button-response-WH-EM',
     stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
     choices: ['Fin'],
+    data: {
+      trialNb: trial_i,
+      target_trial: 999,
+      switch_trial: null,
+      trial_result: 999,
+      test_part: 'finish'
+    }
   }
 
   timelineTask.push(finish);

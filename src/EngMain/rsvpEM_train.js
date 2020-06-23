@@ -6,6 +6,7 @@ function rsvpEM_train(nbTrials_train){
   var trial_counter_train = -1;
   var effort_display_train;
   var target_trial_train;
+  var switch_trial_train;
 
   // START OF TRAIN //
   for (var trial_i_train = 0; trial_i_train < nbTrials_train; trial_i_train++){
@@ -26,6 +27,13 @@ function rsvpEM_train(nbTrials_train){
       post_trial_gap: 500,
       on_start: function(){
         trial_counter_train++;
+      },
+      data: {
+        trialNb: trial_i_train,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'train_number'
       }
     }; // trial number
 
@@ -36,7 +44,14 @@ function rsvpEM_train(nbTrials_train){
       type: 'html-button-response-WH-EM',
       stimulus: "<p style='font-size: 50px'><b>Pre&#769parez-vous !</b></p>",
       trial_duration: 1000,
-      choices: []
+      choices: [],
+      data: {
+        trialNb: trial_i_train,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'prepare_train'
+      }
     };
 
     timelineTask_train.push(prepare_train);
@@ -60,7 +75,14 @@ function rsvpEM_train(nbTrials_train){
       type: 'html-button-response-WH-EM',
       stimulus: tar_arrow_train,
       choices: [],
-      trial_duration: 500
+      trial_duration: 500,
+      data: {
+        trialNb: trial_i_train,
+        target_trial: 999,
+        switch_trial: null,
+        trial_result: 999,
+        test_part: 'initial_arrow_train'
+      }
     }
 
     timelineTask_train.push(initial_arrow_train);
@@ -121,7 +143,10 @@ function rsvpEM_train(nbTrials_train){
       // FOR EACH DISPLAYED STIMULUS //
       for (var stim_i_train = 0; stim_i_train < tar_str_train.length; stim_i_train++){
 
+        switch_trial_train = false;
+
         if (swi_str_train[stim_i_train] == 3){
+          switch_trial_train = true;
           tar_side_train = 1 - tar_side_train;
           if (effort_train = 1){ // change from 3 to arrows if difficulty is low
             if (tar_side_train == 1){
@@ -155,7 +180,10 @@ function rsvpEM_train(nbTrials_train){
           target_trial: target_trial_train,
           data: {
             trialNb: trial_i_train,
-            target_trial: target_trial_train
+            target_trial: target_trial_train[1],
+            switch_trial: switch_trial_train,
+            trial_result: 999,
+            test_part: 'one_stim_train'
           }
         }; // show stim
 
@@ -195,7 +223,10 @@ function rsvpEM_train(nbTrials_train){
       },
       data: {
         trialNb: trial_i_train,
-        target_trial: target_trial_train
+        target_trial: target_trial_train[1],
+        switch_trial: switch_trial_train,
+        trial_result: 999,
+        test_part: 'train_number'
       }
     } // feedback
 
@@ -205,8 +236,15 @@ function rsvpEM_train(nbTrials_train){
 
   var finish_train = {
     type: 'html-button-response-WH-EM',
-    stimulus: '<p><b>Bravo ! </b>Vous avez re&#769ussi toutes les sessions d&#39entrai&#770nement !</p><p>La suite principale va de&#769sormais commencer. Cliquez sur le bouton ci-dessous pour voir votre premie&#768re proposition d&#39 engagement.</p>',
-    choices: ['Continuer']
+    stimulus: '<p><b>Bravo ! </b>Vous avez re&#769ussi toutes les sessions d&#39entrai&#770nement !</p><p>L&#39expe&#769rience principale va de&#769sormais commencer. Cliquez sur le bouton ci-dessous pour voir votre premie&#768re proposition d&#39 engagement.</p>',
+    choices: ['Continuer'],
+    data: {
+      trialNb: trial_i_train,
+      target_trial: 999,
+      switch_trial: null,
+      trial_result: 999,
+      test_part: 'one_stim_train'
+    }
   }
 
   timelineTask_train.push(finish_train);

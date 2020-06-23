@@ -160,23 +160,12 @@ jsPsych.plugins["html-button-response-WH-EM"] = (function() {
 
       // gather the data to store for the trial
       var trial_data = {
-        "rt":               response.rt,   // integer
-        "stimulus":         trial.stimulus,  // string
-        "button_pressed":   parseInt(response.button),   // integer
-        "flips":            999,   // integer
-        "conf_response":    999,   // integer
-        "responses":       "999",  // string
-        "SE_max":           999,   // integer
-        "SE_min":           999,   // integer
-        "SE_max_ini":       999,   // integer
-        "SE_min_ini":       999,   // integer
-        "response_row":     999,   // integer
-        "response_col":     999,   // integer
-        "target_row":       999,   // integer
-        "target_col":       999,   // integer
-        "correct_row":      999,   // integer
-        "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "rt":                response.rt,   // integer
+        "correct":           999, // integer
+        "stimulus":          trial.stimulus,  // string
+        "key_press":         999, // integer
+        "responses":         "999",  // string
+        "button_pressed":    parseInt(response.button) // integer
       };
 
       // clear the display

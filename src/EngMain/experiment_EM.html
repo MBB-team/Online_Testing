@@ -45,7 +45,8 @@ Per trial:
 
     // Configuration parameters of experiment
     const exp = {
-      nbTrials:       32,   // 32
+      nbTrials:       1,   // 32
+      nbTrials_train:  1,   // 4
       nbStim:         29,   // 29
       nbTar:           4,   // 4
       tar_threshold:  28,   // 28
@@ -122,16 +123,30 @@ Per trial:
             // Create "Variable/function" that makes sure you remain in FullScreen
             var firstFullscreen = {
               type: 'fullscreen-WH-EM',
-              message:"<p>  Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer. </p>",
+              message: "<p>  Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer. </p>",
               button_label: 'Mettre en plein \351cran',
               delay_after: 300,
-              check_fullscreen: true
+              check_fullscreen: true,
+              data: {
+                trialNb: 999,
+                target_trial: null,
+                switch_trial: null,
+                trial_result: 999,
+                test_part: 'firstFullscreen'
+              }
             };
 
             var fullscreenExp = {
               type: 'fullscreen-WH-EM',
               message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
                 fullscreen_mode: false,
+                data: {
+                  trialNb: trial_i,
+                  target_trial: null,
+                  switch_trial: null,
+                  trial_result: 999,
+                  test_part: 'FullScreen'
+                }
               }
 
 
@@ -221,6 +236,13 @@ Per trial:
                       sizeInDeg = size / degPerPix;
                     }
                   }
+                },
+                data: {
+                  trialNb: 999,
+                  target_trial: null,
+                  switch_trial: null,
+                  trial_result: 999,
+                  test_part: 'dpi'
                 }
 
               };
@@ -229,7 +251,7 @@ Per trial:
 
               if (cfg.training){
                 // Generate training trials
-                var train = rsvpEM_train(4);
+                var train = rsvpEM_train(exp.nbTrials_train);
                 for (var train_i = 0; train_i < train.length; train_i++){
                   exp_timeline.push(train[train_i])
                 }
@@ -249,7 +271,7 @@ Per trial:
                 //      saveData();
                 //    },
                 on_finish: function(){
-                  //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                   endTask();
                 }

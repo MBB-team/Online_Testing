@@ -1,16 +1,16 @@
 /* jspsych-instructions.js
- * Josh de Leeuw
- *
- * This plugin displays text (including HTML formatted strings) during the experiment.
- * Use it to show instructions, provide performance feedback, etc...
- *
- * Page numbers can be displayed to help with navigation by setting show_page_number
- * to true.
- *
- * documentation: docs.jspsych.org
- *
- *
- */
+* Josh de Leeuw
+*
+* This plugin displays text (including HTML formatted strings) during the experiment.
+* Use it to show instructions, provide performance feedback, etc...
+*
+* Page numbers can be displayed to help with navigation by setting show_page_number
+* to true.
+*
+* documentation: docs.jspsych.org
+*
+*
+*/
 
 jsPsych.plugins["instructions-WH-EM"] = (function() {
 
@@ -58,10 +58,10 @@ jsPsych.plugins["instructions-WH-EM"] = (function() {
         description: 'If true, then a "Previous" and "Next" button will be displayed beneath the instructions.'
       },
       show_page_number: {
-          type: jsPsych.plugins.parameterType.BOOL,
-          pretty_name: 'Show page number',
-          default: false,
-          description: 'If true, and clickable navigation is enabled, then Page x/y will be shown between the nav buttons.'
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Show page number',
+        default: false,
+        description: 'If true, and clickable navigation is enabled, then Page x/y will be shown between the nav buttons.'
       },
       button_label_previous: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -89,13 +89,13 @@ jsPsych.plugins["instructions-WH-EM"] = (function() {
     var last_page_update_time = start_time;
 
     function btnListener(evt){
-    	evt.target.removeEventListener('click', btnListener);
-    	if(this.id === "jspsych-instructions-back"){
-    		back();
-    	}
-    	else if(this.id === 'jspsych-instructions-next'){
-    		next();
-    	}
+      evt.target.removeEventListener('click', btnListener);
+      if(this.id === "jspsych-instructions-back"){
+        back();
+      }
+      else if(this.id === 'jspsych-instructions-next'){
+        next();
+      }
     }
 
     function show_current_page() {
@@ -103,8 +103,8 @@ jsPsych.plugins["instructions-WH-EM"] = (function() {
 
       var pagenum_display = "";
       if(trial.show_page_number) {
-          pagenum_display = "<span style='margin: 0 1em;' class='"+
-          "jspsych-instructions-pagenum'>Page "+(current_page+1)+"/"+trial.pages.length+"</span>";
+        pagenum_display = "<span style='margin: 0 1em;' class='"+
+        "jspsych-instructions-pagenum'>Page "+(current_page+1)+"/"+trial.pages.length+"</span>";
       }
 
       if (trial.show_clickable_nav) {
@@ -115,11 +115,11 @@ jsPsych.plugins["instructions-WH-EM"] = (function() {
           nav_html += "<button id='jspsych-instructions-back' class='jspsych-btn' style='margin-right: 5px;' "+allowed+">&lt; "+trial.button_label_previous+"</button>";
         }
         if (trial.pages.length > 1 && trial.show_page_number) {
-            nav_html += pagenum_display;
+          nav_html += pagenum_display;
         }
         nav_html += "<button id='jspsych-instructions-next' class='jspsych-btn'"+
-            "style='margin-left: 5px;'>"+trial.button_label_next+
-            " &gt;</button></div>";
+        "style='margin-left: 5px;'>"+trial.button_label_next+
+        " &gt;</button></div>";
 
         html += nav_html;
         display_element.innerHTML = html;
@@ -186,23 +186,12 @@ jsPsych.plugins["instructions-WH-EM"] = (function() {
 
       // gather trial data
       var trial_data = {
-        "rt":               performance.now() - start_time,   // integer
-        "stimulus":        "999",  // string
-        "button_pressed":   999,   // integer
-        "flips":            999,   // integer
-        "conf_response":    999,   // integer
-        "responses":        JSON.stringify(view_history),  // string
-        "SE_max":           999,   // integer
-        "SE_min":           999,   // integer
-        "SE_max_ini":       999,   // integer
-        "SE_min_ini":       999,   // integer
-        "response_row":     999,   // integer
-        "response_col":     999,   // integer
-        "target_row":       999,   // integer
-        "target_col":       999,   // integer
-        "correct_row":      999,   // integer
-        "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "rt":                performance.now() - start_time,   // integer
+        "correct":           999, // integer
+        "stimulus":         '999', // string
+        "key_press":         999, // integer
+        "responses":         JSON.stringify(view_history),  // string
+        "button_pressed":    999 // integer
       };
 
       jsPsych.finishTrial(trial_data);
