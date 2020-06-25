@@ -17,6 +17,10 @@ function rsvpEM(nbTrials){
   var target_trial;
   var switch_trial;
   var stim_counter;
+  var number_correct;
+  var number_FA;
+  var target_trials_data;
+  var correct_response_i;
 
   // START OF MAIN //
   for (var trial_i = 0; trial_i < nbTrials; trial_i++) {
@@ -26,6 +30,7 @@ function rsvpEM(nbTrials){
     phase = conditions.phase[trialCondition[trial_i]]
 
     stim_counter = 1;
+    responded = false;
 
     //    <p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>
     switch (reward) {
@@ -76,6 +81,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     }; // trial number
@@ -99,6 +105,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     }
@@ -131,6 +138,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     };
@@ -177,6 +185,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     }
@@ -215,6 +224,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     }
@@ -296,7 +306,7 @@ function rsvpEM(nbTrials){
         if (swi_str[stim_i] == 3){
           switch_trial = 1;
           tar_side = 1 - tar_side;
-          if (effort = 1){ // change from 3 to arrows if difficulty is low
+          if (effort == 1){ // change from 3 to arrows if difficulty is low
             if (tar_side == 1){
               swi_str[stim_i] = '>';
             } else {
@@ -307,12 +317,12 @@ function rsvpEM(nbTrials){
 
         // if the stim_index corresponds to response window, pass true and the index of the target to the plugin
         if (target_stim_index.flat().some(e => e == stim_i)){
-          target_trial = [true, stim_i - target_stim_index[target_counter][0]];
+          target_trial = [true, (stim_i - target_stim_index[target_counter][0]), (target_counter + diff_step*4)];
           if (stim_i == target_stim_index[target_counter][2]){
             if(target_counter != 3){target_counter++};
           };
         } else {
-          target_trial = [false, null];
+          target_trial = [false, 3, 999];
         };
 
         // SHOW STIMULUS //
@@ -327,6 +337,21 @@ function rsvpEM(nbTrials){
           grid_square_size: 100,
           target_trial: target_trial,
           prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet essai a&#768 n&#39importe quel moment <b>en appuyant le bouton << Entre&#769e >> </b>!',
+          responded: responded,
+          on_start: function(trial){
+            if (jsPsych.data.getLastTrialData().select("target_trial").values[0] == 2){
+              target_trials_data = jsPsych.data.get().last(3).values();
+              if (jsPsych.data.get().last(3).select("correct").values.some(e => e == 1)){
+                correct_response_i = jsPsych.data.get().last(3).select("correct").values.indexOf(1);
+                jsPsych.data.get().last(3).addToAll({rt: target_trials_data[correct_response_i].rt, correct: 4});
+                target_trials_data[correct_response_i].correct = 1;
+              } else if (jsPsych.data.get().last(3).select("correct").values.some(e => e == 2)){
+                jsPsych.data.get().last(3).addToAll({correct: 6});
+                target_trials_data[0].correct = 2;
+              }
+
+            }
+          },
           on_finish: function(data){
             // check to see if participant opted out
             if (data.correct == 5){
@@ -344,6 +369,7 @@ function rsvpEM(nbTrials){
             phase: phase,
             training: 0,
             stim_counter: stim_counter,
+            target_counter: target_trial[2],
             diff_step: diff_step
           }
         }; // show stim
@@ -391,6 +417,7 @@ function rsvpEM(nbTrials){
               phase: phase,
               training: 0,
               stim_counter: 999,
+              target_counter: 999,
               diff_step: diff_step
             }
           }
@@ -436,6 +463,7 @@ function rsvpEM(nbTrials){
               phase: phase,
               training: 0,
               stim_counter: 999,
+              target_counter: 999,
               diff_step: diff_step
             }
           }
@@ -465,8 +493,8 @@ function rsvpEM(nbTrials){
       stimulus: '',
       choices: ['Continuer a&#768 la prochaine offre'],
       on_start: function(trial){
-        var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1, training: 0}).count();
-        var number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2, training: 0}).count();
+        number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1, training: 0}).count();
+        number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 3, training: 0}).count();
         trial.stimulus = '<p>Vous avez termine&#769 l&#39essai !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>';
 
         if (number_correct >= exp.tar_threshold && number_FA <= exp.FA_threshold){
@@ -479,8 +507,8 @@ function rsvpEM(nbTrials){
       },
       on_finish: function(data){
 
-        var number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1}).count();
-        var number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 2}).count();
+        number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1}).count();
+        number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 3}).count();
 
         if (number_correct >= exp.tar_threshold){
           data.trial_result = 1; // success
@@ -503,6 +531,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     };
@@ -539,6 +568,7 @@ function rsvpEM(nbTrials){
         phase: phase,
         training: 0,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     };
@@ -571,6 +601,7 @@ function rsvpEM(nbTrials){
       phase: 999,
       training: 0,
       stim_counter: 999,
+      target_counter: 999,
       diff_step: 999
     }
   }

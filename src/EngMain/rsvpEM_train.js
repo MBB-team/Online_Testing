@@ -8,6 +8,10 @@ function rsvpEM_train(nbTrials_train){
   var target_trial_train;
   var switch_trial_train;
   var stim_counter_train;
+  var number_correct_train;
+  var number_FA_train;
+  var target_trials_data_train;
+  var correct_response_i_train;
 
   // START OF TRAIN //
   for (var trial_i_train = 0; trial_i_train < nbTrials_train; trial_i_train++){
@@ -16,16 +20,16 @@ function rsvpEM_train(nbTrials_train){
 
     switch (effort_train[trial_i_train]) {
       case 2:
-      effort_display = 'Haut';
+      effort_display_train = 'Haut';
       break;
       case 1:
-      effort_display = 'Bas';
+      effort_display_train = 'Bas';
       break;
     }
 
     var trial_number_train = {
       type: 'html-button-response-WH-EM',
-      stimulus: '<p>Session d&#39entrai&#770nement nume&#769ro : <b>'+(trial_i_train+1)+'/4</b></p><p>Niveau d&#39effort : <b>'+effort_display+'</b></p>',
+      stimulus: '<p>Session d&#39entrai&#770nement nume&#769ro : <b>'+(trial_i_train+1)+'/4</b></p><p>Niveau d&#39effort : <b>'+effort_display_train+'</b></p>',
       choices: ['C&#39est parti !'],
       post_trial_gap: 500,
       on_start: function(){
@@ -42,6 +46,7 @@ function rsvpEM_train(nbTrials_train){
         phase: 1,
         training: 1,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     }; // trial number
@@ -65,6 +70,7 @@ function rsvpEM_train(nbTrials_train){
         phase: 1,
         training: 1,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     };
@@ -102,6 +108,7 @@ function rsvpEM_train(nbTrials_train){
         phase: 1,
         training: 1,
         stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     }
@@ -169,7 +176,7 @@ function rsvpEM_train(nbTrials_train){
         if (swi_str_train[stim_i_train] == 3){
           switch_trial_train = 1;
           tar_side_train = 1 - tar_side_train;
-          if (effort_train = 1){ // change from 3 to arrows if difficulty is low
+          if (effort_train[trial_i_train] == 1){ // change from 3 to arrows if difficulty is low
             if (tar_side_train == 1){
               swi_str_train[stim_i_train] = '>';
             } else {
@@ -180,12 +187,12 @@ function rsvpEM_train(nbTrials_train){
 
         // if the stim_index corresponds to response window, pass true and the index of the target to the plugin
         if (target_stim_index_train.flat().some(e => e == stim_i_train)){
-          target_trial_train = [true, stim_i_train - target_stim_index_train[target_counter_train][0]];
+          target_trial_train = [true, stim_i_train - target_stim_index_train[target_counter_train][0], (target_counter_train + diff_step_train*4)];
           if (stim_i_train == target_stim_index_train[target_counter_train][2]){
             if(target_counter_train != 3){target_counter_train++};
           };
         } else {
-          target_trial_train = [false, null];
+          target_trial_train = [false, 3];
         };
 
 
@@ -200,6 +207,20 @@ function rsvpEM_train(nbTrials_train){
           grid: [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]],
           grid_square_size: 100,
           target_trial: target_trial_train,
+          on_start: function(trial){
+            if (jsPsych.data.getLastTrialData().select("target_trial").values[0] == 2){
+              target_trials_data_train = jsPsych.data.get().last(3).values();
+              if (jsPsych.data.get().last(3).select("correct").values.some(e => e == 1)){
+                correct_response_i_train = jsPsych.data.get().last(3).select("correct").values.indexOf(1);
+                jsPsych.data.get().last(3).addToAll({rt: target_trials_data_train[correct_response_i_train].rt, correct: 4});
+                target_trials_data_train[correct_response_i_train].correct = 1;
+              } else if (jsPsych.data.get().last(3).select("correct").values.some(e => e == 2)){
+                jsPsych.data.get().last(3).addToAll({correct: 6});
+                target_trials_data_train[0].correct = 2;
+              }
+
+            }
+          },
           data: {
             trialNb: trial_i_train,
             target_trial: target_trial_train[1],
@@ -211,6 +232,7 @@ function rsvpEM_train(nbTrials_train){
             phase: 1,
             training: 1,
             stim_counter: stim_counter_train,
+            target_counter: target_trial_train[2],
             diff_step: diff_step_train
           }
         }; // show stim
@@ -234,8 +256,8 @@ function rsvpEM_train(nbTrials_train){
       stimulus: '',
       choices: ['Continuer a&#768 la prochaine session d&#39entrai&#770nement'],
       on_start: function(trial){
-        var number_correct_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 1, training: 1}).count();
-        var number_FA_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 2, training: 1}).count();
+        number_correct_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 1, training: 1}).count();
+        number_FA_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 3, training: 1}).count();
         trial.stimulus = '<p>Vous avez termine&#769 cette session d&#39entrai&#770nement !</p><p>Re&#769ponses correct : <b>'+number_correct_train+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA_train+'</b></p>';
 
         if (number_correct_train >= exp.tar_threshold && number_FA_train <= exp.FA_threshold){
@@ -248,8 +270,8 @@ function rsvpEM_train(nbTrials_train){
       },
       on_finish: function(data){
 
-        var number_correct_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 1}).count();
-        var number_FA_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 2}).count();
+        number_correct_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 1}).count();
+        number_FA_train = jsPsych.data.get().filter({trialNb: trial_counter_train, correct: 3}).count();
 
         if (number_correct_train >= exp.tar_threshold){
           data.trial_result = 1; // success
@@ -271,6 +293,8 @@ function rsvpEM_train(nbTrials_train){
         effort: effort_train[trial_i_train],
         phase: 1,
         training: 1,
+        stim_counter: 999,
+        target_counter: 999,
         diff_step: 999
       }
     } // feedback
@@ -293,6 +317,8 @@ function rsvpEM_train(nbTrials_train){
       effort: 999,
       phase: 999,
       training: 1,
+      stim_counter: 999,
+      target_counter: 999,
       diff_step: 999
     }
   }

@@ -81,7 +81,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         array: true,
         default: undefined,
         description: 'Indicates if this trial falls within the three trial response window and, if yes, the index of the target'
-      },
+      }
     }
   }
 
@@ -158,26 +158,28 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
           //    if (trial.target_trial[1] == 2){
           //      jsPsych.data.get().last(2).addToAll({correct: 4, rt: response.rt + 350*trial.target_trial[1]})
           //    }
+        } else if (response.key == 13){
+          correct = 5; // opted out
         } else {
-          correct = 0; // miss (incorrect)
+          correct = 2; // miss (incorrect)
         }
       } else {
-        if (response.key != null){ // if this is not a target trial
-          correct = 2; // false alarm
+        if (response.key == 32){ // if this is not a target trial
+          correct = 3; // false alarm
+        } else if (response.key == 13){
+          correct = 5; // opted out
         } else {
-          correct = 999; // null (no response expected)
-        }
-      };
-
-      if (response.key == 13){
-        correct = 5; // opted out
+          correct = 999; // no response expected
+        };
       }
+
 
       // check to see if participant correctly responded in the last trial
       // gather the data to store for the trial
-      var data = jsPsych.data.getLastTrialData().values()[0];
-      if (data.key == 32){
-        if (data.correct == 1 && trial.target_trial[1] == 0){
+      //var data = jsPsych.data.getLastTrialData().values()[0];
+
+      if (response.key != null){
+        if (trial.target_trial[0] && response.key == 32){
           var trial_data = {
             "rt":                 response.rt + 350*trial.target_trial[1],
             "correct":            correct,
@@ -185,55 +187,89 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
             "key_press":          response.key,
             "responses":         "999",  // string
             "button_pressed":     999 // integer
-          };
-        } else if (data.correct == 1 && trial.target_trial[1] == 1){
+          }
+        } else {
           var trial_data = {
-            "rt":                 data.rt,
-            "correct":            4,
-            "stimulus":           data.stimulus,
-            "key_press":          data.key,
+            "rt":                 response.rt,
+            "correct":            correct,
+            "stimulus":           trial.stimulus,
+            "key_press":          response.key,
             "responses":         "999",  // string
             "button_pressed":     999 // integer
-          };
-        } else if (data.correct == 1 && trial.target_trial[1] == 2){
-          var trial_data = {
-            "rt":                data.rt,
-            "correct":           4,
-            "stimulus":          data.stimulus,
-            "key_press":         data.key,
-            "responses":        "999",  // string
-            "button_pressed":    999 // integer
-          };
-        } else if (data.correct == 4 && trial.target_trial[1] == 2){
-          var trial_data = {
-            "rt":                data.rt,
-            "correct":           4,
-            "stimulus":          data.stimulus,
-            "key_press":         data.key,
-            "responses":        "999",  // string
-            "button_pressed":    999 // integer
-          };
-        } else {
-
-          var trial_data = {
-            "rt":                response.rt + 350*trial.target_trial[1],
-            "correct":           correct,
-            "stimulus":          trial.stimulus,
-            "key_press":         response.key,
-            "responses":        "999",  // string
-            "button_pressed":    999 // integer
-          };
-        }
+          }
+        };
       } else {
         var trial_data = {
-          "rt":                 response.rt + 350*trial.target_trial[1],
+          "rt":                 response.rt,
           "correct":            correct,
           "stimulus":           trial.stimulus,
-          "key_press":          response.key,
+          "key_press":          1,
           "responses":         "999",  // string
           "button_pressed":     999 // integer
-        };
-      }
+        }
+      };
+
+
+
+
+      //    if (response.key == 32){
+      //      if (data.correct == 1 && trial.target_trial[1] == 0){
+      //        var trial_data = {
+      //          "rt":                 response.rt + 350*trial.target_trial[1],
+      //          "correct":            correct,
+      //          "stimulus":           trial.stimulus,
+      //          "key_press":          response.key,
+      //          "responses":         "999",  // string
+      //          "button_pressed":     999 // integer
+      //        };
+      //      } else if (data.correct == 1 && trial.target_trial[1] == 1){
+      //        var trial_data = {
+      //          "rt":                 data.rt,
+      //          "correct":            4,
+      //          "stimulus":           data.stimulus,
+      //          "key_press":          data.key,
+      //          "responses":         "999",  // string
+      //          "button_pressed":     999 // integer
+      //        };
+      //      } else if (data.correct == 1 && trial.target_trial[1] == 2){
+      //        var trial_data = {
+      //          "rt":                data.rt,
+      //          "correct":           4,
+      //          "stimulus":          data.stimulus,
+      //          "key_press":         data.key,
+      //          "responses":        "999",  // string
+      //          "button_pressed":    999 // integer
+      //        };
+      //      } else if (data.correct == 4 && trial.target_trial[1] == 2){
+      //        var trial_data = {
+      //          "rt":                data.rt,
+      //          "correct":           4,
+      //          "stimulus":          data.stimulus,
+      //          "key_press":         data.key,
+      //          "responses":        "999",  // string
+      //          "button_pressed":    999 // integer
+      //        };
+      //      } else {
+      //        var trial_data = {
+      //          "rt":                response.rt + 350*trial.target_trial[1],
+      //          "correct":           correct,
+      //          "stimulus":          trial.stimulus,
+      //          "key_press":         response.key,
+      //          "responses":        "999",  // string
+      //          "button_pressed":    999 // integer
+      //        };
+      //      }
+
+      //    } else {
+      //      var trial_data = {
+      //        "rt":                 response.rt + 350*trial.target_trial[1],
+      //        "correct":            correct,
+      //        "stimulus":           trial.stimulus,
+      //        "key_press":          response.key,
+      //        "responses":         "999",  // string
+      //        "button_pressed":     999 // integer
+      //      };
+      //    }
       // clear the display
       display_element.innerHTML = '';
 

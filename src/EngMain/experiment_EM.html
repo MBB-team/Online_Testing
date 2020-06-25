@@ -13,7 +13,7 @@ Per trial:
 <html>
 <head>
   <meta charset="utf-utf-8"/>
-  <title> Attention </title>
+  <title> EngMain </title>
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
@@ -41,12 +41,12 @@ Per trial:
     debug:        false,
     cheat:        false,
     instructions: false,
-    training:     false};
+    training:     true};
 
     // Configuration parameters of experiment
     const exp = {
-      nbTrials:        1,   // 32
-      nbTrials_train:  1,   // 4
+      nbTrials:        32,   // 32
+      nbTrials_train:  4,   // 4
       nbStim:         29,   // 29
       nbTar:           4,   // 4
       tar_threshold:  28,   // 28
@@ -59,11 +59,15 @@ Per trial:
         // instructions
         const nbInstr = 1;
 
+//        const conditions = {
+//          reward: Array(2).fill([1,2]).flat(),
+//          effort: Array(1).fill([1, 1, 2, 2]).flat(),
+//          phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
         const conditions = {
-          reward: Array(1).fill([1,2]).flat(),
-          effort: Array(1).fill([1, 1, 2, 2]).flat(),
-          phase:  Array(2).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+          reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
+          effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
+          phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
           // for screen display
           var dpi_x;
@@ -137,7 +141,9 @@ Per trial:
                 effort: 999,
                 phase: 999,
                 training: 999,
-                stim_counter: 999
+                stim_counter: 999,
+                target_counter: 999,
+                diff_step: 999
               }
             };
 
@@ -155,7 +161,9 @@ Per trial:
                   effort: 999,
                   phase: 999,
                   training: 999,
-                  stim_counter: 999
+                  stim_counter: 999,
+                  target_counter: 999,
+                  diff_step: 999
                 }
               }
 
@@ -257,7 +265,9 @@ Per trial:
                   effort: 999,
                   phase: 999,
                   training: 999,
-                  stim_counter: 999
+                  stim_counter: 999,
+                  target_counter: 999,
+                  diff_step: 999
                 }
 
               };
