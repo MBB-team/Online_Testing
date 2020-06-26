@@ -203,7 +203,7 @@ function rsvpEM(nbTrials){
 
     var optout_q = {
       type: 'html-button-response-WH-EM',
-      stimulus: "<p style='font-size: 50px'>Voulez-vous arre&#770ter cet essai ?</p>",
+      stimulus: "<p style='font-size: 50px'>Voulez-vous arre&#770ter cet exercice ?</p>",
       choices: ['Oui'],
       button_html: '<button class="jspsych-btn" style="font-size: 30px">%choice%</button>',
       trial_duration: 4000,
@@ -336,7 +336,7 @@ function rsvpEM(nbTrials){
           grid: [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]],
           grid_square_size: 100,
           target_trial: target_trial,
-          prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet essai a&#768 n&#39importe quel moment <b>en appuyant le bouton << Entre&#769e >> </b>!',
+          prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet essai a&#768 n&#39importe quel moment <b>en appuyant la touche << Entre&#769e >> </b>!',
           responded: responded,
           on_start: function(trial){
             if (jsPsych.data.getLastTrialData().select("target_trial").values[0] == 2){
