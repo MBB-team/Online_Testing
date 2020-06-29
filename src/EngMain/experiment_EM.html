@@ -4,9 +4,11 @@ Created: 01/06/2020
 
 Data Output (as in MySQL):
 - rt (double)
+- correct (int(3))
 - stimulus (text)
-- responses (text)
 - key_press (int(3))
+- responses (text)
+- button_pressed (int(3))
 - trialNb (int(3))
 - target_trial (int(3))
 - switch_trial (int(3))
@@ -23,6 +25,7 @@ Data Output (as in MySQL):
 - trial_index (int(25))
 - time_elapsed (int(25))
 - internal_node_id (text)
+- date (text)
 - (run_id (int(7)), directly get this value in write_data using PHP session)
 
 -->
@@ -75,17 +78,17 @@ Data Output (as in MySQL):
         stim_dur:    350};
 
         // instructions
-        const nbInstr = 22;
+        const nbInstr = 22; // 22
 
 //        const conditions = {
 //          reward: Array(2).fill([1,2]).flat(),
 //          effort: Array(1).fill([1, 1, 2, 2]).flat(),
 //          phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
-        const conditions = {
-          reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
-          effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
-          phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+       const conditions = {
+         reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
+         effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
+         phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
           // for screen display
           var dpi_x;
@@ -309,10 +312,10 @@ Data Output (as in MySQL):
               jsPsych.init({
                 timeline: exp_timeline,
                 show_progress_bar: true,
-                //    on_trial_finish: function(){
-                //      jsPsych.data.addProperties({date: date});
-                //      saveData();
-                //    },
+                    on_trial_finish: function(){
+                      jsPsych.data.addProperties({date: date});
+                      saveData();
+                    },
                 on_finish: function(){
                   jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
