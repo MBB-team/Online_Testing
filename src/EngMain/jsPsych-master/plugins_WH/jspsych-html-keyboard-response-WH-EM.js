@@ -210,66 +210,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
       };
 
 
-
-
-      //    if (response.key == 32){
-      //      if (data.correct == 1 && trial.target_trial[1] == 0){
-      //        var trial_data = {
-      //          "rt":                 response.rt + 350*trial.target_trial[1],
-      //          "correct":            correct,
-      //          "stimulus":           trial.stimulus,
-      //          "key_press":          response.key,
-      //          "responses":         "999",  // string
-      //          "button_pressed":     999 // integer
-      //        };
-      //      } else if (data.correct == 1 && trial.target_trial[1] == 1){
-      //        var trial_data = {
-      //          "rt":                 data.rt,
-      //          "correct":            4,
-      //          "stimulus":           data.stimulus,
-      //          "key_press":          data.key,
-      //          "responses":         "999",  // string
-      //          "button_pressed":     999 // integer
-      //        };
-      //      } else if (data.correct == 1 && trial.target_trial[1] == 2){
-      //        var trial_data = {
-      //          "rt":                data.rt,
-      //          "correct":           4,
-      //          "stimulus":          data.stimulus,
-      //          "key_press":         data.key,
-      //          "responses":        "999",  // string
-      //          "button_pressed":    999 // integer
-      //        };
-      //      } else if (data.correct == 4 && trial.target_trial[1] == 2){
-      //        var trial_data = {
-      //          "rt":                data.rt,
-      //          "correct":           4,
-      //          "stimulus":          data.stimulus,
-      //          "key_press":         data.key,
-      //          "responses":        "999",  // string
-      //          "button_pressed":    999 // integer
-      //        };
-      //      } else {
-      //        var trial_data = {
-      //          "rt":                response.rt + 350*trial.target_trial[1],
-      //          "correct":           correct,
-      //          "stimulus":          trial.stimulus,
-      //          "key_press":         response.key,
-      //          "responses":        "999",  // string
-      //          "button_pressed":    999 // integer
-      //        };
-      //      }
-
-      //    } else {
-      //      var trial_data = {
-      //        "rt":                 response.rt + 350*trial.target_trial[1],
-      //        "correct":            correct,
-      //        "stimulus":           trial.stimulus,
-      //        "key_press":          response.key,
-      //        "responses":         "999",  // string
-      //        "button_pressed":     999 // integer
-      //      };
-      //    }
       // clear the display
       display_element.innerHTML = '';
 
