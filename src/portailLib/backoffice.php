@@ -342,6 +342,70 @@ function getSessionName($sessionID)
     }
 }
 
+function getSession($sessionID)
+{
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // Get sessionName
+        $sql = "SELECT * FROM taskSession WHERE taskSessionID = ".$sessionID;
+
+        $sessionStmt = $conn->prepare($sql);
+        $sessionStmt->execute();
+        $sessionFetch = $sessionStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($sessionFetch==null || count($sessionFetch)!=1)
+            return null;
+        return $sessionFetch[0];
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
+function updateSessionOpeningTime($sessionID, $newTime)
+{
+    return _updateSessionTime($sessionID, $newTime, "openingTime");
+}
+
+function updateSessionClosingTime($sessionID, $newTime)
+{
+    return _updateSessionTime($sessionID, $newTime, "closingTime");
+}
+
+//return true if succeded
+function _updateSessionTime($sessionID, $newTime, $field)
+{
+    if($field!="openingTime" && $field!="closingTime")
+    {
+        return false;
+    }
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // update run with doneTime
+        $sql = "UPDATE taskSession SET ".$field."='".$newTime."' WHERE taskSessionID='".$sessionID."'";
+
+        $updateSessionStmt = $conn->prepare($sql);
+
+        $updateSessionSucces = $updateSessionStmt->execute();
+
+        return $updateSessionSucces;
+    }
+    catch(PDOException $e)
+    {
+        
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return false;
+    }
+
+}
+
 function backofficeOpenDataBase()
 {
     // this path should point to your configuration file.
