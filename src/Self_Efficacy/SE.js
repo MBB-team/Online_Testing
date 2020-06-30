@@ -172,6 +172,9 @@ function SE(nbBlocks, nbTrials){
             }
           };
 
+          // INCREMENT THE conf_counter
+          conf_counter++;
+
           // PUSH TO TIMELINE //
           timelineTask.push(fullscreenExp);
           timelineTask.push(test_conf);
@@ -180,7 +183,7 @@ function SE(nbBlocks, nbTrials){
 
           var test_phase = {
             type: 'html-button-response-WH',
-            stimulus: '<p>La phase de test est sur le point de commencer.</p><p><b>Sois pre&#770t.e !</b></p>',
+            stimulus: '<p>La phase de test est sur le point de commencer.</p><p><b>Tenez-vous pre&#770t.e !</b></p>',
             choices: [],
             trial_duration: time.fixation,
             data: {
@@ -336,14 +339,14 @@ function SE(nbBlocks, nbTrials){
     var finish = {
       type: 'html-button-response-WH',
       stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
-      choices: ['Finish'],
+      choices: ['Fin'],
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
         TinB: trial_i,
         testNb: 999,
         target_score: target_scores_all[trial_counter],
-        test_part: 'Fin'
+        test_part: 'finish'
       }
     }
 
