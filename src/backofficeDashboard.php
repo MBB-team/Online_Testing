@@ -55,6 +55,38 @@ Legende :
 <div id="visualization"></div>
 <script>
 
+Date.prototype.getFullDate = function()
+    {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+
+        return [this.getFullYear(),
+                (mm>9 ? '' : '0') + mm,
+                (dd>9 ? '' : '0') + dd
+                ].join('-');
+    };
+
+    Date.prototype.getFullDateFR = function()
+    {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+
+        return [(dd>9 ? '' : '0') + dd,
+                (mm>9 ? '' : '0') + mm,
+                this.getFullYear()
+                ].join('-');
+    };
+
+    Date.prototype.getFullTime = function()
+    {
+        var hh = this.getHours(); 
+        var mm = this.getMinutes();
+
+        return [(hh>9 ? '' : '0') + hh,
+                (mm>9 ? '' : '0') + mm,
+                ].join(':');
+    };
+
 var groups = new vis.DataSet();
 var items = new vis.DataSet();
 <?php
@@ -125,6 +157,10 @@ foreach($taskSessions as $key=>$taskSession)
         $itemContent .= "<button class='download' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."' onClick='showDownloadSessionData();' title='Exporter les données de la session ".$taskSession["sessionName"]." uniquement'><i class='material-icons' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."'>get_app</i></button>\n";
     else
         $itemContent .= "<button class='download' title='Cette tâche ne sauvegarde pas de données' disabled><i class='material-icons'>get_app</i></button>\n";
+    if( ($status == "taskSessionNotOpen") || ($status == "taskSessionOpen") )
+        $itemContent .= "<button class='edit' sessionName='".$taskSession["sessionName"]."' sessionID='".$taskSession["taskSessionID"]."' openingTime='".$openingTime."' closingTime='".$closingTime."' onClick='showEditSession();' title='Modifier les dates de la session ".$taskSession["sessionName"]."'><i class='material-icons' sessionName='".$taskSession["sessionName"]."' sessionID='".$taskSession["taskSessionID"]."' openingTime='".$openingTime."' closingTime='".$closingTime."'>edit</i></button>\n";
+    else
+        $itemContent .= "<button class='edit' title='Une session passée ne peut pas être modifiée' disabled><i class='material-icons'>edit</i></button>\n";
     $itemContent .= "</div>";
     $itemContent = str_replace("'", "\\'", $itemContent);
     $itemContent = str_replace("\n", "\\\n", $itemContent);
@@ -195,12 +231,150 @@ function showDownloadSessionData(e)
     noteDiv.style.top = (y) + "px";
     document.getElementById("downloadSessionDatatableName").value=e.target.getAttribute("tableName");
     document.getElementById("downloadSessionID").value=e.target.getAttribute("sessionID");
+
 }
 
 function HideDownloadSessionData()
 {
     document.getElementById("downloadSessionData").style.display = "none";
 }
+
+function showEditSession(e)
+{
+    var x = 0,
+        y = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    var noteDiv = document.getElementById("editSession");
+    noteDiv.style.display = "block";
+    noteDiv.style.left = (x + 20) + "px";
+    noteDiv.style.top = (y) + "px";
+
+    document.getElementById("editSessionTitle").innerText = e.target.getAttribute("sessionName");
+    document.getElementById("editSessionID").value = e.target.getAttribute("sessionID");
+
+    
+
+    dateNow = new Date()
+
+    openingDate = new Date(e.target.getAttribute("openingTime")*1000);
+    closingDate = new Date(e.target.getAttribute("closingTime")*1000);
+
+    document.getElementById("currentOpeningTime").innerText = openingDate.getFullDateFR() + " " + openingDate.getFullTime();
+    document.getElementById("editOpeningDate").value = openingDate.getFullDate();
+    document.getElementById("editOpeningHour").value = openingDate.getFullTime();
+    if(openingDate<dateNow)
+    {
+        //past date : no editing allowed
+        document.getElementById("editOpeningDate").disabled = true;
+        document.getElementById("editOpeningDate").min = "";
+        document.getElementById("editOpeningHour").disabled = true;
+        document.getElementById("editOpeningHour").min = "";
+    }
+    else
+    {
+        document.getElementById("editOpeningDate").disabled = false;
+        document.getElementById("editOpeningDate").min = dateNow.getFullDate();
+        document.getElementById("editOpeningHour").disabled = false;
+        updateMinOpeningHour();
+    }
+    
+    document.getElementById("currentClosingTime").innerText = closingDate.getFullDateFR() + " " + closingDate.getFullTime();
+    document.getElementById("editClosingDate").value = closingDate.getFullDate();
+    document.getElementById("editClosingHour").value = closingDate.getFullTime();
+
+    if(closingDate<dateNow)
+    {
+        //past date : no editing allowed
+        document.getElementById("editClosingDate").disabled = true;
+        document.getElementById("editClosingDate").min = "";
+        document.getElementById("editClosingHour").disabled = true;
+        document.getElementById("editClosingHour").min = "";
+    }
+    else
+    {
+        document.getElementById("editClosingDate").disabled = false;
+        document.getElementById("editClosingDate").min = dateNow.getFullDate();
+        document.getElementById("editClosingHour").disabled = false;
+        updateMinClosingHour();
+    }
+}
+
+function updateMinOpeningHour()
+{
+    dateNow = new Date();
+
+    newDate = new Date(document.getElementById("editOpeningDate").value);
+
+    if(newDate.getFullDate() == dateNow.getFullDate())
+    {
+        document.getElementById("editOpeningHour").min = dateNow.getFullTime();
+    }
+    else
+    {
+        document.getElementById("editOpeningHour").min = "";
+    }
+}
+
+function updateMinClosingHour()
+{
+    dateNow = new Date();
+
+    newDate = new Date(document.getElementById("editClosingDate").value);
+
+    if(newDate.getFullDate() == dateNow.getFullDate())
+    {
+        document.getElementById("editClosingHour").min = dateNow.getFullTime();
+    }
+    else
+    {
+        document.getElementById("editClosingHour").min = "";
+    }
+}
+
+function submitEditSessionForm()
+{
+    event.preventDefault(); //prevent reload page
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "backofficeEditSession.php", true);
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    var params = "editType=" + document.getElementById("editType").value;
+    params += "&sessionID=" + document.getElementById("editSessionID").value;
+    params += "&editOpeningDate=" + document.getElementById("editOpeningDate").value;
+    params += "&editOpeningHour=" + document.getElementById("editOpeningHour").value;
+    params += "&editClosingDate=" + document.getElementById("editClosingDate").value;
+    params += "&editClosingHour=" + document.getElementById("editClosingHour").value;
+
+    xhr.onload = function() {
+        var reponse = "";
+        if(xhr.status == 200){
+                var response = JSON.parse(xhr.responseText); // $.parseJSON
+        }
+        if(response.success){
+                console.log("session updated");
+                document.location.reload(true); //reload page
+        }
+        else {
+                console.log("error on update session");
+                console.log(response);
+                window.alert("Erreur : " + response.message);
+        }
+    }
+    xhr.send(params);
+}
+
+function HideEditSession()
+{
+    document.getElementById("editSession").style.display = "none";
+}
+
 </script>
 <div id='downloadTaskData'>
     <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideDownloadTaskData()"><i class='material-icons'>close</i></button>
@@ -228,6 +402,29 @@ function HideDownloadSessionData()
             <input type='hidden' id='downloadSessionID' name='sessionID' value=''>
             <p>Exclure les run incomplets : <input type='checkbox' name='onlyDone'></p>
             <button>Exporter</button>
+        </form>
+    </div>
+</div>
+<div id='editSession'>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideEditSession()"><i class='material-icons'>close</i></button>
+    </div>
+    <br clear="all">
+    <div id='editSessionContent'>
+    <p>Modifier la session <span id='editSessionTitle'></span></p>
+        <form method='post' action='' onsubmit='submitEditSessionForm()'>
+            <input id='editType' type='hidden' name='editType' value='editSession'>
+            <input id='editSessionID' type='hidden' name='sessionID' value=''>
+            <p>Date d'ouverture courrante : <span id='currentOpeningTime'></span><br>
+            Nouvelle date d'ouverture :
+            <input id='editOpeningDate' type='date' name='editOpeningDate' onchange='updateMinOpeningHour()' required>
+            <input id='editOpeningHour' type='time' name='editOpeningHour' required>
+            </p>
+            <p>Date de fermeture courante : <span id='currentClosingTime'></span><br>
+            Nouvelle date de fermeture :
+            <input id='editClosingDate' type='date' name='editClosingDate' onchange='updateMinClosingHour()' required>
+            <input id='editClosingHour' type='time' name='editClosingHour' required>
+            </p>
+            <button>Appliquer</button>
         </form>
     </div>
 </div>
