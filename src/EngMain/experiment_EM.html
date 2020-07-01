@@ -315,9 +315,10 @@ Data Output (as in MySQL):
                     on_trial_finish: function(){
                       jsPsych.data.addProperties({date: date});
                       saveData();
+                      console.log(exp_timeline)
                     },
                 on_finish: function(){
-                  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                //  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                   endTask();
                 }
