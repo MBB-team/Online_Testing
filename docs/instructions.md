@@ -17,9 +17,9 @@ Ce test dure en moyenne XXX minutes. Votre bonus financier est défini à part
 Ce test est adapté du jeu « Memory ». A chaque essai de ce test, nous allons vous demander de mémoriser la position des paires de cartes jumelles positionnées sur un plateau de 16 cartes. Vous aurez la possibilité de « retourner » (virtuellement) les cartes du plateau autant de fois que vous le voudrez avant de donner votre réponse. Par ailleurs, nous vous demanderons de nous indiquer avec quelle confiance vous pensez avoir réussi chaque essai. Nous nous intéressons autant à votre performance dans le jeu qu’à la confiance que vous déclarez.
 Ce test dure en moyenne XXX minutes. Votre bonus financier est défini à partir de votre performance dans 2 essais tirés au hasard, sachant que chaque réponse correcte est récompensée 2€ (montant maximum du bonus = 2€).
 
-## (Test de @william-hopper)
-Durant cette expérience, vous aurez le choix de vous engager dans une suite d’exercices identiques mais avec des niveaux variables d’effort pour les accomplir et de sommes d’argent à gagner en bonus, si vous réussissez. Au cours d'un exercice, vous devrez répondre à un signal tout en déplaçant rapidement votre attention d'un point à un autre. Vous aurez la possibilité d'arrêter un exercice en cours, si vous pensez que cela ne vaut plus l'effort.
-Ce test dure en moyenne 55 minutes. Votre bonus financier est défini à partir de votre performance dans 2 exercices tirés au hasard.
+## (Test de @william-hopper) Test d'effort mental (?)
+Durant ce test, vous devrez répondre à un signal tout en déplaçant rapidement votre attention d'un point à un autre. A chaque essai que vous réussirez, vous gagnerez de l'argent en en bonys. La difficulté de l'exercice ainsi que la récompense à jeu sera variable d'un essai à un autre : vous aurez la possibilité d'arrêter un essai en cours, si vous pensez que cela ne vaut plus l'effort.
+Ce test dure en moyenne 55 minutes. A la fin du test, nous tirerons deux essais au hasards parmi ceux que vous avez accomplis, et vous recevrez la récompenses associée à votre performance dans ces 2 essais.
 
 ## Tests supplémentaires
 Il s’agit de deux tests supplémentaires (de décision et d’apprentissage), qui durent moins de 5 minutes chacun. Un bonus financier supplémentaire est défini à partir de votre performance dans 2 essais du test d’apprentissage tirés au hasard, sachant que chaque réponse correcte est récompensée 1€ (montant maximum du bonus = 2€).
