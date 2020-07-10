@@ -1,5 +1,5 @@
 # Description des sessions de test
-Une session consiste en 4 types de tests, et de 3 questionnaires d’auto-évaluation psychologique. L’ensemble de la session dure environs 3h30, mais vous aurez la possibilité de réaliser chacun des tests à votre rythme. Plus précisément, vous aurez 3 jours pour effectuer l’ensemble de la session, test par test si vous le souhaitez (nous vous enverrons systématiquement un email de rappel vous informant de l’ouverture de la prochaine session de test).
+Une session consiste en 5 types de tests, et de 3 questionnaires d’auto-évaluation psychologique. L’ensemble de la session dure environs 3h30, mais vous aurez la possibilité de réaliser chacun des tests à votre rythme. Plus précisément, vous aurez 3 jours pour effectuer l’ensemble de la session, test par test si vous le souhaitez (nous vous enverrons systématiquement un email de rappel vous informant de l’ouverture de la prochaine session de test).
 Note : des instructions précises vous seront communiquées avant chaque test.
 
 ## Test de contrôle attentionnel
@@ -19,7 +19,7 @@ Ce test dure en moyenne XXX minutes. Votre bonus financier est défini à part
 
 ## (Test de @william-hopper) Test d'effort mental (?)
 Durant ce test, vous devrez répondre à un signal tout en déplaçant rapidement votre attention d'un point à un autre. A chaque essai que vous réussirez, vous gagnerez de l'argent en en bonys. La difficulté de l'exercice ainsi que la récompense à jeu sera variable d'un essai à un autre : vous aurez la possibilité d'arrêter un essai en cours, si vous pensez que cela ne vaut plus l'effort.
-Ce test dure en moyenne 55 minutes. A la fin du test, nous tirerons deux essais au hasards parmi ceux que vous avez accomplis, et vous recevrez la récompenses associée à votre performance dans ces 2 essais.
+Ce test dure en moyenne 55 minutes. A la fin du test, nous tirerons deux essais au hasard parmi ceux que vous avez accomplis, et vous recevrez la récompenses correspondant à votre performance dans ces 2 essais.
 
 ## Tests supplémentaires
 Il s’agit de deux tests supplémentaires (de décision et d’apprentissage), qui durent moins de 5 minutes chacun. Un bonus financier supplémentaire est défini à partir de votre performance dans 2 essais du test d’apprentissage tirés au hasard, sachant que chaque réponse correcte est récompensée 1€ (montant maximum du bonus = 2€).
