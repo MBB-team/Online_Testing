@@ -2,7 +2,7 @@
 Une session consiste en 5 types de tests, et de 3 questionnaires d’auto-évaluation psychologique. L’ensemble de la session dure environs 3h30, mais vous aurez la possibilité de réaliser chacun des tests à votre rythme. Plus précisément, vous aurez 3 jours pour effectuer l’ensemble de la session, test par test si vous le souhaitez (nous vous enverrons systématiquement un email de rappel vous informant de l’ouverture de la prochaine session de test).
 Note : des instructions précises vous seront communiquées avant chaque test.
 
-## Test de contrôle attentionnel
+## Test d'attention
 A chaque essai de ce test, nous allons vous présenter une séquence d’images de visages très rapide. Certains de ces visages ont été brouillées pour vous distraire. Vous devrez reconnaître le genre (homme ou femme) des visages "intactes", c'est-à-dire non brouillées. Certains visages montreront une expression de peur, ce qui aura tendance à vous distraire, et pourra donc nuire à votre performance.
 Certains essais dans le test rapportent plus d’argent que d’autres. Par exemple, il y a des essais pour lesquels une réponse correcte rapporte 5 centimes et d’autres pour lesquels une réponse correcte rapporte 2 euros. Nous vous indiquerons, avant chaque essai, quelle est la récompense en jeu.
 Ce test dure en moyenne 20 minutes. Le bonus financier lié à ce test défini à partir de votre performance dans 2 essais tirés au hasard (1 essai à 2€ et 1 essai à 5 centimes). Le montant maximum de votre bonus sera donc de 2€05 pour ce test.
@@ -21,7 +21,7 @@ Ce test dure en moyenne 45 minutes. Votre bonus financier est défini à parti
 Durant ce test, vous devrez répondre à un signal tout en déplaçant rapidement votre attention d'un point à un autre. A chaque essai que vous réussirez, vous gagnerez de l'argent en bonus. La difficulté de l'exercice ainsi que la récompense à jeu sera variable d'un essai à un autre : vous aurez la possibilité d'arrêter un essai en cours, si vous pensez que cela ne vaut plus l'effort.
 Ce test dure en moyenne 55 minutes. A la fin du test, nous tirerons deux essais au hasard parmi ceux que vous avez accomplis, et vous recevrez la récompenses correspondant à votre performance dans ces 2 essais.
 
-## Tests supplémentaires
+## Test de compromis
 Il s’agit de deux tests supplémentaires (de décision et d’apprentissage), qui durent moins de 5 minutes chacun. Un bonus financier supplémentaire est défini à partir de votre performance dans 2 essais du test d’apprentissage tirés au hasard, sachant que chaque réponse correcte est récompensée 1€ (montant maximum du bonus = 2€).
 
 ## Questionnaires
