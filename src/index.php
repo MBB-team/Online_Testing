@@ -94,7 +94,7 @@ if(isIdentified())
     <div>
     <div class='username'>".getParticipantID()."</div>
     <input type='hidden' name='action' value='disconnect'>
-    <button title='Se déconnecter'><i class='material-icons'>close</i></button>
+    <button title='Se déconnecter'>Se déconnecter<i class='material-icons'>close</i></button>
     </div>
     </form>
     </div>";
