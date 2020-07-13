@@ -168,7 +168,7 @@ function quest() {
 		"<p> Nous vous souhaitons bon courage pour cette p\351riode.</p>" +
 		"<p> <strong> Vous avez des inquiétudes sur le COVID-19? </strong> </p>" +
 		"<p> Un num\351ro vert r\351pond aux questions 24 heures sur 24 et 7 jours sur 7: 0 800 130 000. </p>" +
-		"<p> <strong> Vous avez besoin d'un soutien psychologique </strong> </p>" +
+		"<p> <strong> Vous avez besoin d'un soutien psychologique ?</strong> </p>" +
 		"<p> CovidEcoute est un service gratuit propos\351 \340 toute personne en proie \340 une d\351tresse psychologique li\351e \340 l'\351pid\351mie du COVID-19: https://covidecoute.org </p>" +
 		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
 		choices: [32],
