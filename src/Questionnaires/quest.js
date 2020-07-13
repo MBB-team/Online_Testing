@@ -83,7 +83,7 @@ function quest() {
 		type: 'html-keyboard-response',
 		stimulus: "<H3> <p> Evaluation du bien-\352tre et lien avec les mesures de sant\351 publique li\351es au COVID-19.</p> </H3>" +
 		"<p> Ce questionnaire \351tudie les facteurs (en particulier: ceux li\351s aux mesures de sant\351 publique) pouvant avoir un impact sur votre bien-\352tre.</p>" +
-		"<p> Merci du temps que vous consacrerez \340 y r\351pondre : il sera pr\351cieux pour mieux comprendre les effets psychologiques de cette p\351riode. </p>" +
+		"<p> Merci du temps que vous consacrerez \340 y r\351pondre : <strong>il sera pr\351cieux pour mieux comprendre les effets psychologiques de cette p\351riode.</strong></p>" +
 		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
 		choices: [32],
 		data: {test_part: 'questinstruction',trial_type: 'quest'}
