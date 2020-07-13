@@ -2,7 +2,7 @@
 
 include('portailLib/backoffice.php');
 
-$editType = $sessionID = $editOpeningDate = $editOpeningHour = $editClosingDate = $editClosingHour = "";
+$editType = $sessionID = $editOpeningDate = $editOpeningHour = $editClosingDate = $editClosingHour = $taskID = $sessionName = "";
 //form processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $editType = test_input("editType");
@@ -11,8 +11,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $editOpeningHour = test_input("editOpeningHour");   //values : "All", "One" 
     $editClosingDate = test_input("editClosingDate");
     $editClosingHour = test_input("editClosingHour");
+    $taskID = test_input("taskID");
+    $sessionName = test_input("sessionName");
 }
-
 
 $errorMessage = "";
 
@@ -20,6 +21,9 @@ switch($editType)
 {
     case "editSession":
         $errorMessage = doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClosingDate, $editClosingHour);
+        break;
+    case "addSession":
+        $errorMessage = doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour, $editClosingDate, $editClosingHour);
         break;
     default:
         $errorMessage = "Commande inconnue";
@@ -51,6 +55,9 @@ function doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClos
     $newClosingTime = strtotime($editClosingDate." ".$editClosingHour);
     $now = strtotime("now");
 
+    if($newClosingTime < $newOpeningTime)
+        return "La fermeture doit être posterieure l'ouverture";
+
     if($closingTime < $now) //already close
         return "Session déjà fermée";
 
@@ -67,12 +74,42 @@ function doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClos
         return "Les nouvelles dates doivent être dans le futur";
 
     //Update openingTime
-    if(!(updateSessionClosingTime($sessionID, $editOpeningDate." ".$editOpeningHour)))
+    if(!(updateSessionOpeningTime($sessionID, $editOpeningDate." ".$editOpeningHour)))
         return "erreur SQL";
 
     return "";
+}
+
+//todo: $taskID might be an array to add session for multiple task with same parameters
+// $sessionName must match
+function doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour, $editClosingDate, $editClosingHour)
+{
+    if(empty($taskID) || empty($sessionName) || empty($editOpeningDate) || empty($editOpeningHour) || empty($editClosingDate) || empty($editClosingHour))
+        return "Paramètres manquants";
+    
+    $taskInfo = getDataTaskTables($taskID);
+    if(empty($taskInfo))
+        return "taskID inconnu";
+        
+    $newOpeningTime = strtotime($editOpeningDate." ".$editOpeningHour);
+    $newClosingTime = strtotime($editClosingDate." ".$editClosingHour);
+    $now = strtotime("now");
 
 
+    if($newClosingTime < $newOpeningTime)
+        return "La fermeture doit être posterieure l'ouverture";
+
+    if($newClosingTime < $now)
+        return "Les dates doivent être dans le futur";
+
+    if($newOpeningTime < $now)
+        return "Les dates doivent être dans le futur";
+
+    //todo: more checking (overlaping session)
+
+    addSession($taskID, $sessionName, $editOpeningDate." ".$editOpeningHour, $editClosingDate." ".$editClosingHour);
+
+    return "";
 }
 
 function test_input($data) {

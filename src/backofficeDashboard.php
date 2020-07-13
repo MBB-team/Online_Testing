@@ -109,10 +109,24 @@ foreach($taskSessions as $key=>$taskSession)
         $idGroup += 1;
         echo "groups.add({
             id: ".$idGroup.",\n";
+        
+        /*** group content ***/
+        $content = "'<div class=\\'groupTask\\'>";
+        //display taskID
+        $content .= $taskSession["task_taskID"]."<br>";
+
+        //download button
         if(!empty($dataTaskTableName))
-            echo "content: '<div class=\\'groupTask\\'>".$taskSession["task_taskID"]."<br><button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button></div>',\n";
+            $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
         else
-            echo "content: '<div class=\\'groupTask\\'>".$taskSession["task_taskID"]."<br><button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button></div>',\n";
+            $content .= "<button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>";
+
+        //add session button
+        $content .= "<button class=\\'addSession\\' taskID=\\'".$taskSession["task_taskID"]."\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'".$taskSession["task_taskID"]."\\'>add</i></button>";
+        $content .= "</div>',\n";
+        /*** group content end***/
+        echo "content: ".$content;
+
         echo "order: ".$idGroup."
         });\n";
     }
@@ -375,6 +389,120 @@ function HideEditSession()
     document.getElementById("editSession").style.display = "none";
 }
 
+function showAddSession(e)
+{
+    var x = 0,
+        y = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    var noteDiv = document.getElementById("addSession");
+    noteDiv.style.display = "block";
+    noteDiv.style.left = (x + 20) + "px";
+    noteDiv.style.top = (y) + "px";
+
+    document.getElementById("addSessionTitle").innerText = e.target.getAttribute("taskID");
+    document.getElementById("addSessionTaskID").value = e.target.getAttribute("taskID");
+
+    dateNow = new Date()
+
+    openingDate = new Date(e.target.getAttribute("openingTime")*1000);
+    closingDate = new Date(e.target.getAttribute("closingTime")*1000);
+
+    document.getElementById("addOpeningDate").value = dateNow.getFullDate();
+    document.getElementById("addOpeningHour").value = dateNow.getFullTime();
+    
+    document.getElementById("addOpeningDate").disabled = false;
+    document.getElementById("addOpeningDate").min = dateNow.getFullDate();
+    document.getElementById("addOpeningHour").disabled = false;
+    updateAddMinOpeningHour();
+    
+    document.getElementById("addClosingDate").value = dateNow.getFullDate();
+    document.getElementById("addClosingHour").value = dateNow.getFullTime();
+
+    document.getElementById("addClosingDate").disabled = false;
+    document.getElementById("addClosingDate").min = dateNow.getFullDate();
+    document.getElementById("addClosingHour").disabled = false;
+    updateAddMinClosingHour();
+
+}
+
+function updateAddMinOpeningHour()
+{
+    dateNow = new Date();
+
+    newDate = new Date(document.getElementById("addOpeningDate").value);
+
+    if(newDate.getFullDate() == dateNow.getFullDate())
+    {
+        document.getElementById("addOpeningHour").min = dateNow.getFullTime();
+    }
+    else
+    {
+        document.getElementById("addOpeningHour").min = "";
+    }
+}
+
+function updateAddMinClosingHour()
+{
+    dateNow = new Date();
+
+    newDate = new Date(document.getElementById("addClosingDate").value);
+
+    if(newDate.getFullDate() == dateNow.getFullDate())
+    {
+        document.getElementById("addClosingHour").min = dateNow.getFullTime();
+    }
+    else
+    {
+        document.getElementById("addClosingHour").min = "";
+    }
+}
+
+function submitAddSessionForm()
+{
+    event.preventDefault(); //prevent reload page
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "backofficeEditSession.php", true);
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    var params = "editType=" + document.getElementById("addType").value;
+    params += "&taskID=" + document.getElementById("addSessionTaskID").value;
+    params += "&editOpeningDate=" + document.getElementById("addOpeningDate").value;
+    params += "&editOpeningHour=" + document.getElementById("addOpeningHour").value;
+    params += "&editClosingDate=" + document.getElementById("addClosingDate").value;
+    params += "&editClosingHour=" + document.getElementById("addClosingHour").value;
+    params += "&sessionName=" + document.getElementById("addSessionName").value;
+
+    xhr.onload = function() {
+        var reponse = "";
+        console.log(xhr.responseText);
+        if(xhr.status == 200){
+                var response = JSON.parse(xhr.responseText); // $.parseJSON
+        }
+        if(response.success){
+                console.log("session updated");
+                document.location.reload(true); //reload page
+        }
+        else {
+                console.log("error on update session");
+                console.log(response);
+                window.alert("Erreur : " + response.message);
+        }
+    }
+    xhr.send(params);
+}
+
+function HideAddSession()
+{
+    document.getElementById("addSession").style.display = "none";
+}
+
 </script>
 <div id='downloadTaskData'>
     <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideDownloadTaskData()"><i class='material-icons'>close</i></button>
@@ -425,6 +553,30 @@ function HideEditSession()
             <input id='editClosingHour' type='time' name='editClosingHour' required>
             </p>
             <button>Appliquer</button>
+        </form>
+    </div>
+</div>
+<div id='addSession'>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideAddSession()"><i class='material-icons'>close</i></button>
+    </div>
+    <br clear="all">
+    <div id='addSessionContent'>
+    <p>Ajouter un session de la tâche <span id='addSessionTitle'></span></p>
+        <form method='post' action='' onsubmit='submitAddSessionForm()'>
+            <input id='addType' type='hidden' name='editType' value='addSession'>
+            <input id='addSessionTaskID' type='hidden' name='taskID' value=''>
+            Nom de la nouvelle session : <input id='addSessionName' name='sessionName' value=''>
+            <p>
+            Date d'ouverture :
+            <input id='addOpeningDate' type='date' name='addOpeningDate' onchange='updateAddMinOpeningHour()' required>
+            <input id='addOpeningHour' type='time' name='addOpeningHour' required>
+            </p>
+            <p>
+            Date de fermeture :
+            <input id='addClosingDate' type='date' name='addClosingDate' onchange='updateAddMinClosingHour()' required>
+            <input id='addClosingHour' type='time' name='addClosingHour' required>
+            </p>
+            <button>Ajouter</button>
         </form>
     </div>
 </div>

@@ -172,7 +172,8 @@ function exportCSV($sql, $csvFilename="export")
 }
 
 //return an array taskName=>['dataTableName','taskID']
-function getDataTaskTables()
+//limit to $taskID if submited 
+function getDataTaskTables($taskID="")
 {
     try {
 
@@ -182,6 +183,7 @@ function getDataTaskTables()
         // Get all tables in database
         $sql = "SELECT taskName, dataTableName, taskID from task ";
         $sql.= "WHERE dataTableName IS NOT NULL";
+        $sql.= ((empty($taskID))?"":(" AND taskID='".$taskID."'"));
         $tablesListStmt = $conn->prepare($sql);
 
         $tablesListStmt->execute();
@@ -363,6 +365,30 @@ function getSession($sessionID)
     catch(PDOException $e)
     {
         print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
+function addSession($taskID, $sessionName, $openingTime, $closingTime)
+{
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // addSession 
+        $sql = "INSERT INTO taskSession (taskSessionID, sessionName, openingTime, closingTime, task_taskID) VALUES (NULL, '".$sessionName."', '".$openingTime."', '".$closingTime."', '".$taskID."')";
+
+        $addSessionStmt = $conn->prepare($sql);
+
+        $addSessionSucces = $addSessionStmt->execute();
+
+        return $addSessionSucces;
+    }
+    catch(PDOException $e)
+    {
+        
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return false;
     }
 }
 
