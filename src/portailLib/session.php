@@ -91,9 +91,9 @@ function getAvailableTask($taskID="")
                 task tsk
             LEFT JOIN taskSession tsn ON tsn.task_taskID = tsk.taskID
             WHERE
-                tsn.openingTime < NOW()
-                AND tsn.closingTime > NOW()
-        ";
+                tsn.openingTime < ".phpNow()."
+                AND tsn.closingTime > ".phpNow();
+
         //if $taskID is supplied. Filter only this task
         if($taskID!="")
             $sql.=" AND tsk.taskID = '". $taskID ."'";
@@ -155,7 +155,7 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
 
         // insert a new run
         $sql = "INSERT INTO run (startTime, participant_participantID, taskSession_taskSessionID) ";
-        $sql.= "VALUES (NOW(),'".$_SESSION["participantID"]."',".$availableTasks[0]["taskSessionID"].")";
+        $sql.= "VALUES (".phpNow().",'".$_SESSION["participantID"]."',".$availableTasks[0]["taskSessionID"].")";
 
         $addRunStmt = $conn->prepare($sql);
 
@@ -214,7 +214,7 @@ function getRunID()
     }
 }
 
-//update a run with doneTime to NOW(), return true on success
+//update a run with doneTime to phpNow(), return true on success
 function endTask()
 {
     if(!isPreparedTask())
@@ -229,7 +229,7 @@ function endTask()
         $conn = sessionOpenDataBase();
 
         // update run with doneTime
-        $sql = "UPDATE run SET doneTime=NOW() WHERE runID='".getRunID()."'";
+        $sql = "UPDATE run SET doneTime=".phpNow()." WHERE runID='".getRunID()."'";
 
         $addRunStmt = $conn->prepare($sql);
 
@@ -269,7 +269,7 @@ function logFailedAttemptIP()
         $conn = sessionOpenDataBase();
 
         // insert a IP in failedAttemptIP table
-        $sql = "INSERT INTO failedAttemptIP (ip, timestamp) VALUES (INET6_ATON('" . getRemoteIP() . "'), NOW())";
+        $sql = "INSERT INTO failedAttemptIP (ip, timestamp) VALUES (INET6_ATON('" . getRemoteIP() . "'), ".phpNow().")";
 
         $addIPStmt = $conn->prepare($sql);
 
@@ -293,7 +293,7 @@ function checkFailedAttemptIP($minCount, $period)
         $conn = sessionOpenDataBase();
 
         // get number of failedAttempt for this remote IP in $period minutes
-        $sql = "SELECT COUNT(failedAttemptIPKey) FROM failedAttemptIP WHERE IP = INET6_ATON('" . getRemoteIP() . "') AND timestamp > NOW() - INTERVAL " . $period . " MINUTE";
+        $sql = "SELECT COUNT(failedAttemptIPKey) FROM failedAttemptIP WHERE IP = INET6_ATON('" . getRemoteIP() . "') AND timestamp > ".phpNow()." - INTERVAL " . $period . " MINUTE";
 
         $countFailedAttemptStmt = $conn->prepare($sql);
 
@@ -323,7 +323,7 @@ function cleanOldFailedAttemptIP($period)
         $conn = sessionOpenDataBase();
 
         // clean failedAttempt older than $period minutes
-        $sql = "DELETE FROM failedAttemptIP WHERE timestamp < NOW() - INTERVAL " . $period . " MINUTE";
+        $sql = "DELETE FROM failedAttemptIP WHERE timestamp < ".phpNow()." - INTERVAL " . $period . " MINUTE";
 
         $cleanFailedAttemptStmt = $conn->prepare($sql);
 
@@ -370,5 +370,12 @@ function sessionOpenDataBase()
     $_conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
     $_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $_conn;
+}
+
+/* return an SQL compatible string of current date/time */
+/* replace the NOW() function  of SQL resquest to use the php server time instead of SQL server time */
+function phpNow()
+{
+    return date("'Y-m-d H:i:s'");
 }
 ?>
