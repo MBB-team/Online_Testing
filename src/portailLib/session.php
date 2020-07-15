@@ -22,6 +22,7 @@ function identify($participantID)
         $conn = sessionOpenDataBase();
 
         $sql = "SELECT COUNT(participantID) FROM participant WHERE participantID = '".$participantID."'";
+        $sql .= " AND BINARY participantID = '".$participantID."'"; //case sensitive comparison
         $userInDatabaseStmt = $conn->prepare($sql);
 
         $userInDatabaseStmt->execute();

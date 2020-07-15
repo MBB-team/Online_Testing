@@ -200,7 +200,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM"] = (function() {
         };
       } else {
         var trial_data = {
-          "rt":                 response.rt,
+          "rt":                 999,
           "correct":            correct,
           "stimulus":           trial.stimulus,
           "key_press":          1,

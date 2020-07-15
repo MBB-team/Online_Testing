@@ -92,7 +92,7 @@ function rsvpEM(nbTrials){
     var wait_screen = {
       type: 'html-button-response-WH-EM',
       stimulus: '<p>Vous avez re&#769fuse&#769 l&#39offre</p><p>Nous allons vous proposer la prochaine offre dans <b>90 secondes</b></p>',
-      trial_duration: 85000,
+      trial_duration: 90000,
       choices: [],
       data: {
         trialNb: trial_i,
