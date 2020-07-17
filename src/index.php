@@ -101,6 +101,7 @@ if(isIdentified())
 }
 else // not identified.
 {
+
     if(isMobile() || !isCompatibleBrowser()) //Check desktop computer and browser
     {
         // Display infos to get a compatible browser
@@ -134,6 +135,14 @@ Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <s
         echo "</div>\n";
     }
 }
+
+?>
+<div id='recruitment'>
+<p>Nous recrutons de nouveaux participants. <br>
+Pour vous inscrire remplissez le formulaire suivant : <br>
+<a href="https://frama.link/cogmood">https://frama.link/cogmood</a></p>
+</div>
+<?php
 
 echo '
 </body>
