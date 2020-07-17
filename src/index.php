@@ -134,7 +134,6 @@ Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <s
         echo "</form>\n";
         echo "</div>\n";
     }
-}
 
 ?>
 <div id='recruitment'>
@@ -143,6 +142,8 @@ Pour vous inscrire remplissez le formulaire suivant : <br>
 <a href="https://frama.link/cogmood">https://frama.link/cogmood</a></p>
 </div>
 <?php
+
+} // /not identified.
 
 echo '
 </body>
