@@ -61,7 +61,7 @@
     var imageDuration     = 70; // in ms
     var fixation_time     = 1000;
 
-    var nbInstr           = 12; // how many Instr Slides (12)
+    var nbInstr           = 14; // how many Instr Slides (12)
     var debug             = false; // if true, skips details, instructions and practice
 
 // --------------------------------- INITIALISATION  ---------------------------//
@@ -180,7 +180,9 @@
             '<img src="'+instrImg[2]+'" id="image-instructions3" style="height:'+screen.height/1.25+'px" ></img>',
             '<img src="'+instrImg[3]+'" id="image-instructions4" style="height:'+screen.height/1.25+'px" ></img>',
             '<img src="'+instrImg[4]+'" id="image-instructions5" style="height:'+screen.height/1.25+'px" ></img>',
-            '<img src="'+instrImg[5]+'" id="image-instructions6" style="height:'+screen.height/1.25+'px" ></img>',],
+            '<img src="'+instrImg[5]+'" id="image-instructions5" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[6]+'" id="image-instructions5" style="height:'+screen.height/1.25+'px" ></img>',
+            '<img src="'+instrImg[7]+'" id="image-instructions6" style="height:'+screen.height/1.25+'px" ></img>',],
             show_clickable_nav: true,
             show_page_number: true,
             on_start: function(){
@@ -245,7 +247,7 @@
                         exp_timeline.push(practice[i]);
                   };
 
-                  var endPract      = instr([6]);
+                  var endPract      = instr([8]);
                   for(var i = 0; i < endPract.length; i++){
                          exp_timeline.push(endPract[i]);
                   };
@@ -256,7 +258,7 @@
                   exp_timeline.push(task[i]);
             };
 
-            var endExp        = instr([11]);
+            var endExp        = instr([13]);
             for(var i = 0; i < endExp.length; i++){
                    exp_timeline.push(endExp[i]);
             };
