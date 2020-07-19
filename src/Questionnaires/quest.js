@@ -45,7 +45,7 @@ function quest() {
 	var anx3 = ["Tr\350s souvent",  "Assez souvent", "Occasionnellement",  "Tr\350s occasionnellement"];
 	var anx4 = ["Oui, quoi qu'il arrive",  "Oui, en g\351n\351ral", "Rarement",  "Jamais"];
 	var anx5 = ["Jamais",  "Parfois", "Assez souvent",  "Tr\350s souvent"];
-	var anx6 = ["Oui, c'est tout \340 fait le cas",  "Un peu", "pas tellement",  "Pas du tout"];
+	var anx6 = ["Oui, c'est tout \340 fait le cas",  "Un peu", "Pas tellement",  "Pas du tout"];
 	var anx7 = ["Vraiment tr\350s souvent",  "Assez souvent", "Pas tr\350s souvent",  "Jamais"];
 
 	var dep1 = ["Oui, tout autant",  "Pas autant", "Un peu seulement",  "Presque plus"];
@@ -67,7 +67,7 @@ function quest() {
 		{prompt: "6) J'ai la bougeotte et n'arrive pas \340 tenir en place: ", options: anx6, required:true},
 		{prompt: "7) J'\351prouve des sensations soudaines de panique:", options: anx7, required:true},
 		{prompt: "8) Je prends plaisir aux m\352mes choses qu'autrefois: ", options: dep1, required:true},
-		{prompt: "9) Je ris facilement et vois le bon c\365t\351 des choses: ", options: dep2, required:true},
+		{prompt: "9) Je ris facilement et vois le bon c\364t\351 des choses: ", options: dep2, required:true},
 		{prompt: '10) Je suis de bonne humeur:', options: dep3, required:true},
 		{prompt: '11) Si vous avez bien lu cette question, r\351pondez "souvent" ', options: anx1, required:true},
 		{prompt: "12) J'ai l'impression de fonctionner au ralenti: ", options: dep4, required:true},
@@ -99,9 +99,9 @@ function quest() {
 		data:{ test_part: 'covid_stress', trial_type: 'quest'},
 	};
 
-	var confinement1 = ["Compl\351tement d'accord","Assez d'accord","Ni d'accord, ni par d'accord","Plut\364t en d\351saccord","Compl\350tement en d\351saccord"];
+	var confinement1 = ["Compl\351tement d'accord","Assez d'accord","Ni d'accord, ni pas d'accord","Plut\364t en d\351saccord","Compl\350tement en d\351saccord"];
 	var confinement2 = ["Tr\350s satisfait","Plut\364t satisfait","Ni satisfait, ni pas satisfait","Plut\364t pas satisfait","Pas satisfait du tout"];
-	var confinement3 = ["Tr\350s claires et coh\351rentes","Assez claires et coh\351rentes","Ni claires, ni floues","Plut\364t floues ou contradictoire","Tr\350s floues ou contradictoires"];
+	var confinement3 = ["Tr\350s claires et coh\351rentes","Assez claires et coh\351rentes","Ni claires, ni floues","Plut\364t floues ou contradictoires","Tr\350s floues ou contradictoires"];
 	var confinement4 = ["Je suis confin\351(e) \340 mon domicile et je suis contamin\351(e)","Je suis confin\351(e) \340 mon domicile sans personne contamin\351e","Je suis en contact direct avec des personnes ou du mat\351riel suspect\351es d'\352tre contamin\351(es) \340 l'ext\351rieur ","Je suis en contact direct avec des personnes \340 l'ext\351rieur de mon domicile","Je sors de mon domicile mais ne suis pas en contact direct avec des personnes ext\351rieures"];
 	var confinement5 = ["Non","Plut\364t non","Plut\364t oui","Oui"];
 	var confinement6 = ["Non, je ne suis pas inquiet \340 ce sujet","Oui, je m'inqui\350te mais j'ai actuellement acc\350s \340 tout ce dont j'ai besoin","Oui, je m'inqui\350te et je n'ai actuellement pas acc\350s \340 tout ce dont j'ai besoin"];
@@ -130,7 +130,7 @@ function quest() {
 	};
 
 	var situation1 = ["Oui, je suis en t\351l\351travail","Oui, je travaille \340 l'ext\351rieur de mon domicile exclusivement ","Oui, je travaille en partie en t\351l\351travail et sur mon site de travail","Non, je suis en ch\364mage partiel","Non, je suis en arr\352t maladie", "Non, je suis en cong\351s ou en arr\352t pour garde d'enfant(s)","Non, je suis en recherche d'emploi"];
-	var situation2 = ["Moins importante qu'avant le confinement","Pareille qu'avant le confinement","Plus importante qu'avant le confinement","Tr\350s variable et d'\351volution impr\351visible"];
+	var situation2 = ["Moins importante qu'avant le confinement","Pareille qu'avant le confinement","Plus importante qu'avant le confinement","Tr\350s variable et d'\351volution impr\351visible","Je ne travaille pas actuellement"];
 	var situation3 = ["Tr\350s probablement ","Probablement","Probablement pas","Certainement pas "];
 
 	var covid_situation = {
