@@ -5,6 +5,12 @@ session_name('onlinetesting');
 session_start();
 
 
+// return :
+// - "success"          if successfully identified
+// - "tooManyFails"     blacklisted
+// - "inactiveUser"     if user exist but disabled
+// - "unknownUser"      if user is not in database (also count as a failed attempt for requester IP)
+// - "unknownError"     SQL error or incorrect datas in database (Request matched more than 1 user)
 
 function identify($participantID)
 {
@@ -14,33 +20,50 @@ function identify($participantID)
     if(checkFailedAttemptIP($maxAttemptByIP,$periodAttemptByIP) != false) //check failed attempts
     {
         unset($_SESSION['participantID']); //clear in session
-        return; //do not even try to login if banned IP
+        return "tooManyFails"; //do not even try to login if banned IP
     }
 
     try {
         // connect to database
         $conn = sessionOpenDataBase();
 
-        $sql = "SELECT COUNT(participantID) FROM participant WHERE participantID = '".$participantID."'";
+        $sql = "SELECT participantID, active FROM participant WHERE participantID = '".$participantID."'";
         $sql .= " AND BINARY participantID = '".$participantID."'"; //case sensitive comparison
         $userInDatabaseStmt = $conn->prepare($sql);
 
         $userInDatabaseStmt->execute();
-        $userCount = $userInDatabaseStmt->fetchColumn();
-        if($userCount>0) //found valid user ID
+        $userInDatabaseFetch = $userInDatabaseStmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if(count($userInDatabaseFetch)==1) //found valid user ID
         {
-            $_SESSION['participantID'] = $participantID; //save in session
-            cleanOldFailedAttemptIP($periodAttemptByIP);
+            if($userInDatabaseFetch[0]['active']==1) //active user
+            {
+                $_SESSION['participantID'] = $participantID; //save in session
+                cleanOldFailedAttemptIP($periodAttemptByIP);
+                return "success";
+            }
+            else //inactive user
+            {
+                unset($_SESSION['participantID']); //clear in session
+                return "inactiveUser";
+            }
         }
-        else //not found
+        else if(count($userInDatabaseFetch)==0)//not found
         {
             unset($_SESSION['participantID']); //clear in session
             logFailedAttemptIP(); //log failed attempt remote IP
+            return "unknownUser";
+        }
+        else //unknown error
+        {
+            unset($_SESSION['participantID']); //clear in session
+            return "unknownError";
         }
     }
     catch(PDOException $e)
     {
         print "Erreur !:" . $e->getMessage() . "<br/>";
+        return "unknownError";
     }
     $conn = null;
 }
