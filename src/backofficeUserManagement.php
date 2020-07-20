@@ -53,9 +53,11 @@ switch($action)
     <link href='css/backoffice.css' rel='stylesheet' type='text/css'>
     </head>
     <body>
-    <a href='backofficeExport.php'>Exporter des données</a><br>
 
 <?php
+ 
+echo backofficeMenu()."<br>\n";
+ 
 /*********************/
 /* Set userID status */
 /*********************/

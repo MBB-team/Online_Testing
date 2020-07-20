@@ -542,6 +542,28 @@ function addParticipant($participantID)
     }
 }
 
+//return html menu of all the backoffice page
+function backofficeMenu()
+{
+    $backofficePages = Array(   '/backofficeExport.php' => "Exporter des données",
+                                '/backofficeDashboard.php' => "Tableau de bord",
+                                '/backofficeUserManagement.php' => "Gestion des participants",
+                            );
+    $menuString = "";
+    foreach($backofficePages as $address => $title)
+    {
+        if(!empty($menuString))
+            $menuString .= " | "; //add a serparator
+
+        if(htmlspecialchars($_SERVER["PHP_SELF"])==$address)
+            $menuString .= "<b>".$title."</b>";
+        else
+            $menuString .= "<a href='".$address."'>".$title."</a>";
+    }
+
+    return $menuString;
+}
+
 function backofficeOpenDataBase()
 {
     // this path should point to your configuration file.

@@ -47,8 +47,9 @@ if($table!="")
         <meta charset='UTF-8'>
         <link href='css/backoffice.css' rel='stylesheet' type='text/css'>
         </head>
-        <body>
-        <a href='backofficeDashboard.php'>Tableau de bord</a><br>";
+        <body>\n";
+
+    echo backofficeMenu()."<br>\n";
 
     if($errorMessage!="")
     {
