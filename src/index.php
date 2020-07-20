@@ -126,16 +126,16 @@ Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <s
             switch($connectErrorMessage)
             {
                 case "tooManyFails":
-                    echo "<p style='color:red'>Trop de tentative d'identification. Contactez cogmood@temp.org pour plus d'informations.</p>\n";
+                    echo "<p style='color:red'>Trop de tentative d'identification. Envoyez un e-mail en <A HREF='&#109;&#97;&#105;&#108;&#116;&#111;&#58;%63%6F%67%6D%6F%6F%64%40%69%63%6D%2D%69%6E%73%74%69%74%75%74%65%2E%6F%72%67'>cliquant ici</A> pour plus d'informations.</p>\n";
                     break;
                 case "inactiveUser":
-                    echo "<p style='color:red'>Cet identifiant est désactivé. Contactez cogmood@temp.org pour plus d'informations.</p>\n";
+                    echo "<p style='color:red'>Cet identifiant est désactivé. Envoyez un e-mail en <A HREF='&#109;&#97;&#105;&#108;&#116;&#111;&#58;%63%6F%67%6D%6F%6F%64%40%69%63%6D%2D%69%6E%73%74%69%74%75%74%65%2E%6F%72%67'>cliquant ici</A> pour plus d'informations.</p>\n";
                     break;
                 case "unknownUser":
-                    echo "<p style='color:red'>Identifiant inconnu. Contactez cogmood@temp.org si le problème persiste.</p>\n";
+                    echo "<p style='color:red'>Identifiant inconnu. Envoyez un e-mail en <A HREF='&#109;&#97;&#105;&#108;&#116;&#111;&#58;%63%6F%67%6D%6F%6F%64%40%69%63%6D%2D%69%6E%73%74%69%74%75%74%65%2E%6F%72%67'>cliquant ici</A> si le problème persiste.</p>\n";
                     break;
                 default:
-                    echo "<p style='color:red'>Erreur inconnue. Contactez cogmood@temp.org si le problème persiste.</p>\n";
+                    echo "<p style='color:red'>Erreur inconnue. Envoyez un e-mail en <A HREF='&#109;&#97;&#105;&#108;&#116;&#111;&#58;%63%6F%67%6D%6F%6F%64%40%69%63%6D%2D%69%6E%73%74%69%74%75%74%65%2E%6F%72%67'>cliquant ici</A> si le problème persiste.</p>\n";
                     break;
             }
         }
