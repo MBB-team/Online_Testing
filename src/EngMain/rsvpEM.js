@@ -44,17 +44,17 @@ function rsvpEM(nbTrials){
 
     switch (effort) {
       case 2:
-      effort_display = 'Haut';
+      effort_display = 'Difficile';
       break;
       case 1:
-      effort_display = 'Bas';
+      effort_display = 'Facile';
       break;
     }
 
     // TRIAL NUMBER //
     var trial_number = {
       type: 'html-button-response-WH-EM',
-      stimulus: '<p>C&#39est le de&#769but d&#39essai <b>'+(trial_i+1)+'/'+exp.nbTrials+'</b>.</p><p>Bonus : <b>'+reward_display+' &euro;</b></p><p>Niveau d&#39effort : <b>'+effort_display+'</b></p>',
+      stimulus: '<p>C&#39est le de&#769but d&#39exercice <b>'+(trial_i+1)+'/'+exp.nbTrials+'</b>.</p><p>Bonus : <b>'+reward_display+' &euro;</b></p><p>Mode de difficulte&#769 : <b>'+effort_display+'</b></p>',
       choices: ['J&#39accepte', 'Je refuse'],
       post_trial_gap: 500,
       on_start: function(){
@@ -62,7 +62,7 @@ function rsvpEM(nbTrials){
         trial_counter++;
       },
       on_finish: function(data){
-        trial_end_time = Date.now() + 90000;
+        trial_end_time = Date.now() + 80000;
         if (data.button_pressed == 0){engage = true;}
         if (data.button_pressed == 1){
           data.trial_result = 5; // did not engage
@@ -91,8 +91,8 @@ function rsvpEM(nbTrials){
     // WAIT SCREEN //
     var wait_screen = {
       type: 'html-button-response-WH-EM',
-      stimulus: '<p>Vous avez re&#769fuse&#769 l&#39offre</p><p>Nous allons vous proposer la prochaine offre dans <b>90 secondes</b></p>',
-      trial_duration: 90000,
+      stimulus: '<p>Vous avez re&#769fuse&#769 l&#39offre</p><p>Nous allons vous proposer la prochaine offre dans <b>80 secondes</b></p>',
+      trial_duration: 80000,
       choices: [],
       data: {
         trialNb: trial_i,
@@ -336,7 +336,7 @@ function rsvpEM(nbTrials){
           grid: [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]],
           grid_square_size: 100,
           target_trial: target_trial,
-          prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet essai a&#768 n&#39importe quel moment <b>en appuyant la touche << Entre&#769e >> </b>!',
+          prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet exercice a&#768 n&#39importe quel moment <b>en appuyant la touche << Entre&#769e >> </b>!',
           responded: responded,
           on_start: function(trial){
             if (jsPsych.data.getLastTrialData().select("target_trial").values[0] == 2){
@@ -495,14 +495,14 @@ function rsvpEM(nbTrials){
       on_start: function(trial){
         number_correct = jsPsych.data.get().filter({trialNb: trial_counter, correct: 1, training: 0}).count();
         number_FA = jsPsych.data.get().filter({trialNb: trial_counter, correct: 3, training: 0}).count();
-        trial.stimulus = '<p>Vous avez termine&#769 l&#39essai !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>';
+        trial.stimulus = '<p>Vous avez termine&#769 l&#39exercice !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>';
 
         if (number_correct >= exp.tar_threshold && number_FA <= exp.FA_threshold){
-          trial.stimulus += '<p>Vous avez gagne&#769 le bonus de cet essai !</p>';
+          trial.stimulus += '<p>Vous avez gagne&#769 le bonus de cet exercice !</p>';
         } else if (number_correct < exp.tar_threshold) {
-          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet essai parce que vous avez rate&#769 trop de cibles</p>';
+          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet exercice parce que vous avez rate&#769 trop de cibles</p>';
         } else if (number_correct >= exp.tar_threshold && number_FA > exp.FA_threshold) {
-          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet essai parce que vous avez fait trop de re&#769ponses incorrectes</p>';
+          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet exercice parce que vous avez fait trop de re&#769ponses incorrectes</p>';
         }
       },
       on_finish: function(data){
@@ -554,7 +554,7 @@ function rsvpEM(nbTrials){
       choices: [],
       on_start: function(trial){
         trial_remaining_time = trial_end_time - Date.now();
-        trial.stimulus = '<p>Vous avez choisi arre&#770ter cet essai</p><p>Nous allons vous proposer la prochaine offre dans: <b>'+Math.round(trial_remaining_time/1000)+' secondes</b></p>'
+        trial.stimulus = '<p>Vous avez choisi arre&#770ter cet exercice</p><p>Nous allons vous proposer la prochaine offre dans: <b>'+Math.round(trial_remaining_time/1000)+' secondes</b></p>'
         trial.trial_duration = trial_remaining_time;
       },
       data: {
@@ -588,7 +588,7 @@ function rsvpEM(nbTrials){
 
   var finish = {
     type: 'html-button-response-WH-EM',
-    stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
+    stimulus: '<p>Le test d&#39engagement est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
     choices: ['Fin'],
     data: {
       trialNb: 999,

@@ -432,6 +432,138 @@ function _updateSessionTime($sessionID, $newTime, $field)
 
 }
 
+//get participant list
+function getParticipantList()
+{
+    try {
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "SELECT * FROM participant";
+        $getParticpantStmt = $conn->prepare($sql);
+
+        $getParticpantStmt->execute();
+        $getParticpantResult = $getParticpantStmt->fetchAll(PDO::FETCH_ASSOC);
+        return $getParticpantResult;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return null;
+    }
+    $conn = null;
+}
+
+//set participant status
+//$newstatus = 1 : activate participant
+//$newstatus = 1 : deactivate participant
+function setParticipantStatus($participantID, $newStatus)
+{
+    //check participant ID
+    $participantList = getParticipantList();
+    if($participantList == null)
+        return "Erreur SQL";
+    if(empty($participantList))
+        return "Identifiant non trouvé.";
+
+    $flagfound = false;
+    foreach($participantList as $participant)
+    {
+        if($participant["participantID"] == $participantID)
+        {
+            $flagfound = true;
+            break;
+        }
+    }
+    if(!$flagfound)
+        return "Identifiant non trouvé.";
+
+    //$participantID found in databasse
+    try {
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "UPDATE participant SET active=$newStatus WHERE participantID='".$participantID."'";
+        $setParticpantStatusStmt = $conn->prepare($sql);
+
+        $setParticipantStatusSuccess = $setParticpantStatusStmt->execute();
+        if(!$setParticipantStatusSuccess)
+            return "Erreur SQL";
+        else
+            return "";
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return "Erreur SQL";
+    }
+    $conn = null;
+}
+
+//return empty string on success else errorMessage
+function addParticipant($participantID)
+{
+    //check participant ID
+    $participantList = getParticipantList();
+    if($participantList == null)
+        return "Erreur SQL";
+
+    $flagfound = false;
+    foreach($participantList as $participant)
+    {
+        if($participant["participantID"] == $participantID)
+        {
+            $flagfound = true;
+            break;
+        }
+    }
+    if($flagfound)
+        return "Identifiant ".$participantID." déjà dans la base.";
+
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // addSession 
+        $sql = "INSERT INTO participant (participantID, active) VALUES ('".$participantID."', '1')";
+
+        $addParticipantStmt = $conn->prepare($sql);
+
+        $addParticipantuccess = $addParticipantStmt->execute();
+
+        return "";
+    }
+    catch(PDOException $e)
+    {
+        
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return "Erreur SQL";
+    }
+}
+
+//return html menu of all the backoffice page
+function backofficeMenu()
+{
+    $backofficePages = Array(   '/backofficeExport.php' => "Exporter des données",
+                                '/backofficeDashboard.php' => "Tableau de bord",
+                                '/backofficeUserManagement.php' => "Gestion des participants",
+                            );
+    $menuString = "";
+    foreach($backofficePages as $address => $title)
+    {
+        if(!empty($menuString))
+            $menuString .= " | "; //add a serparator
+
+        if(htmlspecialchars($_SERVER["PHP_SELF"])==$address)
+            $menuString .= "<b>".$title."</b>";
+        else
+            $menuString .= "<a href='".$address."'>".$title."</a>";
+    }
+
+    return $menuString;
+}
+
 function backofficeOpenDataBase()
 {
     // this path should point to your configuration file.
