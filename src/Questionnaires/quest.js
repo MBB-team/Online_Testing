@@ -6,9 +6,9 @@ function quest() {
 	var  begin_qns = {
 		type: 'html-keyboard-response',
 		stimulus: "<H3> <p> Questionnaires </p> </H3>" +
-		'<p> Nous allons maintenant vous demander de remplir quelques questionnaires sur comment vous vous sentez en ce moment.</p>' +
-		"<p> S'il vous plait, lisez les questions avec soin et r\351pondez selon les options pr\351sent\351es." +
-		"<p> Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \351prouvez, qu'une r\351ponse longuement m\351dit\351e." +
+		'<p> Nous allons maintenant vous demander de r\351mpondre \340 quelques questions sur votre bien-etre.</p>' +
+		"<p> Nous vous demandons de lire les questions avec soin." +
+		"<p> Cela dit, ne vous attardez pas sur votre r\351ponse : votre r\351action imm\351diate \340 chaque question est la meilleure indication de ce que vous \351prouvez." +
 		"<p> <br> <br> Appuyez sur la barre d'espace pour continuer </p>",
 		choices: [32],
 		data: {test_part: 'questinstruction'}
@@ -73,7 +73,7 @@ function quest() {
 		{prompt: "12) J'ai l'impression de fonctionner au ralenti: ", options: dep4, required:true},
 		{prompt: "13) Je ne m'int\351resse plus \340 mon apparence: ", options: dep5, required:true},
 		{prompt: "14) Je me r\351jouis d'avance \340 l'id\351e de faire certaines choses: ", options: dep6, required:true},
-		{prompt: "15) Je peux prendres plaisir \340 un bon livre ou \340 une bonne \351mission radio ou de t\351l\351vision: ", options: dep7, required:true}],
+		{prompt: "15) Je peux prendre plaisir \340 un bon livre ou \340 une bonne \351mission radio ou de t\351l\351vision: ", options: dep7, required:true}],
 		preamble: ["Dans la s\351rie de questions ci-dessous, cochez la r\351ponse qui exprime le mieux ce que vous avez \351prouv\351  <br> au cours de la semaine qui vient de s'\351couler."],
 		data:{test_part: 'hads',trial_type: 'quest'},
 	};
