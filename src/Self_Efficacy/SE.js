@@ -76,7 +76,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Positionnez la barre en fonction du nombre de fois dont vous pensez avoir besoin de voir la grille pour atteindre le score cible.<p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour vous atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -112,7 +112,7 @@ function SE(nbBlocks, nbTrials){
         stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>5 secondes</b> pour re&#769pondre!</p>',
         type: 'html-button-response-WH',
         prompt: function(){
-          var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.';
+          var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.</p>';
           return rewatch_prompt;},
           choices: ['Oui','Non'],
           trial_duration: time.rewatch,
@@ -156,7 +156,7 @@ function SE(nbBlocks, nbTrials){
 
           var test_conf = {
             type: 'html-slider-response-WH',
-            stimulus:'<p>A&#768 quel point auriez-vous e&#769te&#769 confiant d&#39avoir atteint le score cible de <b>'+target_scores_all[trial_counter]+'</b>, si vous aviez e&#769te&#769 teste&#769 ?</p><p>-100% = <b>certainement pas </b> et 100% = <b>certainement oui</b>',
+            stimulus:'<p>Pensez-vous que vous auriez atteint le score cible de <b>'+target_scores_all[trial_counter]+'</b>, si vous aviez e&#769te&#769 teste&#769 ?</p><p>-100% = <b>Certainement pas</b>, 0% = <b>Je ne sais pas</b>, et 100% = <b>Absolument</b>',
             labels: ['-100%','0%','100%'],
             min: -100,
             max: 100,
@@ -338,7 +338,7 @@ function SE(nbBlocks, nbTrials){
 
     var finish = {
       type: 'html-button-response-WH',
-      stimulus: '<p>Fin de l&#39expe&#769rience!</p><p><b>Merci beaucoup pour votre participation !</b></p>',
+      stimulus: '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
       choices: ['Fin'],
       data: {
         blockNb: block_i,

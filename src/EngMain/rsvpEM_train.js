@@ -20,16 +20,16 @@ function rsvpEM_train(nbTrials_train){
 
     switch (effort_train[trial_i_train]) {
       case 2:
-      effort_display_train = 'Haut';
+      effort_display_train = 'Difficile';
       break;
       case 1:
-      effort_display_train = 'Bas';
+      effort_display_train = 'Facile';
       break;
     }
 
     var trial_number_train = {
       type: 'html-button-response-WH-EM',
-      stimulus: '<p>Session d&#39entrai&#770nement nume&#769ro : <b>'+(trial_i_train+1)+'/4</b></p><p>Niveau d&#39effort : <b>'+effort_display_train+'</b></p>',
+      stimulus: '<p>Session d&#39entrai&#770nement nume&#769ro : <b>'+(trial_i_train+1)+'/4</b></p><p>Mode de difficulte&#769 : <b>'+effort_display_train+'</b></p>',
       choices: ['C&#39est parti !'],
       post_trial_gap: 500,
       on_start: function(){
@@ -261,11 +261,11 @@ function rsvpEM_train(nbTrials_train){
         trial.stimulus = '<p>Vous avez termine&#769 cette session d&#39entrai&#770nement !</p><p>Re&#769ponses correct : <b>'+number_correct_train+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA_train+'</b></p>';
 
         if (number_correct_train >= exp.tar_threshold && number_FA_train <= exp.FA_threshold){
-          trial.stimulus += '<p>Si c&#39e&#769tait l&#39expe&#769rience principale, vous auriez gagne&#769 le bonus de cet essai !</p>';
+          trial.stimulus += '<p>Si c&#39e&#769tait l&#39expe&#769rience principale, vous auriez gagne&#769 le bonus de cet exercice !</p>';
         } else if (number_correct_train < exp.tar_threshold) {
-          trial.stimulus += '<p>Si c&#39e&#769tait l&#39expe&#769rience principale, vous auriez pas gagne&#769 le bonus de cet essai parce que vous avez rate&#769 trop de cibles</p>';
+          trial.stimulus += '<p>Si c&#39e&#769tait l&#39expe&#769rience principale, vous auriez pas gagne&#769 le bonus de cet exercice parce que vous avez rate&#769 trop de cibles</p>';
         } else if (number_correct_train >= exp.tar_threshold && number_FA_train > exp.FA_threshold) {
-          trial.stimulus += '<p>Si c&#39e&#769tait l&#39expe&#769rience principale, vous auriez pas gagne&#769 le bonus de cet essai parce que vous avez fait trop de re&#769ponses incorrectes</p>';
+          trial.stimulus += '<p>Si c&#39e&#769tait l&#39expe&#769rience principale, vous auriez pas gagne&#769 le bonus de cet exercice parce que vous avez fait trop de re&#769ponses incorrectes</p>';
         }
       },
       on_finish: function(data){
@@ -305,7 +305,7 @@ function rsvpEM_train(nbTrials_train){
 
   var finish_train = {
     type: 'html-button-response-WH-EM',
-    stimulus: '<p><b>Bravo ! </b>Vous avez re&#769ussi toutes les sessions d&#39entrai&#770nement !</p><p>L&#39expe&#769rience principale va de&#769sormais commencer. Cliquez sur le bouton ci-dessous pour voir votre premie&#768re proposition d&#39engagement.</p>',
+    stimulus: '<p><b>Bravo !</b> L&#39entrai&#770nement est maintenant termine&#769.</p><p>Vous allez maintenant commencer le test.</p><p>Votre performance dans cette phase sera prise en compte pour votre bonus financier.</p><p>Cliquez sur le bouton ci-dessous pour voir votre premie&#768re proposition d&#39engagement.</p>',
     choices: ['Continuer'],
     data: {
       trialNb: 999,
