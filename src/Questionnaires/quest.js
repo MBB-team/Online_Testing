@@ -45,7 +45,7 @@ function quest() {
 	var anx3 = ["Tr\350s souvent",  "Assez souvent", "Occasionnellement",  "Tr\350s occasionnellement"];
 	var anx4 = ["Oui, quoi qu'il arrive",  "Oui, en g\351n\351ral", "Rarement",  "Jamais"];
 	var anx5 = ["Jamais",  "Parfois", "Assez souvent",  "Tr\350s souvent"];
-	var anx6 = ["Oui, c'est tout \340 fait le cas",  "Un peu", "pas tellement",  "Pas du tout"];
+	var anx6 = ["Oui, c'est tout \340 fait le cas",  "Un peu", "Pas tellement",  "Pas du tout"];
 	var anx7 = ["Vraiment tr\350s souvent",  "Assez souvent", "Pas tr\350s souvent",  "Jamais"];
 
 	var dep1 = ["Oui, tout autant",  "Pas autant", "Un peu seulement",  "Presque plus"];
@@ -67,7 +67,7 @@ function quest() {
 		{prompt: "6) J'ai la bougeotte et n'arrive pas \340 tenir en place: ", options: anx6, required:true},
 		{prompt: "7) J'\351prouve des sensations soudaines de panique:", options: anx7, required:true},
 		{prompt: "8) Je prends plaisir aux m\352mes choses qu'autrefois: ", options: dep1, required:true},
-		{prompt: "9) Je ris facilement et vois le bon c\365t\351 des choses: ", options: dep2, required:true},
+		{prompt: "9) Je ris facilement et vois le bon c\364t\351 des choses: ", options: dep2, required:true},
 		{prompt: '10) Je suis de bonne humeur:', options: dep3, required:true},
 		{prompt: '11) Si vous avez bien lu cette question, r\351pondez "souvent" ', options: anx1, required:true},
 		{prompt: "12) J'ai l'impression de fonctionner au ralenti: ", options: dep4, required:true},
@@ -81,9 +81,9 @@ function quest() {
 
 	var  covid_qns = {
 		type: 'html-keyboard-response',
-		stimulus: "<H3> <p> Evaluation du bien-\352tre durant le confinement en lien avec le COVID-19.</p> </H3>" +
-		"<p> Ce questionnaire \351tudie les facteurs pouvant avoir un impact sur votre v\351cu du confinement en lien avec l'\351pid\351mie COVID-19.</p>" +
-		"<p> Merci du temps que vous consacrerez \340 y r\351pondre : il sera pr\351cieux pour mieux comprendre les effets psychologiques de cette p\351riode. </p>" +
+		stimulus: "<H3> <p> Evaluation du bien-\352tre et lien avec les mesures de sant\351 publique li\351es au COVID-19.</p> </H3>" +
+		"<p> Ce questionnaire \351tudie les facteurs (en particulier: ceux li\351s aux mesures de sant\351 publique) pouvant avoir un impact sur votre bien-\352tre.</p>" +
+		"<p> Merci du temps que vous consacrerez \340 y r\351pondre : <strong>il sera pr\351cieux pour mieux comprendre les effets psychologiques de cette p\351riode.</strong></p>" +
 		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
 		choices: [32],
 		data: {test_part: 'questinstruction',trial_type: 'quest'}
@@ -95,21 +95,21 @@ function quest() {
 		questions:  [{prompt: "1) Niveau de stress li\351 au travail: ", options: covid_stress1, required:true, horizontal: true},
 		{prompt: "2) Niveau de stress li\351 \340 la vie personnelle :", options: covid_stress1, required:true, horizontal: true},
 		{prompt: "3) Niveau de stress en g\351n\351ral: ", options: covid_stress1, required:true, horizontal: true}],
-		preamble: ["Sur une \351chelle allant de 0 (absence totale de stress) \340 10 (stress maximal imaginable) <br> quel est votre niveau de stress concernant ces 3 diff\351rents domaines  <br> depuis le d\351but de la p\351riode de confinement ?"],
+		preamble: ["Sur une \351chelle allant de 0 (absence totale de stress) \340 10 (stress maximal imaginable) <br> quel est votre niveau de stress concernant ces 3 diff\351rents domaines?"],
 		data:{ test_part: 'covid_stress', trial_type: 'quest'},
 	};
 
-	var confinement1 = ["Compl\351tement d'accord","Assez d'accord","Ni d'accord, ni par d'accord","Plut\364t en d\351saccord","Compl\350tement en d\351saccord"];
+	var confinement1 = ["Compl\351tement d'accord","Assez d'accord","Ni d'accord, ni pas d'accord","Plut\364t en d\351saccord","Compl\350tement en d\351saccord"];
 	var confinement2 = ["Tr\350s satisfait","Plut\364t satisfait","Ni satisfait, ni pas satisfait","Plut\364t pas satisfait","Pas satisfait du tout"];
-	var confinement3 = ["Tr\350s claires et coh\351rentes","Assez claires et coh\351rentes","Ni claires, ni floues","Plut\364t floues ou contradictoire","Tr\350s floues ou contradictoires"];
+	var confinement3 = ["Tr\350s claires et coh\351rentes","Assez claires et coh\351rentes","Ni claires, ni floues","Plut\364t floues ou contradictoires","Tr\350s floues ou contradictoires"];
 	var confinement4 = ["Je suis confin\351(e) \340 mon domicile et je suis contamin\351(e)","Je suis confin\351(e) \340 mon domicile sans personne contamin\351e","Je suis en contact direct avec des personnes ou du mat\351riel suspect\351es d'\352tre contamin\351(es) \340 l'ext\351rieur ","Je suis en contact direct avec des personnes \340 l'ext\351rieur de mon domicile","Je sors de mon domicile mais ne suis pas en contact direct avec des personnes ext\351rieures"];
 	var confinement5 = ["Non","Plut\364t non","Plut\364t oui","Oui"];
 	var confinement6 = ["Non, je ne suis pas inquiet \340 ce sujet","Oui, je m'inqui\350te mais j'ai actuellement acc\350s \340 tout ce dont j'ai besoin","Oui, je m'inqui\350te et je n'ai actuellement pas acc\350s \340 tout ce dont j'ai besoin"];
 
 	var confinement = {
 		type: 'survey-multi-choice',
-		questions:  [{prompt: "1) Etes-vous en accord avec la mesure de confinement ? ", options: confinement1, required:true},
-		{prompt: "2) Etes-vous satisfait de votre niveau d'information sur les mesures du confinement ? ", options: confinement2, required:true},
+		questions:  [{prompt: "1) Etes-vous en accord avec les mesures actuelles de sant\351 publique li\351es au COVID-19 ? ", options: confinement1, required:true},
+		{prompt: "2) Etes-vous satisfait de votre niveau d'information sur ces mesures ? ", options: confinement2, required:true},
 		{prompt: "3) Avez vous trouv\351 les informations officielles suffisamment claires sur le coronavirus (mode de transmission, pr\351vention, ...) ? ", options: confinement3, required:true},
 		{prompt: "4) Etes-vous en contact avec une ou des personnes susceptible(s) d'\352tre contamin\351e(s) par le coronavirus ? ", options: confinement4, required:true},
 		{prompt: "5) Si vous avez bien lu cette question, r\351pondez 'oui' ", options: confinement5, required:true},
@@ -130,14 +130,14 @@ function quest() {
 	};
 
 	var situation1 = ["Oui, je suis en t\351l\351travail","Oui, je travaille \340 l'ext\351rieur de mon domicile exclusivement ","Oui, je travaille en partie en t\351l\351travail et sur mon site de travail","Non, je suis en ch\364mage partiel","Non, je suis en arr\352t maladie", "Non, je suis en cong\351s ou en arr\352t pour garde d'enfant(s)","Non, je suis en recherche d'emploi"];
-	var situation2 = ["Moins importante qu'avant le confinement","Pareille qu'avant le confinement","Plus importante qu'avant le confinement","Tr\350s variable et d'\351volution impr\351visible"];
+	var situation2 = ["Moins importante qu'avant le confinement","Pareille qu'avant le confinement","Plus importante qu'avant le confinement","Tr\350s variable et d'\351volution impr\351visible","Je ne travaille pas actuellement"];
 	var situation3 = ["Tr\350s probablement ","Probablement","Probablement pas","Certainement pas "];
 
 	var covid_situation = {
 		type: 'survey-multi-choice',
 		questions:  [{prompt: "1) Actuellement, travaillez-vous ? ", options: situation1, required:true},
 		{prompt: "2) Si oui, quelle est votre charge de travail (travail + devoirs domestiques) ?  ", options: situation2, required:true},
-		{prompt: "3) La p\351riode de confinement va-t-elle avoir des r\351percussions financi\350res sur votre budget ?  ", options: situation3, required:true},
+		{prompt: "3) Les mesures de sant\351 publiques actuelles vont-elles avoir des r\351percussions financi\350res sur votre budget ?  ", options: situation3, required:true},
 		{prompt: "4) Cela risque-t-il de vous mettre en situation de pr\351carit\351 ?  ", options: situation3, required:true}],
 		preamble: [""],
 		data:{test_part: 'covid_situation',trial_type: 'quest'},
@@ -162,6 +162,19 @@ function quest() {
 	};
 
 
+	var  covid_end = {
+		type: 'html-keyboard-response',
+		stimulus: "<H3> <p> Merci d'avoir pris le temps de r\351pondre \340 l'ensemble de ces questions. </p> </H3>" +
+		"<p> Nous vous souhaitons bon courage pour cette p\351riode.</p>" +
+		"<p> <strong> Vous avez des inquiétudes sur le COVID-19? </strong> </p>" +
+		"<p> Un num\351ro vert r\351pond aux questions 24 heures sur 24 et 7 jours sur 7: 0 800 130 000. </p>" +
+		"<p> <strong> Vous avez besoin d'un soutien psychologique ?</strong> </p>" +
+		"<p> CovidEcoute est un service gratuit propos\351 \340 toute personne en proie \340 une d\351tresse psychologique li\351e \340 l'\351pid\351mie du COVID-19: https://covidecoute.org </p>" +
+		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
+		choices: [32],
+		data: {test_part: 'questinstruction',trial_type: 'quest'}
+	};
+
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
 	qns.push(fullscreenExp);
@@ -184,6 +197,7 @@ function quest() {
 			qns.push(covid_difficulty);
 			qns.push(fullscreenExp);
 			qns.push(covid_interaction);
+			qns.push(covid_end);
 		}
 	};
 

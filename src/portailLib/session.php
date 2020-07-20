@@ -8,13 +8,21 @@ session_start();
 
 function identify($participantID)
 {
-    
+    $maxAttemptByIP = 5;
+    $periodAttemptByIP = 15; //minutes
+
+    if(checkFailedAttemptIP($maxAttemptByIP,$periodAttemptByIP) != false) //check failed attempts
+    {
+        unset($_SESSION['participantID']); //clear in session
+        return; //do not even try to login if banned IP
+    }
+
     try {
-        
         // connect to database
         $conn = sessionOpenDataBase();
 
         $sql = "SELECT COUNT(participantID) FROM participant WHERE participantID = '".$participantID."'";
+        $sql .= " AND BINARY participantID = '".$participantID."'"; //case sensitive comparison
         $userInDatabaseStmt = $conn->prepare($sql);
 
         $userInDatabaseStmt->execute();
@@ -22,10 +30,12 @@ function identify($participantID)
         if($userCount>0) //found valid user ID
         {
             $_SESSION['participantID'] = $participantID; //save in session
+            cleanOldFailedAttemptIP($periodAttemptByIP);
         }
         else //not found
         {
             unset($_SESSION['participantID']); //clear in session
+            logFailedAttemptIP(); //log failed attempt remote IP
         }
     }
     catch(PDOException $e)
@@ -82,9 +92,9 @@ function getAvailableTask($taskID="")
                 task tsk
             LEFT JOIN taskSession tsn ON tsn.task_taskID = tsk.taskID
             WHERE
-                tsn.openingTime < NOW()
-                AND tsn.closingTime > NOW()
-        ";
+                tsn.openingTime < ".phpNow()."
+                AND tsn.closingTime > ".phpNow();
+
         //if $taskID is supplied. Filter only this task
         if($taskID!="")
             $sql.=" AND tsk.taskID = '". $taskID ."'";
@@ -146,7 +156,7 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
 
         // insert a new run
         $sql = "INSERT INTO run (startTime, participant_participantID, taskSession_taskSessionID) ";
-        $sql.= "VALUES (NOW(),'".$_SESSION["participantID"]."',".$availableTasks[0]["taskSessionID"].")";
+        $sql.= "VALUES (".phpNow().",'".$_SESSION["participantID"]."',".$availableTasks[0]["taskSessionID"].")";
 
         $addRunStmt = $conn->prepare($sql);
 
@@ -205,7 +215,7 @@ function getRunID()
     }
 }
 
-//update a run with doneTime to NOW(), return true on success
+//update a run with doneTime to phpNow(), return true on success
 function endTask()
 {
     if(!isPreparedTask())
@@ -220,7 +230,7 @@ function endTask()
         $conn = sessionOpenDataBase();
 
         // update run with doneTime
-        $sql = "UPDATE run SET doneTime=NOW() WHERE runID='".getRunID()."'";
+        $sql = "UPDATE run SET doneTime=".phpNow()." WHERE runID='".getRunID()."'";
 
         $addRunStmt = $conn->prepare($sql);
 
@@ -251,6 +261,108 @@ function clearRunSession()
     unset($_SESSION["taskUrl"]);
 }
 
+// bruteforce IP ban : log
+function logFailedAttemptIP()
+{
+    try {
+
+        // connect to database
+        $conn = sessionOpenDataBase();
+
+        // insert a IP in failedAttemptIP table
+        $sql = "INSERT INTO failedAttemptIP (ip, timestamp) VALUES (INET6_ATON('" . getRemoteIP() . "'), ".phpNow().")";
+
+        $addIPStmt = $conn->prepare($sql);
+
+        $addIPStmt->execute();
+        
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return false;
+    }
+}
+
+// bruteforce IP ban : check
+// return true if at least $minCount failed attempt in $period minutes
+function checkFailedAttemptIP($minCount, $period)
+{
+    try {
+
+        // connect to database
+        $conn = sessionOpenDataBase();
+
+        // get number of failedAttempt for this remote IP in $period minutes
+        $sql = "SELECT COUNT(failedAttemptIPKey) FROM failedAttemptIP WHERE IP = INET6_ATON('" . getRemoteIP() . "') AND timestamp > ".phpNow()." - INTERVAL " . $period . " MINUTE";
+
+        $countFailedAttemptStmt = $conn->prepare($sql);
+
+        $countFailedAttemptStmt->execute();
+
+        $failedAttempts = $countFailedAttemptStmt->fetchColumn();
+        
+        if($failedAttempts >= $minCount)
+            return true;
+        else
+            return false;
+
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return true; //safer than return null (null == false is true)
+    }
+}
+
+// bruteforce IP ban : clean
+function cleanOldFailedAttemptIP($period)
+{
+    try {
+
+        // connect to database
+        $conn = sessionOpenDataBase();
+
+        // clean failedAttempt older than $period minutes
+        $sql = "DELETE FROM failedAttemptIP WHERE timestamp < ".phpNow()." - INTERVAL " . $period . " MINUTE";
+
+        $cleanFailedAttemptStmt = $conn->prepare($sql);
+
+        $cleanFailedAttemptStmt->execute();
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
+/* if behind a nginx reverse proxy configured with :
+ *   proxy_set_header X-Real-IP $remote_addr;
+ *   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ * return the HTTP_X_REAL_IP value
+ * else return the classic REMOTE_ADDR value
+*/
+function getRemoteIP()
+{
+    if (isset($_SERVER['HTTP_X_REAL_IP']))
+        return $_SERVER['HTTP_X_REAL_IP'];
+    else
+        return $_SERVER['REMOTE_ADDR'];
+}
+
+/* if behind a nginx reverse proxy configured with :
+ *   proxy_set_header X-Forwarded-Host $host;
+ * return the HTTP_X_FORWARDED_HOST value
+ * else return the classic HTTP_HOST value
+*/
+function getServerHost()
+{
+    if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+        return $_SERVER['HTTP_X_FORWARDED_HOST'];
+    else
+        return $_SERVER['HTTP_HOST'];
+}
+
 function sessionOpenDataBase()
 {
     // this path should point to your configuration file.
@@ -259,5 +371,12 @@ function sessionOpenDataBase()
     $_conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
     $_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $_conn;
+}
+
+/* return an SQL compatible string of current date/time */
+/* replace the NOW() function  of SQL resquest to use the php server time instead of SQL server time */
+function phpNow()
+{
+    return date("'Y-m-d H:i:s'");
 }
 ?>

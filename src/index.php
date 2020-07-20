@@ -1,5 +1,6 @@
 <?php
 include("portailLib/session.php");
+include("portailLib/portail.php");
 
 //declare empty variables
 $formParticipantID = $formAction = $formTask = "";
@@ -49,74 +50,127 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 //html header
-echo '<!DOCTYPE html>
+echo "<!DOCTYPE html>
 <html>
-    <head>
-    <meta charset="UTF-8">
-    </head>
-    <body>
-    <p>MBB Online Testing</p>
-    ';
+<head>
+<meta charset='UTF-8'>
+<link href='css/portail.css' rel='stylesheet' type='text/css'>
+</head>
+<body>
+<div class='titleContainer'>
+<div class='title'>COGMOOD</div>
+<div class='subTitle'>Humeur, anxiété et cognition</div>
+</div>\n";
 
 if(isIdentified())
 {
 
-    
-
-    echo "<p>Bonjour utilisateur " . getParticipantID()."</p>";
-
-
-    //Display available task
+    //get tasks
     $availableTasks = getAvailableTask();
-
-    echo "<p style='font-weight: bold; font-size:200%'>Tâches disponibles</p>\n";
-    echo "<table>\n";
-    foreach($availableTasks as $availableTask)
-    {
-        
-        echo "<tr>
-        <td style='font-weight: bold'>" . $availableTask['taskName']."</td>\n";
-        if($availableTask["done"])
-        {
-            echo "<td>Fait</td>";
-        }
-        else
-        {
-            //echo "<a href='".$availableTask["url"]."'>Cliquer ici pour faire la tache</a>";
-            echo "<td><form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-            <input type='hidden' name='action' value='runtask'>
-            <input type='hidden' name='task' value='".$availableTask['taskID']."'>
-            <input type='submit' value='Faire la tâche'>
-            </form></td>";
-        }
-        echo "</tr>\n";
-    }
-    echo "</table>\n";
+    //display not done tasks
+    echo "<div class='taskArea'>\n";
+    echo "<p class='taskMenuTitle'>Tâches disponibles</p>\n";
+    $notDoneCount = displayTasks($availableTasks,false);
+    if($notDoneCount < 1)
+        echo "<p>Toutes les tâches disponibles sont terminées.<br>Vous serez contacté par e-mail pour la prochaine session</p>\n";
+    echo "</div>";
     
-    //disconnect button
-    echo "<br>
-    <form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-    <input type='hidden' name='action' value='disconnect'>
-    <input type='submit' value='Se déconnecter'>
-    </form>";
-}
-else // not identified. Display login form
-{
-    if($connectError)
+    //is there done tasks
+    if( (count($availableTasks) - $notDoneCount) > 0)
     {
-        echo "<p style='color:red'>Numéro de sujet inconnu</p>";
+        echo "<hr class='taskAreaSeparator'>\n";
+
+        //display done tasks
+        echo "<div class='taskArea'>\n";
+        echo "<p class='taskMenuTitle'>Tâches terminées</p>\n";
+        displayTasks($availableTasks,true);
+        echo "</div>";
     }
-    echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
-    <p>Votre numéro de sujet : <input type='text' name='participantID' /></p>
-    <p><input type='submit' value='OK'></p>
-    <input type='hidden' name='action' value='connect'>
-    </form>";
+
+
+    //disconnect button
+    echo "<div class='logout'>
+    <form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>
+    <div>
+    <div class='username'>".getParticipantID()."</div>
+    <input type='hidden' name='action' value='disconnect'>
+    <button title='Se déconnecter'>Se déconnecter<i class='material-icons'>close</i></button>
+    </div>
+    </form>
+    </div>";
 }
+else // not identified.
+{
+
+    if(isMobile() || !isCompatibleBrowser()) //Check desktop computer and browser
+    {
+        // Display infos to get a compatible browser
+        ?>
+<div id='requierment'>
+Pour le bon fonctionnement du site, l'utilisation d'un ordinateur (fixe ou portable) ainsi que d'un des navigateurs compatibles suivant est nécessaire :<br>
+<ul>
+<li><img class='navigatorIcon' src='img/Firefox_Icon.svg'>  Mozilla Firefox (Aide d'installation : pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-windows" target="_blank">Microsoft Windows</a>, pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-mac" target="_blank">Apple Mac OS</a>, pour <a href="https://support.mozilla.org/fr/kb/installer-firefox-linux" target="_blank">Linux</a>)</li>
+<li><img class='navigatorIcon' src='img/Chrome_Icon.svg'>  Google Chrome (Aide d'installation : pour <a href="https://support.google.com/chrome/answer/95346#install_win" target="_blank">Microsoft Windows</a>, pour <a href="https://support.google.com/chrome/answer/95346#install_mac" target="_blank">Apple Mac OS</a>, pour <a href="https://support.google.com/chrome/answer/95346#install_linux" target="_blank">Linux</a>)</li>
+</ul>
+Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <span class='rawLink'><?php echo htmlspecialchars(getServerHost()); ?></span> dans la barre d'adresse.
+</div>
+        <?php
+    }
+    else // Display login form if brower compatible
+    {
+        echo "<div class='login'>\n";
+        echo "<p>Entrez votre identifiant pour poursuivre</p>\n";
+        if($connectError)
+        {
+            echo "<p style='color:red'>Identifiant inconnu</p>\n";
+        }
+        echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
+        echo "<div>\n";
+        echo "<input type='text' name='participantID' placeholder='Identifiant'/>
+        <button title='Se connecter'><div>Se connecter</div><i class='material-icons'>exit_to_app</i>
+        </button>
+        <input type='hidden' name='action' value='connect'>\n";
+        echo "</div>\n";
+        echo "</form>\n";
+        echo "</div>\n";
+    }
+
+?>
+<div id='recruitment'>
+<p>Nous recrutons de nouveaux participants. <br>
+Pour vous inscrire remplissez le formulaire suivant : <br>
+<a href="https://frama.link/cogmood">https://frama.link/cogmood</a></p>
+</div>
+<?php
+
+} // /not identified.
 
 echo '
 </body>
 </html>
 ';
+
+//display tasks button in a table filtered by done status
+//return number of tasks displayed
+function displayTasks($tasks, $doneStatus)
+{
+    $itemCount = 0;
+    foreach($tasks as $task)
+    {
+        if($task["done"] != $doneStatus)
+            continue;
+        $itemCount++;
+        echo "<form class='taskButtonOuter' method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
+        echo "<div>\n";
+        echo "<input type='hidden' name='action' value='runtask'>\n<input type='hidden' name='task' value='".$task['taskID']."'>\n";
+        echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='Faire la tâche'".($doneStatus ? " disabled" : "").">\n";
+        echo "<div class='taskButtonText'>".$task['taskName']."</div><i class='material-icons'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
+        echo "</button>\n";
+        echo "</div>\n";
+        echo "</form>\n";
+    }
+    return $itemCount;
+}
 
 function test_input($data) {
     //return content of $_POST["$data"] with a bit of security

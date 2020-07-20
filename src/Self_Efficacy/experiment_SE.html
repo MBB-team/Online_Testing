@@ -58,7 +58,7 @@ Per trial:
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 45;
+  const nbInstr              = 33;
 
   // --------------------------------- INITIALISATION  --------------------------- //
 
@@ -132,7 +132,7 @@ Per trial:
     for (var t=1; t <= 8; t++){
       numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
-    }
+    };
 
     // Grey square
     var greySquare = 'Stimuli/grey-square.png';
@@ -155,7 +155,7 @@ Per trial:
 
 // --------------------------------- SAVING DATA  ----------------------------//
 
-    //CODE TO SAVE FULLDATA AT THE END
+    // CODE TO SAVE FULLDATA AT THE END
 
     function saveData() {
           var xhr = new XMLHttpRequest();

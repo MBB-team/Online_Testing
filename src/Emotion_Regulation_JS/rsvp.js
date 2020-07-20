@@ -17,12 +17,12 @@ function rsvp(nbBlocks, nbTrials, training)
             // Put here the parameters that need to be randomised every block
             var instrCondiImg = "";
             if (conditionRwd[block][1] == 1 ){
-                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[7]} // DC Small Rwd
-                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[8]} // DC Large Rwd
+                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[9]} // DC Small Rwd
+                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[10]} // DC Large Rwd
             }
             else if (conditionRwd[block][1] == 2){
-                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[9]} // BC Small Rwd
-                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[10]} // BC Small Rwd
+                  if (conditionRwd[block][0] == 1) {instrCondiImg =  instrImg[11]} // BC Small Rwd
+                  else if (conditionRwd[block][0] == 2) {instrCondiImg = instrImg[12]} // BC Small Rwd
             };
 
             var instrCondi = {

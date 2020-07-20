@@ -9,6 +9,7 @@ services:
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
       - /save/dumps:/tmp/dumps # Save dump
+      - ./migration:/migration
     ports: # Enable access to local SQL IDE
       - "53506:3306"
     expose: # Enable access from php image
@@ -48,4 +49,4 @@ services:
       - TZ=Europe/Stockholm
       - PUID=993 # When using volumes (-v flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID. Use `id username` to find this id.
       - PGID=993
-      - STAGING=true # Set to true to retrieve certs in staging mode. Rate limits will be much higher, but the resulting cert will not pass the browser's security test. Only to be used for testing purposes.
+      - STAGING=${LETSENCRYPT_ISTEST} # Set to true to retrieve certs in staging mode. Rate limits will be much higher, but the resulting cert will not pass the browser's security test. Only to be used for testing purposes.
