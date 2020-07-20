@@ -500,6 +500,48 @@ function setParticipantStatus($participantID, $newStatus)
     $conn = null;
 }
 
+//return empty string on success else errorMessage
+function addParticipant($participantID)
+{
+    //check participant ID
+    $participantList = getParticipantList();
+    if($participantList == null)
+        return "Erreur SQL";
+
+    $flagfound = false;
+    foreach($participantList as $participant)
+    {
+        if($participant["participantID"] == $participantID)
+        {
+            $flagfound = true;
+            break;
+        }
+    }
+    if($flagfound)
+        return "Identifiant ".$participantID." déjà dans la base.";
+
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // addSession 
+        $sql = "INSERT INTO participant (participantID, active) VALUES ('".$participantID."', '1')";
+
+        $addParticipantStmt = $conn->prepare($sql);
+
+        $addParticipantuccess = $addParticipantStmt->execute();
+
+        return "";
+    }
+    catch(PDOException $e)
+    {
+        
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return "Erreur SQL";
+    }
+}
+
 function backofficeOpenDataBase()
 {
     // this path should point to your configuration file.
