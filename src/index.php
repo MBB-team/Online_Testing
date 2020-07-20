@@ -7,6 +7,7 @@ $formParticipantID = $formAction = $formTask = "";
 
 
 $connectError = false; //flag to display an error message in the html form
+$connectErrorMessage = ""; //will contain details of error
 
 //form processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case "connect":
             if(!isIdentified())
             {
-                identify($formParticipantID);
+                $connectErrorMessage = identify($formParticipantID);
                 if(!isIdentified())
                 {
                     $connectError = true;
@@ -122,7 +123,21 @@ Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <s
         echo "<p>Entrez votre identifiant pour poursuivre</p>\n";
         if($connectError)
         {
-            echo "<p style='color:red'>Identifiant inconnu</p>\n";
+            switch($connectErrorMessage)
+            {
+                case "tooManyFails":
+                    echo "<p style='color:red'>Trop de tentative d'identification. Contactez cogmood@temp.org pour plus d'informations.</p>\n";
+                    break;
+                case "inactiveUser":
+                    echo "<p style='color:red'>Cet identifiant est désactivé. Contactez cogmood@temp.org pour plus d'informations.</p>\n";
+                    break;
+                case "unknownUser":
+                    echo "<p style='color:red'>Identifiant inconnu. Contactez cogmood@temp.org si le problème persiste.</p>\n";
+                    break;
+                default:
+                    echo "<p style='color:red'>Erreur inconnue. Contactez cogmood@temp.org si le problème persiste.</p>\n";
+                    break;
+            }
         }
         echo "<form method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
         echo "<div>\n";

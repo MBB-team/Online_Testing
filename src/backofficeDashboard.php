@@ -13,8 +13,8 @@ echo "<!DOCTYPE html>
             src='https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js'
         ></script>
         </head>
-        <body>
-        <a href='backofficeExport.php'>Exporter des données</a><br>\n";
+        <body>\n";
+echo backofficeMenu()."<br>\n";
 
 
 // get datas
