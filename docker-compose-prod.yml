@@ -49,3 +49,4 @@ services:
       - TZ=Europe/Stockholm
       - PUID=993 # When using volumes (-v flags) permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID. Use `id username` to find this id.
       - PGID=993
+      - STAGING=${LETSENCRYPT_ISTEST} # Set to true to retrieve certs in staging mode. Rate limits will be much higher, but the resulting cert will not pass the browser's security test. Only to be used for testing purposes.
