@@ -19,7 +19,7 @@ Ce test dure en moyenne 45 minutes. Votre bonus financier est défini à parti
 
 ## Test d'engagement
 Durant ce test, vous devrez répondre à un signal tout en déplaçant rapidement votre attention d'un point à un autre. A chaque essai que vous réussirez, vous gagnerez de l'argent en bonus. La difficulté de l'exercice ainsi que la récompense à jeu sera variable d'un essai à un autre : vous aurez la possibilité d'arrêter un essai en cours, si vous pensez que cela ne vaut plus l'effort.
-Ce test dure en moyenne 55 minutes. A la fin du test, nous tirerons deux essais au hasard parmi ceux que vous avez accomplis, et vous recevrez la récompenses correspondant à votre performance dans ces 2 essais.
+Ce test dure en moyenne 45 minutes. A la fin du test, nous tirerons deux essais au hasard parmi ceux que vous avez accomplis, et vous recevrez la récompenses correspondant à votre performance dans ces 2 essais.
 
 ## Test de compromis
 Il s’agit de deux tests supplémentaires (de décision et d’apprentissage), qui durent moins de 5 minutes chacun. Un bonus financier supplémentaire est défini à partir de votre performance dans 2 essais du test d’apprentissage tirés au hasard, sachant que chaque réponse correcte est récompensée 1€ (montant maximum du bonus = 2€).
