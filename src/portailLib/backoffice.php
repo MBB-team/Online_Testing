@@ -432,6 +432,74 @@ function _updateSessionTime($sessionID, $newTime, $field)
 
 }
 
+//get participant list
+function getParticipantList()
+{
+    try {
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "SELECT * FROM participant";
+        $getParticpantStmt = $conn->prepare($sql);
+
+        $getParticpantStmt->execute();
+        $getParticpantResult = $getParticpantStmt->fetchAll(PDO::FETCH_ASSOC);
+        return $getParticpantResult;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return null;
+    }
+    $conn = null;
+}
+
+//set participant status
+//$newstatus = 1 : activate participant
+//$newstatus = 1 : deactivate participant
+function setParticipantStatus($participantID, $newStatus)
+{
+    //check participant ID
+    $participantList = getParticipantList();
+    if($participantList == null)
+        return "Erreur SQL";
+    if(empty($participantList))
+        return "Identifiant non trouvé.";
+
+    $flagfound = false;
+    foreach($participantList as $participant)
+    {
+        if($participant["participantID"] == $participantID)
+        {
+            $flagfound = true;
+            break;
+        }
+    }
+    if(!$flagfound)
+        return "Identifiant non trouvé.";
+
+    //$participantID found in databasse
+    try {
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "UPDATE participant SET active=$newStatus WHERE participantID='".$participantID."'";
+        $setParticpantStatusStmt = $conn->prepare($sql);
+
+        $setParticipantStatusSuccess = $setParticpantStatusStmt->execute();
+        if(!$setParticipantStatusSuccess)
+            return "Erreur SQL";
+        else
+            return "";
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return "Erreur SQL";
+    }
+    $conn = null;
+}
+
 function backofficeOpenDataBase()
 {
     // this path should point to your configuration file.
