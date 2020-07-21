@@ -57,7 +57,7 @@ function SE(nbBlocks, nbTrials){
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>C&#39est le de&#769but de l&#39essai <b>'+trial_n+'</b> du bloc <b><p>'+block_n+'</b>.</p></p><p style="font-size:30px">Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+trial_n+'</b> du bloc <b><p>'+block_n+'</b>.</p></p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
         choices: ['C&#39est parti !'],
         data: {
           blockNb: block_i,
@@ -109,7 +109,7 @@ function SE(nbBlocks, nbTrials){
 
       // REWATCH QUESTION //
       var rewatch = {
-        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>5 secondes</b> pour re&#769pondre!</p>',
+        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>5 secondes</b> pour re&#769pondre!</p>',
         type: 'html-button-response-WH',
         prompt: function(){
           var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.</p>';
@@ -229,7 +229,7 @@ function SE(nbBlocks, nbTrials){
               response_ends_trial: true,
               highlight: time.highlight,
               allow_nontarget_responses: true,
-              prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet essai est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
+              prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
               pre_target_duration: 0,
               choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
               on_start: function(){var clicked = [null,null]},
