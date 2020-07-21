@@ -64,6 +64,14 @@ function doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClos
     if($newClosingTime < $now) //new past closing date
         return "Les nouvelles dates doivent être dans le futur";
 
+    //check overlap
+    if( isNewSessionOverlap($sessionInfo["task_taskID"],
+                            $editOpeningDate." ".$editOpeningHour,
+                            $editClosingDate." ".$editClosingHour,
+                            getAllTaskSessions($sessionInfo["task_taskID"]),
+                            $sessionInfo["sessionName"] ) )
+        return "Une session existe déjà pour cette tâche à cette période";
+
     //Update closingTime
     if(!(updateSessionClosingTime($sessionID, $editClosingDate." ".$editClosingHour)))
         return "erreur SQL";
@@ -105,11 +113,75 @@ function doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour,
     if($newOpeningTime < $now)
         return "Les dates doivent être dans le futur";
 
-    //todo: more checking (overlaping session)
+    $existingSessions = getAllTaskSessions();
+    
+    $errorMessage = "";
+    //check session name
+    if( isSessionNameExist($sessionName, $existingSessions))
+        $errorMessage .= $sessionName . " : Une session portant ce nom existe déjà.\\n";
+
+    if(!empty($errorMessage))
+        return $errorMessage .= "Aucune session n'a été ajoutée.";
+
+    //check overlap
+    $errorMessage = "";
+    if( isNewSessionOverlap($taskID,
+                            $editOpeningDate." ".$editOpeningHour,
+                            $editClosingDate." ".$editClosingHour,
+                            $existingSessions ) )
+        $errorMessage .= $sessionName . " : Une session existe déjà pour cette période.\\n";
+
+    if(!empty($errorMessage))
+        return $errorMessage .= "Aucune session n'a été ajoutée.";
 
     addSession($taskID, $sessionName, $editOpeningDate." ".$editOpeningHour, $editClosingDate." ".$editClosingHour);
 
     return "";
+}
+
+//return true if session Name already exist
+//$sessionName : name of session to check
+//$sessionsInDatabase : all sessions in database (use getAllTaskSessions() )
+function isSessionNameExist($sessionName, $sessionsInDatabase)
+{
+    foreach($sessionsInDatabase as $sessionInDatabase)
+    {
+        if(strtoupper($sessionName) == strtoupper($sessionInDatabase["sessionName"]))
+            return true;
+    }
+    return false;
+}
+
+//return true if session overlap an existing session of same task
+//$taskID : check for this task 
+//$openingTimeStr, $closingTime : period to test. Format "AAAA-MM-DD HH:MM:SS" (seconds can be omited)
+//$sessionsInDatabase : all sessions in database (use getAllTaskSessions() )
+//$excludeSessionName : exclude this session Name (used to check overlap on other session but itself when editing existing session)
+function isNewSessionOverlap($taskID, $openingTimeStr, $closingTimeStr, $sessionsInDatabase, $excludeSessionName = "")
+{
+    $openingTime = strtotime($openingTimeStr);
+    $closingTime = strtotime($closingTimeStr);
+    foreach($sessionsInDatabase as $sessionInDatabase)
+    {
+        if(strtoupper($taskID) != strtoupper($sessionInDatabase["task_taskID"])) //not same task
+            continue;
+
+        if( (!empty($excludeSessionName)) && (strtoupper($excludeSessionName) == strtoupper($sessionInDatabase["sessionName"])) ) //don't check to self
+        {
+            continue;
+        }
+
+        $refOpeningTime = strtotime($sessionInDatabase["openingTime"]);
+        $refClosingTime = strtotime($sessionInDatabase["closingTime"]);
+        if(     ($refOpeningTime <= $openingTime && $openingTime <= $refClosingTime) || //opening time is in an existing session
+                ($refOpeningTime <= $closingTime && $closingTime <= $refClosingTime) || //closing time is in an existing session
+                ($openingTime <= $refOpeningTime && $refOpeningTime <= $closingTime) || //existing session opening time is in tested session period
+                ($openingTime <= $refClosingTime && $refClosingTime <= $closingTime) ) //existing session closing time is in tested session period
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 function test_input($data) {
