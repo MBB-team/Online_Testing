@@ -244,7 +244,7 @@ function rsvpEM_train(nbTrials_train){
 
       } // end each displayed stimulus
 
-      timelineTask.push(fullscreenExp);
+      timelineTask_train.push(fullscreenExp);
 
 
     } // end of diff step
