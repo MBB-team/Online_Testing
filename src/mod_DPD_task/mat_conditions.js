@@ -1,5 +1,12 @@
 function mat_conditions()
 {
+  //Simulated choices --> correct_Dummy1, correct_Dummy2, correct_Dummy3
+  // Parameters of dummies:
+  //               Dummy 1 = [-8,-3,0,0]
+  //               Dummy 2 = [-8,0.1,0,0]
+  //               Dummy 3 = [8,0.1,0,0]
+
+
 
 var test_stimuli = [
   { plantes: "4 plantes sont fertiles", stimulus: "Gagner 25 euros", probabilities: 82, trial_type: 9, data: {test_frame: 'test_gain', frame: 1, prob_win: 0.05, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
