@@ -364,7 +364,7 @@
         on_finish: function(data){//adds a "correct" property to data
         data.test_part = 'prediction_training';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy1;
+        data.correct = (data.response+1 == data.correct_Dummy1)?1:0;
        }
      }
       var trial_index_pred1 = 0;
@@ -380,7 +380,7 @@
         trial_index_pred1 += 1
         data.test_part = 'prediction_1';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy1;
+        data.correct = (data.response+1 == data.correct_Dummy1)?1:0;
         }
       }
 
@@ -397,7 +397,7 @@
         trial_index_pred2 += 1
         data.test_part = 'prediction_2';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy2;
+        data.correct = (data.response+1 == data.correct_Dummy2)?1:0;
        }
      }
 
@@ -414,7 +414,7 @@
         trial_index_pred3 += 1
         data.test_part = 'prediction_3';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy3;
+        data.correct = (data.response+1 == data.correct_Dummy3)?1:0;
        }
      }
 
@@ -431,7 +431,7 @@
         trial_index_pred4 += 1
         data.test_part = 'prediction_4';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy4;
+        data.correct = (data.response+1 == data.correct_Dummy4)?1:0;
        }
      }
 
@@ -447,7 +447,7 @@
         trial_index_control+= 1
         data.test_part = 'control';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_ecosystem;
+        data.correct = (data.response+1 == data.correct_ecosystem)?1:0;
        }
     }
 
