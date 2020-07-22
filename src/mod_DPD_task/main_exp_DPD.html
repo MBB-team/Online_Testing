@@ -355,7 +355,8 @@
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){//adds a "correct" property to data
         trial_index_dec += 1
-        if( trial_index_dec == 37 || trial_index_dec == 71 || trial_index_pred2 == 105 || trial_index_pred2 == 139 || trial_index_pred2 == 173)
+        //if( trial_index_dec == 37 || trial_index_dec == 71 || trial_index_pred2 == 105 || trial_index_pred2 == 139 || trial_index_pred2 == 173)
+        if( trial_index_dec == 21 || trial_index_dec == 39 || trial_index_pred2 == 57 || trial_index_pred2 == 75 || trial_index_pred2 == 93)
         {counter_dec_phase += 1;}
         data.test_part = 'decision';
         data.decision_phase = counter_dec_phase;

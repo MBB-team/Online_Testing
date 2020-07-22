@@ -9,7 +9,7 @@ function mat_conditions()
 
 
 var test_stimuli = [
-  { plantes: "4 plantes sont fertiles", stimulus: "Gagner 25 euros", probabilities: 82, trial_type: 9, data: {test_frame: 'test_gain', frame: 1, prob_win: 0.05, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
+  { plantes: "4 plantes sont fertiles", stimulus: "Gagner 25 euros", probabilities: 82, trial_type: 9, data: {test_frame: 'test_gain', frame: 1, prob_win: 0.05, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:1}}, // CATCH TRIAL
   { plantes: "8 plantes sont fertiles", stimulus: "Gagner 5 euros ", probabilities: 81, trial_type: 4, data: {test_frame: 'test_gain', frame: 1, prob_win: 0.10, correct_Dummy1: 1, correct_Dummy2:2,correct_Dummy3:1}},
   { plantes: "9 plantes sont fertiles", stimulus: "Gagner 6 euros", probabilities: 80, trial_type: 4, data: {test_frame: 'test_gain', frame: 1,  prob_win: 0.11,correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
   { plantes: "10 plantes sont fertiles", stimulus: "Gagner 6 euros ", probabilities: 79, trial_type: 4, data: {test_frame: 'test_gain', frame: 1, prob_win: 0.12, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
@@ -91,8 +91,8 @@ var test_stimuli = [
   { plantes: "70 plantes sont fertiles", stimulus: "Gagner 44 euros ", probabilities: 3, trial_type: 1, data:{test_frame: 'test_gain', frame: 1,  prob_win: 0.88,correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}},
   { plantes: "71 plantes sont fertiles", stimulus: "Gagner 45 euros", probabilities: 2, trial_type: 1, data:{test_frame: 'test_gain', frame: 1,  prob_win: 0.89,correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}},
   { plantes: "72 plantes sont fertiles", stimulus: "Gagner 45 euros ", probabilities: 1, trial_type: 1, data:{test_frame: 'test_gain', frame: 1, prob_win: 0.90, correct_Dummy1: 1, correct_Dummy2:2,correct_Dummy3:1}},
-  { plantes: "76 plantes sont fertiles", stimulus: "Gagner 25 euros", probabilities: 0, trial_type: 11, data:{test_frame: 'test_gain', frame: 1, prob_win: 0.95, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}},
-  { plantes: "4 plantes sont fertiles", stimulus: "Perdre 25 euros", probabilities: 82, trial_type: 10, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.05, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
+  { plantes: "76 plantes sont fertiles", stimulus: "Gagner 25 euros", probabilities: 0, trial_type: 11, data:{test_frame: 'test_gain', frame: 1, prob_win: 0.95, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:2}}, // CATCH TRIAL
+  { plantes: "4 plantes sont fertiles", stimulus: "Perdre 25 euros", probabilities: 82, trial_type: 10, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.05, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:1}},// CATCH TRIAL
   { plantes: "8 plantes sont fertiles", stimulus: "Perdre 45 euros ", probabilities: 81, trial_type: 4, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.10, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
   { plantes: "9 plantes sont fertiles", stimulus: "Perdre 45 euros", probabilities: 80, trial_type: 4, data: {test_frame: 'test_loss', frame: 0,  prob_win: 0.11,correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
   { plantes: "10 plantes sont fertiles", stimulus: "Perdre 44 euros ", probabilities: 79, trial_type: 4, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.12, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:1}},
@@ -174,7 +174,7 @@ var test_stimuli = [
   { plantes: "70 plantes sont fertiles", stimulus: "Perdre 6 euros ", probabilities: 3, trial_type: 1, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.88, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}},
   { plantes: "71 plantes sont fertiles", stimulus: "Perdre 6 euros", probabilities: 2, trial_type: 1, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.89, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}},
   { plantes: "72 plantes sont fertiles", stimulus: "Perdre 5 euros ", probabilities: 1, trial_type: 1, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.90, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}},
-  { plantes: "76 plantes sont fertiles", stimulus: "Perdre 25 euros", probabilities: 0, trial_type: 12, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.95, correct_Dummy1: 1, correct_Dummy2:1,correct_Dummy3:2}}
+  { plantes: "76 plantes sont fertiles", stimulus: "Perdre 25 euros", probabilities: 0, trial_type: 12, data: {test_frame: 'test_loss', frame: 0, prob_win: 0.95, correct_Dummy1: 2, correct_Dummy2:2,correct_Dummy3:2}} // CATCH TRIAL
   ]
 
   return test_stimuli
