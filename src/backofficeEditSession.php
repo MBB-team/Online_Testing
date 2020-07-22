@@ -88,16 +88,48 @@ function doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClos
     return "";
 }
 
-//todo: $taskID might be an array to add session for multiple task with same parameters
-// $sessionName must match
+// $taskID : array to add session for multiple task with same parameters
+// $sessionName["taskID"] must match
 function doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour, $editClosingDate, $editClosingHour)
 {
     if(empty($taskID) || empty($sessionName) || empty($editOpeningDate) || empty($editOpeningHour) || empty($editClosingDate) || empty($editClosingHour))
         return "Paramètres manquants";
     
-    $taskInfo = getDataTaskTables($taskID);
-    if(empty($taskInfo))
-        return "taskID inconnu";
+    $tasksInfo = getDataTaskTables();
+    $errorMessage = "";
+    //check taskID exist in data base then check if sessionName is supplied
+    foreach($taskID as $taskIDelem)
+    {
+        $foundFlag = false;
+        foreach($tasksInfo as $taskInfo)
+        {
+            if(strtoupper($taskInfo["taskID"])==strtoupper($taskIDelem))
+            {
+                $foundFlag = true;
+            }
+        }
+        
+        if($foundFlag == false)
+        {
+            $errorMessage .= $taskIDelem . " : Tâche inconnue.\\n";
+            continue;
+        }
+
+        if(!array_key_exists($taskIDelem, $sessionName))
+        {
+            $errorMessage .= $taskIDelem . " : Pas de nom de session.\\n";
+            continue;
+        }
+
+        if(empty($sessionName[$taskIDelem]))
+        {
+            $errorMessage .= $taskIDelem . " : Nom de session vide.\\n";
+            continue;
+        }
+    }
+
+    if(!empty($errorMessage))
+        return $errorMessage .= "Aucune session n'a été ajoutée.";
         
     $newOpeningTime = strtotime($editOpeningDate." ".$editOpeningHour);
     $newClosingTime = strtotime($editClosingDate." ".$editClosingHour);
@@ -117,24 +149,33 @@ function doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour,
     
     $errorMessage = "";
     //check session name
-    if( isSessionNameExist($sessionName, $existingSessions))
-        $errorMessage .= $sessionName . " : Une session portant ce nom existe déjà.\\n";
+    foreach($taskID as $taskIDelem)
+    {
+        if( isSessionNameExist($sessionName[$taskIDelem], $existingSessions))
+            $errorMessage .= $taskIDelem . " : Une session " . $sessionName[$taskIDelem] . " existe déjà.\\n";
+    }
 
     if(!empty($errorMessage))
         return $errorMessage .= "Aucune session n'a été ajoutée.";
 
-    //check overlap
     $errorMessage = "";
-    if( isNewSessionOverlap($taskID,
-                            $editOpeningDate." ".$editOpeningHour,
-                            $editClosingDate." ".$editClosingHour,
-                            $existingSessions ) )
-        $errorMessage .= $sessionName . " : Une session existe déjà pour cette période.\\n";
+    //check overlap
+    foreach($taskID as $taskIDelem)
+    {
+        if( isNewSessionOverlap($taskIDelem,
+                                $editOpeningDate." ".$editOpeningHour,
+                                $editClosingDate." ".$editClosingHour,
+                                $existingSessions ) )
+            $errorMessage .= $taskIDelem . " : Une session existe déjà pour cette période.\\n";
+    }
 
     if(!empty($errorMessage))
         return $errorMessage .= "Aucune session n'a été ajoutée.";
 
-    addSession($taskID, $sessionName, $editOpeningDate." ".$editOpeningHour, $editClosingDate." ".$editClosingHour);
+    foreach($taskID as $taskIDelem)
+    {
+        addSession($taskIDelem, $sessionName[$taskIDelem], $editOpeningDate." ".$editOpeningHour, $editClosingDate." ".$editClosingHour);
+    }
 
     return "";
 }
@@ -190,9 +231,23 @@ function test_input($data) {
     if(!array_key_exists($data, $_POST))
     { return "";}
 
-    $returnData = trim($_POST["$data"]);
-    $returnData = stripslashes($returnData);
-    $returnData = htmlspecialchars($returnData);
+    $returnData = "";
+    if(is_array($_POST["$data"]))
+    {
+        $returnData = array();
+        foreach($_POST["$data"] as $key => $val)
+        {
+            $returnData[$key] = trim($val);
+            $returnData[$key] = stripslashes($returnData[$key]);
+            $returnData[$key] = htmlspecialchars($returnData[$key]);
+        }
+    }
+    else
+    {
+        $returnData = trim($_POST["$data"]);
+        $returnData = stripslashes($returnData);
+        $returnData = htmlspecialchars($returnData);
+    }
     return $returnData;
   }
 ?>
