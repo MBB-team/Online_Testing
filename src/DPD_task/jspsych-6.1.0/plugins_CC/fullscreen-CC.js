@@ -103,7 +103,7 @@ jsPsych.plugins.fullscreen = (function() {
 
           var trial_data = {
             "rt": 999,
-            "stimulus": "999",
+            "stimulus": 999,
             "response": 999,
             "dummy_number": 999,
             "start_point": 999
