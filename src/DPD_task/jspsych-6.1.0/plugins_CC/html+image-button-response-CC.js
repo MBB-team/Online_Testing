@@ -103,16 +103,13 @@ jsPsych.plugins["html+image-button-response"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     // display stimulus
-<<<<<<< Updated upstream
     var new_html = ' ';
 
     //show prompt if there is one
     if (trial.prompt !== null) {
       new_html += '<div id:"myPrompt" style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%) translateY(-50%);">'+trial.prompt+'</div>';
     }
-=======
     var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 50%; right: 64%;">'+trial.stimulus+'</div>';
->>>>>>> Stashed changes
 
     //display buttons
     var buttons = [];
@@ -134,13 +131,11 @@ jsPsych.plugins["html+image-button-response"] = (function() {
     }
     new_html += '</div>';
 
-<<<<<<< Updated upstream
     new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 30%; margin: 100px '+trial.margin_horizontal+'">'+trial.stimulus+'</div>';
 
     // add piechart with probabilities
     if (trial.probabilities !== null){
       new_html += '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 14%;" ></img>';
-=======
     //show prompt if there is one
     if (trial.prompt !== null) {
       new_html += '<div id:"myPrompt" style="position:absolute; top: 12%; right: 25%;">'+trial.prompt+'</div>';
@@ -149,7 +144,6 @@ jsPsych.plugins["html+image-button-response"] = (function() {
     // add piechart with probabilities
     if (trial.probabilities !== null){
       var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top:17%; right: 16%;" ></img>';
->>>>>>> Stashed changes
     }
 
 
