@@ -76,7 +76,7 @@ jsPsych.plugins["html+image-button-response"] = (function() {
       margin_horizontal: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin horizontal',
-        default: '150px',
+        default: '140px',
         description: 'The horizontal margin of the button.'
       },
       response_ends_trial: {
@@ -103,7 +103,16 @@ jsPsych.plugins["html+image-button-response"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     // display stimulus
+<<<<<<< Updated upstream
+    var new_html = ' ';
+
+    //show prompt if there is one
+    if (trial.prompt !== null) {
+      new_html += '<div id:"myPrompt" style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%) translateY(-50%);">'+trial.prompt+'</div>';
+    }
+=======
     var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 50%; right: 64%;">'+trial.stimulus+'</div>';
+>>>>>>> Stashed changes
 
     //display buttons
     var buttons = [];
@@ -121,10 +130,17 @@ jsPsych.plugins["html+image-button-response"] = (function() {
     new_html += '<div id="jspsych-html-button-response-btngroup">';
     for (var i = 0; i < trial.choices.length; i++) {
       var str = buttons[i].replace(/%choice%/g, trial.choices[i]);
-      new_html += '<div class="jspsych-html-button-response-button" style="display: inline-block; margin:'+trial.margin_vertical+' '+trial.margin_horizontal+'" id="jspsych-html-button-response-button-' + i +'" data-choice="'+i+'">'+str+'</div>';
+      new_html += '<div class="jspsych-html-button-response-button" style="display: inline-block; margin:'+trial.margin_vertical+' '+trial.margin_horizontal+' 0px" id="jspsych-html-button-response-button-' + i +'" data-choice="'+i+'">'+str+'</div>';
     }
     new_html += '</div>';
 
+<<<<<<< Updated upstream
+    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 30%; margin: 100px '+trial.margin_horizontal+'">'+trial.stimulus+'</div>';
+
+    // add piechart with probabilities
+    if (trial.probabilities !== null){
+      new_html += '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 14%;" ></img>';
+=======
     //show prompt if there is one
     if (trial.prompt !== null) {
       new_html += '<div id:"myPrompt" style="position:absolute; top: 12%; right: 25%;">'+trial.prompt+'</div>';
@@ -133,15 +149,12 @@ jsPsych.plugins["html+image-button-response"] = (function() {
     // add piechart with probabilities
     if (trial.probabilities !== null){
       var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top:17%; right: 16%;" ></img>';
+>>>>>>> Stashed changes
     }
 
 
     // DISPLAY ELEMENTS
-    if (trial.probabilities !== null){
-      display_element.innerHTML = [new_html + new_piechart];
-    } else if (trial.probabilities == null){
-        display_element.innerHTML = [new_html]
-      }
+    display_element.innerHTML = [new_html]
 
 
     // start time

@@ -76,13 +76,13 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
       margin_vertical: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin vertical',
-        default: '500px',
+        default: '350px',
         description: 'The vertical margin of the button.'
       },
       margin_horizontal: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Margin horizontal',
-        default: '170px',
+        default: '140px',
         description: 'The horizontal margin of the button.'
       },
       response_ends_trial: {
@@ -108,10 +108,17 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    // display stimulus
-    var new_html = '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 200px; right: 760px;">'+trial.stimulus_1+'</div>'; //"X plantes sont fertiles"
-    new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 350px; right: 720px;">'+trial.stimulus_2+'</div>'; // "Aucun contact avec les herbivores",
-    new_html +=  '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 180px; right: 300px;">'+trial.stimulus_3+'</div>'; // "Toutes les plantes sont fertiles"
+        // display stimulus
+        var new_html = ' ';
+
+        //show prompt if there is one
+        if (trial.prompt !== null) {
+          new_html += '<div id:"myPrompt" style="position:absolute; top: 10%; left: 50%; transform: translateX(-50%) translateY(-50%);">'+trial.prompt+'</div>';
+        }
+
+        new_html += '<div id="jspsych-html-button-response-stimulus" style="display: inline-block;  margin: 10% ">'+trial.stimulus_1+'</div>'; //"X plantes sont fertiles"
+        new_html +=  '<div id="jspsych-html-button-response-stimulus" style="display: inline-block; margin: 10% ">'+trial.stimulus_3+'</div>'; // "Toutes les plantes sont fertiles"
+
 
     //display buttons
     var buttons = [];
@@ -129,27 +136,21 @@ jsPsych.plugins["control-html+image-button-response"] = (function() {
     new_html += '<div id="jspsych-html-button-response-btngroup">';
     for (var i = 0; i < trial.choices.length; i++) {
       var str = buttons[i].replace(/%choice%/g, trial.choices[i]);
-      new_html += '<div class="jspsych-html-button-response-button" style="display: inline-block; margin:'+trial.margin_vertical+' '+trial.margin_horizontal+'" id="jspsych-html-button-response-button-' + i +'" data-choice="'+i+'">'+str+'</div>';
+      new_html += '<div class="jspsych-html-button-response-button" style="display: inline-block; margin:'+trial.margin_vertical+' '+trial.margin_horizontal+' 50px" id="jspsych-html-button-response-button-' + i +'" data-choice="'+i+'">'+str+'</div>';
     }
     new_html += '</div>';
 
-    //show prompt if there is one
-    if (trial.prompt !== null) {
-      new_html += '<div id:"myPrompt" style="position:absolute; top: 70px; right: 325px;">'+trial.prompt+'</div>';
-    }
-
     // add piechart with probabilities
-    if (trial.probabilities !== null){
-      var new_piechart = '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:relative; top: -850px; right: -230px;" ></img>';
-    }
+   if (trial.probabilities !== null){
+          new_html += '<div id="jspsych-html-button-response-stimulus" style="position:absolute; top: 30%; margin: 10% 5%;">'+trial.stimulus_2+'</div>';// "Aucun contact avec les herbivores",
+          new_html += '<img src="'+piechart[trial.probabilities]+'" alt="probabiliy to lose" style="position:absolute; top: 35%; margin: 0% 5%;"></img>';
+   }
 
 
-    // DISPLAY ELEMENTS
-    if (trial.probabilities !== null){
-      display_element.innerHTML = [new_html + new_piechart];
-    } else if (trial.probabilities == null){
-        display_element.innerHTML = [new_html]
-      }
+
+
+
+      display_element.innerHTML = [new_html];
 
 
     // start time
