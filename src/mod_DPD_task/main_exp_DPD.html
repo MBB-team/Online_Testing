@@ -754,7 +754,7 @@
     var if_explicit_question_pred1= {
         timeline: [explicit_question],
         conditional_function: function(){
-          if( trial_index_pred1 == 34) { //Explicit question at the end of each prediction phase
+          if( trial_index_pred1 == 18) { //Explicit question at the end of each prediction phase
               return true;
           } else {
               return false;
@@ -764,7 +764,7 @@
     var if_explicit_question_pred2= {
         timeline: [explicit_question],
         conditional_function: function(){
-          if( trial_index_pred2 == 34) { //Explicit question at the end of each prediction phase
+          if( trial_index_pred2 == 18) { //Explicit question at the end of each prediction phase
               return true;
           } else {
               return false;
@@ -774,23 +774,23 @@
     var if_explicit_question_pred3= {
         timeline: [explicit_question],
         conditional_function: function(){
-          if( trial_index_pred3 == 34) { //Explicit question at the end of each prediction phase
+          if( trial_index_pred3 == 18) { //Explicit question at the end of each prediction phase
               return true;
           } else {
               return false;
           }
         }
     }
-    var if_explicit_question_pred4= {
-        timeline: [explicit_question],
-        conditional_function: function(){
-          if( trial_index_pred4 == 34) { //Explicit question at the end of each prediction phase
-              return true;
-          } else {
-              return false;
-          }
-        }
-    }
+    // var if_explicit_question_pred4= {
+    //     timeline: [explicit_question],
+    //     conditional_function: function(){
+    //       if( trial_index_pred4 == 34) { //Explicit question at the end of each prediction phase
+    //           return true;
+    //       } else {
+    //           return false;
+    //       }
+    //     }
+    // }
 // --------------------------------- BLOCK PROCEDURES  ---------------------------//
 var test_procedure_training_dec = {
   timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
