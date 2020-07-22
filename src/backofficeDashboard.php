@@ -52,7 +52,10 @@ Legende :
 ?>
 
 
-<div id="visualization"></div>
+<div id="visualization">
+<div class='addMultipleSession'><button id='addAllTaskSession' class='addSession' taskID='' onClick='showAddSession();' title='Ajouter une session pour toutes les tâches'><i taskID='' class='material-icons'>playlist_add</i></button>
+    </div>
+    </div>
 <script>
 
 Date.prototype.getFullDate = function()
@@ -94,6 +97,7 @@ $lastTaskID = "";
 $idGroup = -1;
 $idItem = -1;
 $dataTaskTable="";
+$taskIDlist = array(); //used to generate addSessions form
 foreach($taskSessions as $key=>$taskSession)
 {
     if($taskSession["task_taskID"] != $lastTaskID)
@@ -104,6 +108,7 @@ foreach($taskSessions as $key=>$taskSession)
             //close previous group
         }
         $lastTaskID = $taskSession["task_taskID"];
+        $taskIDlist[] = $lastTaskID;
         $dataTaskTableName = getDataTaskTableName($dataTaskTables, $lastTaskID);
         //new group
         $idGroup += 1;
@@ -122,7 +127,7 @@ foreach($taskSessions as $key=>$taskSession)
             $content .= "<button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>";
 
         //add session button
-        $content .= "<button class=\\'addSession\\' taskID=\\'".$taskSession["task_taskID"]."\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'".$taskSession["task_taskID"]."\\'>add</i></button>";
+        $content .= "<button class=\\'addSession\\' taskID=\\'[\"".$taskSession["task_taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$taskSession["task_taskID"]."\"]\\'>add</i></button>";
         $content .= "</div>',\n";
         /*** group content end***/
         echo "content: ".$content;
@@ -202,6 +207,14 @@ var options = {
 // create a Timeline
 var container = document.getElementById('visualization');
 timeline = new vis.Timeline(container, items, groups, options);
+
+//update add all task session button
+var strAllTasks = '<?php 
+foreach($taskIDlist as $key => $taskIDlistElem)
+    echo '"'.$taskIDlistElem.'"'.((array_key_last($taskIDlist)!=$key)?',':'');
+?>';
+document.getElementById("addAllTaskSession").setAttribute("taskID", '['+strAllTasks+']');
+document.getElementById("addAllTaskSession").querySelector("i").setAttribute("taskID", '['+strAllTasks+']');
 
 function showDownloadTaskData(e)
 {
@@ -406,8 +419,11 @@ function showAddSession(e)
     noteDiv.style.left = (x + 20) + "px";
     noteDiv.style.top = (y) + "px";
 
-    document.getElementById("addSessionTitle").innerText = e.target.getAttribute("taskID");
-    document.getElementById("addSessionTaskID").value = e.target.getAttribute("taskID");
+    var taskIDarray = JSON.parse(e.target.getAttribute("taskID"));
+    var addSessionTaskCheckboxList = document.querySelectorAll('input.addSessionTaskCheckbox');
+    addSessionTaskCheckboxList.forEach(function(addSessionTaskCheckbox){
+        addSessionTaskCheckbox.checked = taskIDarray.includes(addSessionTaskCheckbox.value);
+    })
 
     dateNow = new Date()
 
@@ -472,12 +488,28 @@ function submitAddSessionForm()
     xhr.open("POST", "backofficeEditSession.php", true);
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     var params = "editType=" + document.getElementById("addType").value;
-    params += "&taskID=" + document.getElementById("addSessionTaskID").value;
+
+    //taskID Selection and generate sessions names
+    NotEmptyFlag = false;
+    var addSessionTaskCheckboxList = document.querySelectorAll('input.addSessionTaskCheckbox');
+    addSessionTaskCheckboxList.forEach(function(addSessionTaskCheckbox){
+        if(addSessionTaskCheckbox.checked)
+        {
+            NotEmptyFlag = true;
+            params += "&taskID[]=" + addSessionTaskCheckbox.value;
+            params += "&sessionName["+addSessionTaskCheckbox.value+"]=" + addSessionTaskCheckbox.value + "_" + document.getElementById("addSessionNameSuffix").value;
+        }
+    })
+    if(!NotEmptyFlag)
+    {
+        window.alert("Erreur : " + "Aucune tâche sélectionnée");
+        return;
+    }
+
     params += "&editOpeningDate=" + document.getElementById("addOpeningDate").value;
     params += "&editOpeningHour=" + document.getElementById("addOpeningHour").value;
     params += "&editClosingDate=" + document.getElementById("addClosingDate").value;
     params += "&editClosingHour=" + document.getElementById("addClosingHour").value;
-    params += "&sessionName=" + document.getElementById("addSessionName").value;
 
     xhr.onload = function() {
         var reponse = "";
@@ -561,11 +593,16 @@ function HideAddSession()
     </div>
     <br clear="all">
     <div id='addSessionContent'>
-    <p>Ajouter un session de la tâche <span id='addSessionTitle'></span></p>
+    <p>Ajouter une session pour les tâches cochées</p>
         <form method='post' action='' onsubmit='submitAddSessionForm()'>
             <input id='addType' type='hidden' name='editType' value='addSession'>
-            <input id='addSessionTaskID' type='hidden' name='taskID' value=''>
-            Nom de la nouvelle session : <input id='addSessionName' name='sessionName' value=''>
+            <?php
+            foreach($taskIDlist as $taskIDelem)
+            {
+                echo "<label><input class='addSessionTaskCheckbox' type='checkbox' name='".$taskIDelem."' value='".$taskIDelem."'>".$taskIDelem."</label><br>\n";
+            }
+            ?>
+            Suffixe des nom de sessions : <input id='addSessionNameSuffix' name='sessionNameSuffix' value=''>
             <p>
             Date d'ouverture :
             <input id='addOpeningDate' type='date' name='addOpeningDate' onchange='updateAddMinOpeningHour()' required>
