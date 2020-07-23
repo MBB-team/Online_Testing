@@ -22,6 +22,7 @@ $taskSessions = getAllTaskSessions();
 $dataTaskTables = getDataTaskTables();
 $doneRuns = getRunCountByTaskSessions(true);
 $onlyStartedRuns = getRunCountByTaskSessions(false);
+$tasks = getAllTask();
 
 /***************************/
 /* Display legends + Usage */
@@ -98,36 +99,38 @@ $idGroup = -1;
 $idItem = -1;
 $dataTaskTable="";
 $taskIDlist = array(); //used to generate addSessions form
-foreach($taskSessions as $key=>$taskSession)
+
+//groups
+foreach($tasks as $key=>$task)
 {
-    if($taskSession["task_taskID"] != $lastTaskID)
+    if($task["taskID"] != $lastTaskID)
     {
 
         if($lastTaskID != "")
         {
             //close previous group
         }
-        $lastTaskID = $taskSession["task_taskID"];
-        $taskIDlist[] = $lastTaskID;
-        $dataTaskTableName = getDataTaskTableName($dataTaskTables, $lastTaskID);
         //new group
         $idGroup += 1;
+        $lastTaskID = $task["taskID"];
+        $taskIDlist[$idGroup] = $lastTaskID;
+        $dataTaskTableName = getDataTaskTableName($dataTaskTables, $lastTaskID);
         echo "groups.add({
             id: ".$idGroup.",\n";
         
         /*** group content ***/
         $content = "'<div class=\\'groupTask\\'>";
         //display taskID
-        $content .= $taskSession["task_taskID"]."<br>";
+        $content .= $task["taskID"]."<br>";
 
         //download button
         if(!empty($dataTaskTableName))
-            $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
+            $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
         else
             $content .= "<button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>";
 
         //add session button
-        $content .= "<button class=\\'addSession\\' taskID=\\'[\"".$taskSession["task_taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$taskSession["task_taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$taskSession["task_taskID"]."\"]\\'>add</i></button>";
+        $content .= "<button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
         $content .= "</div>',\n";
         /*** group content end***/
         echo "content: ".$content;
@@ -135,7 +138,11 @@ foreach($taskSessions as $key=>$taskSession)
         echo "order: ".$idGroup."
         });\n";
     }
+}
 
+//items
+foreach($taskSessions as $key=>$taskSession)
+{
     // get status of taskSession
     $openingTime = strtotime($taskSession["openingTime"]);
     $closingTime = strtotime($taskSession["closingTime"]);
@@ -155,6 +162,10 @@ foreach($taskSessions as $key=>$taskSession)
     }
 
     $idItem += 1;
+
+    //find group in dashboard for this session
+    $idGroup = array_search($taskSession['task_taskID'], $taskIDlist);
+
     echo "items.add({
         id: ".$idItem.",
         group: ". $idGroup .",

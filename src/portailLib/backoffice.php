@@ -272,6 +272,31 @@ function getAllTaskSessions($taskID="")
     }
 }
 
+// return task(s) info
+function getAllTask()
+{
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        // Get task session
+        $sql = "SELECT * from task";
+
+        $taskStmt = $conn->prepare($sql);
+
+        $taskStmt->execute();
+
+        $taskFetch = $taskStmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $taskFetch;
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+}
+
 //return true if $tableName is found in the array returned by getAllTables() or getAllTaskSessions()
 function isTableInArray($tableName, $tableArray)
 {
@@ -449,7 +474,7 @@ function getParticipantList()
     catch(PDOException $e)
     {
         print "Erreur !:" . $e->getMessage() . "<br/>";
-        return null;
+        throw $e;
     }
     $conn = null;
 }
@@ -461,8 +486,7 @@ function setParticipantStatus($participantID, $newStatus)
 {
     //check participant ID
     $participantList = getParticipantList();
-    if($participantList == null)
-        return "Erreur SQL";
+
     if(empty($participantList))
         return "Identifiant non trouvé.";
 
@@ -505,8 +529,6 @@ function addParticipant($participantID)
 {
     //check participant ID
     $participantList = getParticipantList();
-    if($participantList == null)
-        return "Erreur SQL";
 
     $flagfound = false;
     foreach($participantList as $participant)
