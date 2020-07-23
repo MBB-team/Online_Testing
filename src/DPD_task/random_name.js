@@ -9,6 +9,6 @@ function random_name(){
             'Charlotte', 'Ad\350le', 'Sofia', 'Margaux', 'Margot', 'Olivia', 'Cl\351mence', 'Victoria',
              'Clara', 'Anna', 'Andr\351a', 'H\351l\351na', 'Apolline', 'Constance', 'Capucine', 'Ana\357s']; // 34 females
 
- new_names = jsPsych.randomization.sampleWithoutReplacement(name_list, 4);
+ new_names = jsPsych.randomization.sampleWithoutReplacement(name_list, 3);
  return new_names
 } // end function

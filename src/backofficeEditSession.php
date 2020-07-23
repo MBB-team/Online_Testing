@@ -64,6 +64,14 @@ function doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClos
     if($newClosingTime < $now) //new past closing date
         return "Les nouvelles dates doivent être dans le futur";
 
+    //check overlap
+    if( isNewSessionOverlap($sessionInfo["task_taskID"],
+                            $editOpeningDate." ".$editOpeningHour,
+                            $editClosingDate." ".$editClosingHour,
+                            getAllTaskSessions($sessionInfo["task_taskID"]),
+                            $sessionInfo["sessionName"] ) )
+        return "Une session existe déjà pour cette tâche à cette période";
+
     //Update closingTime
     if(!(updateSessionClosingTime($sessionID, $editClosingDate." ".$editClosingHour)))
         return "erreur SQL";
@@ -80,16 +88,48 @@ function doEditSession($sessionID, $editOpeningDate, $editOpeningHour, $editClos
     return "";
 }
 
-//todo: $taskID might be an array to add session for multiple task with same parameters
-// $sessionName must match
+// $taskID : array to add session for multiple task with same parameters
+// $sessionName["taskID"] must match
 function doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour, $editClosingDate, $editClosingHour)
 {
     if(empty($taskID) || empty($sessionName) || empty($editOpeningDate) || empty($editOpeningHour) || empty($editClosingDate) || empty($editClosingHour))
         return "Paramètres manquants";
     
-    $taskInfo = getDataTaskTables($taskID);
-    if(empty($taskInfo))
-        return "taskID inconnu";
+    $tasksInfo = getDataTaskTables();
+    $errorMessage = "";
+    //check taskID exist in data base then check if sessionName is supplied
+    foreach($taskID as $taskIDelem)
+    {
+        $foundFlag = false;
+        foreach($tasksInfo as $taskInfo)
+        {
+            if(strtoupper($taskInfo["taskID"])==strtoupper($taskIDelem))
+            {
+                $foundFlag = true;
+            }
+        }
+        
+        if($foundFlag == false)
+        {
+            $errorMessage .= $taskIDelem . " : Tâche inconnue.\\n";
+            continue;
+        }
+
+        if(!array_key_exists($taskIDelem, $sessionName))
+        {
+            $errorMessage .= $taskIDelem . " : Pas de nom de session.\\n";
+            continue;
+        }
+
+        if(empty($sessionName[$taskIDelem]))
+        {
+            $errorMessage .= $taskIDelem . " : Nom de session vide.\\n";
+            continue;
+        }
+    }
+
+    if(!empty($errorMessage))
+        return $errorMessage .= "Aucune session n'a été ajoutée.";
         
     $newOpeningTime = strtotime($editOpeningDate." ".$editOpeningHour);
     $newClosingTime = strtotime($editClosingDate." ".$editClosingHour);
@@ -105,11 +145,84 @@ function doAddSession($taskID, $sessionName, $editOpeningDate, $editOpeningHour,
     if($newOpeningTime < $now)
         return "Les dates doivent être dans le futur";
 
-    //todo: more checking (overlaping session)
+    $existingSessions = getAllTaskSessions();
+    
+    $errorMessage = "";
+    //check session name
+    foreach($taskID as $taskIDelem)
+    {
+        if( isSessionNameExist($sessionName[$taskIDelem], $existingSessions))
+            $errorMessage .= $taskIDelem . " : Une session " . $sessionName[$taskIDelem] . " existe déjà.\\n";
+    }
 
-    addSession($taskID, $sessionName, $editOpeningDate." ".$editOpeningHour, $editClosingDate." ".$editClosingHour);
+    if(!empty($errorMessage))
+        return $errorMessage .= "Aucune session n'a été ajoutée.";
+
+    $errorMessage = "";
+    //check overlap
+    foreach($taskID as $taskIDelem)
+    {
+        if( isNewSessionOverlap($taskIDelem,
+                                $editOpeningDate." ".$editOpeningHour,
+                                $editClosingDate." ".$editClosingHour,
+                                $existingSessions ) )
+            $errorMessage .= $taskIDelem . " : Une session existe déjà pour cette période.\\n";
+    }
+
+    if(!empty($errorMessage))
+        return $errorMessage .= "Aucune session n'a été ajoutée.";
+
+    foreach($taskID as $taskIDelem)
+    {
+        addSession($taskIDelem, $sessionName[$taskIDelem], $editOpeningDate." ".$editOpeningHour, $editClosingDate." ".$editClosingHour);
+    }
 
     return "";
+}
+
+//return true if session Name already exist
+//$sessionName : name of session to check
+//$sessionsInDatabase : all sessions in database (use getAllTaskSessions() )
+function isSessionNameExist($sessionName, $sessionsInDatabase)
+{
+    foreach($sessionsInDatabase as $sessionInDatabase)
+    {
+        if(strtoupper($sessionName) == strtoupper($sessionInDatabase["sessionName"]))
+            return true;
+    }
+    return false;
+}
+
+//return true if session overlap an existing session of same task
+//$taskID : check for this task 
+//$openingTimeStr, $closingTime : period to test. Format "AAAA-MM-DD HH:MM:SS" (seconds can be omited)
+//$sessionsInDatabase : all sessions in database (use getAllTaskSessions() )
+//$excludeSessionName : exclude this session Name (used to check overlap on other session but itself when editing existing session)
+function isNewSessionOverlap($taskID, $openingTimeStr, $closingTimeStr, $sessionsInDatabase, $excludeSessionName = "")
+{
+    $openingTime = strtotime($openingTimeStr);
+    $closingTime = strtotime($closingTimeStr);
+    foreach($sessionsInDatabase as $sessionInDatabase)
+    {
+        if(strtoupper($taskID) != strtoupper($sessionInDatabase["task_taskID"])) //not same task
+            continue;
+
+        if( (!empty($excludeSessionName)) && (strtoupper($excludeSessionName) == strtoupper($sessionInDatabase["sessionName"])) ) //don't check to self
+        {
+            continue;
+        }
+
+        $refOpeningTime = strtotime($sessionInDatabase["openingTime"]);
+        $refClosingTime = strtotime($sessionInDatabase["closingTime"]);
+        if(     ($refOpeningTime <= $openingTime && $openingTime <= $refClosingTime) || //opening time is in an existing session
+                ($refOpeningTime <= $closingTime && $closingTime <= $refClosingTime) || //closing time is in an existing session
+                ($openingTime <= $refOpeningTime && $refOpeningTime <= $closingTime) || //existing session opening time is in tested session period
+                ($openingTime <= $refClosingTime && $refClosingTime <= $closingTime) ) //existing session closing time is in tested session period
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 function test_input($data) {
@@ -118,9 +231,23 @@ function test_input($data) {
     if(!array_key_exists($data, $_POST))
     { return "";}
 
-    $returnData = trim($_POST["$data"]);
-    $returnData = stripslashes($returnData);
-    $returnData = htmlspecialchars($returnData);
+    $returnData = "";
+    if(is_array($_POST["$data"]))
+    {
+        $returnData = array();
+        foreach($_POST["$data"] as $key => $val)
+        {
+            $returnData[$key] = trim($val);
+            $returnData[$key] = stripslashes($returnData[$key]);
+            $returnData[$key] = htmlspecialchars($returnData[$key]);
+        }
+    }
+    else
+    {
+        $returnData = trim($_POST["$data"]);
+        $returnData = stripslashes($returnData);
+        $returnData = htmlspecialchars($returnData);
+    }
     return $returnData;
   }
 ?>

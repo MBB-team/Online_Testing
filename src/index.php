@@ -151,11 +151,15 @@ Après avoir lancé le navigateur compatible de votre choix, copiez l'adresse <s
     }
 
 ?>
+
+<?php /* ?>
 <div id='recruitment'>
 <p>Nous recrutons de nouveaux participants. <br>
 Pour vous inscrire remplissez le formulaire suivant : <br>
 <a href="https://frama.link/cogmood">https://frama.link/cogmood</a></p>
 </div>
+<?php // */ ?>
+
 <?php
 
 } // /not identified.

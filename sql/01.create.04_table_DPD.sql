@@ -40,8 +40,6 @@ CREATE TABLE `table_DPD` (
       `correct_Dummy1` int(3) DEFAULT NULL,
       `correct_Dummy2` int(3) DEFAULT NULL,
       `correct_Dummy3` int(3) DEFAULT NULL,
-      `correct_Dummy4` int(3) DEFAULT NULL,
-      `correct_ecosystem` int(3) DEFAULT NULL,
       `trial_type` text,
       `trial_index` int(25) DEFAULT NULL,
       `time_elapsed` int(25) DEFAULT NULL,

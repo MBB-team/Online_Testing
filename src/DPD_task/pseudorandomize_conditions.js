@@ -24,14 +24,14 @@ function pseudorandomize_conditions()
 
   var my_order_block_1 = [rand_trial_type_1[0],rand_trial_type_2[0], rand_trial_type_3[0],rand_trial_type_4[0], rand_trial_type_5[0], rand_trial_type_6[0], rand_trial_type_7[0], rand_trial_type_1[0]]
   var my_order_block_2 = [rand_trial_type_1[1],rand_trial_type_2[1], rand_trial_type_3[1],rand_trial_type_4[1], rand_trial_type_5[1], rand_trial_type_6[1], rand_trial_type_7[1], rand_trial_type_1[1]]
-  var my_order_block_3 = [rand_trial_type_1[2],rand_trial_type_2[2], rand_trial_type_3[2],rand_trial_type_4[2], rand_trial_type_5[2], rand_trial_type_6[2], rand_trial_type_7[2], rand_trial_type_1[2]]
-  var my_order_block_4 = [rand_trial_type_1[3],rand_trial_type_2[3], rand_trial_type_3[3],rand_trial_type_4[3], rand_trial_type_5[3], rand_trial_type_6[3], rand_trial_type_7[3], rand_trial_type_1[3]]
+  // var my_order_block_3 = [rand_trial_type_1[2],rand_trial_type_2[2], rand_trial_type_3[2],rand_trial_type_4[2], rand_trial_type_5[2], rand_trial_type_6[2], rand_trial_type_7[2], rand_trial_type_1[2]]
+  // var my_order_block_4 = [rand_trial_type_1[3],rand_trial_type_2[3], rand_trial_type_3[3],rand_trial_type_4[3], rand_trial_type_5[3], rand_trial_type_6[3], rand_trial_type_7[3], rand_trial_type_1[3]]
 
   var rand_trial_block_1 = jsPsych.randomization.repeat(my_order_block_1, 1)
   var rand_trial_block_2 = jsPsych.randomization.repeat(my_order_block_2, 1)
-  var rand_trial_block_3 = jsPsych.randomization.repeat(my_order_block_3, 1)
-  var rand_trial_block_4 = jsPsych.randomization.repeat(my_order_block_4, 1)
+  // var rand_trial_block_3 = jsPsych.randomization.repeat(my_order_block_3, 1)
+  // var rand_trial_block_4 = jsPsych.randomization.repeat(my_order_block_4, 1)
 
-  var my_order = rand_trial_block_1.concat(rand_trial_type_CT1[0], rand_trial_block_2, rand_trial_block_3, rand_trial_type_CT2[0], rand_trial_block_4);
+  var my_order = rand_trial_block_1.concat(rand_trial_type_CT1[0], rand_trial_block_2, rand_trial_type_CT2[0]);
   return my_order
 } // end function

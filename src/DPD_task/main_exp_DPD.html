@@ -2,31 +2,30 @@
       Experiment online using JavaScript and jsPsych Library
             - Author: Cynthia Cabañas (cynthia.cabanas@gmail.com)
             - Creation date: 24 April 2020
-            - Last update: 11 May 2020
-====================================================================================
+            - Last update: 21 July 2020
+-----------------------------------------------------------------------------------
             Data Output (as in MySQL)
+
                   - rt (double)
-                  - stimulus (text)
-                  - response (int(3))
-                  - dummy_number (int(3))
-                  - start_point (int(3))
-                  - test_frame (text)
-                  - frame (int(3))
-                  - prob_win (int(3))
-                  - correct_Dummy1 (int(3))
-                  - correct_Dummy2 (int(3))
-                  - correct_Dummy3 (int(3))
-                  - correct_Dummy4 (int(3))
-                  - correct_ecosystem (int(3))
-                  - trial_type (text)
-                  - trial_index (int(25))
-                  - time_elapsed  (int(25))
-                  - internal_node_id (text)
-                  - test_part (text)
-                  - decision_phase (int(3))
-                  - correct (int(3))
-                  - (run_id (int(7)), directly get this value in write_data using PHP session)
-                  - date (text)
+              		- stimulus (int(3))
+              		- response (int(3))
+              		- dummy_number (int(3))
+              		- start_point (int(3))
+              		- test_frame (varchar(25))
+              		- frame (int(3))
+              		- prob_win (int(3))
+              		- correct_Dummy1 (int(3))
+              		- correct_Dummy2 (int(3))
+              		- correct_Dummy3 (int(3))
+              		//- correct_Dummy4 (int(3))
+              		//- correct_ecosystem (int(3))
+              		- trial_type (varchar(25))
+              		- trial_index (int(25))
+              		- time_elapsed  (int(25))
+              		- internal_node_id (varchar(25))
+              		- test_part (varchar(25))
+              		- decision_phase (int(3))
+              		- correct (int(3))
 
 -->
 <!DOCTYPE html>
@@ -34,13 +33,12 @@
   <head>
     <title> DPD task </title>
     <meta charset="utf-8"/>
-    <script  src = "jspsych-6.1.0/jspsych.js"></script>
-    <script  src = "jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
-    <script  src = "jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
-    <script  src = "jspsych-6.1.0/plugins_CC/html+image-button-response-CC.js"></script>
-    <script  src = "jspsych-6.1.0/plugins_CC/control-html+image-button-response-CC.js"></script>
-    <script  src = "jspsych-6.1.0/plugins_CC/fullscreen-CC.js"></script>
-    <script  src = "jspsych-6.1.0/plugins_CC/jspsych-instructions.js"></script>
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-html-slider-response.js"></script>
+    <script src="jspsych-6.1.0/plugins_CC/html+image-button-response-CC.js"></script>
+    <script src="jspsych-6.1.0/plugins_CC/fullscreen-CC.js"></script>
+    <script src="jspsych-6.1.0/plugins_CC/jspsych-instructions.js"></script>
     <script  src = "getBrowserInfo.js"></script>
     <script  src = "mat_conditions.js"></script>
     <script  src = "pseudorandomize_conditions.js"></script>
@@ -53,15 +51,16 @@
 </body>
   <script type="application/javascript">
 
-  // --------------------------------- PARAMETERS --------------------------------//
+// --------------------------------- PARAMETERS --------------------------------//
 
   var setSize           = 15; // 15
   var imageDuration     = 70; // in ms
   var fixation_time     = 1000;
 
-  var nbInstr           = 9; // how many Instr Slides (12)
+  var nbInstr           = 11; // how many Instr Slides
   var nbScreens         = 6;
-  var nbControlInstr    = 5;
+  //var nbControlInstr    = 5;
+  //var debug             = false; // if true, skips details, instructions and practice
 
   // --------------------------------- INITIALISATION  ---------------------------//
 
@@ -93,8 +92,8 @@
                     correct_Dummy1: 999,
                     correct_Dummy2: 999,
                     correct_Dummy3: 999,
-                    correct_Dummy4: 999,
-                    correct_ecosystem: 999
+                    //correct_Dummy4: 999,
+                    //correct_ecosystem: 999
                   },
                   on_finish: function(data){//adds a "correct" property to data
                   data.test_part = 'firstFullscreen';
@@ -105,7 +104,7 @@
 
             var fullscreenExp = {
                   type: 'fullscreen',
-                  message: "<p> Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
+                  message: "<p>Vous devez \352tre en mode plein \351cran pour continuer lexp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
                   fullscreen_mode: false,
                   data: {
                     test_frame: "999",
@@ -114,8 +113,8 @@
                     correct_Dummy1: 999,
                     correct_Dummy2: 999,
                     correct_Dummy3: 999,
-                    correct_Dummy4: 999,
-                    correct_ecosystem: 999,
+                    //correct_Dummy4: 999,
+                    //correct_ecosystem: 999,
                   },
                   on_finish: function(data){//adds a "correct" property to data
                   data.test_part = 'fullscreenExp';
@@ -140,14 +139,26 @@
               screensImg[t-1] = 'stimuli/instructions/screensDPD/screensDPD-'+t+'.png'; // pre-load all instructions
               screensImg_html[t-1] = '<img src="'+screensImg[t-1]+'"id= "image-instructions" style="height:'+screen.height/1.25+'px"></img>';
              };
-             // Control Instructions (Training, Decision and prediction screens and debriefing)
-             var control_instrImg = [];
-             var control_instrImg_html = [];
-             for (var t=1; t <= nbControlInstr; t++){
-               control_instrImg[t-1] = 'stimuli/instructions/control-instructionsDPD/control-instructionsDPD-'+t+'.png'; // pre-load all instructions
-               control_instrImg_html[t-1] = '<img src="'+control_instrImg[t-1]+'"id= "image-control-instructions" style="height:'+screen.height/1.25+'px"></img>';
-              };
+             // // Control Instructions (Training, Decision and prediction screens and debriefing)
+             // var control_instrImg = [];
+             // var control_instrImg_html = [];
+             // for (var t=1; t <= nbControlInstr; t++){
+             //   control_instrImg[t-1] = 'stimuli/instructions/control-instructionsDPD/control-instructionsDPD-'+t+'.png'; // pre-load all instructions
+             //   control_instrImg_html[t-1] = '<img src="'+control_instrImg[t-1]+'"id= "image-control-instructions" style="height:'+screen.height/1.25+'px"></img>';
+             //  };
 
+// --------------------------------- BEGINING EXPERIMENT  --------------------//
+
+          var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
+          //console.log("The subject ID is "+subject_id)
+          // if(debug == false){
+          //   // var firstInstr    = instr([0,1,7,8,2,9]);
+          //   // var training      = rsvp(nbBlocksPrac, nbTrialsPrac, 1);
+          //   // for(var i = 0; i < practice.length; i++){
+          //   //       exp_timeline.push(practice[i]);
+          //   //};
+          //
+          // } // end debug
 
 // --------------------------- TEST TRIALS - PLUGINS  ------------------------//
     var test_stimuli = mat_conditions()
@@ -167,8 +178,8 @@
           correct_Dummy1: 999,
           correct_Dummy2: 999,
           correct_Dummy3: 999,
-          correct_Dummy4: 999,
-          correct_ecosystem: 999,
+          //correct_Dummy4: 999,
+          //correct_ecosystem: 999,
         },
         on_finish: function(data){//adds a "correct" property to data
         data.test_part = 'first_instructions';
@@ -186,8 +197,8 @@
             correct_Dummy1: 999,
             correct_Dummy2: 999,
             correct_Dummy3: 999,
-            correct_Dummy4: 999,
-            correct_ecosystem: 999,
+            //correct_Dummy4: 999,
+            //correct_ecosystem: 999,
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'training_dec_screen';
@@ -205,8 +216,8 @@
             correct_Dummy1: 999,
             correct_Dummy2: 999,
             correct_Dummy3: 999,
-            correct_Dummy4: 999,
-            correct_ecosystem: 999,
+            //correct_Dummy4: 999,
+            //correct_ecosystem: 999,
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'training_pred_screen';
@@ -224,8 +235,8 @@
             correct_Dummy1: 999,
             correct_Dummy2: 999,
             correct_Dummy3: 999,
-            correct_Dummy4: 999,
-            correct_ecosystem: 999,
+            //correct_Dummy4: 999,
+            //correct_ecosystem: 999,
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'end_training_screen';
@@ -243,8 +254,8 @@
             correct_Dummy1: 999,
             correct_Dummy2: 999,
             correct_Dummy3: 999,
-            correct_Dummy4: 999,
-            correct_ecosystem: 999,
+            //correct_Dummy4: 999,
+            //correct_ecosystem: 999,
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'decision_screen';
@@ -262,8 +273,8 @@
             correct_Dummy1: 999,
             correct_Dummy2: 999,
             correct_Dummy3: 999,
-            correct_Dummy4: 999,
-            correct_ecosystem: 999,
+            //correct_Dummy4: 999,
+            //correct_ecosystem: 999,
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'prediction_screen';
@@ -281,8 +292,8 @@
             correct_Dummy1: 999,
             correct_Dummy2: 999,
             correct_Dummy3: 999,
-            correct_Dummy4: 999,
-            correct_ecosystem: 999,
+            //correct_Dummy4: 999,
+            //correct_ecosystem: 999,
           },
           on_finish: function(data){//adds a "correct" property to data
           data.test_part = 'debrief_message';
@@ -290,25 +301,25 @@
           data.correct = 999
          }
        };
-        var control_instructions = {
-            type: 'instructions',
-            pages:control_instrImg_html,
-            data: {
-              test_frame: "999",
-              frame: 999,
-              prob_win: 999,
-              correct_Dummy1: 999,
-              correct_Dummy2: 999,
-              correct_Dummy3: 999,
-              correct_Dummy4: 999,
-              correct_ecosystem: 999,
-            },
-            on_finish: function(data){//adds a "correct" property to data
-            data.test_part = 'control_instructions';
-            data.decision_phase = 999;
-            data.correct = 999
-           }
-         };
+        // var control_instructions = {
+        //     type: 'instructions',
+        //     pages:control_instrImg_html,
+        //     data: {
+        //       test_frame: "999",
+        //       frame: 999,
+        //       prob_win: 999,
+        //       correct_Dummy1: 999,
+        //       correct_Dummy2: 999,
+        //       correct_Dummy3: 999,
+        //       correct_Dummy4: 999,
+        //       //correct_ecosystem: 999,
+        //     },
+        //     on_finish: function(data){//adds a "correct" property to data
+        //     data.test_part = 'control_instructions';
+        //     data.decision_phase = 999;
+        //     data.correct = 999
+        //    }
+        //  };
 
     var fixation = {
       type: 'html-keyboard-response',
@@ -322,8 +333,8 @@
         correct_Dummy1: 999,
         correct_Dummy2: 999,
         correct_Dummy3: 999,
-        correct_Dummy4: 999,
-        correct_ecosystem: 999,
+        //correct_Dummy4: 999,
+        //correct_ecosystem: 999,
       },
       on_finish: function(data){//adds a "correct" property to data
       data.test_part = 'fixation';
@@ -344,7 +355,8 @@
         data: jsPsych.timelineVariable('data'),
         on_finish: function(data){//adds a "correct" property to data
         trial_index_dec += 1
-        if( trial_index_dec == 37 || trial_index_dec == 71 || trial_index_pred2 == 105 || trial_index_pred2 == 139 || trial_index_pred2 == 173)
+        //if( trial_index_dec == 37 || trial_index_dec == 71 || trial_index_pred2 == 105 || trial_index_pred2 == 139 || trial_index_pred2 == 173)
+        if( trial_index_dec == 21 || trial_index_dec == 39 || trial_index_pred2 == 57 || trial_index_pred2 == 75 || trial_index_pred2 == 93)
         {counter_dec_phase += 1;}
         data.test_part = 'decision';
         data.decision_phase = counter_dec_phase;
@@ -364,7 +376,7 @@
         on_finish: function(data){//adds a "correct" property to data
         data.test_part = 'prediction_training';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy1;
+        data.correct = (data.response+1 == data.correct_Dummy1)?1:0;
        }
      }
       var trial_index_pred1 = 0;
@@ -380,7 +392,7 @@
         trial_index_pred1 += 1
         data.test_part = 'prediction_1';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy1;
+        data.correct = (data.response+1 == data.correct_Dummy1)?1:0;
         }
       }
 
@@ -397,7 +409,7 @@
         trial_index_pred2 += 1
         data.test_part = 'prediction_2';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy2;
+        data.correct = (data.response+1 == data.correct_Dummy2)?1:0;
        }
      }
 
@@ -414,42 +426,42 @@
         trial_index_pred3 += 1
         data.test_part = 'prediction_3';
         data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy3;
+        data.correct = (data.response+1 == data.correct_Dummy3)?1:0;
        }
      }
 
-      var trial_index_pred4 = 0;
-      var test_prediction_4 = {
-        type: "html+image-button-response",
-        dummy: 4,
-        prompt:'<div>'+list_random_names[3]+' reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
-        stimulus: jsPsych.timelineVariable('stimulus'),
-        choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
-        probabilities: jsPsych.timelineVariable('probabilities'),
-        data: jsPsych.timelineVariable('data'),
-        on_finish: function(data){//adds a "correct" property to data
-        trial_index_pred4 += 1
-        data.test_part = 'prediction_4';
-        data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_Dummy4;
-       }
-     }
+     //  var trial_index_pred4 = 0;
+     //  var test_prediction_4 = {
+     //    type: "html+image-button-response",
+     //    dummy: 4,
+     //    prompt:'<div>'+list_random_names[3]+' reçoit une somme initiale de 50 euros virtuels. Quelle option va-t-il/elle choisir?</div>',
+     //    stimulus: jsPsych.timelineVariable('stimulus'),
+     //    choices: ['Elle/Il choisira cette option!', 'Elle/Il choisira cette option!'],
+     //    probabilities: jsPsych.timelineVariable('probabilities'),
+     //    data: jsPsych.timelineVariable('data'),
+     //    on_finish: function(data){//adds a "correct" property to data
+     //    trial_index_pred4 += 1
+     //    data.test_part = 'prediction_4';
+     //    data.decision_phase = 999;
+     //    data.correct = (data.response+1 == data.correct_Dummy4)?1:0;
+     //   }
+     // }
 
-      var trial_index_control = 0;
-      var test_control = {
-        type: "control-html+image-button-response",
-        prompt:'<div> Les deux \351cosyst\350mes commencent avec 80 plantes. Dans un an,</div>'+'<div>lequel de ces deux \351cosyst\350mes aura le plus grand nombre de plantes?</div>',
-        stimulus_1: jsPsych.timelineVariable('plantes'),
-        choices: ['Ecosyst\350me 1', 'Ecosyst\350me 2'],
-        probabilities: jsPsych.timelineVariable('probabilities'),
-        data: jsPsych.timelineVariable('data'),
-        on_finish: function(data){//adds a "correct" property to data
-        trial_index_control+= 1
-        data.test_part = 'control';
-        data.decision_phase = 999;
-        data.correct = data.response+1 == data.correct_ecosystem;
-       }
-    }
+    //   var trial_index_control = 0;
+    //   var test_control = {
+    //     type: "control-html+image-button-response",
+    //     prompt:'<div> Les deux \351cosyst\350mes commencent avec 80 plantes. Dans un an,</div>'+'<div>lequel de ces deux \351cosyst\350mes aura le plus grand nombre de plantes?</div>',
+    //     stimulus_1: jsPsych.timelineVariable('plantes'),
+    //     choices: ['Ecosyst\350me 1', 'Ecosyst\350me 2'],
+    //     probabilities: jsPsych.timelineVariable('probabilities'),
+    //     data: jsPsych.timelineVariable('data'),
+    //     on_finish: function(data){//adds a "correct" property to data
+    //     trial_index_control+= 1
+    //     data.test_part = 'control';
+    //     data.decision_phase = 999;
+    //     data.correct = (data.response+1 == data.correct_ecosystem)?1:0;
+    //    }
+    // }
 
       var feedback_CR = {
       type: 'html-keyboard-response',
@@ -502,56 +514,57 @@
    }
   }
 
-  var feedback_CR_control = {
-  type: 'html-keyboard-response',
-  choices: jsPsych.NO_KEYS,
-  trial_duration: 1500,
-  stimulus: function(){
-    var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
-    if(last_trial_correct){
-      var correct = "<p> Bien jou\351! Cette ann\351e, cet \351cosyst\350me a plus de plantes!</p>"
-      var color_correct = correct.fontcolor("green");
-      color_correct = color_correct.bold(); // makes text bold
-      return color_correct;
-    } else {
-      incorrect = "<p>D\351sol\351, cette ann\351e, c’est en fait l’autre \351cosyst\350me qui a plus de plantes.</p>"
-      var color_incorrect = incorrect.fontcolor("red");
-      color_incorrect = color_incorrect.bold(); // makes text bold
-      return color_incorrect;
-    }
-  },
-  data: jsPsych.timelineVariable('data'),
-  on_finish: function(data){//adds a "correct" property to data
-  data.test_part = 'feedback_CR_control';
-  data.decision_phase = 999;
-  data.correct = 999;
- }
-}
-var feedback_noCR_control = {
-type: 'html-keyboard-response',
-choices: jsPsych.NO_KEYS,
-trial_duration: 1500,
-stimulus: function(){
-  var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
-  if(last_trial_correct){
-    var correct = "<p> Bien jou\351! Cette ann\351e, cet \351cosyst\350me a plus de plantes!</p>"
-    var color_correct = correct.fontcolor("green");
-    color_correct = color_correct.bold(); // makes text bold
-    return color_correct;
-  } else {
-    incorrect = "<p>D\351sol\351, cette ann\351e, c’est en fait l’autre \351cosyst\350me qui a plus de plantes.</p>"
-    var color_incorrect = incorrect.fontcolor("red");
-    color_incorrect = color_incorrect.bold(); // makes text bold
-    return color_incorrect;
-  }
-},
-data: jsPsych.timelineVariable('data'),
-on_finish: function(data){//adds a "correct" property to data
-data.test_part = 'feedback_noCR_control';
-data.decision_phase = 999;
-data.correct = 999;
-}
-}
+//   var feedback_CR_control = {
+//   type: 'html-keyboard-response',
+//   choices: jsPsych.NO_KEYS,
+//   trial_duration: 1500,
+//   stimulus: function(){
+//     var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
+//     if(last_trial_correct){
+//       var correct = "<p> Bien jou\351! Cette ann\351e, cet \351cosyst\350me a plus de plantes!</p>"
+//       var color_correct = correct.fontcolor("green");
+//       color_correct = color_correct.bold(); // makes text bold
+//       return color_correct;
+//     } else {
+//       incorrect = "<p>D\351sol\351, cette ann\351e, c’est en fait l’autre \351cosyst\350me qui a plus de plantes.</p>"
+//       var color_incorrect = incorrect.fontcolor("red");
+//       color_incorrect = color_incorrect.bold(); // makes text bold
+//       return color_incorrect;
+//     }
+//   },
+//   data: jsPsych.timelineVariable('data'),
+//   on_finish: function(data){//adds a "correct" property to data
+//   data.test_part = 'feedback_CR_control';
+//   data.decision_phase = 999;
+//   data.correct = 999;
+//  }
+// }
+// var feedback_noCR_control = {
+// type: 'html-keyboard-response',
+// choices: jsPsych.NO_KEYS,
+// trial_duration: 1500,
+// stimulus: function(){
+//   var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+//   if(last_trial_correct){
+//     var correct = "<p> Bien jou\351! Cette ann\351e, cet \351cosyst\350me a plus de plantes!</p>"
+//     var color_correct = correct.fontcolor("green");
+//     color_correct = color_correct.bold(); // makes text bold
+//     return color_correct;
+//   } else {
+//     incorrect = "<p>D\351sol\351, cette ann\351e, c’est en fait l’autre \351cosyst\350me qui a plus de plantes.</p>"
+//     var color_incorrect = incorrect.fontcolor("red");
+//     color_incorrect = color_incorrect.bold(); // makes text bold
+//     return color_incorrect;
+//   }
+// },
+//
+// data: jsPsych.timelineVariable('data'),
+// on_finish: function(data){//adds a "correct" property to data
+// data.test_part = 'feedback_noCR_control';
+// data.decision_phase = 999;
+// data.correct = 999;
+// }
+// }
   var confidence_slider = {
     type: 'html-slider-response',
     stimulus: 'A quel point \352tes-vous confiant(e) en votre pr\351diction?',
@@ -585,7 +598,7 @@ data.correct = 999;
     var if_confidence_pred1= {
         timeline: [confidence_slider],
         conditional_function: function(){
-          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 ) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -596,7 +609,7 @@ data.correct = 999;
     var if_confidence_pred2= {
         timeline: [confidence_slider],
         conditional_function: function(){
-          if( trial_index_pred2 == 4 || trial_index_pred2 == 8 || trial_index_pred2 == 12 || trial_index_pred2 == 16 || trial_index_pred2 == 20 || trial_index_pred2 == 24 || trial_index_pred2 == 28|| trial_index_pred2 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred2 == 4 || trial_index_pred2 == 8 || trial_index_pred2 == 12 || trial_index_pred2 == 16 ) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -607,7 +620,7 @@ data.correct = 999;
     var if_confidence_pred3= {
         timeline: [confidence_slider],
         conditional_function: function(){
-          if( trial_index_pred3 == 4 || trial_index_pred3 == 8 || trial_index_pred3 == 12 || trial_index_pred3 == 16 || trial_index_pred3 == 20 || trial_index_pred3 == 24 || trial_index_pred3 == 28|| trial_index_pred3 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred3 == 4 || trial_index_pred3 == 8 || trial_index_pred3 == 12 || trial_index_pred3 == 16 ) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -618,28 +631,28 @@ data.correct = 999;
     var if_confidence_pred4= {
         timeline: [confidence_slider],
         conditional_function: function(){
-          if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 || trial_index_pred4 == 20 || trial_index_pred4 == 24 || trial_index_pred4 == 28|| trial_index_pred4 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 ) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
             }
         }
     }
-    var if_confidence_control= {
-        timeline: [confidence_slider],
-        conditional_function: function(){
-          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+    // var if_confidence_control= {
+    //     timeline: [confidence_slider],
+    //     conditional_function: function(){
+    //       if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // }
 
     var if_feedback_CR_pred1= {
         timeline: [feedback_CR],
         conditional_function: function(){
-          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 ) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -649,7 +662,7 @@ data.correct = 999;
     var if_feedback_noCR_pred1= {
         timeline: [feedback_noCR],
         conditional_function: function(){
-          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 || trial_index_pred1 == 20 || trial_index_pred1 == 24 || trial_index_pred1 == 28|| trial_index_pred1 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred1 == 4 || trial_index_pred1 == 8 || trial_index_pred1 == 12 || trial_index_pred1 == 16 ) { //Confidence ratings every 4 trials
                 return false;
             } else {
                 return true;
@@ -659,7 +672,7 @@ data.correct = 999;
     var if_feedback_CR_pred2= {
         timeline: [feedback_CR],
         conditional_function: function(){
-          if( trial_index_pred2 == 4 || trial_index_pred2 == 8 || trial_index_pred2 == 12 || trial_index_pred2 == 16 || trial_index_pred2 == 20 || trial_index_pred2 == 24 || trial_index_pred2 == 28|| trial_index_pred2 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred2 == 4 || trial_index_pred2 == 8 || trial_index_pred2 == 12 || trial_index_pred2 == 16 ) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -669,7 +682,7 @@ data.correct = 999;
     var if_feedback_noCR_pred2= {
         timeline: [feedback_noCR],
         conditional_function: function(){
-          if( trial_index_pred2 == 4 || trial_index_pred2 == 8 || trial_index_pred2 == 12 || trial_index_pred2 == 16 || trial_index_pred2 == 20 || trial_index_pred2 == 24 || trial_index_pred2 == 28|| trial_index_pred2 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred2 == 4 || trial_index_pred2 == 8 || trial_index_pred2 == 12 || trial_index_pred2 == 16) { //Confidence ratings every 4 trials
                 return false;
             } else {
                 return true;
@@ -679,7 +692,7 @@ data.correct = 999;
     var if_feedback_CR_pred3= {
         timeline: [feedback_CR],
         conditional_function: function(){
-          if( trial_index_pred3 == 4 || trial_index_pred3 == 8 || trial_index_pred3 == 12 || trial_index_pred3 == 16 || trial_index_pred3 == 20 || trial_index_pred3 == 24 || trial_index_pred3 == 28|| trial_index_pred3 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred3 == 4 || trial_index_pred3 == 8 || trial_index_pred3 == 12 || trial_index_pred3 == 16) { //Confidence ratings every 4 trials
                 return true;
             } else {
                 return false;
@@ -689,58 +702,58 @@ data.correct = 999;
     var if_feedback_noCR_pred3= {
         timeline: [feedback_noCR],
         conditional_function: function(){
-          if( trial_index_pred3 == 4 || trial_index_pred3 == 8 || trial_index_pred3 == 12 || trial_index_pred3 == 16 || trial_index_pred3 == 20 || trial_index_pred3 == 24 || trial_index_pred3 == 28|| trial_index_pred3 == 32) { //Confidence ratings every 4 trials
+          if( trial_index_pred3 == 4 || trial_index_pred3 == 8 || trial_index_pred3 == 12 || trial_index_pred3 == 16) { //Confidence ratings every 4 trials
                 return false;
             } else {
                 return true;
             }
         }
     }
-    var if_feedback_CR_pred4= {
-        timeline: [feedback_CR],
-        conditional_function: function(){
-          if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 || trial_index_pred4 == 20 || trial_index_pred4 == 24 || trial_index_pred4 == 28|| trial_index_pred4 == 32) { //Confidence ratings every 4 trials
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-    var if_feedback_noCR_pred4= {
-        timeline: [feedback_noCR],
-        conditional_function: function(){
-          if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 || trial_index_pred4 == 20 || trial_index_pred4 == 24 || trial_index_pred4 == 28|| trial_index_pred4 == 32) { //Confidence ratings every 4 trials
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-    var if_feedback_CR_control= {
-        timeline: [feedback_CR_control],
-        conditional_function: function(){
-          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-    var if_feedback_noCR_control= {
-        timeline: [feedback_noCR_control],
-        conditional_function: function(){
-          if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
+    // var if_feedback_CR_pred4= {
+    //     timeline: [feedback_CR],
+    //     conditional_function: function(){
+    //       if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 || trial_index_pred4 == 20 || trial_index_pred4 == 24 || trial_index_pred4 == 28|| trial_index_pred4 == 32) { //Confidence ratings every 4 trials
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // }
+    // var if_feedback_noCR_pred4= {
+    //     timeline: [feedback_noCR],
+    //     conditional_function: function(){
+    //       if( trial_index_pred4 == 4 || trial_index_pred4 == 8 || trial_index_pred4 == 12 || trial_index_pred4 == 16 || trial_index_pred4 == 20 || trial_index_pred4 == 24 || trial_index_pred4 == 28|| trial_index_pred4 == 32) { //Confidence ratings every 4 trials
+    //             return false;
+    //         } else {
+    //             return true;
+    //         }
+    //     }
+    // }
+    // var if_feedback_CR_control= {
+    //     timeline: [feedback_CR_control],
+    //     conditional_function: function(){
+    //       if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     }
+    // }
+    // var if_feedback_noCR_control= {
+    //     timeline: [feedback_noCR_control],
+    //     conditional_function: function(){
+    //       if( trial_index_control == 4 || trial_index_control == 8 || trial_index_control == 12 || trial_index_control == 16 || trial_index_control == 20 || trial_index_control == 24 || trial_index_control == 28|| trial_index_control == 32) { //Confidence ratings every 4 trials
+    //             return false;
+    //         } else {
+    //             return true;
+    //         }
+    //     }
+    // }
 
     var if_explicit_question_pred1= {
         timeline: [explicit_question],
         conditional_function: function(){
-          if( trial_index_pred1 == 34) { //Explicit question at the end of each prediction phase
+          if( trial_index_pred1 == 18) { //Explicit question at the end of each prediction phase
               return true;
           } else {
               return false;
@@ -750,7 +763,7 @@ data.correct = 999;
     var if_explicit_question_pred2= {
         timeline: [explicit_question],
         conditional_function: function(){
-          if( trial_index_pred2 == 34) { //Explicit question at the end of each prediction phase
+          if( trial_index_pred2 == 18) { //Explicit question at the end of each prediction phase
               return true;
           } else {
               return false;
@@ -760,23 +773,23 @@ data.correct = 999;
     var if_explicit_question_pred3= {
         timeline: [explicit_question],
         conditional_function: function(){
-          if( trial_index_pred3 == 34) { //Explicit question at the end of each prediction phase
+          if( trial_index_pred3 == 18) { //Explicit question at the end of each prediction phase
               return true;
           } else {
               return false;
           }
         }
     }
-    var if_explicit_question_pred4= {
-        timeline: [explicit_question],
-        conditional_function: function(){
-          if( trial_index_pred4 == 34) { //Explicit question at the end of each prediction phase
-              return true;
-          } else {
-              return false;
-          }
-        }
-    }
+    // var if_explicit_question_pred4= {
+    //     timeline: [explicit_question],
+    //     conditional_function: function(){
+    //       if( trial_index_pred4 == 34) { //Explicit question at the end of each prediction phase
+    //           return true;
+    //       } else {
+    //           return false;
+    //       }
+    //     }
+    // }
 // --------------------------------- BLOCK PROCEDURES  ---------------------------//
 var test_procedure_training_dec = {
   timeline: [fixation, test_decision],  // 32 trials (+2 catch trials)
@@ -810,7 +823,6 @@ var test_procedure_training_pred = {
       fn: function my_order(t){
         //var myorder = [1,2,3]
         var myorder = pseudorandomize_conditions ()
-        //console.log(myorder)
           return myorder;
         }
       }
@@ -823,7 +835,6 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          //console.log(myorder)
             return myorder;
           }
         }
@@ -837,7 +848,6 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          //console.log(myorder)
             return myorder;
           }
         }
@@ -850,39 +860,38 @@ var test_procedure_training_pred = {
         fn: function my_order(t){
           //var myorder = [1,2,3]
           var myorder = pseudorandomize_conditions ()
-          //console.log(myorder)
             return myorder;
           }
         }
       }
-    var test_procedure_prediction_4 = {
-      timeline: [fixation, test_prediction_4, if_confidence_pred4, if_feedback_CR_pred4, if_feedback_noCR_pred4, if_explicit_question_pred4],
-      timeline_variables: test_stimuli,
-      sample: {
-        type: 'custom',
-        fn: function my_order(t){
-          //var myorder = [1,2,3]
-          var myorder = pseudorandomize_conditions ()
-          //console.log(myorder)
-            return myorder;
-          }
-        }
-      }
-      var test_procedure_control = {
-        timeline: [fixation, test_control, if_confidence_control, if_feedback_CR_control, if_feedback_noCR_control],
-        timeline_variables: test_stimuli,
-        sample: {
-          type: 'custom',
-          fn: function my_order(t){
-            var myorder = pseudorandomize_conditions ()
-            //console.log(myorder)
-              return myorder;
-            }
-          }
-        }
+    // var test_procedure_prediction_4 = {
+    //   timeline: [fixation, test_prediction_4, if_confidence_pred4, if_feedback_CR_pred4, if_feedback_noCR_pred4, if_explicit_question_pred4],
+    //   timeline_variables: test_stimuli,
+    //   sample: {
+    //     type: 'custom',
+    //     fn: function my_order(t){
+    //       //var myorder = [1,2,3]
+    //       var myorder = pseudorandomize_conditions ()
+    //       console.log(myorder)
+    //         return myorder;
+    //       }
+    //     }
+    //   }
+      // var test_procedure_control = {
+        // timeline: [fixation, test_control, if_confidence_control, if_feedback_CR_control, if_feedback_noCR_control],
+        // timeline_variables: test_stimuli,
+        // sample: {
+        //   type: 'custom',
+        //   fn: function my_order(t){
+        //     var myorder = pseudorandomize_conditions ()
+        //     console.log(myorder)
+        //       return myorder;
+        //     }
+        //   }
+        // }
 
 
-    var prediction_phase = [test_procedure_prediction_1, test_procedure_prediction_2, test_procedure_prediction_3, test_procedure_prediction_4];
+    var prediction_phase = [test_procedure_prediction_1, test_procedure_prediction_2, test_procedure_prediction_3];
      shuffled_prediction_phase = jsPsych.randomization.repeat(prediction_phase, 1);
 
 
@@ -896,89 +905,89 @@ var test_procedure_training_pred = {
      timeline.push(test_procedure_training_pred);
      timeline.push(end_training_screen);
      timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 1 (1/9 total phases)
+     timeline.push(test_procedure_decision); //Decision 1 (1/7 total phases)
      timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/9 total phases)
+     timeline.push(shuffled_prediction_phase[0]); //Prediction 1 (2/7 total phases)
      timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 2 (3/9 total phases)
+     timeline.push(test_procedure_decision); //Decision 2 (3/7 total phases)
      timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/9 total phases)
+     timeline.push(shuffled_prediction_phase[1]); //Prediction 2 (4/7 total phases)
      timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 3 (5/9 total phases)
+     timeline.push(test_procedure_decision); //Decision 3 (5/7 total phases)
      timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/9 total phases)
+     timeline.push(shuffled_prediction_phase[2]); //Prediction 3 (6/7 total phases)
      timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 4 (7/9 total phases)
-     timeline.push(prediction_screen);
-     timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
-     timeline.push(decision_screen);
-     timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
-     timeline.push(control_instructions);
-     timeline.push(test_procedure_control); //Control task
+     timeline.push(test_procedure_decision); //Decision 4 (7/7 total phases)
+     // timeline.push(prediction_screen);
+     // timeline.push(shuffled_prediction_phase[3]); //Prediction 4 (8/9 total phases)
+     // timeline.push(decision_screen);
+     // timeline.push(test_procedure_decision); //Decision 5 (9/9 total phases)
+     //timeline.push(control_instructions);
+     //timeline.push(test_procedure_control); //Control task
      timeline.push(debrief_message);
 
-// --------------------------------- SAVING DATA  ----------------------------//
-     function saveData() {
-           var xhr = new XMLHttpRequest();
-           xhr.open('POST', 'write_data_DPD.php'); // change it to point to php script.
-           xhr.setRequestHeader('Content-Type', 'application/json');
-           xhr.onload = function() {
-                 if(xhr.status == 200){
-                       console.log(xhr);
-                       var response = JSON.parse(xhr.responseText);
-                       console.log(response);
-                 } if(response.success){ console.log("Data saved");
-           } else {console.log("Data not saved");}
-            };
-           xhr.send(jsPsych.data.getLastTrialData().json());
-      }
+     // --------------------------------- SAVING DATA  ----------------------------//
+          function saveData() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'write_data_DPD.php'); // change it to point to php script.
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                      if(xhr.status == 200){
+                            console.log(xhr);
+                            var response = JSON.parse(xhr.responseText);
+                            console.log(response);
+                      } if(response.success){ console.log("Data saved");
+                } else {console.log("Data not saved");}
+                 };
+                xhr.send(jsPsych.data.getLastTrialData().json());
+           }
 
-// --------------------------------- BEGINING EXPERIMENT  --------------------//
+     // --------------------------------- BEGINING EXPERIMENT  --------------------//
 
-     var today    = new Date();
-     var date     = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+          var today    = new Date();
+          var date     = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
-     // Execute the experiment
-     jsPsych.init({
-       timeline: timeline,
-       show_progress_bar: true,
-       on_trial_finish: function() {
-             jsPsych.data.addProperties({date: date});
-             saveData(); // edit out if not on server
-       },
-       on_finish: function() {
-             endTask();
-             //jsPsych.data.displayData();// Disable once online, use to look at data while coding
-             //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>')
-         }
-       });
+          // Execute the experiment
+          jsPsych.init({
+            timeline: timeline,
+            show_progress_bar: true,
+            on_trial_finish: function() {
+                  jsPsych.data.addProperties({date: date});
+                  saveData(); // edit out if not on server
+            },
+            on_finish: function() {
+                  endTask();
+                  //jsPsych.data.displayData();// Disable once online, use to look at data while coding
+                  //document.write('<p><br></br><br></br><center> Merci pour votre participation! <br></br></center><p>')
+              }
+            });
 
-       function endTask() {
-             var xhr = new XMLHttpRequest();
-             xhr.open('POST', 'endTask.php');
-             xhr.onload = function() {
-                   var reponse = "";
-                   if(xhr.status == 200){
-                        var response = JSON.parse(xhr.responseText); // $.parseJSON
-                  }
-                  if(response.success){
-                        console.log("run updated");
-                        window.location.replace("/"); //redirect to home page
-                  }
-                  else{
-                        console.log("error on update run");
-                        console.log(xhr);
-                        console.log(response);
-                        //redirect to home page after 5 secs if error
-                        setTimeout(function () {
-                              window.location.replace("/");
-                        },
-                        5000);
-                  }
-            };
-            xhr.send();
-      }
+            function endTask() {
+                  var xhr = new XMLHttpRequest();
+                  xhr.open('POST', 'endTask.php');
+                  xhr.onload = function() {
+                        var reponse = "";
+                        if(xhr.status == 200){
+                             var response = JSON.parse(xhr.responseText); // $.parseJSON
+                       }
+                       if(response.success){
+                             console.log("run updated");
+                             window.location.replace("/"); //redirect to home page
+                       }
+                       else{
+                             console.log("error on update run");
+                             console.log(xhr);
+                             console.log(response);
+                             //redirect to home page after 5 secs if error
+                             setTimeout(function () {
+                                   window.location.replace("/");
+                             },
+                             5000);
+                       }
+                 };
+                 xhr.send();
+           }
 
-} // end of browser checking
-</script>
-</html>
+     } // end of browser checking
+     </script>
+     </html>
