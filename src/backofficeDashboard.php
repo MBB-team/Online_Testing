@@ -166,6 +166,8 @@ foreach($taskSessions as $key=>$taskSession)
     //find group in dashboard for this session
     $idGroup = array_search($taskSession['task_taskID'], $taskIDlist);
 
+    $dataTaskTableName = getDataTaskTableName($dataTaskTables, $taskSession['task_taskID']);
+
     echo "items.add({
         id: ".$idItem.",
         group: ". $idGroup .",
