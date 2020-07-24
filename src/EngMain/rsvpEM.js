@@ -588,7 +588,7 @@ function rsvpEM(nbTrials){
 
   var finish = {
     type: 'html-button-response-WH-EM',
-    stimulus: '<p>Le test d&#39engagement est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
+    stimulus: '<p>Le test de charge mentale est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
     choices: ['Fin'],
     data: {
       trialNb: 999,
