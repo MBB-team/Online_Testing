@@ -7,3 +7,4 @@
 
 <p>En cas de difficult&eacute;s, vous pouvez nous contacter &agrave; <em><a href="mailto:cogmood@icm-institute.org" target="_blank" rel="noopener">cogmood@icm-institute.org</a></em></p>
 <p>Merci de votre participation !</p>
+<p>L'&eacute;quipe PRISME/COGMOOD</p>
