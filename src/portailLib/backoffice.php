@@ -110,43 +110,53 @@ function exportCSV($sql, $csvFilename="export")
 
     try {
 
-        // connect to database
-        $conn = backofficeOpenDataBase();
+        // connect to database without buffer
+        $conn = backofficeOpenDataBase(false);
 
         $exportStmt = $conn->prepare($sql);
 
+        //error_log("beforeSQL:". memory_get_usage());
         $exportStmt->execute();
+        //error_log("AfterSQL :". memory_get_usage());
         if(!$exportStmt->execute())
         { //fail
             return 'Something went wrong. Check table name.';
         }
 
-        $exportSQL = $exportStmt->fetchAll();
-
-        if(count($exportSQL)<=0)
-        { //no data
-            return 'Empty result';
-        }
-
-        $csvExport = "";
-        
-        //csv header
         $columns = array();
-        foreach($exportSQL[0] as $columnName=>$val)
+
+        $rowCount = 0;
+        $rowFlushlimit = 10000;
+        $rowFlushed = 0;
+        while($exportLine = $exportStmt->fetch(PDO::FETCH_ASSOC))
         {
-            //skip numeric alias of columns name
-            if(is_numeric($columnName))
+            $rowCount++;
+            if($rowCount<=1)
             {
-                continue;
+                //first row
+
+                //output html header
+                header("Content-type: text/x-csv");
+                header("Content-Disposition: attachment; filename=\"".$csvFilename.".csv\"");
+
+                //retrive columns names
+                $csvExport = "";
+                foreach($exportLine as $columnName=>$val)
+                {
+                    //skip numeric alias of columns name
+                    if(is_numeric($columnName))
+                    {
+                        continue;
+                    }
+                    array_push($columns, $columnName);
+                    $csvExport.=$columnName.$separator;
+                }
+                //ouput table header
+                echo $csvExport."\n";
             }
-            array_push($columns, $columnName);
-            $csvExport.=$columnName.$separator;
-        }
-        $csvExport.="\n";
-        
-        //append all lines
-        foreach($exportSQL as $exportLine)
-        {
+
+            //retrive row fields
+            $csvExport = "";
             foreach($columns as $column)
             {
                 if(isset($exportLine[$column]))
@@ -155,12 +165,26 @@ function exportCSV($sql, $csvFilename="export")
                 }
                 $csvExport.=$separator;
             }
-            $csvExport.="\n";
+            //output row fields
+            echo $csvExport."\n";
+
+            //flush to progressively send data
+            if($rowFlushed+$rowFlushlimit < $rowCount)
+            {
+                $rowFlushed = $rowCount;
+                ob_flush();
+            }
+            
         }
 
-        header("Content-type: text/x-csv");
-        header("Content-Disposition: attachment; filename=\"".$csvFilename.".csv\"");
+        if($rowCount<1)
+        { //no data
+            return 'Empty result';
+        }
+
+        
         echo($csvExport);
+        //error_log("peak:". memory_get_peak_usage());
         exit();
 
     }
@@ -586,13 +610,17 @@ function backofficeMenu()
     return $menuString;
 }
 
-function backofficeOpenDataBase()
+//$enableBuffer = 1 : normal operation (for small answer)
+//$enableBuffer = 0 : disable buffer on php side (for big answer)
+function backofficeOpenDataBase($enableBuffer = true)
 {
     // this path should point to your configuration file.
     include('database_config_session.php');
     //connect and set charset to utf8
     $_conn = new PDO("mysql:host=$servername;port=$port;dbname=$dbname", $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
     $_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if(!$enableBuffer)
+        $_conn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false); //disable buffer
     return $_conn;
 }
 ?>
