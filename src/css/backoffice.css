@@ -115,3 +115,25 @@ div.legend, div.usage
     border-color:  lightgray;
     border-radius: 5px;
 }
+
+#diskUsage table
+{
+    border-collapse: collapse;
+}
+
+#diskUsage table td, #diskUsage table th {
+    border: 1px solid #aaa;
+    padding: 8px;
+  }
+
+#diskUsage table th
+{
+    background-color: #ddd;
+    text-align: left;
+    border-bottom-width: thick;
+}
+
+#diskUsage table tr:last-child td
+{
+    border-top-width: thick;
+}

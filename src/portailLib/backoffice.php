@@ -588,12 +588,36 @@ function addParticipant($participantID)
     }
 }
 
+//return SQL disk usage
+function getTablesdiskUsage()
+{
+    try {
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "SELECT TABLE_NAME AS table_name , (data_length + index_length) AS table_size FROM information_schema.TABLES WHERE table_schema = DATABASE()"; //
+        $getDiskUsageStmt = $conn->prepare($sql);
+
+        if( !($getDiskUsageStmt->execute()) )
+            return null;
+
+        return $getDiskUsageStmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        throw $e;
+    }
+    $conn = null;
+}
+
 //return html menu of all the backoffice page
 function backofficeMenu()
 {
     $backofficePages = Array(   '/backofficeExport.php' => "Exporter des données",
                                 '/backofficeDashboard.php' => "Tableau de bord",
                                 '/backofficeUserManagement.php' => "Gestion des participants",
+                                '/backofficeSystemInfo.php' => "Informations système",
                             );
     $menuString = "";
     foreach($backofficePages as $address => $title)
