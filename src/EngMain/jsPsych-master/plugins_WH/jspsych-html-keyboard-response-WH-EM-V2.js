@@ -82,20 +82,39 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         default: undefined,
         description: 'Indicates if this trial falls within the three trial response window and, if yes, the index of the target'
       },
-      optout_question: {
+      optout_question_index: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Optout Question Indexes',
         array: true,
         default: undefined,
         description: 'Index of explicit opt out question'
+      },
+      number_stim: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Number of Stimuli',
+        default: 232,
+        description: 'The number of stimuli in a trial'
       }
     }
   }
 
   plugin.trial = function(display_element, trial) {
 
-    var new_html = this.stimulus(trial.grid, trial.grid_square_size, trial.target, trial.stimulus);
+    var nbStim = 0;
+    display_stim(); // initial stim
+    var stim_interval = setInterval(display_stim, trial.trial_duration);
 
+    // display stimulus
+    function (){
+      if (nbImg == trial.number_stim){
+        clearInterval(stim_interval);
+        end_trial();
+      } else if (nbStim == trial.optout_question_index[0] || nbStim == trial.optout_question_index[1]){
+
+      } else {
+
+      }
+    }
     // add prompt
     if(trial.prompt !== null){
       new_html += trial.prompt;

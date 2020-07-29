@@ -1,6 +1,5 @@
 function rsvpEM(nbTrials){
 
-
   // INITIALISATION //
   var timelineTask = [];
   var trialCondition = jsPsych.randomization.shuffle([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31])
@@ -21,6 +20,10 @@ function rsvpEM(nbTrials){
   var number_FA;
   var target_trials_data;
   var correct_response_i;
+  var grid_square_size = 100;
+  var grid_layout = [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]]
+
+  var rsvpHTML = rsvpStimuli(grid_layout,grid_square_size);
 
   // START OF MAIN //
   for (var trial_i = 0; trial_i < nbTrials; trial_i++) {
@@ -32,7 +35,6 @@ function rsvpEM(nbTrials){
     stim_counter = 1;
     responded = false;
 
-    //    <p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>
     switch (reward) {
       case 2:
       reward_display = 2;
@@ -333,8 +335,6 @@ function rsvpEM(nbTrials){
           trial_duration: time.stim_dur,
           response_ends_trial: false,
           target: tar_side,
-          grid: [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]],
-          grid_square_size: 100,
           target_trial: target_trial,
           prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet exercice a&#768 n&#39importe quel moment <b>en appuyant la touche << Entre&#769e >> </b>!',
           responded: responded,
