@@ -183,7 +183,6 @@ function exportCSV($sql, $csvFilename="export")
         }
 
         
-        echo($csvExport);
         //error_log("peak:". memory_get_peak_usage());
         exit();
 
