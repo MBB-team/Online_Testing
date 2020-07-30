@@ -26,12 +26,11 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
 
       }
 
-        var stimulus_summary = {}; // stimulus parameters only to reduce saved size in database
+
         var stimulus = "<div id='jspsych-SE_WH-stimulus' style='margin:auto; display: table; table-layout: fixed; border-spacing:"+square_size/4+"px'>";
         for(var i=0; i<grid.length; i++){
           stimulus += "<div class='jspsych-SE_WH-stimulus-row' style='display:table-row;'>";
           for(var j=0; j<grid[i].length; j++){
-            stimulus_summary[i+'_'+j] = {};
             var classname = 'jspsych-SE_WH-stimulus-cell';
 
             if      (i == row_i[0] && j == col_i[0]){var img_present = 1}
@@ -41,7 +40,6 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
             stimulus += "<div class='"+classname+"' id='jspsych-SE_WH-stimulus-cell-"+i+"-"+j+"' "+
             "data-row="+i+" data-column="+j+" target = _"+img_present+" "+
             "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
-            stimulus_summary[i+'_'+j]['pres'] = img_present;
 
             if(grid[i][j] == 1){
               stimulus += "border: 2px solid black;'"
@@ -54,12 +52,11 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
             // first image location
             if(i == row_i[0] && j == col_i[0]){
               stimulus += '<img src="'+numbersImg[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';
-              stimulus_summary[i+'_'+j]['nb'] = pair_i + 1;
             }
+
             // second image location
             if(i == row_i[1] && j == col_i[1]){
               stimulus += '<img src="'+numbersImg[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';
-              stimulus_summary[i+'_'+j]['nb'] = pair_i + 1;
             }
 
             stimulus += "</div>";
@@ -69,9 +66,7 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
         }
         stimulus += "</div>";
 
-        flip_stimuli[grid_counter]={};
-        flip_stimuli[grid_counter]['stimulus'] = stimulus;
-        flip_stimuli[grid_counter]['stimulus_summary'] = stimulus_summary;
+        flip_stimuli[grid_counter] = stimulus;
         grid_counter++;
 
       } // each pair on grid
