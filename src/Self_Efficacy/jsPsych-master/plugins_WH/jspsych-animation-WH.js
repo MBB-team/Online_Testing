@@ -191,7 +191,7 @@ jsPsych.plugins["animation-WH"] = (function() {
       // gather trial data
       var trial_data = {
         "rt":               999,   // integer
-        "stimulus":         JSON.stringify(animation_sequence),  // string
+        "stimulus":         "", //JSON.stringify(animation_sequence),  // string
         "button_pressed":   999,   // integer
         "flips":            999,   // integer
         "conf_response":    999,   // integer
