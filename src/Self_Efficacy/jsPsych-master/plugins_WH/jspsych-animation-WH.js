@@ -93,7 +93,6 @@ jsPsych.plugins["animation-WH"] = (function() {
     var reps = 0;
     var startTime = performance.now();
     var animation_sequence = [];
-    var animation_sequence_summary = []; // stimulus parameters only to reduce saved size in database
     var responses = [];
     var current_stim = "";
 
@@ -117,7 +116,7 @@ jsPsych.plugins["animation-WH"] = (function() {
 
     function show_next_frame() {
       // show image
-      display_element.innerHTML = trial.stimuli[animate_frame]['stimulus'];
+      display_element.innerHTML = trial.stimuli[animate_frame];
 
       // if feedback trial, highlight correct responses
       if (trial.feedback){
@@ -136,18 +135,13 @@ jsPsych.plugins["animation-WH"] = (function() {
         square_target.style.outline = "5px solid yellow";
       }
 
-      current_stim = trial.stimuli[animate_frame]['stimulus'];
+      current_stim = trial.stimuli[animate_frame];
 
-      var now = performance.now(); //only one call to use the same time for two arrays
       // record when image was shown
       animation_sequence.push({
-        "stimulus": trial.stimuli[animate_frame]['stimulus'],
-        "time": now - startTime
+        "stimulus": trial.stimuli[animate_frame],
+        "time": performance.now() - startTime
       });
-      animation_sequence_summary.push({
-        "stimulus": trial.stimuli[animate_frame]['stimulus_summary'],
-        "time": now - startTime
-      })
 
       if (trial.prompt !== null) {
         display_element.innerHTML += trial.prompt;
@@ -157,16 +151,11 @@ jsPsych.plugins["animation-WH"] = (function() {
         jsPsych.pluginAPI.setTimeout(function() {
           display_element.querySelector('#jspsych-animation-image').style.visibility = 'hidden';
           current_stim = 'blank';
-          var now = performance.now(); //only one call to use the same time for two arrays
           // record when blank image was shown
           animation_sequence.push({
             "stimulus": 'blank',
-            "time": now - startTime
+            "time": performance.now() - startTime
           });
-          animation_sequence_summary.push({
-            "stimulus": trial.stimuli[animate_frame]['stimulus_summary'],
-            "time": now - startTime
-          })
         }, trial.frame_time);
       }
     }
@@ -202,7 +191,7 @@ jsPsych.plugins["animation-WH"] = (function() {
       // gather trial data
       var trial_data = {
         "rt":               999,   // integer
-        "stimulus":         JSON.stringify(animation_sequence_summary),  // string
+        "stimulus":         JSON.stringify(animation_sequence),  // string
         "button_pressed":   999,   // integer
         "flips":            999,   // integer
         "conf_response":    999,   // integer
@@ -219,6 +208,7 @@ jsPsych.plugins["animation-WH"] = (function() {
         "correct_col":      999,   // integer
         "correct":          null   // BOOL
       };
+
       jsPsych.finishTrial(trial_data);
     }
   };
