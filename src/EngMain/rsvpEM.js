@@ -20,10 +20,6 @@ function rsvpEM(nbTrials){
   var number_FA;
   var target_trials_data;
   var correct_response_i;
-  var grid_square_size = 100;
-  var grid_layout = [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]]
-
-  var rsvpHTML = rsvpStimuli(grid_layout,grid_square_size);
 
   // START OF MAIN //
   for (var trial_i = 0; trial_i < nbTrials; trial_i++) {
