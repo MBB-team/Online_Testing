@@ -328,6 +328,8 @@ function rsvpEM(nbTrials){
           type: 'html-keyboard-response-WH-EM',
           stimulus: [tar_str[stim_i], swi_str[stim_i], distr_str[0][stim_i], distr_str[1][stim_i], distr_str[2][stim_i], distr_str[3][stim_i], distr_str[4][stim_i], distr_str[5][stim_i], distr_str[6][stim_i]],
           choices: [32, 13],
+          grid: [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]],
+          grid_square_size: 100,
           trial_duration: time.stim_dur,
           response_ends_trial: false,
           target: tar_side,
