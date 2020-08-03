@@ -17,6 +17,7 @@
         <script   src = "jsPsych-master/plugins_JS/jspsych-survey-multi-select.js"></script>
         <script   src = "getBrowserInfo.js"></script> <!-- add the external functions-->
         <script   src = "quest.js"></script>
+        <script   src = "dataSaver.js"></script>
     </head>
     <body>
           <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
@@ -26,6 +27,7 @@
 
 
 // --------------------------------- INITIALISATION  ---------------------------//
+      dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_quest.php');
 
     // Checks if the browser is Chrome or Firefox (best compatibility)
     var browserInfo = getBrowserInfo(); // Call the function that I specified in the head
@@ -62,7 +64,8 @@
 
 // --------------------------------- Save DATA --------------------------------- //
           function saveData() {
-                var xhr = new XMLHttpRequest();
+                dataSaver.save(jsPsych.data.getLastTrialData().json());
+/*                var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'write_data_quest.php');
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.onload = function() {
@@ -74,6 +77,7 @@
                      console.log("Data not saved");}
                   };
                   xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
+*/
             }
 
  // --------------------------------- BEGINING EXPERIMENT  ----------------------//
@@ -106,6 +110,12 @@
             });
 
             function endTask() {
+                  //first send buffered data
+                  while(dataSaver.sendAll()>0)
+                  {
+                        console.log('Datas left to send : ' + dataSaver.bufferLength());
+                  }
+                  
                   var xhr = new XMLHttpRequest();
                   xhr.open('POST', 'endTask.php');
                   xhr.onload = function() {
@@ -126,7 +136,7 @@
                               }, 5000);
                         }
                   };
-                  xhr.send();
+                  //xhr.send();
             }
     }
 </script>

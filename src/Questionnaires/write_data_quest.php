@@ -8,7 +8,14 @@ include('database_config_quest.php');
 
 // Nothing needs to be changed after this:
 
-$data_array = json_decode(file_get_contents('php://input'), true);
+$data_all = json_decode(file_get_contents('php://input'), true);
+
+$result = array(); // will return if insert were succeded (1) or failed (0) for each indexes
+foreach($data_all as $key => $data_array)
+{
+  $result[$key] = 0; //temporary mark as failed
+}
+$result['message']="";
 
 try {
   $conn = sessionOpenDataBase();
@@ -23,34 +30,46 @@ try {
   // Second stage is to create prepared SQL statement using the column
   // names as a guide to what values might be in the JSON.
 
-  // If a value is missing from a particular trial, then NULL is inserted
-  $sql = "INSERT INTO $table VALUES(";
-  for($i = 0; $i < count($col_names); $i++){
-    $name = $col_names[$i];
-    $sql .= ":$name";
-    if($i != count($col_names)-1){
-      $sql .= ", ";
-    }
-  }
-  $sql .= ");";
-  $insertstmt = $conn->prepare($sql);
-  for($i=0; $i < count($data_array); $i++){
-    for($j = 0; $j < count($col_names); $j++){
-      $colname = $col_names[$j];
-      if( ($colname == "run_id") && isPreparedTask()){
-        $insertstmt->bindValue(":$colname", getRunID() );
-      }
-      else if(!isset($data_array[$i][$colname])){
-        $insertstmt->bindValue(":$colname", null, PDO::PARAM_NULL);
-      } else {
-        $insertstmt->bindValue(":$colname", $data_array[$i][$colname]);
+  foreach($data_all as $key => $data_json)
+  {
+    $data_array = json_decode($data_json, true);
+    // If a value is missing from a particular trial, then NULL is inserted
+    $sql = "INSERT INTO $table VALUES(";
+    for($i = 0; $i < count($col_names); $i++){
+      $name = $col_names[$i];
+      $sql .= ":$name";
+      if($i != count($col_names)-1){
+        $sql .= ", ";
       }
     }
-    $insertstmt->execute();
+    $sql .= ");";
+    $insertstmt = $conn->prepare($sql);
+    for($i=0; $i < count($data_array); $i++){
+      for($j = 0; $j < count($col_names); $j++){
+        $colname = $col_names[$j];
+        if( ($colname == "run_id") && isPreparedTask()){
+          $insertstmt->bindValue(":$colname", getRunID() );
+        }
+        else if(!isset($data_array[$i][$colname])){
+          $insertstmt->bindValue(":$colname", null, PDO::PARAM_NULL);
+        } else {
+          $insertstmt->bindValue(":$colname", $data_array[$i][$colname]);
+        }
+      }
+      if($insertstmt->execute())
+      {
+        $result[$key] = 1; //mark as succeded
+      }
+    }
+    
   }
-  echo '{"success": true}';
-} catch(PDOException $e) {
-  echo '{"success": false, "message": ' . '"'. $e->getMessage() . '"}';
+  echo json_encode($result);
+  
+}
+catch(PDOException $e)
+{
+  $result['message'] = $e->getMessage();
+  echo json_encode($result);
 }
 $conn = null;
 ?>
