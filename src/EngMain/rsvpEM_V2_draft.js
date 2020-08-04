@@ -35,6 +35,8 @@ function rsvpEM(nbTrials){
     stim_counter = 1;
     responded = false;
 
+    var rsvpEMstring = rsvpEMstrings(target_indexes_main[trialCondition], exp.nbTar, exp.nbStim);
+
     switch (reward) {
       case 2:
       reward_display = 2;
