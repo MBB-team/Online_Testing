@@ -32,6 +32,12 @@ try {
 
   foreach($data_all as $key => $data_json)
   {
+    if( isIndexSaved($key) ) //already saved
+    {
+      $result[$key] = 2; //mark as already saved
+      continue;
+    }
+
     $data_array = json_decode($data_json, true);
     // If a value is missing from a particular trial, then NULL is inserted
     $sql = "INSERT INTO $table VALUES(";
@@ -58,6 +64,7 @@ try {
       }
       if($insertstmt->execute())
       {
+        logIndexSaved($key);
         $result[$key] = 1; //mark as succeded
       }
     }

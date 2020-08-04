@@ -40,20 +40,21 @@ function DataSaver(mode, url="")
         switch(mode)
         {
             case dataSaverModes.LOG :
-                console.log("dataSaver: Index:" + index + "\n" + data);
+                console.log("dataSaver: logMode: Index:" + index + "\n" + data);
                 //console log should not fail, remove from buffer
                 delete this.buffer[index];
                 break;
             case dataSaverModes.SERVER :
-                /*var indexes=[];
+                var indexes=[];
                 indexes.push(index);
-                this.send(indexes);*/
+                this.send(indexes);
                 break;
             default :
                 break;
         }
     }
 
+    /* for internal use */
     this.send = function(indexes, async = true)
     {
         if(indexes.length<=0)
@@ -90,19 +91,35 @@ function DataSaver(mode, url="")
             data[indexes[i]] = this.buffer[indexes[i]];
         }
         //console.log(JSON.stringify(data));
-        xhr.send(JSON.stringify(data)); // allows to save it every trial
-        
-        if(!async)
+
+        if(async)
         {
-            if(xhr.status == 200)
+            xhr.send(JSON.stringify(data));
+        }
+        else
+        {
+            try
             {
-                var response = JSON.parse(xhr.responseText);
-                //console.log(response);
-                this.onDataSaverResult(response);
+                xhr.send(JSON.stringify(data));
+            
+                if(xhr.status == 200)
+                {
+                    var response = JSON.parse(xhr.responseText);
+                    //console.log(response);
+                    this.onDataSaverResult(response);
+                }
+                else
+                {
+                    console.log('dataSaver: error: xhr.status='+xhr.status);
+                }
             }
-            else
+            catch (e)
             {
-                console.log('dataSaver: error: xhr.status='+xhr.status);
+                //only log on network error
+                if((e instanceof DOMException) && (e.code == DOMException.NETWORK_ERR))
+                    console.log(e);
+                else //rethrow other exception
+                    throw e;
             }
         }
     }
@@ -115,12 +132,15 @@ function DataSaver(mode, url="")
             if(key=='message')
                 continue;
 
-            if(value == 1)
+            if(value == 2)
+                console.log('dataSaver: Index ' + key + ' already saved');
+                
+            if(value >= 1)
                 delete this.buffer[key];
         }
         if(response['message']!='')
         {
-            console.log('dataSaver: error: '+response['message'])
+            console.log('dataSaver: Error: ' + response['message'])
         }
     }
 
@@ -144,5 +164,63 @@ function DataSaver(mode, url="")
             this.send(indexes, false);
 
         return this.bufferLength();
+    }
+
+    /* return true if succeded */
+    /* endTask is not sent if buffer is not empty */
+    this.sendEndTask = function()
+    {
+        if(this.bufferLength()>0)
+        {
+            console.log('dataSaver: Buffer is not empty. Not sending endTask.');
+            return false;
+        }
+
+        switch(mode)
+        {
+            case dataSaverModes.LOG :
+                console.log("dataSaver: logMode: endTask");
+                //console log should not fail
+                return true;
+                break;
+            case dataSaverModes.SERVER :
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'endTask.php', false); //synchronous mode
+                try
+                {
+                    xhr.send();
+                
+                    if(xhr.status == 200)
+                    {
+                        var response = JSON.parse(xhr.responseText);
+                        //console.log(response);
+                        if(response.success)
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        console.log('dataSaver: Error: xhr.status='+xhr.status);
+                        return false;
+                    }
+                }
+                catch (e)
+                {
+                    //only log on network error
+                    if((e instanceof DOMException) && (e.code == DOMException.NETWORK_ERR))
+                    {
+                        console.log(e);
+                        return false;
+                    }
+                    else //rethrow other exception
+                        throw e;
+                }
+                break;
+            default :
+                break;
+        }
+
+        
     }
 }

@@ -44,19 +44,19 @@ function identify($participantID)
             }
             else //inactive user
             {
-                unset($_SESSION['participantID']); //clear in session
+                unIdentify(); //clear in session
                 return "inactiveUser";
             }
         }
         else if(count($userInDatabaseFetch)==0)//not found
         {
-            unset($_SESSION['participantID']); //clear in session
+            unIdentify(); //clear in session
             logFailedAttemptIP(); //log failed attempt remote IP
             return "unknownUser";
         }
         else //unknown error
         {
-            unset($_SESSION['participantID']); //clear in session
+            unIdentify();
             return "unknownError";
         }
     }
@@ -95,6 +95,7 @@ function getParticipantID()
 function unIdentify()
 {
     unset($_SESSION['participantID']); //clear userid in session
+    clearRunSession();
 }
 
 //get list of current opened tasks. Append a boolean "done" attribut to each task (true if user had already done the task).
@@ -194,7 +195,7 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
                 $_SESSION["taskID"] = $taskID;
                 $_SESSION["taskSessionID"] = $availableTasks[0]["taskSessionID"];
                 $_SESSION["taskUrl"] = $availableTasks[0]["url"];
-
+                $_SESSION["indexesSaved"] = [];
                 return true;
         }
         else
@@ -275,6 +276,22 @@ function endTask()
     
 }
 
+//keep track of already saved data indexes to prevent save same data twice 
+function logIndexSaved($index)
+{
+    if(!isset($_SESSION["indexesSaved"]))
+        return;
+    array_push($_SESSION["indexesSaved"], $index);
+}
+
+//return true if $index is already saved
+function isIndexSaved($index)
+{
+    if(!isset($_SESSION["indexesSaved"]))
+        return false;
+    return in_array($index, $_SESSION["indexesSaved"]);
+}
+
 function clearRunSession()
 {
     //clear session variables
@@ -282,6 +299,7 @@ function clearRunSession()
     unset($_SESSION['taskID']);
     unset($_SESSION['taskSessionID']);
     unset($_SESSION["taskUrl"]);
+    unset($_SESSION["indexesSaved"]);
 }
 
 // bruteforce IP ban : log
