@@ -18,6 +18,7 @@
         <script   src = "getBrowserInfo.js"></script> <!-- add the external functions-->
         <script   src = "quest.js"></script>
         <script   src = "dataSaver.js"></script>
+        <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
     </head>
     <body>
           <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
@@ -104,14 +105,13 @@
                   },
                   on_finish: function() {
                         //jsPsych.data.displayData(); // Disable once online
-                        document.write(' <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>\
-                              <p><br></br><br></br><center>\
+                        document.body.innerHTML = '<p><br></br><br></br><center>\
                               Merci pour votre participation!<br>\
                               <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
                               <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
                               <span id="dataSendError"></span><br>\
                               <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
-                              </center><p>');
+                              </center><p>';
                         endTask();
                   },
             });
