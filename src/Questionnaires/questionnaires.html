@@ -157,6 +157,7 @@
                         errorMessage.innerHTML="Une erreur réseau est survenue pendant l'enregistrement des données. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
                         buttonRetry.style.visibility='visible';
                         sendAnimation.style.visibility = 'hidden';
+                        return;
                   }
                   
                   //send endTask
