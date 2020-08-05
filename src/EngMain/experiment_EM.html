@@ -351,6 +351,7 @@ Data Output (as in MySQL):
                     if(leftToSend == lastLeftToSend)
                     {
                           failedRetry += 1;
+                          errorMessage.innerHTML += ". ";
                           console.log('Failed to send datas. Retries : ' + failedRetry);
                     }
                     else

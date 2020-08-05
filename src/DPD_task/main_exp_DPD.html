@@ -988,6 +988,7 @@ var test_procedure_training_pred = {
                         if(leftToSend == lastLeftToSend)
                         {
                               failedRetry += 1;
+                              errorMessage.innerHTML += ". ";
                               console.log('Failed to send datas. Retries : ' + failedRetry);
                         }
                         else
