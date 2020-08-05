@@ -1,4 +1,6 @@
 
+// author : Gilles Rautureau
+
 const dataSaverModes =
 {
     UNKNOWN:    0,

@@ -17,7 +17,8 @@
         <script   src = "jsPsych-master/plugins_JS/jspsych-survey-multi-select.js"></script>
         <script   src = "getBrowserInfo.js"></script> <!-- add the external functions-->
         <script   src = "quest.js"></script>
-        <script   src = "dataSaver.js"></script>
+        <script   src = "/js/dataSaver.js"></script>
+        <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
     </head>
     <body>
           <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
@@ -65,19 +66,6 @@
 // --------------------------------- Save DATA --------------------------------- //
           function saveData() {
                 dataSaver.save(jsPsych.data.getLastTrialData().json());
-/*                var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'write_data_quest.php');
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onload = function() {
-                      if(xhr.status == 200){
-                           var response = JSON.parse(xhr.responseText);
-                     } if(response.success){
-                           console.log("Data saved");
-                     } else {
-                     console.log("Data not saved");}
-                  };
-                  xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
-*/
             }
 
  // --------------------------------- BEGINING EXPERIMENT  ----------------------//
@@ -104,14 +92,20 @@
                   },
                   on_finish: function() {
                         //jsPsych.data.displayData(); // Disable once online
-                        document.write(' <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>\
-                              <p><br></br><br></br><center>\
+                        document.body.innerHTML = '<p><br></br><br></br><center>\
                               Merci pour votre participation!<br>\
                               <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
                               <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
                               <span id="dataSendError"></span><br>\
                               <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
-                              </center><p>');
+                              </center><p>';
+                        //ensure exited fullscreen
+                        if (document.fullscreenElement)
+                        { 
+                              document.exitFullscreen()
+                              .then(() => console.log("Document Exited form Full screen mode"))
+                              .catch((err) => console.error(err))
+                        }
                         endTask();
                   },
             });
@@ -128,7 +122,7 @@
                   infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
                   sendAnimation.style.visibility = 'visible';
 
-                  //first send buffered data
+                  // step 1 : send buffered data
                   var failedRetry = 0;
                   var lastLeftToSend = dataSaver.bufferLength();
                   while(dataSaver.sendAll()>0)
@@ -137,6 +131,7 @@
                         if(leftToSend == lastLeftToSend)
                         {
                               failedRetry += 1;
+                              errorMessage.innerHTML += ". ";
                               console.log('Failed to send datas. Retries : ' + failedRetry);
                         }
                         else
@@ -157,9 +152,10 @@
                         errorMessage.innerHTML="Une erreur réseau est survenue pendant l'enregistrement des données. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
                         buttonRetry.style.visibility='visible';
                         sendAnimation.style.visibility = 'hidden';
+                        return; //don't try to send endTask
                   }
                   
-                  //send endTask
+                  // step 2 : send endTask
                   var endTaskSuccess = dataSaver.sendEndTask();
                   if(endTaskSuccess)
                   {
