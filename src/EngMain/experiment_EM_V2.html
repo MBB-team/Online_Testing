@@ -1,6 +1,7 @@
 <!-- Code for Engage/Maintain RSVP task online using Javascript and jsPsych library
 Author: William Hopper (williamjthopper@gmail.com)
-Created: 01/06/2020
+Created: 03/06/2020
+Version 2
 
 Data Output (as in MySQL):
 - rt (double)
@@ -38,7 +39,7 @@ Data Output (as in MySQL):
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
-  <script   src  = "jsPsych-master/plugins_WH_V2/fullscreen-WH-EM.js"></script> <!-- plugin that Juliana modified -->
+  <script   src  = "jsPsych-master/plugins_WH_V2/fullscreen-WH-EM-V2.js"></script> <!-- plugin that Juliana modified -->
   <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-instructions-WH-EM-V2.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-html-button-response-WH-EM-V2.js'></script>
   <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-html-keyboard-response-WH-EM-V2.js'></script>
@@ -46,6 +47,7 @@ Data Output (as in MySQL):
   <script   src  = 'rsvpEM_V2.js'></script>
   <script   src  = 'rsvpEM_train.js'></script>
   <script   src  = 'rsvpStimuli.js'></script>
+  <script   src  = 'fscreen.js'></script>
 
 
 </head>
@@ -67,7 +69,7 @@ Data Output (as in MySQL):
 
     // Configuration parameters of experiment
     const exp = {
-      nbTrials:        1,   // 32
+      nbTrials:        2,   // 32
       nbTrials_train:   4,   // 4
       nbStim:          29,   // 29
       nbTar:            4,   // 4
@@ -306,7 +308,7 @@ Data Output (as in MySQL):
               }
 
               // Generate trials
-              var task = rsvpEM(exp.nbTrials);
+              var task = rsvpEM_V2(exp.nbTrials);
               for (var task_i = 0; task_i < task.length; task_i++) {
                 exp_timeline.push(task[task_i]);
               };
@@ -320,7 +322,7 @@ Data Output (as in MySQL):
                       //console.log(exp_timeline)
                     },
                 on_finish: function(){
-                //  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                 jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                   endTask();
                 }

@@ -2,7 +2,7 @@ function rsvpEM_V2(nbTrials){
 
   // INITIALISATION //
   var timelineTask = [];
-  var trialCondition = jsPsych.randomization.shuffle([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31])
+  var trialCondition = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];// jsPsych.randomization.shuffle([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31])
   var trial_counter = -1;
   var optout = !false;
   var engage = true;
@@ -32,7 +32,8 @@ function rsvpEM_V2(nbTrials){
     effort = conditions.effort[trialCondition[trial_i]]
     phase = conditions.phase[trialCondition[trial_i]]
 
-    var rsvpEMstring = rsvpEMstrings(target_indexes_main[trialCondition], exp.nbTar, exp.nbStim);
+
+    var rsvpEMstring = rsvpEMstrings(target_indexes_main[trialCondition[trial_i]], exp.nbTar, exp.nbStim);
 
     switch (reward) {
       case 2:
@@ -168,14 +169,20 @@ function rsvpEM_V2(nbTrials){
     // SHOW STIMULUS //
     var one_stim = {
       type: 'html-keyboard-response-WH-EM-V2',
+      html_string: rsvpEMHTML,
       stimulus: rsvpEMstring_flat,
       choices: [32, 13],
       trial_duration: time.stim_dur,
       target: tar_side,
       prompt: '<p style="font-size: 30">Vous pouvez choisir d&#39arre&#770ter cet exercice a&#768 n&#39importe quel moment <b>en appuyant la touche << Entre&#769e >> </b>!',
+      optout_question_index: optout_q_index,
+      difficulty: effort,
       on_finish: function(data){
+        number_correct = (jsPsych.data.get().last().values()[0].pt_cor_responses).filter(e => e != null).length;
+        number_FA = (jsPsych.data.get().last().values()[0]).FA.length;
+
         // check to see if participant opted out
-        if (data.correct == 5){
+        if (data.trial_result == 5){
           optout = !true;
         }
       },
@@ -197,6 +204,17 @@ function rsvpEM_V2(nbTrials){
       type: 'html-button-response-WH-EM-V2',
       stimulus: '',
       choices: ['Continuer a&#768 la prochaine offre'],
+      on_start: function(trial){
+        trial.stimulus = '<p>Vous avez termine&#769 l&#39exercice !</p><p>Re&#769ponses correct : <b>'+number_correct+'/32</b></p><p>Re&#769ponses incorrect : <b>'+number_FA+'</b></p>';
+
+        if (number_correct >= exp.tar_threshold && number_FA <= exp.FA_threshold){
+          trial.stimulus += '<p>Vous avez gagne&#769 le bonus de cet exercice !</p>';
+        } else if (number_correct < exp.tar_threshold) {
+          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet exercice parce que vous avez rate&#769 trop de cibles</p>';
+        } else if (number_correct >= exp.tar_threshold && number_FA > exp.FA_threshold) {
+          trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet exercice parce que vous avez fait trop de re&#769ponses incorrectes</p>';
+        }
+      }
     } // feedback
 
     // CONDITION THE FEEDBACK //
@@ -217,7 +235,7 @@ function rsvpEM_V2(nbTrials){
       choices: [],
       on_start: function(trial){
         trial_remaining_time = trial_end_time - Date.now();
-        trial.stimulus = '<p>Vous avez choisi arre&#770ter cet exercice</p><p>Nous allons vous proposer la prochaine offre dans: <b>'+Math.round(trial_remaining_time/1000)+' secondes</b></p>';
+        trial.stimulus = '<p>Vous avez choisi d&#39arre&#770ter cet exercice</p><p>Nous allons vous proposer la prochaine offre dans: <b>'+Math.round(trial_remaining_time/1000)+' secondes</b></p>';
         trial.trial_duration = trial_remaining_time;
       },
     }; // opted_out

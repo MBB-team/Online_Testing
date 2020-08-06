@@ -24,6 +24,13 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         array: true,
         description: 'The stimulus (i.e. letter) to be displayed'
       },
+      html_string: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        pretty_name: 'Stimulus',
+        default: undefined,
+        array: true,
+        description: 'The HTML string for the rsvp stimuli'
+      },
       choices: {
         type: jsPsych.plugins.parameterType.KEYCODE,
         array: true,
@@ -60,14 +67,14 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
       number_stim: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Number of Stimuli',
-        default: 232,
+        default: 231,
         description: 'The number of stimuli in a trial'
       },
       difficulty: {
-        type: jsPsych.plugins.parameterType.INT,
+        type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Trial Difficulty',
         default: undefined,
-        description: 'The difficulty of the trial (Easy (0) or Hard (1))'
+        description: 'The difficulty of the trial (Easy (1) or Hard (2))'
       }
     }
   }
@@ -75,7 +82,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
   plugin.trial = function(display_element, trial) {
 
     // initialisation
-    var nbStim = 0;
+    var nbStim = -1;
     var target_side = trial.target;
     var switch_stim;
     var new_html;
@@ -86,6 +93,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
     var swi_times = [];
     var target_counter = -1;
     var tar_indexes = getAllIndexes(trial.stimulus[0].flat(),7).map(v => [v, v + 1, v + 2]).flat();
+    var result;
     var response = {
       rt: null,
       key: null
@@ -93,7 +101,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
     var t0 = performance.now(); // trial start time
 
     // function to end trial when it is time
-    var end_trial() = function(){
+    var end_trial = function(){
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
@@ -104,13 +112,28 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
+      if (result != 5){
+        if (getAllIndexes(pt_cor_responses, null).length < 5 && pt_FA_responses.length < 5){
+          result = 1; // success
+        }
+
+        if (getAllIndexes(pt_cor_responses, null).length > 5){
+          result = 2; // missed too many targets
+        }
+
+        if (pt_FA_responses.length >= 5){
+          result = 3; // too many false alarms
+        }
+      }
+
       // save data
       var trial_data = {
-        "pt_cor_responses": JSON.stringify(pt_cor_responses),
-        "correct":          32 - getAllIndexes(pt_cor_responses, null).length,
-        "FA":               pt_FA_responses.length,
+        "pt_cor_responses": pt_cor_responses,
+        "trial_result":     result,
+        "FA":               pt_FA_responses,
         "tar_times":        JSON.stringify(tar_times),
         "swi_times":        JSON.stringify(swi_times),
+        "optout_i":         nbStim
       };
 
       // clear the display
@@ -124,20 +147,23 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
     // function to handle responses by the subject
     var after_response = function(info){
 
-      if (tar_indexes.some(e => e == nbStim){ // if this is a target trial, response is correct
-
-        if (pt_cor_responses[target_counter] == null){ // only record first response
-          pt_cor_responses[target_counter] = info;
-        }
-
-      } else { // else response is incorrect
-
-        pt_FA_responses.push(info);
-
-      }
-
       if (info.key == 13){
+        result = 5; // opted out
         end_trial();
+      } else {
+
+        if (tar_indexes.some(e => e == (nbStim))){ // if this is a target trial, response is correct
+
+          if (pt_cor_responses[target_counter] == null){ // only record first response
+            pt_cor_responses[target_counter] = info.rt - tar_times[target_counter][1];
+          }
+
+        } else { // else response is incorrect
+
+          if (tar_times.length != 0){
+            pt_FA_responses.push([target_counter + 1, info.rt - tar_times[target_counter][1]]);
+          }
+        }
       }
 
     }; // after_response
@@ -184,13 +210,13 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
               display_element.innerHTML = new_html;
 
               // resume
-              jsPsych,pluginAPI.setTimeout(function(){nbStim++; update_stim = 1;}, 500);
+              jsPsych.pluginAPI.setTimeout(function(){nbStim++; update_stim = 1;}, 500);
 
             },4000)
 
           } // update stim
 
-        } else if (!document.fullscreenElement || !document.mozFullScreenElement || !document.webkitFullscreenElement || !document.msFullscreenElement){ // check fullscreen before display rsvp stim
+        } else if (!fscreen.fullscreenElement()){ // check fullscreen before display rsvp stim
 
           display_element.innerHTML = "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>" + '<button id="jspsych-fullscreen-btn" class="jspsych-btn">Continuer</button>';
           var listener = display_element.querySelector('#jspsych-fullscreen-btn').addEventListener('click', function() {
@@ -209,7 +235,9 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
 
         } else { // display stim
 
-          new_html = trial.stimulus;
+          nbStim++; // iterate the stim
+
+          new_html = trial.html_string;
 
           // add prompt
           if(trial.prompt !== null){
@@ -258,11 +286,11 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
 
           if (switch_stim == 3){ // if this is a switch stim
             swi_times.push([3, performance.now() - t0]);
-            if (!trial.difficulty){ // if its NOT HARD, need to change 3s to arrows
+            if (trial.difficulty == 1){ // if its NOT HARD, need to change 3s to arrows
               if (target_side == 0){
-                switch_stim = '<';
-              } else if (target_side == 1){
                 switch_stim = '>';
+              } else if (target_side == 1){
+                switch_stim = '<';
               }
             }
             target_side = 1 - target_side;
@@ -270,7 +298,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
 
           display_element.querySelector("div[stream = switch]").innerHTML = switch_stim;
 
-          nbStim++; // iterate the stim
 
         } // if not fullscreen or optout but display stim
       } // if not last stim
