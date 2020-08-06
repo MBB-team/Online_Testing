@@ -4,30 +4,25 @@ Created: 03/06/2020
 Version 2
 
 Data Output (as in MySQL):
-- rt (double)
-- correct (int(3))
-- stimulus (text)
-- key_press (int(3))
-- responses (text)
-- button_pressed (int(3))
-- trialNb (int(3))
-- target_trial (int(3))
-- switch_trial (int(3))
-- trial_result (int(3))
-- test_part (text)
-- reward (int(3))
-- effort (int(3))
-- phase (int(3))
-- training (int(3))
-- stim_counter (int(3))
-- target_counter (int(3))
-- diff_step (int(3))
-- trial_type (text)
-- trial_index (int(25))
-- time_elapsed (int(25))
-- internal_node_id (text)
-- date (text)
-- (run_id (int(7)), directly get this value in write_data using PHP session)
+- rt:		            double,
+- responses:	      text,
+- button:		        INT(3)
+- trialNb: 	        INT(3),
+- trial_result:     INT(3),
+- test_part: 	      text,
+- training: 	      INT(3),
+- trial_type:	      text,
+- trial_index:	    INT(25),
+- time_elapsed:	    INT(25),
+- internal_node_id: text,
+- date:		          text,
+- (run_id           (INT(7)), directly get this value in write_data using PHP session)
+- trial_condition:  INT(3),
+- pt_cor_responses: Array --> converted to text string with JSON.stringify,
+- FA:               Array --> converted to text string with JSON.stringify,
+- tar_times:	      Array --> converted to text string with JSON.stringify,
+- swi_times:	      Array --> converted to text string with JSON.stringify,
+- optout_i:	        INT(3),
 
 -->
 
@@ -45,7 +40,7 @@ Data Output (as in MySQL):
   <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-html-keyboard-response-WH-EM-V2.js'></script>
   <script   src  = 'Stimuli/Target_Indexes/target_indexes.js'></script>
   <script   src  = 'rsvpEM_V2.js'></script>
-  <script   src  = 'rsvpEM_train.js'></script>
+  <script   src  = 'rsvpEM_train_V2.js'></script>
   <script   src  = 'rsvpStimuli.js'></script>
   <script   src  = 'fscreen.js'></script>
 
@@ -64,12 +59,12 @@ Data Output (as in MySQL):
   const cfg = {
     debug:        false,
     cheat:        false,
-    instructions: false,
-    training:     false};
+    instructions: true,
+    training:     true};
 
     // Configuration parameters of experiment
     const exp = {
-      nbTrials:        2,   // 32
+      nbTrials:        32,   // 32
       nbTrials_train:   4,   // 4
       nbStim:          29,   // 29
       nbTar:            4,   // 4
@@ -83,15 +78,15 @@ Data Output (as in MySQL):
         // instructions
           const nbInstr = 15; // 22
 
-        const conditions = {
-          reward: Array(2).fill([1,2]).flat(),
-          effort: Array(1).fill([1, 1, 2, 2]).flat(),
-          phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+        // const conditions = {
+        //   reward: Array(2).fill([1,2]).flat(),
+        //   effort: Array(1).fill([1, 1, 2, 2]).flat(),
+        //   phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
-       // const conditions = {
-         // reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
-         // effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
-         // phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+       const conditions = {
+         reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
+         effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
+         phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
           // for screen display
           var dpi_x;
@@ -301,7 +296,7 @@ Data Output (as in MySQL):
 
               if (cfg.training){
                 // Generate training trials
-                var train = rsvpEM_train(exp.nbTrials_train);
+                var train = rsvpEM_train_V2(exp.nbTrials_train);
                 for (var train_i = 0; train_i < train.length; train_i++){
                   exp_timeline.push(train[train_i])
                 }

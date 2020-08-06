@@ -160,12 +160,15 @@ jsPsych.plugins["html-button-response-WH-EM-V2"] = (function() {
 
       // gather the data to store for the trial
       var trial_data = {
-        "rt":                response.rt,   // integer
-        "correct":           999, // integer
-        "stimulus":          trial.stimulus,  // string
-        "key_press":         999, // integer
-        "responses":         "999",  // string
-        "button_pressed":    parseInt(response.button) // integer
+        "rt":                 response.rt,
+        "responses":         "999",
+        "button":             parseInt(response.button),
+        "trial_result":       999,
+        "pt_cor_responses":  "999",
+        "FA":                "999",
+        "tar_times":         "999",
+        "swi_times":         "999",
+        "optout_i":           999
       };
 
       // clear the display
