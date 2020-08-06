@@ -2,7 +2,7 @@ function rsvpEM_V2(nbTrials){
 
   // INITIALISATION //
   var timelineTask = [];
-  var trialCondition = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];// jsPsych.randomization.shuffle([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31])
+  var trialCondition = jsPsych.randomization.shuffle([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31])
   var trial_counter = -1;
   var optout = !false;
   var engage = true;
@@ -13,13 +13,8 @@ function rsvpEM_V2(nbTrials){
   var effort_display;
   var trial_end_time;
   var trial_remaining_time;
-  var target_trial;
-  var switch_trial;
-  var stim_counter;
   var number_correct;
   var number_FA;
-  var target_trials_data;
-  var correct_response_i;
   var grid_square_size = 100;
   var grid_layout = [[0,3,0,0,0,3,0],[3,1,0,2,0,1,3],[0,3,0,0,0,3,0]];
 
@@ -71,6 +66,13 @@ function rsvpEM_V2(nbTrials){
           engage = false;
         }
       },
+      data: {
+        trialNb: trial_i,
+        trial_result: 999,
+        test_part: 'offer',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
+      }
     }; // trial number
 
     timelineTask.push(trial_number);
@@ -81,6 +83,13 @@ function rsvpEM_V2(nbTrials){
       stimulus: '<p>Vous avez re&#769fuse&#769 l&#39offre</p><p>Nous allons vous proposer la prochaine offre dans <b>80 secondes</b></p>',
       trial_duration: 80000,
       choices: [],
+      data: {
+        trialNb: trial_i,
+        trial_result: 999,
+        test_part: 'wait_screen',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
+      }
     }; // wait screen
 
     // CONDITION THE WAIT SCREEN //
@@ -100,6 +109,13 @@ function rsvpEM_V2(nbTrials){
       stimulus: "<p style='font-size: 50px'><b>Pre&#769parez-vous !</b></p>",
       trial_duration: 1000,
       choices: [],
+      data: {
+        trialNb: trial_i,
+        trial_result: 999,
+        test_part: 'prepare',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
+      }
     }; // prepare
 
     // CONDITION PREPARE //
@@ -133,6 +149,13 @@ function rsvpEM_V2(nbTrials){
       stimulus: tar_arrow,
       choices: [],
       trial_duration: 500,
+      data: {
+        trialNb: trial_i,
+        trial_result: 999,
+        test_part: 'initial_arrow',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
+      }
     }; // initial arrow
 
     // CONDITION THE ARROW //
@@ -181,11 +204,20 @@ function rsvpEM_V2(nbTrials){
         number_correct = (jsPsych.data.get().last().values()[0].pt_cor_responses).filter(e => e != null).length;
         number_FA = (jsPsych.data.get().last().values()[0]).FA.length;
 
+        data.pt_cor_responses = JSON.stringify(data.pt_cor_responses);
+        data.FA               = JSON.stringify(data.FA);
+
         // check to see if participant opted out
         if (data.trial_result == 5){
           optout = !true;
         }
       },
+      data: {
+        trialNb: trial_i,
+        test_part: 'one_stim',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
+      }
     } // one stim
 
     // CONDITION THE STIMULUS //
@@ -214,6 +246,13 @@ function rsvpEM_V2(nbTrials){
         } else if (number_correct >= exp.tar_threshold && number_FA > exp.FA_threshold) {
           trial.stimulus += '<p>Vous avez pas gagne&#769 le bonus de cet exercice parce que vous avez fait trop de re&#769ponses incorrectes</p>';
         }
+      },
+      data: {
+        trialNb: trial_i,
+        trial_result: 999,
+        test_part: 'feedback',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
       }
     } // feedback
 
@@ -238,6 +277,13 @@ function rsvpEM_V2(nbTrials){
         trial.stimulus = '<p>Vous avez choisi d&#39arre&#770ter cet exercice</p><p>Nous allons vous proposer la prochaine offre dans: <b>'+Math.round(trial_remaining_time/1000)+' secondes</b></p>';
         trial.trial_duration = trial_remaining_time;
       },
+      data: {
+        trialNb: trial_i,
+        trial_result: 999,
+        test_part: 'opted_out',
+        trial_condition: trialCondition[trial_i],
+        training: 0,
+      }
     }; // opted_out
 
     // CONDITION THE OPTOUT //
@@ -257,6 +303,13 @@ function rsvpEM_V2(nbTrials){
     type: 'html-button-response-WH-EM-V2',
     stimulus: '<p>Le test de charge mentale est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
     choices: ['Fin'],
+    data: {
+      trialNb: trial_i,
+      trial_result: 999,
+      test_part: 'finish',
+      trial_condition: trialCondition[trial_i],
+      training: 0,
+    }
   } // finish
 
   timelineTask.push(finish);

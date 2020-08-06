@@ -113,12 +113,15 @@ jsPsych.plugins["fullscreen-WH-EM-V2"] = (function() {
       jsPsych.pluginAPI.setTimeout(function(){
 
         var trial_data = {
-          "rt":                999,   // integer
-          "correct":           999, // integer
-          "stimulus":         "999",  // string
-          "key_press":         999, // integer
-          "responses":        "999",  // string
-          "button_pressed":    999 // integer
+          "rt":                 999,
+          "responses":         "999",
+          "button":             999,
+          "trial_result":       999,
+          "pt_cor_responses":  "999",
+          "FA":                "999",
+          "tar_times":         "999",
+          "swi_times":         "999",
+          "optout_i":           999
         };
 
         jsPsych.finishTrial(trial_data);

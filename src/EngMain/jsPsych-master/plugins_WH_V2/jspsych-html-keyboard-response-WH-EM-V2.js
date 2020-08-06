@@ -61,7 +61,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Optout Question Indexes',
         array: true,
-        default: undefined,
+        default: [],
         description: 'Index of explicit opt out question'
       },
       number_stim: {
@@ -75,6 +75,12 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         pretty_name: 'Trial Difficulty',
         default: undefined,
         description: 'The difficulty of the trial (Easy (1) or Hard (2))'
+      },
+      main: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Train or Main',
+        default: 1,
+        description: 'Is this training (0) or main experiment (1)?'
       }
     }
   }
@@ -128,8 +134,11 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
 
       // save data
       var trial_data = {
-        "pt_cor_responses": pt_cor_responses,
+        "rt":               999,
+        "responses":       "999",  // string
+        "button":           parseInt(response.button) // integer
         "trial_result":     result,
+        "pt_cor_responses": pt_cor_responses,
         "FA":               pt_FA_responses,
         "tar_times":        JSON.stringify(tar_times),
         "swi_times":        JSON.stringify(swi_times),
@@ -190,7 +199,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         clearInterval(stim_interval);
         end_trial();
       } else {
-        if (nbStim == trial.optout_question_index[0] || nbStim == trial.optout_question_index[1]){ // if we need to display the explicit optout question
+        if (trial.main == 1 && nbStim == trial.optout_question_index[0] || nbStim == trial.optout_question_index[1]){ // if we need to display the explicit optout question
           if (update_stim){ // only update the optout HTML once
             new_html = "<p style='font-size: 50px'>Voulez-vous arre&#770ter cet exercice ?</p><p>Si oui, appuyez la touche <b><< Entre&#769e >></b> !</p>";
 

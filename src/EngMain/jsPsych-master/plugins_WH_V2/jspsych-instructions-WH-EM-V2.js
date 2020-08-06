@@ -186,12 +186,15 @@ jsPsych.plugins["instructions-WH-EM-V2"] = (function() {
 
       // gather trial data
       var trial_data = {
-        "rt":                performance.now() - start_time,   // integer
-        "correct":           999, // integer
-        "stimulus":         '999', // string
-        "key_press":         999, // integer
-        "responses":         JSON.stringify(view_history),  // string
-        "button_pressed":    999 // integer
+        "rt":                performance.now() - start_time,
+        "responses":         JSON.stringify(view_history),
+        "button":            999,
+        "trial_result":      999,
+        "pt_cor_responses": "999",
+        "FA":               "999",
+        "tar_times":        "999",
+        "swi_times":        "999",
+        "optout_i":          999
       };
 
       jsPsych.finishTrial(trial_data);
