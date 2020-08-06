@@ -60,7 +60,7 @@ Per trial:
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 33;
+  const nbInstr              = 34;
 
   // --------------------------------- INITIALISATION  --------------------------- //
   dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_SE.php');
@@ -222,7 +222,7 @@ Per trial:
                               </center><p>';
              //ensure exited fullscreen
              if (document.fullscreenElement)
-             { 
+             {
                   document.exitFullscreen()
                   .then(() => console.log("Document Exited form Full screen mode"))
                   .catch((err) => console.error(err))
@@ -276,7 +276,7 @@ Per trial:
             sendAnimation.style.visibility = 'hidden';
             return; //don't try to send endTask
       }
-      
+
       // step 2 : send endTask
       var endTaskSuccess = dataSaver.sendEndTask();
       if(endTaskSuccess)
