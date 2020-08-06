@@ -38,15 +38,14 @@ Data Output (as in MySQL):
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
   <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
-  <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH-EM.js"></script> <!-- plugin that Juliana modified -->
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH-EM.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH-EM.js'></script>
-  <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-keyboard-response-WH-EM.js'></script>
+  <script   src  = "jsPsych-master/plugins_WH_V2/fullscreen-WH-EM.js"></script> <!-- plugin that Juliana modified -->
+  <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-instructions-WH-EM-V2.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-html-button-response-WH-EM-V2.js'></script>
+  <script   src  = 'jsPsych-master/plugins_WH_V2/jspsych-html-keyboard-response-WH-EM-V2.js'></script>
   <script   src  = 'Stimuli/Target_Indexes/target_indexes.js'></script>
-  <script   src  = 'rsvpEM.js'></script>
+  <script   src  = 'rsvpEM_V2.js'></script>
   <script   src  = 'rsvpEM_train.js'></script>
-  <script   src = "/js/dataSaver.js"></script>
-  <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+  <script   src  = 'rsvpStimuli.js'></script>
 
 
 </head>
@@ -63,17 +62,17 @@ Data Output (as in MySQL):
   const cfg = {
     debug:        false,
     cheat:        false,
-    instructions: true,
-    training:     true};
+    instructions: false,
+    training:     false};
 
     // Configuration parameters of experiment
     const exp = {
-      nbTrials:        32,   // 32
-      nbTrials_train:  4,   // 4
-      nbStim:         29,   // 29
-      nbTar:           4,   // 4
-      tar_threshold:  28,   // 28
-      FA_threshold:    4};  // 4
+      nbTrials:        1,   // 32
+      nbTrials_train:   4,   // 4
+      nbStim:          29,   // 29
+      nbTar:            4,   // 4
+      tar_threshold:   28,   // 28
+      FA_threshold:     4};  // 4
 
       // Timings of the experiment
       const time = {
@@ -82,15 +81,15 @@ Data Output (as in MySQL):
         // instructions
           const nbInstr = 15; // 22
 
-//        const conditions = {
-//          reward: Array(2).fill([1,2]).flat(),
-//          effort: Array(1).fill([1, 1, 2, 2]).flat(),
-//          phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+        const conditions = {
+          reward: Array(2).fill([1,2]).flat(),
+          effort: Array(1).fill([1, 1, 2, 2]).flat(),
+          phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
-       const conditions = {
-         reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
-         effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
-         phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+       // const conditions = {
+         // reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
+         // effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
+         // phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
           // for screen display
           var dpi_x;
@@ -104,14 +103,13 @@ Data Output (as in MySQL):
 
 
           // --------------------------------- INITIALISATION  --------------------------- //
-          dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
 
           // Checks if the browser is Chrome or Firefox (best compatibility)
           var browserInfo = getBrowserInfo();
 
           if (browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox') {
             var wrong_browser = {
-              type: 'html-button-response-WH-EM',
+              type: 'html-button-response-WH-EM-V2',
               choices: [],
               stimulus: "<p>Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p>"
               +"<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>"
@@ -150,7 +148,7 @@ Data Output (as in MySQL):
 
             // Create "Variable/function" that makes sure you remain in FullScreen
             var firstFullscreen = {
-              type: 'fullscreen-WH-EM',
+              type: 'fullscreen-WH-EM-V2',
               message: "<p>  Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer. </p>",
               button_label: 'Mettre en plein \351cran',
               delay_after: 300,
@@ -172,7 +170,7 @@ Data Output (as in MySQL):
             };
 
             var fullscreenExp = {
-              type: 'fullscreen-WH-EM',
+              type: 'fullscreen-WH-EM-V2',
               message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
                 fullscreen_mode: false,
                 data: {
@@ -212,7 +210,19 @@ Data Output (as in MySQL):
               // CODE TO SAVE FULLDATA AT THE END
 
               function saveData() {
-                dataSaver.save(jsPsych.data.getLastTrialData().json());
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'write_data.php'); // change it to point to php script.
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                  if(xhr.status == 200){
+                    console.log(xhr);
+                    var response = JSON.parse(xhr.responseText); // $.parseJSON
+                    console.log(response);
+                  } if(response.success){ console.log("Data saved");
+                } else {console.log("Data not saved");}
+              };
+              xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
+
             }
 
             // ------------------------------ BEGIN EXPERIMENT --------------------------- /
@@ -234,7 +244,7 @@ Data Output (as in MySQL):
 
               // Execute the experiment
               var instructions = {
-                type: 'instructions-WH-EM',
+                type: 'instructions-WH-EM-V2',
                 pages: instrImg_html,
                 show_clickable_nav: true
               };
@@ -246,7 +256,7 @@ Data Output (as in MySQL):
 
               // calculate the dimensions of the participants screen
               var dpi = {
-                type: 'html-button-response-WH-EM',
+                type: 'html-button-response-WH-EM-V2',
                 stimulus: '<div id="dpi" style="height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;"></div>',
                 choices: [],
                 trial_duration: 500,
@@ -311,89 +321,37 @@ Data Output (as in MySQL):
                     },
                 on_finish: function(){
                 //  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                    document.body.innerHTML = '<p><br></br><br></br><center>\
-                              Merci pour votre participation!<br>\
-                              <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
-                              <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
-                              <span id="dataSendError"></span><br>\
-                              <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
-                              </center><p>';
-                    //ensure exited fullscreen
-                    if (document.fullscreenElement)
-                    { 
-                          document.exitFullscreen()
-                          .then(() => console.log("Document Exited form Full screen mode"))
-                          .catch((err) => console.error(err))
-                    }
-                    endTask();
+                  //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
+                  endTask();
                 }
               });
             } // end of startExperiment
 
             function endTask() {
-              /*update messages and hide retry button*/
-              var errorMessage = document.getElementById('dataSendError');
-              var buttonRetry = document.getElementById('dataRetrySend');
-              var infoMessage = document.getElementById('dataLeftText');
-              var sendAnimation = document.getElementById('sendAnimation');
-
-              errorMessage.innerHTML = "";
-              buttonRetry.style.visibility = 'hidden';
-              infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
-              sendAnimation.style.visibility = 'visible';
-
-              // step 1 : send buffered data
-              var failedRetry = 0;
-              var lastLeftToSend = dataSaver.bufferLength();
-              while(dataSaver.sendAll()>0)
-              {
-                    var leftToSend = dataSaver.bufferLength();
-                    if(leftToSend == lastLeftToSend)
-                    {
-                          failedRetry += 1;
-                          errorMessage.innerHTML += ". ";
-                          console.log('Failed to send datas. Retries : ' + failedRetry);
-                    }
-                    else
-                    {
-                          infoMessage.innerHTML = leftToSend + " restants";
-                          console.log('Datas left to send : ' + leftToSend);
-                    }
-                    lastLeftToSend = leftToSend;
-                    if(failedRetry>9)
-                    {
-                          break;
-                    }
-              }
-              infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
-              console.log('Datas left to send : ' + dataSaver.bufferLength());
-              if(dataSaver.bufferLength()>0)
-              {
-                    errorMessage.innerHTML="Une erreur réseau est survenue pendant l'enregistrement des données. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
-                    buttonRetry.style.visibility='visible';
-                    sendAnimation.style.visibility = 'hidden';
-                    return; //don't try to send endTask
-              }
-              
-              // step 2 : send endTask
-              var endTaskSuccess = dataSaver.sendEndTask();
-              if(endTaskSuccess)
-              {
-                    sendAnimation.style.visibility = 'hidden';
-                    errorMessage.innerHTML="Toutes les données ont été enregistrées.<br>Vous allez être redirigié vers la page d'accueil. (sinon, cliquez <a href='/'>ici</a>)";
-                    //redirect to home page after 5 secs if error
-                    setTimeout(function () {
-                                window.location.replace("/");
-                          }, 3000);
-              }
-              else
-              {
-                    errorMessage.innerHTML="Une erreur réseau est survenue pendant la validation de la tâche. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
-                    buttonRetry.style.visibility='visible';
-                    sendAnimation.style.visibility = 'hidden';
-              }
-
-            }
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', 'endTask.php');
+              xhr.onload = function() {
+                var reponse = "";
+                if(xhr.status == 200){
+                  var response = JSON.parse(xhr.responseText); // $.parseJSON
+                }
+                if(response.success){
+                  console.log("run updated");
+                  window.location.replace("/"); //redirect to home page
+                }
+                else {
+                  console.log("error on update run");
+                  console.log(xhr);
+                  console.log(response);
+                  //redirect to home page after 5 secs if error
+                  setTimeout(function (){
+                    window.location.replace("/");
+                  },
+                  5000);
+                }
+              };
+              xhr.send();
+            };
           }; // end of browser checking
         </script>
         </html>

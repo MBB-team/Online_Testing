@@ -44,19 +44,19 @@ function identify($participantID)
             }
             else //inactive user
             {
-                unset($_SESSION['participantID']); //clear in session
+                unIdentify(); //clear in session
                 return "inactiveUser";
             }
         }
         else if(count($userInDatabaseFetch)==0)//not found
         {
-            unset($_SESSION['participantID']); //clear in session
+            unIdentify(); //clear in session
             logFailedAttemptIP(); //log failed attempt remote IP
             return "unknownUser";
         }
         else //unknown error
         {
-            unset($_SESSION['participantID']); //clear in session
+            unIdentify();
             return "unknownError";
         }
     }
@@ -95,6 +95,7 @@ function getParticipantID()
 function unIdentify()
 {
     unset($_SESSION['participantID']); //clear userid in session
+    clearRunSession();
 }
 
 //get list of current opened tasks. Append a boolean "done" attribut to each task (true if user had already done the task).
@@ -194,7 +195,7 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
                 $_SESSION["taskID"] = $taskID;
                 $_SESSION["taskSessionID"] = $availableTasks[0]["taskSessionID"];
                 $_SESSION["taskUrl"] = $availableTasks[0]["url"];
-
+                $_SESSION["indexesSaved"] = [];
                 return true;
         }
         else
@@ -275,6 +276,106 @@ function endTask()
     
 }
 
+//keep track of already saved data indexes to prevent save same data twice 
+function logIndexSaved($index)
+{
+    if(!isset($_SESSION["indexesSaved"]))
+        return;
+    array_push($_SESSION["indexesSaved"], $index);
+}
+
+//return true if $index is already saved
+function isIndexSaved($index)
+{
+    if(!isset($_SESSION["indexesSaved"]))
+        return false;
+    return in_array($index, $_SESSION["indexesSaved"]);
+}
+
+// write samples (from php://input) in database table $table
+// return an array
+//  indexN => result
+//  ...
+//  'message' => error
+//
+// result   = 0 : failed
+//          = 1 : saved
+//          = 2 : already saved
+// error : empty string or error message from PDO
+function writeData($table)
+{
+    $data_all = json_decode(file_get_contents('php://input'), true);
+
+    $result = array(); // will return if insert were succeded (1) or failed (0) or already saved (2) for each indexes
+    foreach($data_all as $key => $data_array)
+    {
+    $result[$key] = 0; //temporary mark as failed
+    }
+    $result['message']="";
+
+    try {
+        $conn = sessionOpenDataBase();
+
+        // First stage is to get all column names from the table and store them in $col_names array.
+        $stmt = $conn->prepare("SHOW COLUMNS FROM `$table`");
+        $stmt->execute();
+        $col_names = array();
+        while($row = $stmt->fetchColumn())
+        {
+            $col_names[] = $row;
+        }
+        // Second stage is to create prepared SQL statement using the column
+        // names as a guide to what values might be in the JSON.
+
+        foreach($data_all as $key => $data_json)
+        {
+            if( isIndexSaved($key) ) //already saved
+            {
+            $result[$key] = 2; //mark as already saved
+            continue;
+            }
+
+            $data_array = json_decode($data_json, true);
+            // If a value is missing from a particular trial, then NULL is inserted
+            $sql = "INSERT INTO $table VALUES(";
+            for($i = 0; $i < count($col_names); $i++){
+                $name = $col_names[$i];
+                $sql .= ":$name";
+                if($i != count($col_names)-1){
+                    $sql .= ", ";
+                }
+            }
+            $sql .= ");";
+            $insertstmt = $conn->prepare($sql);
+            for($i=0; $i < count($data_array); $i++){
+                for($j = 0; $j < count($col_names); $j++){
+                    $colname = $col_names[$j];
+                    if( ($colname == "run_id") && isPreparedTask()){
+                    $insertstmt->bindValue(":$colname", getRunID() );
+                    }
+                    else if(!isset($data_array[$i][$colname])){
+                    $insertstmt->bindValue(":$colname", null, PDO::PARAM_NULL);
+                    } else {
+                    $insertstmt->bindValue(":$colname", $data_array[$i][$colname]);
+                    }
+                }
+                if($insertstmt->execute())
+                {
+                    logIndexSaved($key);
+                    $result[$key] = 1; //mark as succeded
+                }
+            }
+        }
+    }
+    catch(PDOException $e)
+    {
+        $result['message'] = $e->getMessage();
+    }
+    $conn = null;
+    return $result;
+}
+
+
 function clearRunSession()
 {
     //clear session variables
@@ -282,6 +383,7 @@ function clearRunSession()
     unset($_SESSION['taskID']);
     unset($_SESSION['taskSessionID']);
     unset($_SESSION["taskUrl"]);
+    unset($_SESSION["indexesSaved"]);
 }
 
 // bruteforce IP ban : log
