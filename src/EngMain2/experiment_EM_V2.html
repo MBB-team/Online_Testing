@@ -76,17 +76,17 @@ Data Output (as in MySQL):
         stim_dur:    330};
 
         // instructions
-          const nbInstr = 15; // 22
+        const nbInstr = 15; // 22
 
         // const conditions = {
         //   reward: Array(2).fill([1,2]).flat(),
         //   effort: Array(1).fill([1, 1, 2, 2]).flat(),
         //   phase:  Array(1).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
-       const conditions = {
-         reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
-         effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
-         phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
+        const conditions = {
+          reward: Array(exp.nbTrials/2).fill([1,2]).flat(),
+          effort: Array(exp.nbTrials/4).fill([1, 1, 2, 2]).flat(),
+          phase:  Array(exp.nbTrials/16).fill([1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4]).flat()};
 
           // for screen display
           var dpi_x;
@@ -152,17 +152,10 @@ Data Output (as in MySQL):
               check_fullscreen: true,
               data: {
                 trialNb: 999,
-                target_trial: 999,
-                switch_trial: 999,
                 trial_result: 999,
                 test_part: 'firstFullscreen',
-                reward: 999,
-                effort: 999,
-                phase: 999,
+                trial_condition: 999,
                 training: 999,
-                stim_counter: 999,
-                target_counter: 999,
-                diff_step: 999
               }
             };
 
@@ -172,17 +165,10 @@ Data Output (as in MySQL):
                 fullscreen_mode: false,
                 data: {
                   trialNb: 999,
-                  target_trial: 999,
-                  switch_trial: 999,
                   trial_result: 999,
-                  test_part: 'FullScreen',
-                  reward: 999,
-                  effort: 999,
-                  phase: 999,
+                  test_part: 'Fullscreen',
+                  trial_condition: 999,
                   training: 999,
-                  stim_counter: 999,
-                  target_counter: 999,
-                  diff_step: 999
                 }
               }
 
@@ -276,17 +262,10 @@ Data Output (as in MySQL):
                 },
                 data: {
                   trialNb: 999,
-                  target_trial: 999,
-                  switch_trial: 999,
                   trial_result: 999,
                   test_part: 'dpi',
-                  reward: 999,
-                  effort: 999,
-                  phase: 999,
+                  trial_condition: 999,
                   training: 999,
-                  stim_counter: 999,
-                  target_counter: 999,
-                  diff_step: 999
                 }
 
               };
@@ -311,13 +290,13 @@ Data Output (as in MySQL):
               jsPsych.init({
                 timeline: exp_timeline,
                 show_progress_bar: true,
-                    on_trial_finish: function(){
-                      jsPsych.data.addProperties({date: date});
-                      saveData();
-                      //console.log(exp_timeline)
-                    },
+                on_trial_finish: function(){
+                  jsPsych.data.addProperties({date: date});
+                  saveData();
+                  //console.log(exp_timeline)
+                },
                 on_finish: function(){
-                 jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                   endTask();
                 }
