@@ -1,3 +1,0 @@
-SET NAMES utf8;
-
-ALTER TABLE task ADD COLUMN dataTableName VARCHAR(25) NULL;
