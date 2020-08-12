@@ -30,6 +30,21 @@
 
 // --------------------------------- INITIALISATION  ---------------------------//
       dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_quest.php');
+      dataSaver.SetClientIds(<?php 
+      if( isset($clientIds) && is_array($clientIds) && (count($clientIds) > 0) )
+      {
+            echo '{';
+            foreach($clientIds as $key => $value)
+            {
+                  echo "'$key':'$value',";
+            }
+            echo '}';
+      }
+      else
+      {
+            echo 'null'; //no client ids to add
+      }
+      ?>);
 
     // Checks if the browser is Chrome or Firefox (best compatibility)
     var browserInfo = getBrowserInfo(); // Call the function that I specified in the head

@@ -305,12 +305,26 @@ function isIndexSaved($index)
 function writeData($table)
 {
     $data_all = json_decode(file_get_contents('php://input'), true);
-
+    $clientIds = array();
     $result = array(); // will return if insert were succeded (1) or failed (0) or already saved (2) for each indexes
     foreach($data_all as $key => $data_array)
     {
-    $result[$key] = 0; //temporary mark as failed
+        if(is_numeric($key)) //add index to $result array
+        {
+            $result[$key] = 0; //temporary mark as failed
+            continue;
+        }
+        if($key == 'clientIds')
+        {
+            //var_dump($data_array);
+            foreach($data_array as $clientIdsKey => $clientIdsData)
+            {
+                $clientIds[$clientIdsKey] = htmlspecialchars($clientIdsData);
+            }
+            continue;
+        }
     }
+
     $result['message']="";
 
     try {
@@ -329,6 +343,10 @@ function writeData($table)
 
         foreach($data_all as $key => $data_json)
         {
+            if( !is_numeric($key) ) //skip non data
+            {
+                continue;
+            }
             if( isIndexSaved($key) ) //already saved
             {
             $result[$key] = 2; //mark as already saved

@@ -16,6 +16,7 @@ function DataSaver(mode, url="")
 
     this.buffer = {};
     this.bufferIndex = -1;
+    this.clientIds = null;
 
     switch(mode)
     {
@@ -30,6 +31,11 @@ function DataSaver(mode, url="")
         default :
             console.log("dataSaver: Unknown mode");
             break;
+    }
+
+    this.SetClientIds = function(ids)
+    {
+        this.clientIds = ids;
     }
     
     this.save = function(data)
@@ -75,7 +81,7 @@ function DataSaver(mode, url="")
             {
                 if(xhr.status == 200)
                 {
-                    //console.log(xhr.responseText);
+                    console.log(xhr.responseText);
                     var response = JSON.parse(xhr.responseText);
                     //console.log(response);
                     this.onDataSaverResult(response);
@@ -92,7 +98,12 @@ function DataSaver(mode, url="")
         {
             data[indexes[i]] = this.buffer[indexes[i]];
         }
-        //console.log(JSON.stringify(data));
+        if(this.clientIds != null)
+        {
+            //add client Ids
+            data['clientIds'] = this.clientIds;
+        }
+        console.log(JSON.stringify(data));
 
         if(async)
         {
