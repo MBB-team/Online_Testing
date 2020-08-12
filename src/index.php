@@ -56,6 +56,7 @@ echo "<!DOCTYPE html>
 <head>
 <meta charset='UTF-8'>
 <link href='css/portail.css' rel='stylesheet' type='text/css'>
+<link rel='icon' href='/favicon.ico' />
 </head>
 <body>
 <div class='titleContainer'>
