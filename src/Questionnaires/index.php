@@ -3,8 +3,14 @@ include('../portailLib/session.php');
 
 if(isIdentified() && isPreparedTask())
 {
+    //get ids
+    $clientIds=[];
+    $clientIds["participantID"] = getParticipantID();
+    $clientIds["runID"] = getRunID();
+    if($_SESSION["runKey"] != null)
+        $clientIds["runKey"] = $_SESSION["runKey"];
     //Load task
-    include('questionnaires.html');  //modify this according to task html file name
+    include('questionnaires.php');  //modify this according to task html file name
 }
 else
 {
