@@ -122,7 +122,7 @@
                               .then(() => console.log("Document Exited form Full screen mode"))
                               .catch((err) => console.error(err))
                         }
-                        endTask();
+                        setTimeout(function(){endTask()},2100); //wait for last async request end before retry
                   },
             });
 

@@ -7,6 +7,8 @@ if(isIdentified() && isPreparedTask())
     $clientIds=[];
     $clientIds["participantID"] = getParticipantID();
     $clientIds["runID"] = getRunID();
+    if($_SESSION["runKey"] != null)
+        $clientIds["runKey"] = $_SESSION["runKey"];
     //Load task
     include('questionnaires.php');  //modify this according to task html file name
 }

@@ -103,7 +103,7 @@ function DataSaver(mode, url="")
             //add client Ids
             data['clientIds'] = this.clientIds;
         }
-        console.log(JSON.stringify(data));
+        //console.log(JSON.stringify(data));
 
         if(async)
         {
@@ -199,9 +199,16 @@ function DataSaver(mode, url="")
             case dataSaverModes.SERVER :
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'endTask.php', false); //synchronous mode
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                var data={};
+                if(this.clientIds != null)
+                {
+                    //add client Ids
+                    data['clientIds'] = this.clientIds;
+                }
                 try
                 {
-                    xhr.send();
+                    xhr.send(JSON.stringify(data));
                 
                     if(xhr.status == 200)
                     {
