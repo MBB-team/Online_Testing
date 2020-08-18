@@ -30,14 +30,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case "runtask":
             if(isIdentified())
             {
-                $prepareTaskSucces = prepareTask($formTask);
-                if($prepareTaskSucces)
+                //$prepareTaskSucces = prepareTask($formTask);
+                //if($prepareTaskSucces)
+                $taskUrl = getTaskUrl($formTask);
+                if(!empty($taskUrl))
                 {
                     //redirect to task
-                    header("Location: ".$_SESSION["taskUrl"]);
+                    header("Location: ".$taskUrl);
                     exit();
                 } else {
-                    echo '<p>Only one session can be opened for one task at a time.</p>';
+                    //echo '<p>Only one session can be opened for one task at a time.</p>';
+                    echo 'Tâche non trouvée <script type="application/javascript"> setTimeOut(function(){window.location.replace("/");},4000);)</script>';
                     exit();
                 }
                 
