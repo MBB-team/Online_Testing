@@ -36,6 +36,10 @@ function DataSaver(mode, url="")
     this.SetClientIds = function(ids)
     {
         this.clientIds = ids;
+        if(this.clientIds==null)
+        {
+            alert('Ids vides. Les données ne seront pas sauvegardées.');
+        }
     }
     
     this.save = function(data)
