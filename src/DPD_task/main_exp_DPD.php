@@ -67,7 +67,7 @@
 
   // --------------------------------- INITIALISATION  ---------------------------//
       dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_DPD.php');
-
+      dataSaver.SetClientIds(<?php echoAsJsArray($clientIds); ?>);
       // Checks if the browser is Chrome or Firefox (best compatibility)
       var browserInfo = getBrowserInfo();
 
@@ -964,7 +964,7 @@ var test_procedure_training_pred = {
                         .then(() => console.log("Document Exited form Full screen mode"))
                         .catch((err) => console.error(err))
                   }
-                  endTask();
+                  setTimeout(function(){endTask()},2100); //wait for last async request end before retry
               }
             });
 
