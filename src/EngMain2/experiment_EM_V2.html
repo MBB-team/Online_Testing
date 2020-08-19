@@ -18,10 +18,10 @@ Data Output (as in MySQL):
 - date:		          text,
 - (run_id           (INT(7)), directly get this value in write_data using PHP session)
 - trial_condition:  INT(3),
-- pt_cor_responses: Array --> converted to text string with JSON.stringify,
-- FA:               Array --> converted to text string with JSON.stringify,
-- tar_times:	      Array --> converted to text string with JSON.stringify,
-- swi_times:	      Array --> converted to text string with JSON.stringify,
+- pt_cor_responses: Array ==> converted to text string with JSON.stringify,
+- FA:               Array ==> converted to text string with JSON.stringify,
+- tar_times:	      Array ==> converted to text string with JSON.stringify,
+- swi_times:	      Array ==> converted to text string with JSON.stringify,
 - optout_i:	        INT(3)
 
 -->
@@ -76,7 +76,7 @@ Data Output (as in MySQL):
         stim_dur:    330};
 
         // instructions
-        const nbInstr = 15; // 22
+        const nbInstr = 16; // 16
 
         // const conditions = {
         //   reward: Array(2).fill([1,2]).flat(),
@@ -292,11 +292,12 @@ Data Output (as in MySQL):
                 show_progress_bar: true,
                 on_trial_finish: function(){
                   jsPsych.data.addProperties({date: date});
+                  //console.log(jsPsych.data.getLastTrialData().values())
                   saveData();
                   //console.log(exp_timeline)
                 },
                 on_finish: function(){
-                  jsPsych.data.displayData(); // Disable once online, use to look at data while coding
+                  //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
                   endTask();
                 }

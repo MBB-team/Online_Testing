@@ -60,9 +60,9 @@ function rsvpEM_V2(nbTrials){
       },
       on_finish: function(data){
         trial_end_time = Date.now() + 80000;
-        if (data.button_pressed == 0){engage = true;}
-        if (data.button_pressed == 1){
-          data.trial_result = 5; // did not engage
+        if (data.button == 0){engage = true;}
+        if (data.button == 1){
+          data.trial_result = 4; // did not engage
           engage = false;
         }
       },
@@ -208,7 +208,7 @@ function rsvpEM_V2(nbTrials){
         data.FA               = JSON.stringify(data.FA);
 
         // check to see if participant opted out
-        if (data.trial_result == 5){
+        if (data.trial_result == 5 || data.trial_result == 6){
           optout = !true;
         }
       },
