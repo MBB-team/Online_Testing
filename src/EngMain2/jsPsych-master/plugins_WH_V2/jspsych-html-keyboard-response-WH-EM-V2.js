@@ -118,7 +118,7 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
       }
 
-      if (result != 5){
+      if (result != 5 && result != 6){
         if (getAllIndexes(pt_cor_responses, null).length < 5 && pt_FA_responses.length < 5){
           result = 1; // success
         }
@@ -157,7 +157,11 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
     var after_response = function(info){
 
       if (info.key == 13){
-        result = 5; // opted out
+        if (trial.main == 1 && nbStim == trial.optout_question_index[0] || nbStim == trial.optout_question_index[1]){
+          result = 6; // explicit opt out
+        } else {
+          result = 5; // opted out
+        }
         end_trial();
       } else {
 
@@ -202,7 +206,6 @@ jsPsych.plugins["html-keyboard-response-WH-EM-V2"] = (function() {
         if (trial.main == 1 && nbStim == trial.optout_question_index[0] || nbStim == trial.optout_question_index[1]){ // if we need to display the explicit optout question
           if (update_stim){ // only update the optout HTML once
             new_html = "<p style='font-size: 50px'>Voulez-vous arre&#770ter cet exercice ?</p><p>Si oui, appuyez la touche <b><< Entre&#769e >></b> !</p>";
-
             display_element.innerHTML = new_html;
             update_stim = 0;
 
