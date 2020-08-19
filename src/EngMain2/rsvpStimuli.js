@@ -75,20 +75,21 @@ rsvpEMstrings = function(target_indexes, nbTar, nbStim){
       };
     }; // for each target/switch
 
-    var distr_str = [];
-
-    // Generate distraction streams
-    for (var distr_str_i = 0; distr_str_i < 7; distr_str_i++){
-      distr_str[distr_str_i] = randstr(nbStim).split('');
-    }; // generate distraction strings
-
-
     target_string[diff_step] = tar_str;
     switch_string[diff_step] = swi_str;
-    distr_string[diff_step]  = distr_str;
 
   }; // diff step
 
+  var distr_str = [Array(8), Array(8), Array(8), Array(8), Array(8), Array(8), Array(8)];
+
+  // Generate distraction streams
+  for (var distr_str_i = 0; distr_str_i < 7; distr_str_i++){
+    for (var diff_step = 0; diff_step < 8; diff_step++){
+      distr_str[distr_str_i][diff_step] = randstr(nbStim).split('');
+    }
+  }; // generate distraction strings
+
   // return strings for all the streams
-  return [target_string, switch_string, distr_string]
+  return [target_string, switch_string, distr_str[0], distr_str[1], distr_str[2], distr_str[3], distr_str[4], distr_str[5], distr_str[6]]
+
 }; // function
