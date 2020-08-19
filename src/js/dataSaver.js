@@ -85,7 +85,7 @@ function DataSaver(mode, url="")
             {
                 if(xhr.status == 200)
                 {
-                    console.log(xhr.responseText);
+                    //console.log(xhr.responseText);
                     var response = JSON.parse(xhr.responseText);
                     //console.log(response);
                     this.onDataSaverResult(response);
