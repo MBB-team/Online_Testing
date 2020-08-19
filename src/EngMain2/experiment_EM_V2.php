@@ -43,6 +43,9 @@ Data Output (as in MySQL):
   <script   src  = 'rsvpEM_train_V2.js'></script>
   <script   src  = 'rsvpStimuli.js'></script>
   <script   src  = 'fscreen.js'></script>
+  <script   src = "/js/dataSaver.js"></script>
+  <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+  <link rel='icon' href='/favicon.ico' />
 
 
 </head>
@@ -100,6 +103,8 @@ Data Output (as in MySQL):
 
 
           // --------------------------------- INITIALISATION  --------------------------- //
+          dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
+          dataSaver.SetClientIds(<?php echoAsJsArray($clientIds); ?>);
 
           // Checks if the browser is Chrome or Firefox (best compatibility)
           var browserInfo = getBrowserInfo();
@@ -193,18 +198,7 @@ Data Output (as in MySQL):
               // CODE TO SAVE FULLDATA AT THE END
 
               function saveData() {
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'write_data.php'); // change it to point to php script.
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onload = function() {
-                  if(xhr.status == 200){
-                    console.log(xhr);
-                    var response = JSON.parse(xhr.responseText); // $.parseJSON
-                    console.log(response);
-                  } if(response.success){ console.log("Data saved");
-                } else {console.log("Data not saved");}
-              };
-              xhr.send(jsPsych.data.getLastTrialData().json()); // allows to save it every trial
+                dataSaver.save(jsPsych.data.getLastTrialData().json());
 
             }
 
@@ -298,37 +292,89 @@ Data Output (as in MySQL):
                 },
                 on_finish: function(){
                   //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-                  //document.write('<p><br></br><br></br><center>Thank you for participating! <br></br> Your data code is <strong>'+subject_id+'</strong>.<br></center><p>')
-                  endTask();
+                  document.body.innerHTML = '<p><br></br><br></br><center>\
+                              Merci pour votre participation!<br>\
+                              <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
+                              <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
+                              <span id="dataSendError"></span><br>\
+                              <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
+                              </center><p>';
+                  //ensure exited fullscreen
+                  if (document.fullscreenElement)
+                  { 
+                        document.exitFullscreen()
+                        .then(() => console.log("Document Exited form Full screen mode"))
+                        .catch((err) => console.error(err))
+                  }
+                  setTimeout(function(){endTask()},2100); //wait for last async request end before retry
                 }
               });
             } // end of startExperiment
 
             function endTask() {
-              var xhr = new XMLHttpRequest();
-              xhr.open('POST', 'endTask.php');
-              xhr.onload = function() {
-                var reponse = "";
-                if(xhr.status == 200){
-                  var response = JSON.parse(xhr.responseText); // $.parseJSON
-                }
-                if(response.success){
-                  console.log("run updated");
-                  window.location.replace("/"); //redirect to home page
-                }
-                else {
-                  console.log("error on update run");
-                  console.log(xhr);
-                  console.log(response);
-                  //redirect to home page after 5 secs if error
-                  setTimeout(function (){
-                    window.location.replace("/");
-                  },
-                  5000);
-                }
-              };
-              xhr.send();
-            };
+                  /*update messages and hide retry button*/
+                  var errorMessage = document.getElementById('dataSendError');
+                  var buttonRetry = document.getElementById('dataRetrySend');
+                  var infoMessage = document.getElementById('dataLeftText');
+                  var sendAnimation = document.getElementById('sendAnimation');
+
+                  errorMessage.innerHTML = "";
+                  buttonRetry.style.visibility = 'hidden';
+                  infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
+                  sendAnimation.style.visibility = 'visible';
+
+                  // step 1 : send buffered data
+                  var failedRetry = 0;
+                  var lastLeftToSend = dataSaver.bufferLength();
+                  while(dataSaver.sendAll()>0)
+                  {
+                        var leftToSend = dataSaver.bufferLength();
+                        if(leftToSend == lastLeftToSend)
+                        {
+                              failedRetry += 1;
+                              errorMessage.innerHTML += ". ";
+                              console.log('Failed to send datas. Retries : ' + failedRetry);
+                        }
+                        else
+                        {
+                              infoMessage.innerHTML = leftToSend + " restants";
+                              console.log('Datas left to send : ' + leftToSend);
+                        }
+                        lastLeftToSend = leftToSend;
+                        if(failedRetry>9)
+                        {
+                              break;
+                        }
+                  }
+                  infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
+                  console.log('Datas left to send : ' + dataSaver.bufferLength());
+                  if(dataSaver.bufferLength()>0)
+                  {
+                        errorMessage.innerHTML="Une erreur réseau est survenue pendant l'enregistrement des données. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
+                        buttonRetry.style.visibility='visible';
+                        sendAnimation.style.visibility = 'hidden';
+                        return; //don't try to send endTask
+                  }
+                  
+                  // step 2 : send endTask
+                  var endTaskSuccess = dataSaver.sendEndTask();
+                  if(endTaskSuccess)
+                  {
+                        sendAnimation.style.visibility = 'hidden';
+                        errorMessage.innerHTML="Toutes les données ont été enregistrées.<br>Vous allez être redirigié vers la page d'accueil. (sinon, cliquez <a href='/'>ici</a>)";
+                        //redirect to home page after 5 secs if error
+                        setTimeout(function () {
+                                    window.location.replace("/");
+                              }, 3000);
+                  }
+                  else
+                  {
+                        errorMessage.innerHTML="Une erreur réseau est survenue pendant la validation de la tâche. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
+                        buttonRetry.style.visibility='visible';
+                        sendAnimation.style.visibility = 'hidden';
+                  }
+
+            }
           }; // end of browser checking
         </script>
         </html>
