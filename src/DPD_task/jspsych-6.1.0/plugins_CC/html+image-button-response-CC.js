@@ -8,16 +8,16 @@
  * author of modification: Cynthia Cabañas (cynthiacabanas@gmail.com)
  **/
 
+  // --------------------------------- PRE-LOAD MEDIA  -----------------------//
+    // Example
+    var piechart = [];
+    for(var t=0;t < 82+1;t++){
+      piechart[t] = 'stimuli/img_piechart/piechart ('+t+').png'; // Pre-load all the jpg files in this folder
+    };
+// ---------------------------------------------------------------------------------//
 jsPsych.plugins["html+image-button-response"] = (function() {
 
   var plugin = {};
-  // --------------------------------- PRE-LOAD MEDIA  -----------------------//
-    // Example
-      var piechart = [];
-      for(var t=0;t < 82+1;t++){
-        piechart[t] = 'stimuli/img_piechart/piechart ('+t+').png'; // Pre-load all the jpg files in this folder
-      };
-  // ---------------------------------------------------------------------------------//
 
   plugin.info = {
     name: 'html+image-button-response',

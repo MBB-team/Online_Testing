@@ -48,7 +48,15 @@
         <link rel='icon' href='/favicon.ico' />
     </head>
     <body>
-        <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+        <div id='jspsych-target' style='width:auto; height:auto; position:relative;'>
+            <p><br></br><br></br>
+                  <center>
+                        Chargement en cours ...<br>
+                        <br><span id="loadingPercent"></span><br>
+                        <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>
+                  </center>
+            </p>
+        </div>
         <canvas class = "canvas" id="myCanvas"></canvas>
    </body>
    <script type="application/javascript">
@@ -169,10 +177,11 @@
           imgRwd    = ['imgJS/cent.jpg', 'imgJS/euro.jpg'];
 
           function updateLoadedCount(nLoaded){
-                var percentcomplete = nLoaded / (instrImg.length +
+                var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length +
                 imgWFF.length + imgWFN.length + imgWMF.length + imgWMN.length +
                 scrambleWFF.length + scrambleWFN.length + scrambleWMF.length + scrambleWMN.length +
-                imgCondi.length + imgRwd.length)  * 100;
+                imgCondi.length + imgRwd.length)  * 100), 100);
+                document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
                 //console.log('Loaded '+percentcomplete+'% of images');
           }
 
@@ -271,7 +280,7 @@
                               //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                               document.body.innerHTML = '<p><br></br><br></br><center>\
                                     Merci pour votre participation!<br>\
-                                    <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
+                                    <br>Enregistrement des données (<span id="dataLeftText">'+dataSaver.bufferLength()+' restants'+'</span>)<br>\
                                     <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
                                     <span id="dataSendError"></span><br>\
                                     <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\

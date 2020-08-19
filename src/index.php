@@ -186,7 +186,7 @@ function displayTasks($tasks, $doneStatus)
         echo "<form class='taskButtonOuter' method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
         echo "<div>\n";
         echo "<input type='hidden' name='action' value='runtask'>\n<input type='hidden' name='task' value='".$task['taskID']."'>\n";
-        echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='Faire la tâche'".($doneStatus ? " disabled" : "").">\n";
+        echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='".($doneStatus ? "Tâche terminée" : "Faire la tâche")."'".($doneStatus ? " disabled" : "").">\n";
         echo "<div class='taskButtonText'>".$task['taskName']."</div><i class='material-icons'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
         echo "</button>\n";
         echo "</div>\n";

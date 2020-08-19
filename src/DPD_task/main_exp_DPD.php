@@ -49,7 +49,15 @@
     <link rel='icon' href='/favicon.ico' />
   </head>
   <body>
-    <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+    <div id='jspsych-target' style='width:auto; height:auto; position:relative;'>
+      <p><br></br><br></br>
+        <center>
+                          Chargement en cours ...<br>
+                          <br><span id="loadingPercent"></span><br>
+                          <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>
+        </center>
+        </p>
+    </div>
     <canvas class = "canvas" id="myCanvas"></canvas>
 </body>
   <script type="application/javascript">
@@ -151,6 +159,11 @@
              //   control_instrImg_html[t-1] = '<img src="'+control_instrImg[t-1]+'"id= "image-control-instructions" style="height:'+screen.height/1.25+'px"></img>';
              //  };
 
+             function updateLoadedCount(nLoaded){
+              var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + screensImg.length + piechart.length )  * 100), 100);
+              document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
+              //console.log('Loaded '+percentcomplete+'% of images');
+            }
 // --------------------------------- BEGINING EXPERIMENT  --------------------//
 
           var subject_id    = Math.floor(Math.random()*9000000) + 1000000; // there is a new extention, i.e. var subject_id = jsPsych.randomization.randomID(15)
@@ -940,6 +953,12 @@ var test_procedure_training_pred = {
           var today    = new Date();
           var date     = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
 
+          // Preload images
+          jsPsych.pluginAPI.preloadImages([instrImg, screensImg, piechart], //piechart from html+image-keyboard-response-CC.js
+            function(){ startExperiment();},
+            function(nLoaded){updateLoadedCount(nLoaded);});
+
+          function startExperiment() {
           // Execute the experiment
           jsPsych.init({
             timeline: timeline,
@@ -952,7 +971,7 @@ var test_procedure_training_pred = {
                   //jsPsych.data.displayData();// Disable once online, use to look at data while coding
                   document.body.innerHTML = '<p><br></br><br></br><center>\
                         Merci pour votre participation!<br>\
-                        <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
+                        <br>Enregistrement des données (<span id="dataLeftText">'+dataSaver.bufferLength()+' restants'+'</span>)<br>\
                         <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
                         <span id="dataSendError"></span><br>\
                         <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
@@ -967,6 +986,7 @@ var test_procedure_training_pred = {
                   setTimeout(function(){endTask()},2100); //wait for last async request end before retry
               }
             });
+          }
 
             function endTask() {
                   /*update messages and hide retry button*/

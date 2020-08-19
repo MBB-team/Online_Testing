@@ -50,7 +50,15 @@ Data Output (as in MySQL):
 
 </head>
 <body>
-  <div id='jspsych-target' style='width:auto; height:auto; position:relative;'></div>
+  <div id='jspsych-target' style='width:auto; height:auto; position:relative;'>
+    <p><br></br><br></br>
+      <center>
+          Chargement en cours ...<br>
+          <br><span id="loadingPercent"></span><br>
+          <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>
+      </center>
+    </p>
+  </div>
   <canvas class = "canvas" id="myCanvas"></canvas>
 </body>
 
@@ -189,7 +197,8 @@ Data Output (as in MySQL):
               };
 
               function updateLoadedCount(nLoaded){
-                var percentcomplete = nLoaded / (instrImg.length + 1)  * 100;
+                var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length)  * 100), 100);
+                document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
                 //console.log('Loaded '+percentcomplete+'% of images');
               }
 
@@ -294,7 +303,7 @@ Data Output (as in MySQL):
                   //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
                   document.body.innerHTML = '<p><br></br><br></br><center>\
                               Merci pour votre participation!<br>\
-                              <br>Enregistrement des données (<span id="dataLeftText"></span>)<br>\
+                              <br>Enregistrement des données (<span id="dataLeftText">'+dataSaver.bufferLength()+' restants'+'</span>)<br>\
                               <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
                               <span id="dataSendError"></span><br>\
                               <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
