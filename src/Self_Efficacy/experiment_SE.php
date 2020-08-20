@@ -222,28 +222,18 @@ Per trial:
              jsPsych.data.addProperties({date: date});
              saveData(); // edit out if not on server
        },
-        on_finish: function() {
-             //jsPsych.data.displayData(); // Disable once online, use to look at data while coding
-             document.body.innerHTML = '<p><br></br><br></br><center>\
-                              Merci pour votre participation!<br>\
-                              <br>Enregistrement des données (<span id="dataLeftText">'+dataSaver.bufferLength()+' restants'+'</span>)<br>\
-                              <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
-                              <span id="dataSendError"></span><br>\
-                              <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
-                              </center><p>';
-             //ensure exited fullscreen
-             if (document.fullscreenElement)
-             {
-                  document.exitFullscreen()
-                  .then(() => console.log("Document Exited form Full screen mode"))
-                  .catch((err) => console.error(err))
-             }
-             setTimeout(function(){endTask()},3300); //wait for last async request end before retry
-        }
+        on_finish: function(){jspsych_finish()},
       });
     } // end of startExperiment
 
-    function endTask() {
+    // helper function to use a setTimeout as a promise.
+    function allowUpdate() {
+                  return new Promise((f) => {
+                        setTimeout(f, 0);
+                  });
+            }
+
+    async function endTask() {
       /*update messages and hide retry button*/
       var errorMessage = document.getElementById('dataSendError');
       var buttonRetry = document.getElementById('dataRetrySend');
@@ -277,6 +267,7 @@ Per trial:
             {
                   break;
             }
+            await allowUpdate();
       }
       infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
       console.log('Datas left to send : ' + dataSaver.bufferLength());
@@ -306,6 +297,25 @@ Per trial:
             sendAnimation.style.visibility = 'hidden';
       }
    }
+
+   function jspsych_finish() {
+          //jsPsych.data.displayData();// Disable once online, use to look at data while coding
+          document.body.innerHTML = '<p><br></br><br></br><center>\
+                Merci pour votre participation!<br>\
+                <br>Enregistrement des données (<span id="dataLeftText">'+dataSaver.bufferLength()+' restants'+'</span>)<br>\
+                <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
+                <span id="dataSendError"></span><br>\
+                <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
+                </center><p>';
+          //ensure exited fullscreen
+          if (document.fullscreenElement)
+          { 
+                document.exitFullscreen()
+                .then(() => console.log("Document Exited form Full screen mode"))
+                .catch((err) => console.error(err))
+          }
+          setTimeout(function(){endTask()},3300); //wait for last async request end before retry
+    }
 
   } // end of browser checking
 </script>
