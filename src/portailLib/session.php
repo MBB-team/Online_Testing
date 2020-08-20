@@ -493,6 +493,35 @@ function writeData($table)
             //}
 
             $data_array = json_decode($data_json, true);
+            
+            //check already saved /!\ assume only one data per $data_array
+            if( isset($clientIds["runID"]) && 
+                isset($key) && 
+                isset($clientIds["runKey"]) && 
+                isset($data_array[0]["date"]) && 
+                isset($data_array[0]["internal_node_id"]) && 
+                isset($data_array[0]["time_elapsed"]) )
+            {
+                $sql = "SELECT COUNT(*) FROM $table WHERE ";
+                $sql.= "run_id = '" . $clientIds["runID"] . "' ";
+                $sql.= "AND recordIndex = '" . $key . "' ";
+                $sql.= "AND clientRunKey = '" . $clientIds["runKey"] . "' ";
+                $sql.= "AND date = '" . $data_array[0]["date"] . "' ";
+                $sql.= "AND internal_node_id = '" . $data_array[0]["internal_node_id"] . "' ";
+                $sql.= "AND time_elapsed = '" . $data_array[0]["time_elapsed"] . "' ";
+
+                $checkStmt = $conn->prepare($sql);
+                if($checkStmt->execute())
+                {
+                    if($checkStmt->fetchColumn() > 0)
+                    {
+                        $result[$key] = 2; //mark as already saved
+                        continue; //skip recording
+                    }
+                }
+            }
+
+
             // If a value is missing from a particular trial, then NULL is inserted
             $sql = "INSERT INTO $table VALUES(";
             for($i = 0; $i < count($col_names); $i++){
