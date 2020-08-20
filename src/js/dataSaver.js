@@ -77,7 +77,7 @@ function DataSaver(mode, url="")
         xhr.setRequestHeader('Content-Type', 'application/json');
         if(async)
         {
-            xhr.timeout = 2000;
+            xhr.timeout = 3000;
             xhr.ontimeout = function () {
                 console.error("dataSaver request timed out.");
             }.bind(this);

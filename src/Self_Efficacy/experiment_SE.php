@@ -238,7 +238,7 @@ Per trial:
                   .then(() => console.log("Document Exited form Full screen mode"))
                   .catch((err) => console.error(err))
              }
-             setTimeout(function(){endTask()},2100); //wait for last async request end before retry
+             setTimeout(function(){endTask()},3300); //wait for last async request end before retry
         }
       });
     } // end of startExperiment
