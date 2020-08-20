@@ -16,6 +16,7 @@ function DataSaver(mode, url="")
 
     this.buffer = {};
     this.bufferIndex = -1;
+    this.clientIds = null;
 
     switch(mode)
     {
@@ -30,6 +31,15 @@ function DataSaver(mode, url="")
         default :
             console.log("dataSaver: Unknown mode");
             break;
+    }
+
+    this.SetClientIds = function(ids)
+    {
+        this.clientIds = ids;
+        if(this.clientIds==null)
+        {
+            alert('Ids vides. Les données ne seront pas sauvegardées.');
+        }
     }
     
     this.save = function(data)
@@ -67,7 +77,7 @@ function DataSaver(mode, url="")
         xhr.setRequestHeader('Content-Type', 'application/json');
         if(async)
         {
-            xhr.timeout = 2000;
+            xhr.timeout = 3000;
             xhr.ontimeout = function () {
                 console.error("dataSaver request timed out.");
             }.bind(this);
@@ -91,6 +101,11 @@ function DataSaver(mode, url="")
         for(i=0; i<indexes.length; i++)
         {
             data[indexes[i]] = this.buffer[indexes[i]];
+        }
+        if(this.clientIds != null)
+        {
+            //add client Ids
+            data['clientIds'] = this.clientIds;
         }
         //console.log(JSON.stringify(data));
 
@@ -188,9 +203,16 @@ function DataSaver(mode, url="")
             case dataSaverModes.SERVER :
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', 'endTask.php', false); //synchronous mode
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                var data={};
+                if(this.clientIds != null)
+                {
+                    //add client Ids
+                    data['clientIds'] = this.clientIds;
+                }
                 try
                 {
-                    xhr.send();
+                    xhr.send(JSON.stringify(data));
                 
                     if(xhr.status == 200)
                     {

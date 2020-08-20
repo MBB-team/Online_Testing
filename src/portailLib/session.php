@@ -95,7 +95,7 @@ function getParticipantID()
 function unIdentify()
 {
     unset($_SESSION['participantID']); //clear userid in session
-    clearRunSession();
+    //clearRunSession();
 }
 
 //get list of current opened tasks. Append a boolean "done" attribut to each task (true if user had already done the task).
@@ -158,19 +158,49 @@ function getAvailableTask($taskID="")
     return $openedTasks;
 }
 
-function prepareTask($taskID) //if everything allright, add a line to run table, set Session variable and return true. //otherwise return false
+function getTaskUrl($taskID)
+{
+    if(!isset($taskID) || empty($taskID))
+        return "";
+    try {
+
+        // connect to database
+        $conn = sessionOpenDataBase();
+        $sql = "SELECT url FROM task WHERE taskID = '" . $taskID . "'";
+        $urlStmt = $conn->prepare($sql);
+        
+        if($urlStmt->execute())
+            return $urlStmt->fetchColumn();
+        else
+            return "";
+    }
+    catch(PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        return "";
+    }
+}
+
+//if everything allright, add a line to run table, set Session variable and return an array with prepared task info. //otherwise return empty array
+//$run["participantID"] 
+//$run["runID"] 
+//$run["taskID"] 
+//$run["taskSessionID"] 
+//$run["taskUrl"] 
+//$run["runKey"]
+function prepareTask($taskID) 
 {
     //check if user can do the task
     $availableTasks = getAvailableTask($taskID);
     if(count($availableTasks)!=1) //assuming max one session can opened for one task at a time
     {
         //invalid task
-        return(false);
+        return([]);
     }
     if($availableTasks[0]["done"])
     {
         //task already done
-        return(false);
+        return([]);
     }
 
     try {
@@ -180,7 +210,7 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
 
         // insert a new run
         $sql = "INSERT INTO run (startTime, participant_participantID, taskSession_taskSessionID) ";
-        $sql.= "VALUES (".phpNow().",'".$_SESSION["participantID"]."',".$availableTasks[0]["taskSessionID"].")";
+        $sql.= "VALUES (".phpNow().",'".getParticipantID()."',".$availableTasks[0]["taskSessionID"].")";
 
         $addRunStmt = $conn->prepare($sql);
 
@@ -191,17 +221,55 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
         $runIDStmt = $conn->prepare($sql);
         if($runIDStmt->execute())
         {
-                $_SESSION["runID"] = $runIDStmt->fetchColumn();
-                $_SESSION["taskID"] = $taskID;
-                $_SESSION["taskSessionID"] = $availableTasks[0]["taskSessionID"];
-                $_SESSION["taskUrl"] = $availableTasks[0]["url"];
-                $_SESSION["indexesSaved"] = [];
-                return true;
+            $run = [];
+
+            $run["participantID"] = getParticipantID();
+            $run["runID"] = $runIDStmt->fetchColumn();
+            $run["taskID"] = $taskID;
+            $run["taskSessionID"] = $availableTasks[0]["taskSessionID"];
+            $run["taskUrl"] = $availableTasks[0]["url"];
+
+            //set runKey
+            $runKey=null;
+            $limitRetry = 50;
+            while($limitRetry>0)
+            {
+                $runKey = strtolower(substr(md5($run["runID"] . '_' . rand()), 0, 8));
+                $sql = "SELECT COUNT(runKey) FROM run WHERE runKey = '" . $runKey . "' ";
+                $countRunKeyStmt = $conn->prepare($sql);
+                $countRunKeyStmt->execute();
+
+                if( $countRunKeyStmt->fetchColumn() == 0 ) 
+                {
+                    break; //found a unique runKey
+                }
+                $limitRetry--;
+            }
+            if($limitRetry<=0)
+            {
+                $runKey = null;
+            }
+            else
+            {
+                $sql = "UPDATE run SET runKey = '" . $runKey . "' WHERE runID = '" . $run["runID"] . "' ";
+                $updateRunKeyStmt = $conn->prepare($sql);
+                $success = $updateRunKeyStmt->execute();
+                if(!$success)
+                {
+                    $runKey = null;
+                }
+
+            }
+            $run["runKey"] = $runKey;
+
+            
+            
+            return $run;
         }
         else
         {
-            clearRunSession();
-            return false;
+            //clearRunSession();
+            return [];
         }
 
     }
@@ -209,12 +277,12 @@ function prepareTask($taskID) //if everything allright, add a line to run table,
     {
         
         print "Erreur !:" . $e->getMessage() . "<br/>";
-        clearRunSession();
-        return false;
+        //clearRunSession();
+        return [];
     }
 
 }
-
+/*
 function isPreparedTask()
 {
     if(array_key_exists('runID', $_SESSION))
@@ -238,32 +306,92 @@ function getRunID()
         return("");
     }
 }
-
+*/
 //update a run with doneTime to phpNow(), return true on success
 function endTask()
 {
-    if(!isPreparedTask())
-    {
-        //no run started in this session environement
-        return false;
-    }
-    //update current run with doneTime
-    try {
+    //if(!isPreparedTask())
+    //{
+    //    //no run started in this session environement
+    //    return false;
+    //}
 
+    $data_all = array(); 
+    try
+    {
+        $data_all = json_decode(file_get_contents('php://input'), true);
+    }
+    catch ( Exception $e)
+    {
+        $data_all = array(); // probably no data due to using old endTask call
+    }
+
+    $clientIds = array();
+    //$result = array(); // will return if insert were succeded (1) or failed (0) or already saved (2) for each indexes
+
+    foreach($data_all as $key => $data_array)
+    {
+        //expect no data exept clientIds
+
+        if($key == 'clientIds')
+        {
+            //var_dump($data_array);
+            foreach($data_array as $clientIdsKey => $clientIdsData)
+            {
+                $clientIds[$clientIdsKey] = htmlspecialchars($clientIdsData);
+            }
+            continue;
+        }
+    }
+/*
+    if(!isset($clientIds["runID"]) && isIdentified() && isPreparedTask()) // session fallback //todo: remove this ?
+    {
+        $clientIds["runID"] = getRunID();
+        if(isset($_SESSION["runKey"]))
+            $clientIds["runKey"] = $_SESSION["runKey"];
+    }
+    if(!isset($clientIds["runKey"]))
+        $clientIds["runKey"] = null;
+*/
+    if(!isset($clientIds["runID"]))
+        return false;
+
+    try {
         // connect to database
         $conn = sessionOpenDataBase();
 
+        //check if run is opened
+        $sql = "SELECT count(*) FROM run WHERE runID='" . $clientIds["runID"] . "' AND doneTime IS NULL";
+        if( is_null($clientIds["runKey"]) )
+        {
+            $sql.= " AND runKey IS NULL" ;
+        }
+        else
+        {
+            $sql.= " AND runKey='" . $clientIds["runKey"] . "'";
+        }
+        
+        $CheckRunStmt = $conn->prepare($sql);
+        $CheckRunStmt->execute();
+
+        if($CheckRunStmt->fetchColumn() != 1) //run not fund
+            return false;
+
+        //update run with doneTime
+
         // update run with doneTime
-        $sql = "UPDATE run SET doneTime=".phpNow()." WHERE runID='".getRunID()."'";
+        $sql = "UPDATE run SET doneTime=".phpNow()." WHERE runID='".$clientIds["runID"]."'";
 
         $addRunStmt = $conn->prepare($sql);
 
         $addRunSucces = $addRunStmt->execute();
 
+        //todo: remove this clear?
+        /*
         if($addRunSucces)
         {
             clearRunSession();
-        }
+        }*/
         return $addRunSucces;
     }
     catch(PDOException $e)
@@ -275,7 +403,7 @@ function endTask()
 
     
 }
-
+/*
 //keep track of already saved data indexes to prevent save same data twice 
 function logIndexSaved($index)
 {
@@ -291,7 +419,7 @@ function isIndexSaved($index)
         return false;
     return in_array($index, $_SESSION["indexesSaved"]);
 }
-
+*/
 // write samples (from php://input) in database table $table
 // return an array
 //  indexN => result
@@ -305,12 +433,36 @@ function isIndexSaved($index)
 function writeData($table)
 {
     $data_all = json_decode(file_get_contents('php://input'), true);
-
+    $clientIds = array();
     $result = array(); // will return if insert were succeded (1) or failed (0) or already saved (2) for each indexes
     foreach($data_all as $key => $data_array)
     {
-    $result[$key] = 0; //temporary mark as failed
+        if(is_numeric($key)) //add index to $result array
+        {
+            $result[$key] = 0; //temporary mark as failed
+            continue;
+        }
+        if($key == 'clientIds')
+        {
+            //var_dump($data_array);
+            foreach($data_array as $clientIdsKey => $clientIdsData)
+            {
+                $clientIds[$clientIdsKey] = htmlspecialchars($clientIdsData);
+            }
+            continue;
+        }
     }
+    /*
+    if(!isset($clientIds["runID"])) // session fallback
+    {
+        $clientIds["runID"] = getRunID();
+        if(isset($_SESSION["runKey"]))
+            $clientIds["runKey"] = $_SESSION["runKey"];
+    }
+    */
+    if(!isset($clientIds["runKey"]))
+        $clientIds["runKey"] = null;
+
     $result['message']="";
 
     try {
@@ -329,13 +481,47 @@ function writeData($table)
 
         foreach($data_all as $key => $data_json)
         {
-            if( isIndexSaved($key) ) //already saved
+            if( !is_numeric($key) ) //skip non data
             {
-            $result[$key] = 2; //mark as already saved
-            continue;
+                continue;
             }
+            //disable this feature
+            //if( isIndexSaved($key) ) //already saved
+            //{
+            //$result[$key] = 2; //mark as already saved
+            //continue;
+            //}
 
             $data_array = json_decode($data_json, true);
+            
+            //check already saved /!\ assume only one data per $data_array
+            if( isset($clientIds["runID"]) && 
+                isset($key) && 
+                isset($clientIds["runKey"]) && 
+                isset($data_array[0]["date"]) && 
+                isset($data_array[0]["internal_node_id"]) && 
+                isset($data_array[0]["time_elapsed"]) )
+            {
+                $sql = "SELECT COUNT(*) FROM $table WHERE ";
+                $sql.= "run_id = '" . $clientIds["runID"] . "' ";
+                $sql.= "AND recordIndex = '" . $key . "' ";
+                $sql.= "AND clientRunKey = '" . $clientIds["runKey"] . "' ";
+                $sql.= "AND date = '" . $data_array[0]["date"] . "' ";
+                $sql.= "AND internal_node_id = '" . $data_array[0]["internal_node_id"] . "' ";
+                $sql.= "AND time_elapsed = '" . $data_array[0]["time_elapsed"] . "' ";
+
+                $checkStmt = $conn->prepare($sql);
+                if($checkStmt->execute())
+                {
+                    if($checkStmt->fetchColumn() > 0)
+                    {
+                        $result[$key] = 2; //mark as already saved
+                        continue; //skip recording
+                    }
+                }
+            }
+
+
             // If a value is missing from a particular trial, then NULL is inserted
             $sql = "INSERT INTO $table VALUES(";
             for($i = 0; $i < count($col_names); $i++){
@@ -350,18 +536,23 @@ function writeData($table)
             for($i=0; $i < count($data_array); $i++){
                 for($j = 0; $j < count($col_names); $j++){
                     $colname = $col_names[$j];
-                    if( ($colname == "run_id") && isPreparedTask()){
-                    $insertstmt->bindValue(":$colname", getRunID() );
+                    if( ($colname == "run_id") && isset($clientIds["runID"])){
+                        $insertstmt->bindValue(":$colname", $clientIds["runID"] );
+                    } else if( ($colname == "clientRunKey") && isset($clientIds["runKey"])){
+                        $insertstmt->bindValue(":$colname", $clientIds["runKey"] );
+                    }
+                    else if( ($colname == "recordIndex") ){
+                        $insertstmt->bindValue(":$colname", $key );
                     }
                     else if(!isset($data_array[$i][$colname])){
-                    $insertstmt->bindValue(":$colname", null, PDO::PARAM_NULL);
+                        $insertstmt->bindValue(":$colname", null, PDO::PARAM_NULL);
                     } else {
-                    $insertstmt->bindValue(":$colname", $data_array[$i][$colname]);
+                        $insertstmt->bindValue(":$colname", $data_array[$i][$colname]);
                     }
                 }
                 if($insertstmt->execute())
                 {
-                    logIndexSaved($key);
+                    //logIndexSaved($key);
                     $result[$key] = 1; //mark as succeded
                 }
             }
@@ -369,13 +560,29 @@ function writeData($table)
     }
     catch(PDOException $e)
     {
-        $result['message'] = $e->getMessage();
+        $result['message'] .= " ". $e->getMessage() . json_encode($clientIds);
     }
     $conn = null;
     return $result;
 }
 
-
+function echoAsJsArray($array)
+{
+    if( isset($array) && is_array($array) && (count($array) > 0) )
+    {
+        echo '{';
+        foreach($array as $key => $value)
+        {
+                echo "'$key':'$value',";
+        }
+        echo '}';
+    }
+    else
+    {
+        echo 'null'; //no data in $array
+    }
+}
+/*
 function clearRunSession()
 {
     //clear session variables
@@ -385,7 +592,7 @@ function clearRunSession()
     unset($_SESSION["taskUrl"]);
     unset($_SESSION["indexesSaved"]);
 }
-
+*/
 // bruteforce IP ban : log
 function logFailedAttemptIP()
 {

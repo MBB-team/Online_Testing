@@ -30,14 +30,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case "runtask":
             if(isIdentified())
             {
-                $prepareTaskSucces = prepareTask($formTask);
-                if($prepareTaskSucces)
+                //$prepareTaskSucces = prepareTask($formTask);
+                //if($prepareTaskSucces)
+                $taskUrl = getTaskUrl($formTask);
+                if(!empty($taskUrl))
                 {
                     //redirect to task
-                    header("Location: ".$_SESSION["taskUrl"]);
+                    header("Location: ".$taskUrl);
                     exit();
                 } else {
-                    echo '<p>Only one session can be opened for one task at a time.</p>';
+                    //echo '<p>Only one session can be opened for one task at a time.</p>';
+                    echo 'Tâche non trouvée <script type="application/javascript"> setTimeOut(function(){window.location.replace("/");},4000);)</script>';
                     exit();
                 }
                 
@@ -56,6 +59,7 @@ echo "<!DOCTYPE html>
 <head>
 <meta charset='UTF-8'>
 <link href='css/portail.css' rel='stylesheet' type='text/css'>
+<link rel='icon' href='/favicon.ico' />
 </head>
 <body>
 <div class='titleContainer'>
@@ -182,7 +186,7 @@ function displayTasks($tasks, $doneStatus)
         echo "<form class='taskButtonOuter' method='post' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "'>\n";
         echo "<div>\n";
         echo "<input type='hidden' name='action' value='runtask'>\n<input type='hidden' name='task' value='".$task['taskID']."'>\n";
-        echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='Faire la tâche'".($doneStatus ? " disabled" : "").">\n";
+        echo "<button class='taskButton ".($doneStatus ? "taskDone" : "taskNotDone")."' title='".($doneStatus ? "Tâche terminée" : "Faire la tâche")."'".($doneStatus ? " disabled" : "").">\n";
         echo "<div class='taskButtonText'>".$task['taskName']."</div><i class='material-icons'>".($doneStatus ? "done" : "play_arrow")."</i>\n";
         echo "</button>\n";
         echo "</div>\n";
