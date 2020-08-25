@@ -48,7 +48,9 @@ CREATE TABLE `tableEngMain` (
   `time_elapsed` int(25) DEFAULT NULL,
   `internal_node_id` text DEFAULT NULL,
   `date` text DEFAULT NULL,
-  `run_id` int(7) NOT NULL
+  `run_id` int(7) NOT NULL,
+  `clientRunKey` VARCHAR(8) NULL,
+  `recordIndex` INT NULL
 ) ENGINE=InnoDB;
 COMMIT;
 

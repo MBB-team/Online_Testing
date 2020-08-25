@@ -52,7 +52,9 @@ CREATE TABLE `table_DPD` (
       `decision_phase` int(3) DEFAULT NULL,
       `correct` int(3) DEFAULT NULL,
       `run_id` int(7) NOT NULL,
-      `date` text DEFAULT NULL
+      `date` text DEFAULT NULL,
+      `clientRunKey` VARCHAR(8) NULL,
+      `recordIndex` INT NULL
 ) ENGINE=InnoDB;
 COMMIT;
 

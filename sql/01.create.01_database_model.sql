@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `databaseEmo`.`run` (
   `doneTime` DATETIME NULL,
   `participant_participantID` VARCHAR(25) NOT NULL,
   `taskSession_taskSessionID` INT NOT NULL,
+  `runKey` VARCHAR(8) NULL UNIQUE,
   PRIMARY KEY (`runID`),
   INDEX `fk_run_participant1_idx` (`participant_participantID` ASC),
   INDEX `fk_run_taskSession1_idx` (`taskSession_taskSessionID` ASC),
