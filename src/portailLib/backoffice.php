@@ -194,7 +194,7 @@ function exportCSV($sql, $csvFilename="export")
     }
 }
 
-//return an array taskName=>['dataTableName','taskID']
+//return an array n=>['dataTableName','taskID','taskName']
 //limit to $taskID if submited 
 function getDataTaskTables($taskID="")
 {
@@ -214,13 +214,14 @@ function getDataTaskTables($taskID="")
         $tablesFetch = $tablesListStmt->fetchAll(PDO::FETCH_ASSOC);
         $tablesList = [];
 
-        // parse each line to form a simpler array taskName=>'dataTableName','taskID'
+        // parse each line to form a simpler array n=>'dataTableName','taskID','taskName'
         foreach($tablesFetch as $table)
         {
             $task = [];
             $task['dataTableName'] = $table['dataTableName'];
             $task['taskID'] = $table['taskID'];
-            $tablesList[$table['taskName']] = $task;
+            $task['taskName'] = $table['taskName'];
+            array_push($tablesList,$task);
         }
         return $tablesList;
     }

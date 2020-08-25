@@ -166,8 +166,8 @@ function displayDropDownList($fieldName, $items, $htmlID="", $onchange="")
         echo "<option value='".$item['dataTableName'];
         echo (isset($item['taskID']))?("' taskID='".$item['taskID']):"";
         echo "'>";
-        if(is_string($key))
-            echo $key;
+        if(isset($item['taskName']) && is_string($item['taskName']))
+            echo $item['taskName'].' ('.$item['dataTableName'].')';
         else
             echo $item['dataTableName'];
         echo "</option>\n";
