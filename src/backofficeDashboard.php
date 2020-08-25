@@ -125,9 +125,15 @@ foreach($tasks as $key=>$task)
 
         //download button
         if(!empty($dataTaskTableName))
+        {
             $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
+            $content .= "<button class=\\'checkDataButton\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showCheckData();\\' title=\\'Vérifier les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>broken_image</i><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>build</i></button>";
+        }
         else
+        {
             $content .= "<button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>";
+            $content .= "<button class=\\'checkDataButton\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>broken_image</i><i class=\\'material-icons\\'>build</i></button>";
+        }
 
         //add session button
         $content .= "<button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
@@ -252,6 +258,33 @@ function HideDownloadTaskData()
 {
     document.getElementById("downloadTaskData").style.display = "none";
 }
+
+function showCheckData(e)
+{
+    var x = 0,
+        y = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    var noteDiv = document.getElementById("checkData");
+    noteDiv.style.display = "block";
+    noteDiv.style.left = (x + 20) + "px";
+    noteDiv.style.top = (y) + "px";
+
+    document.getElementById("checkDataContent").innerHTML = "Chargement...";
+    //document.getElementById("checkDatataTaskID").value=e.target.getAttribute("taskID");
+}
+
+function HideCheckData()
+{
+    document.getElementById("checkData").style.display = "none";
+}
+
 
 function showDownloadSessionData(e)
 {
@@ -576,6 +609,13 @@ function HideAddSession()
             <p>Exclure les run incomplets : <input type='checkbox' name='onlyDone'></p>
             <button>Exporter</button>
         </form>
+    </div>
+</div>
+<div id='checkData'>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideCheckData()"><i class='material-icons'>close</i></button>
+    </div>
+    <br clear="all">
+    <div id='checkDataContent'>
     </div>
 </div>
 <div id='editSession'>

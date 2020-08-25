@@ -60,20 +60,20 @@ td.sessionCell span, td.sessionCell span .material-icons
     border-color: rgb(192, 192, 192);
 }
 
-button.download div, button.edit div, button.addSession div
+button.download div, button.edit div, button.addSession div, button.checkDataButton div
 {
     vertical-align: middle;
     display: inline-block;
 }
 
-button.download .material-icons, button.edit .material-icons, button.addSession .material-icons
+button.download .material-icons, button.edit .material-icons, button.addSession .material-icons, button.checkDataButton .material-icons
 {
     font-size: 1.5em;
     vertical-align: middle;
     display: inline-block;
 }
 
-#downloadTaskData, #downloadSessionData, #editSession, #addSession
+#downloadTaskData, #downloadSessionData, #editSession, #addSession, #checkData
 {
     background: whitesmoke;
     border-style: solid;
