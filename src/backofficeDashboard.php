@@ -127,7 +127,7 @@ foreach($tasks as $key=>$task)
         if(!empty($dataTaskTableName))
         {
             $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
-            $content .= "<button class=\\'checkDataButton\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showCheckData();\\' title=\\'Vérifier les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>broken_image</i><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>build</i></button>";
+            $content .= "<button class=\\'checkDataButton\\' taskID=\\'".$task["taskID"]."\\' onClick=\\'showCheckData();\\' title=\\'Vérifier les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'".$task["taskID"]."\\'>broken_image</i><i class=\\'material-icons\\' taskID=\\'".$task["taskID"]."\\'>build</i></button>";
         }
         else
         {
@@ -136,7 +136,7 @@ foreach($tasks as $key=>$task)
         }
 
         //add session button
-        $content .= "<button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
+        $content .= "<br><button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
         $content .= "</div>',\n";
         /*** group content end***/
         echo "content: ".$content;
@@ -278,6 +278,100 @@ function showCheckData(e)
 
     document.getElementById("checkDataContent").innerHTML = "Chargement...";
     //document.getElementById("checkDatataTaskID").value=e.target.getAttribute("taskID");
+
+    //check request
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "backofficeRepair.php", true);
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    var params = "action=check";
+    params += "&taskID=" + e.target.getAttribute("taskID");
+    /*params += "&editOpeningDate=" + document.getElementById("editOpeningDate").value;
+    params += "&editOpeningHour=" + document.getElementById("editOpeningHour").value;
+    params += "&editClosingDate=" + document.getElementById("editClosingDate").value;
+    params += "&editClosingHour=" + document.getElementById("editClosingHour").value;*/
+
+    xhr.onload = function() {
+        var checkDataContentDiv = document.getElementById("checkDataContent");
+        var reponse = "";
+        if(xhr.status == 200){
+                var response = JSON.parse(xhr.responseText); // $.parseJSON
+                console.log(response);
+        }
+        else
+        {
+            checkDataContentDiv.innerHTML = "Erreur " + xhr.status;
+            return;
+        }
+
+        //clear content
+        checkDataContentDiv.innerHTML = "";
+        if("message" in response) {
+            var messageDiv = document.createElement("div");
+            messageDiv.innerHTML = response.message;
+            checkDataContentDiv.appendChild(messageDiv);
+        }
+        if(("data" in response) && response.data.length>0 )
+        {
+            var checkDataTable = document.createElement("table");
+            //table header
+            var thead = document.createElement("thead");
+            checkDataTable.appendChild(thead);
+            var tr = document.createElement("tr");
+            thead.appendChild(tr);
+            for(const colName of ["run_id", "date", "nombre de lignes"])
+            {
+                var th = document.createElement("th");
+                th.innerHTML = colName;
+                tr.appendChild(th);
+            }   
+            //rows
+            var tbody = document.createElement("tbody");
+            checkDataTable.appendChild(tbody);
+            for (const element of response.data)
+            {
+                var tr = document.createElement("tr");
+                tbody.appendChild(tr);
+                for(const colName of ["run_id", "date", "nombre de lignes"])
+                {
+                    var cellData = '';
+                    switch(colName)
+                    {
+                        case "run_id" :
+                            cellData = element["run_id"];
+                            break;
+                        case "date" :
+                            cellData = element["date"];
+                            break;
+                        case "nombre de lignes" :
+                            cellData = element["nb"];
+                            break;
+                        default :
+                            cellData = '';
+                            break;
+                    }
+                    var td = document.createElement("td");
+                    td.innerHTML = cellData;
+                    tr.appendChild(td);
+                    console.log(cellData);
+                }   
+
+            }
+
+            checkDataContentDiv.appendChild(checkDataTable);
+        }
+        else
+        {
+            var noticeDiv = document.createElement("div");
+            noticeDiv.innerHTML = "Pas d'erreurs trouvées.";
+            checkDataContentDiv.appendChild(noticeDiv);
+        }
+
+    }
+
+    xhr.onerror = function() {
+        document.getElementById("checkDataContent").innerHTML = "Une erreur est survenue.";
+    }
+    xhr.send(params);
 }
 
 function HideCheckData()

@@ -194,6 +194,47 @@ function exportCSV($sql, $csvFilename="export")
     }
 }
 
+//return summary of unlinked data 
+function getUnlinkedDataSummary($taskID)
+{
+    $tableInfo = getDataTaskTables($taskID);
+    if(empty($tableInfo))
+    {
+        //task not found
+        return [];
+    }
+
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "SELECT run_id, date, COUNT(*) as nb";
+        $sql.= " FROM run, taskSession, ".$tableInfo[0]['dataTableName'];
+        $sql.= " WHERE runID=run_id";
+        $sql.= " AND taskSessionID=taskSession_taskSessionID";
+        $sql.= " AND (recordIndex IS NULL)"; //dont check data after improved saving
+        $sql.= " AND task_taskID!='".$taskID."'"; //linked to wrong runID so wrong taskID
+        $sql.= " GROUP BY run_id, date";
+
+        $unlinkedDataStmt = $conn->prepare($sql);
+
+        if( !($unlinkedDataStmt->execute()) )
+        {
+            return [];
+        }
+            
+        return($unlinkedDataStmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+    catch (PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        print $sql;
+        return [];
+    }
+
+}
+
 //return an array n=>['dataTableName','taskID','taskName']
 //limit to $taskID if submited 
 function getDataTaskTables($taskID="")

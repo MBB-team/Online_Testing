@@ -16,10 +16,11 @@ $result['message'] = "";
 switch($action)
 {
     case "check":
-        $result['message'] = 'check "'. $taskID;
+        $result['message'] = 'Vérification pour la tâche '. $taskID;
+        $result['data'] = getUnlinkedDataSummary($taskID);
         break;
     case "export":
-        $result['message'] = 'Export "'. $taskID . ' ' . $runID;
+        $result['message'] = 'Export "'. $taskID . ' ' . $runID; //replace by export csv
         break;
     default:
         $result['message'] = 'Commande "'. $action .'" inconnue';
@@ -28,4 +29,15 @@ switch($action)
 
 echo json_encode($result);
 
+function test_input($data) {
+    //return content of $_POST["$data"] with a bit of security
+    //return empty string if $data is not found in $_POST
+    if(!array_key_exists($data, $_POST))
+    { return "";}
+
+    $returnData = trim($_POST["$data"]);
+    $returnData = stripslashes($returnData);
+    $returnData = htmlspecialchars($returnData);
+    return $returnData;
+  }
 ?>
