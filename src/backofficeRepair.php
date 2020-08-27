@@ -2,12 +2,13 @@
 
 include('portailLib/backoffice.php');
 
-$action = $taskID = $runID = "";
+$action = $taskID = $runID = $matchedRunID= "";
 //form processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $action = test_input("action");         //values : "check", "export"
+    $action = test_input("action");         //values : "check", "exportOriginal, exportCorrected"
     $taskID = test_input("taskID");         //values : working on this taskID
     $runID = test_input("runID");           //values : original runID to export
+    $matchedRunID = test_input("matchedRunID");           //values : original runID to export
 }
 
 $result = array(); // contin data to be returned
@@ -18,9 +19,13 @@ switch($action)
     case "check":
         $result['message'] = 'Vérification pour la tâche '. $taskID;
         $result['data'] = getUnlinkedDataSummary($taskID);
+        $result['taskID'] = $taskID;
         break;
-    case "export":
+    case "exportOriginal":
         $result['message'] = 'Export "'. $taskID . ' ' . $runID; //replace by export csv
+        break;
+    case "exportCorrected":
+        $result['message'] = 'Export "'. $taskID . ' ' . $runID. ' ' . $matchedRunID; //replace by export csv
         break;
     default:
         $result['message'] = 'Commande "'. $action .'" inconnue';

@@ -318,7 +318,7 @@ function showCheckData(e)
             checkDataTable.appendChild(thead);
             var tr = document.createElement("tr");
             thead.appendChild(tr);
-            for(const colName of ["run_id", "date", "nombre de lignes"])
+            for(const colName of ["participantID", "run_id", "date", "nombre de lignes", "correspondance(s) possible(s)", "données corrigées"])
             {
                 var th = document.createElement("th");
                 th.innerHTML = colName;
@@ -331,28 +331,54 @@ function showCheckData(e)
             {
                 var tr = document.createElement("tr");
                 tbody.appendChild(tr);
-                for(const colName of ["run_id", "date", "nombre de lignes"])
+                for(const colName of ["participantID", "run_id", "date", "nombre de lignes", "correspondance(s) possible(s)", "données corrigées"])
                 {
-                    var cellData = '';
+                    var td = document.createElement("td");
                     switch(colName)
                     {
+                        case "participantID" :
+                            td.innerHTML = element["participantID"];
+                            break;
                         case "run_id" :
-                            cellData = element["run_id"];
+                            td.innerHTML = element["run_id"];
+                            td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"]));
                             break;
                         case "date" :
-                            cellData = element["date"];
+                            td.innerHTML = element["date"];
                             break;
                         case "nombre de lignes" :
-                            cellData = element["nb"];
+                            td.innerHTML = element["nb"];
+                            break;
+                        case "correspondance(s) possible(s)":
+                            td.innerHTML = "";
+                            if(("match" in element) && element.match.length>0)
+                            {
+                                for (const matchRun of element.match)
+                                {
+                                    if(td.innerHTML.length>0)
+                                        td.innerHTML += "<br>";
+                                    td.innerHTML += matchRun['run_id'] + ' (' + matchRun['sessionName'] + ')';
+                                    td.appendChild(CheckDataCreateButton(response.taskID, matchRun["run_id"]));
+                                }
+                            }
+                            break;
+                        case "données corrigées" :
+                            td.innerHTML = "";
+                            if(("match" in element) && element.match.length>0)
+                            {
+                                for (const matchRun of element.match)
+                                {
+                                    if(td.innerHTML.length>0)
+                                        td.innerHTML += "<br>";
+                                    td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"], matchRun["run_id"]));
+                                }
+                            }
                             break;
                         default :
                             cellData = '';
                             break;
                     }
-                    var td = document.createElement("td");
-                    td.innerHTML = cellData;
                     tr.appendChild(td);
-                    console.log(cellData);
                 }   
 
             }
@@ -372,6 +398,36 @@ function showCheckData(e)
         document.getElementById("checkDataContent").innerHTML = "Une erreur est survenue.";
     }
     xhr.send(params);
+}
+
+function CheckDataCreateButton(taskID, originalRunID, matchedRunID='')
+{
+    var dlButton = document.createElement('button');
+    dlButton.classList.add('download');
+    dlButton.setAttribute('taskID', taskID);
+    dlButton.setAttribute('originalRunID', originalRunID);
+    dlButton.setAttribute('matchedRunID', matchedRunID);
+    dlButton.title = 'Exporter les données ' + (matchedRunID.length<1?'brutes':'corrigées');
+    var dlIcon = document.createElement('i');
+    dlIcon.classList.add('material-icons');
+    dlIcon.setAttribute('taskID', taskID);
+    dlIcon.setAttribute('originalRunID', originalRunID);
+    dlIcon.setAttribute('matchedRunID', matchedRunID);
+    dlIcon.innerHTML = 'get_app';
+    dlButton.appendChild(dlIcon);
+    if(matchedRunID.length>0)
+    {
+        var dlIcon2 = document.createElement('i');
+        dlIcon2.classList.add('material-icons');
+        dlIcon2.setAttribute('taskID', taskID);
+        dlIcon2.setAttribute('originalRunID', originalRunID);
+        dlIcon2.setAttribute('matchedRunID', matchedRunID);
+        dlIcon2.innerHTML = 'build';
+        dlButton.appendChild(dlIcon2);
+    }
+
+    //TODO: add function to retrive the data
+    return dlButton;
 }
 
 function HideCheckData()

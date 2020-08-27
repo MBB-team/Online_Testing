@@ -209,7 +209,7 @@ function getUnlinkedDataSummary($taskID)
         // connect to database
         $conn = backofficeOpenDataBase();
 
-        $sql = "SELECT run_id, date, COUNT(*) as nb";
+        $sql = "SELECT participant_participantID as participantID, run_id, date, COUNT(*) as nb";
         $sql.= " FROM run, taskSession, ".$tableInfo[0]['dataTableName'];
         $sql.= " WHERE runID=run_id";
         $sql.= " AND taskSessionID=taskSession_taskSessionID";
@@ -223,8 +223,33 @@ function getUnlinkedDataSummary($taskID)
         {
             return [];
         }
-            
-        return($unlinkedDataStmt->fetchAll(PDO::FETCH_ASSOC));
+        $unlinkedData = $unlinkedDataStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        //serach for possible match
+        foreach($unlinkedData as $key=>$row)
+        {
+            $sql = "SELECT run_id, sessionName";
+            $sql.= " FROM run, taskSession, ".$tableInfo[0]['dataTableName'];
+            $sql.= " WHERE runID=run_id";
+            $sql.= " AND taskSessionID=taskSession_taskSessionID";
+            $sql.= " AND runID!='".$row['run_id']."'"; //search for other runID
+            $sql.= " AND date='".$row['date']."'";  //with same date
+            $sql.= " AND participant_participantID='".$row['participantID']."'"; //participantID should be correct
+            $sql.= " GROUP BY run_id";
+            $unlinkedData[$key]['sql'] = $sql;
+            $matchStmt = $conn->prepare($sql);
+            if($matchStmt->execute())
+            {
+                $matchResult = $matchStmt->fetchAll(PDO::FETCH_ASSOC);
+                $unlinkedData[$key]['match'] = [];
+                foreach($matchResult as $matchRun)
+                {
+                    $unlinkedData[$key]['match'][] = $matchRun;
+                }
+            }
+        }
+
+        return($unlinkedData);
     }
     catch (PDOException $e)
     {
