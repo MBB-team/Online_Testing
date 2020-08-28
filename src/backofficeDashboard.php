@@ -301,6 +301,11 @@ function showCheckData(e)
 
         //clear content
         checkDataContentDiv.innerHTML = "";
+        var noticeLink = document.createElement('a');
+        noticeLink.href = "backofficeCheckDataNotice.php";
+        noticeLink.target='_blank';
+        noticeLink.innerHTML = "<i class='material-icons'>help</i> Notice";
+        checkDataContentDiv.appendChild(noticeLink);
         if("message" in response) {
             var messageDiv = document.createElement("div");
             messageDiv.innerHTML = response.message;
