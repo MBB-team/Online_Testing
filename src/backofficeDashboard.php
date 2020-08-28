@@ -125,12 +125,18 @@ foreach($tasks as $key=>$task)
 
         //download button
         if(!empty($dataTaskTableName))
+        {
             $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
+            $content .= "<button class=\\'checkDataButton\\' taskID=\\'".$task["taskID"]."\\' onClick=\\'showCheckData();\\' title=\\'Vérifier les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'".$task["taskID"]."\\'>broken_image</i><i class=\\'material-icons\\' taskID=\\'".$task["taskID"]."\\'>build</i></button>";
+        }
         else
+        {
             $content .= "<button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>";
+            $content .= "<button class=\\'checkDataButton\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>broken_image</i><i class=\\'material-icons\\'>build</i></button>";
+        }
 
         //add session button
-        $content .= "<button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
+        $content .= "<br><button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
         $content .= "</div>',\n";
         /*** group content end***/
         echo "content: ".$content;
@@ -252,6 +258,240 @@ function HideDownloadTaskData()
 {
     document.getElementById("downloadTaskData").style.display = "none";
 }
+
+function showCheckData(e)
+{
+    var x = 0,
+        y = 0;
+    if (!e) e = window.event;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    } else if (e.clientX || e.clientY) {
+        x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+        y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    var noteDiv = document.getElementById("checkData");
+    noteDiv.style.display = "block";
+    noteDiv.style.left = (x + 20) + "px";
+    noteDiv.style.top = (y) + "px";
+
+    document.getElementById("checkDataContent").innerHTML = "Chargement...";
+    //document.getElementById("checkDatataTaskID").value=e.target.getAttribute("taskID");
+
+    //check request
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "backofficeRepair.php", true);
+    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    var params = "action=check";
+    params += "&taskID=" + e.target.getAttribute("taskID");
+
+    xhr.onload = function() {
+        var checkDataContentDiv = document.getElementById("checkDataContent");
+        var reponse = "";
+        if(xhr.status == 200){
+                var response = JSON.parse(xhr.responseText); // $.parseJSON
+                //console.log(response);
+        }
+        else
+        {
+            checkDataContentDiv.innerHTML = "Erreur " + xhr.status;
+            return;
+        }
+
+        //clear content
+        checkDataContentDiv.innerHTML = "";
+        var noticeLink = document.createElement('a');
+        noticeLink.href = "backofficeCheckDataNotice.php";
+        noticeLink.target='_blank';
+        noticeLink.innerHTML = "<i class='material-icons'>help</i> Notice";
+        checkDataContentDiv.appendChild(noticeLink);
+        if("message" in response) {
+            var messageDiv = document.createElement("div");
+            messageDiv.innerHTML = response.message;
+            checkDataContentDiv.appendChild(messageDiv);
+        }
+        if(("data" in response) && response.data.length>0 )
+        {
+            var checkDataTable = document.createElement("table");
+            //table header
+            var thead = document.createElement("thead");
+            checkDataTable.appendChild(thead);
+            var tr = document.createElement("tr");
+            thead.appendChild(tr);
+            for(const colName of ["participantID", "run_id", "date", "nombre de lignes", "correspondance(s) possible(s)", "données corrigées"])
+            {
+                var th = document.createElement("th");
+                th.innerHTML = colName;
+                tr.appendChild(th);
+            }   
+            //rows
+            var tbody = document.createElement("tbody");
+            checkDataTable.appendChild(tbody);
+            for (const element of response.data)
+            {
+                var tr = document.createElement("tr");
+                tbody.appendChild(tr);
+                for(const colName of ["participantID", "run_id", "date", "nombre de lignes", "correspondance(s) possible(s)", "données corrigées"])
+                {
+                    var td = document.createElement("td");
+                    switch(colName)
+                    {
+                        case "participantID" :
+                            td.innerHTML = element["participantID"];
+                            break;
+                        case "run_id" :
+                            td.innerHTML = element["run_id"];
+                            td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"], element["participantID"]));
+                            break;
+                        case "date" :
+                            td.innerHTML = element["date"];
+                            break;
+                        case "nombre de lignes" :
+                            td.innerHTML = element["nb"];
+                            break;
+                        case "correspondance(s) possible(s)":
+                            td.innerHTML = "";
+                            if(("match" in element) && element.match.length>0)
+                            {
+                                for (const matchRun of element.match)
+                                {
+                                    if(td.innerHTML.length>0)
+                                        td.innerHTML += "<br>";
+                                    td.innerHTML += 'run ' + matchRun['run_id'] + ' (' + matchRun['sessionName'] + ')';
+                                    td.appendChild(CheckDataCreateButton(response.taskID, matchRun["run_id"], element["participantID"]));
+                                }
+                            }
+                            break;
+                        case "données corrigées" :
+                            td.innerHTML = "";
+                            if(("match" in element) && element.match.length>0)
+                            {
+                                for (const matchRun of element.match)
+                                {
+                                    if(td.innerHTML.length>0)
+                                        td.innerHTML += "<br>";
+                                    td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"], element["participantID"], matchRun["run_id"]));
+                                }
+                            }
+                            break;
+                        default :
+                            cellData = '';
+                            break;
+                    }
+                    tr.appendChild(td);
+                }   
+
+            }
+
+            checkDataContentDiv.appendChild(checkDataTable);
+        }
+        else
+        {
+            var noticeDiv = document.createElement("div");
+            noticeDiv.innerHTML = "Pas d'erreurs trouvées.";
+            checkDataContentDiv.appendChild(noticeDiv);
+        }
+
+    }
+
+    xhr.onerror = function() {
+        document.getElementById("checkDataContent").innerHTML = "Une erreur est survenue.";
+    }
+    xhr.send(params);
+}
+
+function CheckDataCreateButton(taskID, originalRunID, participantID, matchedRunID='')
+{
+    var dlButton = document.createElement('button');
+    dlButton.classList.add('download');
+    dlButton.setAttribute('action', matchedRunID.length<1?'exportOriginal':'exportCorrected');
+    dlButton.setAttribute('taskID', taskID);
+    dlButton.setAttribute('originalRunID', originalRunID);
+    dlButton.setAttribute('matchedRunID', matchedRunID);
+    dlButton.setAttribute('participantID', participantID);
+    dlButton.title = 'Exporter les données ' + (matchedRunID.length<1?'brutes':'corrigées');
+    var dlIcon = document.createElement('i');
+    dlIcon.classList.add('material-icons');
+    dlIcon.innerHTML = 'get_app';
+    dlButton.appendChild(dlIcon);
+    if(matchedRunID.length>0)
+    {
+        var dlIcon2 = document.createElement('i');
+        dlIcon2.classList.add('material-icons');
+        dlIcon2.innerHTML = 'build';
+        dlButton.appendChild(dlIcon2);
+    }
+
+    dlButton.onclick = function()
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "backofficeRepair.php", true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        var params = "action=" + this.getAttribute('action');
+        params += "&taskID=" + this.getAttribute('taskID');
+        params += "&runID=" + this.getAttribute('originalRunID');
+        params += "&matchedRunID=" + this.getAttribute('matchedRunID');
+        params += "&participantID=" + this.getAttribute('participantID');
+        
+
+        xhr.onload = function() {
+            var reponse = "";
+            if(xhr.status == 200){
+                //console.log(xhr); 
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var RegexMatches = filenameRegex.exec(disposition);
+                    if (RegexMatches != null && RegexMatches[1]) { 
+                    filename = RegexMatches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                if(filename.length>0)
+                {
+                    var blob = new Blob([xhr.response], {type: 'text/x-csv'});
+                    //Create a link element, hide it, direct 
+                    //it towards the blob, and then 'click' it programatically
+                    let a = document.createElement("a");
+                    a.style = "display: none";
+                    document.body.appendChild(a);
+                    //Create a DOMString representing the blob 
+                    //and point the link element towards it
+                    let url = window.URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = filename;
+                    //programatically click the link to trigger the download
+                    a.click();
+                    //release the reference to the file by revoking the Object URL
+                    window.URL.revokeObjectURL(url);
+                }
+                else
+                {
+                    var response = JSON.parse(xhr.responseText); // $.parseJSON
+                    if(response.message.length>0)
+                        window.alert(response.message);
+                    else
+                        window.alert("Erreur inconnue");
+                }
+            }
+            else
+                window.alert("Erreur " + xhr.status);
+        }
+        xhr.send(params);
+
+    }
+    //TODO: add function to retrive the data
+    return dlButton;
+}
+
+function HideCheckData()
+{
+    document.getElementById("checkData").style.display = "none";
+}
+
 
 function showDownloadSessionData(e)
 {
@@ -526,7 +766,7 @@ function submitAddSessionForm()
 
     xhr.onload = function() {
         var reponse = "";
-        console.log(xhr.responseText);
+        //console.log(xhr.responseText);
         if(xhr.status == 200){
                 var response = JSON.parse(xhr.responseText); // $.parseJSON
         }
@@ -576,6 +816,13 @@ function HideAddSession()
             <p>Exclure les run incomplets : <input type='checkbox' name='onlyDone'></p>
             <button>Exporter</button>
         </form>
+    </div>
+</div>
+<div id='checkData'>
+    <div style="margin: 2px; float: right;"><button class='closeFloatDiv' onclick="HideCheckData()"><i class='material-icons'>close</i></button>
+    </div>
+    <br clear="all">
+    <div id='checkDataContent'>
     </div>
 </div>
 <div id='editSession'>

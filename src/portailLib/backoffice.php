@@ -104,7 +104,7 @@ function exportCSVJoinedTable($table, $onlyDone=false, $sessionID="")
 // subfunction to export CSV.
 // actually do the SQL request and form the CSV file
 // If error return a string error.
-function exportCSV($sql, $csvFilename="export")
+function exportCSV($sql, $csvFilename="export", $correctedRunData=[])
 {
     $separator = "\t";
 
@@ -161,7 +161,50 @@ function exportCSV($sql, $csvFilename="export")
             {
                 if(isset($exportLine[$column]))
                 {
-                    $csvExport.=$exportLine[$column];
+                    if(!empty($correctedRunData)) //replace wrong data
+                    {
+                        switch($column)
+                        {
+                            case 'runID':
+                                $csvExport.=$correctedRunData['runID'];
+                                break;
+                            case 'run_id':
+                                $csvExport.=$correctedRunData['runID'];
+                                break;
+                            case 'startTime':
+                                $csvExport.=$correctedRunData['startTime'];
+                                break;
+                            case 'doneTime':
+                                $csvExport.=$correctedRunData['doneTime'];
+                                break;
+                            case 'taskSession_taskSessionID':
+                                $csvExport.=$correctedRunData['taskSession_taskSessionID'];
+                                break;
+                            case 'runKey':
+                                $csvExport.=$correctedRunData['runKey'];
+                                break;
+                            case 'taskSessionID':
+                                $csvExport.=$correctedRunData['taskSessionID'];
+                                break;
+                            case 'sessionName':
+                                $csvExport.=$correctedRunData['sessionName'];
+                                break;
+                            case 'openingTime':
+                                $csvExport.=$correctedRunData['openingTime'];
+                                break;
+                            case 'closingTime':
+                                $csvExport.=$correctedRunData['closingTime'];
+                                break;
+                            case 'task_taskID':
+                                $csvExport.=$correctedRunData['task_taskID'];
+                                break;
+                            default:
+                                $csvExport.=$exportLine[$column];
+                                break;
+                        }
+                    }
+                    else //normal mode
+                        $csvExport.=$exportLine[$column];
                 }
                 $csvExport.=$separator;
             }
@@ -192,6 +235,147 @@ function exportCSV($sql, $csvFilename="export")
         $openedTasks = array(); //clear array before continue
         print "Erreur !:" . $e->getMessage() . "<br/>";
     }
+}
+
+//export raw data for participantID, run_id in taskID's table
+function exportCSVrawRun($participantID, $run_id, $taskID)
+{
+    $tableInfo = getDataTaskTables($taskID);
+    if(empty($tableInfo))
+    {
+        //task not found
+        return $taskID." n'existe pas dans la base de données";
+    }
+    if(empty($tableInfo[0]['dataTableName']))
+    {
+        //no table for $taskID
+        return $taskID." ne possède pas de table de données";
+    }
+
+    //SQL request
+    $sql = "SELECT * FROM run, ".$tableInfo[0]['dataTableName'];
+    $sql.= " WHERE run_id='". $run_id ."'";
+    $sql.= " AND run_id=runID";
+    $sql.= " AND participant_participantID='". $participantID ."'";
+    return exportCSV($sql, "raw_participantID=".$participantID."_runID=".$run_id."_".$tableInfo[0]['dataTableName']."_".date('Y-m-d_H-i-s'));
+}
+
+//export corrected data for participantID, run_id in taskID's table
+function exportCSVcorrectedRun($participantID, $run_id, $taskID, $correctedRunID)
+{
+    $tableInfo = getDataTaskTables($taskID);
+    if(empty($tableInfo))
+    {
+        //task not found
+        return $taskID." n'existe pas dans la base de données";
+    }
+    if(empty($tableInfo[0]['dataTableName']))
+    {
+        //no table for $taskID
+        return $taskID." ne possède pas de table de données";
+    }
+
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+        //get corrected run info
+        $sql = "SELECT * FROM run, taskSession";
+        $sql.= " WHERE taskSession_taskSessionID=taskSessionID";
+        $sql.= " AND runID='$correctedRunID'";
+        $correctedRunStmt = $conn->prepare($sql);
+        if($correctedRunStmt->execute() && $correctedRunStmt->rowCount()==1)
+        {
+            $correctedRunData = $correctedRunStmt->fetch(PDO::FETCH_ASSOC);
+            //get data request
+            $sql = "SELECT * FROM run, taskSession, ".$tableInfo[0]['dataTableName'];
+            $sql.= " WHERE runID=run_id AND taskSessionID=taskSession_taskSessionID";
+            $sql.= " AND runID='$run_id'";
+
+            return exportCSV($sql, "participantID=".$participantID."_runID=".$run_id."as".$correctedRunID."_".$correctedRunData['sessionName']."_".$tableInfo[0]['dataTableName']."_joined_".date('Y-m-d_H-i-s'), $correctedRunData)." ".$sql;
+        }
+        else
+        {
+            return "runID $correctedRunID infos not found";
+        }
+    }
+    catch (PDOException $e)
+    {
+        return "Erreur !:" . $e->getMessage() . "<br/>";
+    }
+
+    //SQL request
+    $sql = "SELECT * FROM run, ".$tableInfo[0]['dataTableName'];
+    $sql.= " WHERE run_id='". $run_id ."'";
+    $sql.= " AND run_id=runID";
+    $sql.= " AND participant_participantID='". $participantID ."'";
+    return exportCSV($sql, "raw_participantID=".$participantID."_runID=".$run_id."_".$tableInfo[0]['dataTableName']."_".date('Y-m-d_H-i-s'))." ".$sql;
+}
+
+//return summary of unlinked data 
+function getUnlinkedDataSummary($taskID)
+{
+    $tableInfo = getDataTaskTables($taskID);
+    if(empty($tableInfo))
+    {
+        //task not found
+        return [];
+    }
+
+    try {
+
+        // connect to database
+        $conn = backofficeOpenDataBase();
+
+        $sql = "SELECT participant_participantID as participantID, run_id, date, COUNT(*) as nb";
+        $sql.= " FROM run, taskSession, ".$tableInfo[0]['dataTableName'];
+        $sql.= " WHERE runID=run_id";
+        $sql.= " AND taskSessionID=taskSession_taskSessionID";
+        $sql.= " AND (recordIndex IS NULL)"; //dont check data after improved saving
+        $sql.= " AND task_taskID!='".$taskID."'"; //linked to wrong runID so wrong taskID
+        $sql.= " GROUP BY run_id, date";
+
+        $unlinkedDataStmt = $conn->prepare($sql);
+
+        if( !($unlinkedDataStmt->execute()) )
+        {
+            return [];
+        }
+        $unlinkedData = $unlinkedDataStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        //serach for possible match
+        foreach($unlinkedData as $key=>$row)
+        {
+            $sql = "SELECT run_id, sessionName";
+            $sql.= " FROM run, taskSession, ".$tableInfo[0]['dataTableName'];
+            $sql.= " WHERE runID=run_id";
+            $sql.= " AND taskSessionID=taskSession_taskSessionID";
+            $sql.= " AND runID!='".$row['run_id']."'"; //search for other runID
+            $sql.= " AND date='".$row['date']."'";  //with same date
+            $sql.= " AND participant_participantID='".$row['participantID']."'"; //participantID should be correct
+            $sql.= " GROUP BY run_id";
+            $unlinkedData[$key]['sql'] = $sql;
+            $matchStmt = $conn->prepare($sql);
+            if($matchStmt->execute())
+            {
+                $matchResult = $matchStmt->fetchAll(PDO::FETCH_ASSOC);
+                $unlinkedData[$key]['match'] = [];
+                foreach($matchResult as $matchRun)
+                {
+                    $unlinkedData[$key]['match'][] = $matchRun;
+                }
+            }
+        }
+
+        return($unlinkedData);
+    }
+    catch (PDOException $e)
+    {
+        print "Erreur !:" . $e->getMessage() . "<br/>";
+        print $sql;
+        return [];
+    }
+
 }
 
 //return an array n=>['dataTableName','taskID','taskName']
