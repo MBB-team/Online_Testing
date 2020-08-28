@@ -116,17 +116,17 @@ div.legend, div.usage
     border-radius: 5px;
 }
 
-#diskUsage table
+#diskUsage table, #checkDataContent table
 {
     border-collapse: collapse;
 }
 
-#diskUsage table td, #diskUsage table th {
+#diskUsage table td, #diskUsage table th , #checkDataContent table td, #checkDataContent table th{
     border: 1px solid #aaa;
     padding: 8px;
   }
 
-#diskUsage table th
+#diskUsage table th, #checkDataContent table th
 {
     background-color: #ddd;
     text-align: left;

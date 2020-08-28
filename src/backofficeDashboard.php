@@ -285,17 +285,13 @@ function showCheckData(e)
     xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     var params = "action=check";
     params += "&taskID=" + e.target.getAttribute("taskID");
-    /*params += "&editOpeningDate=" + document.getElementById("editOpeningDate").value;
-    params += "&editOpeningHour=" + document.getElementById("editOpeningHour").value;
-    params += "&editClosingDate=" + document.getElementById("editClosingDate").value;
-    params += "&editClosingHour=" + document.getElementById("editClosingHour").value;*/
 
     xhr.onload = function() {
         var checkDataContentDiv = document.getElementById("checkDataContent");
         var reponse = "";
         if(xhr.status == 200){
                 var response = JSON.parse(xhr.responseText); // $.parseJSON
-                console.log(response);
+                //console.log(response);
         }
         else
         {
@@ -341,7 +337,7 @@ function showCheckData(e)
                             break;
                         case "run_id" :
                             td.innerHTML = element["run_id"];
-                            td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"]));
+                            td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"], element["participantID"]));
                             break;
                         case "date" :
                             td.innerHTML = element["date"];
@@ -357,8 +353,8 @@ function showCheckData(e)
                                 {
                                     if(td.innerHTML.length>0)
                                         td.innerHTML += "<br>";
-                                    td.innerHTML += matchRun['run_id'] + ' (' + matchRun['sessionName'] + ')';
-                                    td.appendChild(CheckDataCreateButton(response.taskID, matchRun["run_id"]));
+                                    td.innerHTML += 'run ' + matchRun['run_id'] + ' (' + matchRun['sessionName'] + ')';
+                                    td.appendChild(CheckDataCreateButton(response.taskID, matchRun["run_id"], element["participantID"]));
                                 }
                             }
                             break;
@@ -370,7 +366,7 @@ function showCheckData(e)
                                 {
                                     if(td.innerHTML.length>0)
                                         td.innerHTML += "<br>";
-                                    td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"], matchRun["run_id"]));
+                                    td.appendChild(CheckDataCreateButton(response.taskID, element["run_id"], element["participantID"], matchRun["run_id"]));
                                 }
                             }
                             break;
@@ -400,32 +396,88 @@ function showCheckData(e)
     xhr.send(params);
 }
 
-function CheckDataCreateButton(taskID, originalRunID, matchedRunID='')
+function CheckDataCreateButton(taskID, originalRunID, participantID, matchedRunID='')
 {
     var dlButton = document.createElement('button');
     dlButton.classList.add('download');
+    dlButton.setAttribute('action', matchedRunID.length<1?'exportOriginal':'exportCorrected');
     dlButton.setAttribute('taskID', taskID);
     dlButton.setAttribute('originalRunID', originalRunID);
     dlButton.setAttribute('matchedRunID', matchedRunID);
+    dlButton.setAttribute('participantID', participantID);
     dlButton.title = 'Exporter les données ' + (matchedRunID.length<1?'brutes':'corrigées');
     var dlIcon = document.createElement('i');
     dlIcon.classList.add('material-icons');
-    dlIcon.setAttribute('taskID', taskID);
-    dlIcon.setAttribute('originalRunID', originalRunID);
-    dlIcon.setAttribute('matchedRunID', matchedRunID);
     dlIcon.innerHTML = 'get_app';
     dlButton.appendChild(dlIcon);
     if(matchedRunID.length>0)
     {
         var dlIcon2 = document.createElement('i');
         dlIcon2.classList.add('material-icons');
-        dlIcon2.setAttribute('taskID', taskID);
-        dlIcon2.setAttribute('originalRunID', originalRunID);
-        dlIcon2.setAttribute('matchedRunID', matchedRunID);
         dlIcon2.innerHTML = 'build';
         dlButton.appendChild(dlIcon2);
     }
 
+    dlButton.onclick = function()
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "backofficeRepair.php", true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        var params = "action=" + this.getAttribute('action');
+        params += "&taskID=" + this.getAttribute('taskID');
+        params += "&runID=" + this.getAttribute('originalRunID');
+        params += "&matchedRunID=" + this.getAttribute('matchedRunID');
+        params += "&participantID=" + this.getAttribute('participantID');
+        
+
+        xhr.onload = function() {
+            var reponse = "";
+            if(xhr.status == 200){
+                //console.log(xhr); 
+
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var RegexMatches = filenameRegex.exec(disposition);
+                    if (RegexMatches != null && RegexMatches[1]) { 
+                    filename = RegexMatches[1].replace(/['"]/g, '');
+                    }
+                }
+
+                if(filename.length>0)
+                {
+                    var blob = new Blob([xhr.response], {type: 'text/x-csv'});
+                    //Create a link element, hide it, direct 
+                    //it towards the blob, and then 'click' it programatically
+                    let a = document.createElement("a");
+                    a.style = "display: none";
+                    document.body.appendChild(a);
+                    //Create a DOMString representing the blob 
+                    //and point the link element towards it
+                    let url = window.URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = filename;
+                    //programatically click the link to trigger the download
+                    a.click();
+                    //release the reference to the file by revoking the Object URL
+                    window.URL.revokeObjectURL(url);
+                }
+                else
+                {
+                    var response = JSON.parse(xhr.responseText); // $.parseJSON
+                    if(response.message.length>0)
+                        window.alert(response.message);
+                    else
+                        window.alert("Erreur inconnue");
+                }
+            }
+            else
+                window.alert("Erreur " + xhr.status);
+        }
+        xhr.send(params);
+
+    }
     //TODO: add function to retrive the data
     return dlButton;
 }
@@ -709,7 +761,7 @@ function submitAddSessionForm()
 
     xhr.onload = function() {
         var reponse = "";
-        console.log(xhr.responseText);
+        //console.log(xhr.responseText);
         if(xhr.status == 200){
                 var response = JSON.parse(xhr.responseText); // $.parseJSON
         }

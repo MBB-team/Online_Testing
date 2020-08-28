@@ -2,13 +2,14 @@
 
 include('portailLib/backoffice.php');
 
-$action = $taskID = $runID = $matchedRunID= "";
+$action = $taskID = $runID = $matchedRunID = $participantID = "";
 //form processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = test_input("action");         //values : "check", "exportOriginal, exportCorrected"
     $taskID = test_input("taskID");         //values : working on this taskID
     $runID = test_input("runID");           //values : original runID to export
     $matchedRunID = test_input("matchedRunID");           //values : original runID to export
+    $participantID = test_input("participantID");           //values : participantID 
 }
 
 $result = array(); // contin data to be returned
@@ -22,10 +23,12 @@ switch($action)
         $result['taskID'] = $taskID;
         break;
     case "exportOriginal":
-        $result['message'] = 'Export "'. $taskID . ' ' . $runID; //replace by export csv
+        $errorMessage = exportCSVrawRun($participantID, $runID, $taskID); //if it worked, stop here
+        $result['message'] = 'Export Raw"'. $participantID . ' '. $taskID . ' ' . $runID . ' -- ' . $errorMessage; 
         break;
     case "exportCorrected":
-        $result['message'] = 'Export "'. $taskID . ' ' . $runID. ' ' . $matchedRunID; //replace by export csv
+        $errorMessage = exportCSVcorrectedRun($participantID, $runID, $taskID, $matchedRunID); //if it worked, stop here
+        $result['message'] = 'Export corrected "'. $participantID . ' '. $taskID . ' ' . $runID . '->' . $matchedRunID . ' -- ' . $errorMessage; //replace by export csv
         break;
     default:
         $result['message'] = 'Commande "'. $action .'" inconnue';
