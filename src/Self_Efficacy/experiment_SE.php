@@ -79,7 +79,7 @@ Per trial:
         case 'https:':
               //theses lines are not executed unless the file is on a web server (assuming with php module)
               dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_SE.php');
-              dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}')); 
+              dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}'));
               break;
         case 'file':
         case 'file:':
@@ -155,7 +155,7 @@ Per trial:
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.PNG'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
 
@@ -321,7 +321,7 @@ Per trial:
                 </center><p>';
           //ensure exited fullscreen
           if (document.fullscreenElement)
-          { 
+          {
                 document.exitFullscreen()
                 .then(() => console.log("Document Exited form Full screen mode"))
                 .catch((err) => console.error(err))
