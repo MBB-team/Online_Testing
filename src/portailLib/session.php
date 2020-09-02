@@ -566,20 +566,23 @@ function writeData($table)
     return $result;
 }
 
-function echoAsJsArray($array)
+function echoAsJSON($array) //without brackets to allow runing script without php
 {
+    $flagFirst = true;
     if( isset($array) && is_array($array) && (count($array) > 0) )
     {
-        echo '{';
         foreach($array as $key => $value)
         {
-                echo "'$key':'$value',";
+            if($flagFirst)
+            {
+                $flagFirst = false;
+            }
+            else
+            {
+                echo ",";
+            }
+            echo "\"$key\":\"$value\"";
         }
-        echo '}';
-    }
-    else
-    {
-        echo 'null'; //no data in $array
     }
 }
 /*
