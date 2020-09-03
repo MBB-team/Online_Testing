@@ -29,7 +29,7 @@ Data Output (as in MySQL):
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-utf-8"/>
+  <meta charset="utf-8"/>
   <title> EngMain </title>
   <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
   <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -43,8 +43,8 @@ Data Output (as in MySQL):
   <script   src  = 'rsvpEM_train_V2.js'></script>
   <script   src  = 'rsvpStimuli.js'></script>
   <script   src  = 'fscreen.js'></script>
-  <script   src = "/js/dataSaver.js"></script>
-  <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+  <script   src = "../js/dataSaver.js"></script>
+  <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
   <link rel='icon' href='/favicon.ico' />
 
 
@@ -111,8 +111,20 @@ Data Output (as in MySQL):
 
 
           // --------------------------------- INITIALISATION  --------------------------- //
-          dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
-          dataSaver.SetClientIds(<?php echoAsJsArray($clientIds); ?>);
+          switch(window.location.protocol) {
+                case 'http':
+                case 'https':
+                case 'http:':
+                case 'https:':
+                      //theses lines are not executed unless the file is on a web server (assuming with php module)
+                      dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
+                      dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}')); 
+                      break;
+                case 'file':
+                case 'file:':
+                      dataSaver = new DataSaver(dataSaverModes.LOG);
+                      break;
+          }
 
           // Checks if the browser is Chrome or Firefox (best compatibility)
           var browserInfo = getBrowserInfo();

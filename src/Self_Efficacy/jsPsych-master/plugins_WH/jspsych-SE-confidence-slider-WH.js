@@ -16,6 +16,12 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
         pretty_name: 'Number Line Range',
         description: 'The range of the number line.'
       },
+      start: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: [1,30],
+        array: true,
+        pretty_name: 'Initial Number Line'
+      },
       trial_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Trial duration',
@@ -63,8 +69,8 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
 
     // Initialise slider location
     var sliderLimits_ini = Array(2);
-    sliderLimits_ini[0] = randi(0,trial.range-1);
-    sliderLimits_ini[1] = randi(sliderLimits_ini[0],trial.range-1);
+    sliderLimits_ini[0] = trial.start[0];
+    sliderLimits_ini[1] = trial.start[1];
     var sliderLimits = sliderLimits_ini;
 
     for (var i = sliderLimits[0]; i <= sliderLimits[1] ; i++) {
@@ -153,8 +159,8 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
         "responses":       "999",  // string
         "SE_max":           sliderLimits[1]+1,   // integer
         "SE_min":           sliderLimits[0]+1,   // integer
-        "SE_max_ini":       sliderLimits_ini[1]+1,   // integer
-        "SE_min_ini":       sliderLimits_ini[0]+1,   // integer
+        "SE_max_ini":       trial.start[1]+1,   // integer
+        "SE_min_ini":       trial.start[0]+1,   // integer
         "response_row":     999,   // integer
         "response_col":     999,   // integer
         "target_row":       999,   // integer

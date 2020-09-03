@@ -60,7 +60,9 @@ CREATE TABLE `tableSE` (
   `time_elapsed` int(50) DEFAULT NULL,
   `internal_node_id` text DEFAULT NULL,
   `run_id` int(7) NOT NULL,
-  `date` text DEFAULT NULL
+  `date` text DEFAULT NULL,
+  `clientRunKey` VARCHAR(8) NULL,
+  `recordIndex` INT NULL
 ) ENGINE=InnoDB;
 COMMIT;
 

@@ -11,7 +11,8 @@ function SE(nbBlocks, nbTrials){
   var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var conf_counter  = 0; // counter for looping through confidence trials
   var nbTperB       = nbTrials/nbBlocks;
-  var grid_dim = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+  var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+  var sliderIni     = Array(2);
 
   // Target Scores
   var target_scores = [3, 4, 5, 6, 7, 8];
@@ -71,12 +72,16 @@ function SE(nbBlocks, nbTrials){
 
       timelineTask.push(trial_number)
 
+      sliderIni[0]    = randi(0,29);
+      sliderIni[1]     = randi(sliderIni[0],29);
+
       // SE QUESTION //
       var SE_conf = {
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
         prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour vous atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        start: sliderIni,
         data: {
           blockNb: block_i,
           trialNb: trial_counter,

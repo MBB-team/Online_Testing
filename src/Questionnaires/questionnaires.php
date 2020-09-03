@@ -17,8 +17,8 @@
         <script   src = "jsPsych-master/plugins_JS/jspsych-survey-multi-select.js"></script>
         <script   src = "getBrowserInfo.js"></script> <!-- add the external functions-->
         <script   src = "quest.js"></script>
-        <script   src = "/js/dataSaver.js"></script>
-        <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+        <script   src = "../js/dataSaver.js"></script>
+        <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
         <link rel='icon' href='/favicon.ico' />
     </head>
     <body>
@@ -35,10 +35,21 @@
    </body>
    <script type="application/javascript">
 
-
 // --------------------------------- INITIALISATION  ---------------------------//
-      dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_quest.php');
-      dataSaver.SetClientIds(<?php echoAsJsArray($clientIds); ?>);
+      switch(window.location.protocol) {
+            case 'http':
+            case 'https':
+            case 'http:':
+            case 'https:':
+                  //theses lines are not executed unless the file is on a web server (assuming with php module)
+                  dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_quest.php');
+                  dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}')); 
+                  break;
+            case 'file':
+            case 'file:':
+                  dataSaver = new DataSaver(dataSaverModes.LOG);
+                  break;
+      }
 
     // Checks if the browser is Chrome or Firefox (best compatibility)
     var browserInfo = getBrowserInfo(); // Call the function that I specified in the head

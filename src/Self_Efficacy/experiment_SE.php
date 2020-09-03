@@ -27,8 +27,8 @@ Per trial:
             <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
             <script   src  = 'SE.js'></script>
-            <script   src = "/js/dataSaver.js"></script>
-            <link href= "/css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+            <script   src = "../js/dataSaver.js"></script>
+            <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link rel='icon' href='/favicon.ico' />
       </head>
       <body>
@@ -72,8 +72,20 @@ Per trial:
   const nbInstr              = 34;
 
   // --------------------------------- INITIALISATION  --------------------------- //
-  dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_SE.php');
-  dataSaver.SetClientIds(<?php echoAsJsArray($clientIds); ?>);
+  switch(window.location.protocol) {
+        case 'http':
+        case 'https':
+        case 'http:':
+        case 'https:':
+              //theses lines are not executed unless the file is on a web server (assuming with php module)
+              dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_SE.php');
+              dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}'));
+              break;
+        case 'file':
+        case 'file:':
+              dataSaver = new DataSaver(dataSaverModes.LOG);
+              break;
+  }
 
   // Checks if the browser is Chrome or Firefox (best compatibility)
   var browserInfo = getBrowserInfo();
@@ -143,7 +155,7 @@ Per trial:
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.PNG'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
 
@@ -309,7 +321,7 @@ Per trial:
                 </center><p>';
           //ensure exited fullscreen
           if (document.fullscreenElement)
-          { 
+          {
                 document.exitFullscreen()
                 .then(() => console.log("Document Exited form Full screen mode"))
                 .catch((err) => console.error(err))
