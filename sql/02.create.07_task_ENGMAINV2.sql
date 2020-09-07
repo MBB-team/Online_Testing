@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `tableEngMainV2` (
   `FA` TEXT DEFAULT NULL,
   `tar_times` TEXT DEFAULT NULL,
   `swi_times` TEXT DEFAULT NULL,
-  `output_i` int(3) DEFAULT NULL,
+  `optout_i` int(3) DEFAULT NULL,
   `clientRunKey` VARCHAR(8) NULL,
   `recordIndex` INT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
