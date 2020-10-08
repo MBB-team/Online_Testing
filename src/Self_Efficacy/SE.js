@@ -212,7 +212,8 @@ function SE(nbBlocks, nbTrials){
           // TESTING PHASE //
           for (var test_i = 0; test_i < numbersImg.length; test_i++) {
 
-            var pair_1st = randi(0,1); // randomly select which of pair is shown and which is hidden
+        //    var pair_1st = randi(0,1); // randomly select which of pair is shown and which is hidden
+            var pair_1st = 0; // for non-matching version of task, show numbers and test animals
             var pair_2nd = 1 - pair_1st;
 
             target_i[test_i] = grid_indexes_shuffled[trial_counter][test_i][pair_1st].map(function(v){return (v - 1)})

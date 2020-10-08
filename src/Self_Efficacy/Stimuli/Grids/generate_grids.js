@@ -6,7 +6,7 @@
 *
 */
 
-function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size){
+function generate_grids(nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs){
 
   var flip_stimuli = Array(nbTrials*8);
   var grid_counter = 0;
@@ -27,51 +27,56 @@ function generate_grids(nbTrials, numbersImg, grid_indexes_shuffled, square_size
       }
 
 
-        var stimulus = "<div id='jspsych-SE_WH-stimulus' style='margin:auto; display: table; table-layout: fixed; border-spacing:"+square_size/4+"px'>";
-        for(var i=0; i<grid.length; i++){
-          stimulus += "<div class='jspsych-SE_WH-stimulus-row' style='display:table-row;'>";
-          for(var j=0; j<grid[i].length; j++){
-            var classname = 'jspsych-SE_WH-stimulus-cell';
+      var stimulus = "<div id='jspsych-SE_WH-stimulus' style='margin:auto; display: table; table-layout: fixed; border-spacing:"+square_size/4+"px'>";
+      for(var i=0; i<grid.length; i++){
+        stimulus += "<div class='jspsych-SE_WH-stimulus-row' style='display:table-row;'>";
+        for(var j=0; j<grid[i].length; j++){
+          var classname = 'jspsych-SE_WH-stimulus-cell';
 
-            if      (i == row_i[0] && j == col_i[0]){var img_present = 1}
-            else if (i == row_i[1] && j == col_i[1]){var img_present = 1}
-            else {var img_present = 0};
+          if      (i == row_i[0] && j == col_i[0]){var img_present = 1}
+          else if (i == row_i[1] && j == col_i[1]){var img_present = 1}
+          else {var img_present = 0};
 
-            stimulus += "<div class='"+classname+"' id='jspsych-SE_WH-stimulus-cell-"+i+"-"+j+"' "+
-            "data-row="+i+" data-column="+j+" target = _"+img_present+" "+
-            "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
+          stimulus += "<div class='"+classname+"' id='jspsych-SE_WH-stimulus-cell-"+i+"-"+j+"' "+
+          "data-row="+i+" data-column="+j+" target = _"+img_present+" "+
+          "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
 
-            if(grid[i][j] == 1){
-              stimulus += "border: 2px solid black;'"
-            }
+          if(grid[i][j] == 1){
+            stimulus += "border: 2px solid black;'"
+          }
 
-            // add a tag to indicate stimuli is in this cell
+          // add a tag to indicate stimuli is in this cell
 
 
-            stimulus += ">";
-            // first image location
-            if(i == row_i[0] && j == col_i[0]){
+          stimulus += ">";
+          // first image location
+          if(i == row_i[0] && j == col_i[0]){
+            stimulus += '<img src="'+numbersImg[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';
+          }
+
+          // second image location
+          if(i == row_i[1] && j == col_i[1]){
+            if(matching_pairs == 1){
+
               stimulus += '<img src="'+numbersImg[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';
+            } else {
+              stimulus += '<img src="'+numbersImg2[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';
             }
-
-            // second image location
-            if(i == row_i[1] && j == col_i[1]){
-              stimulus += '<img src="'+numbersImg[pair_i]+'" style="height:'+square_size+'px; width:auto"></img>';
-            }
-
-            stimulus += "</div>";
           }
 
           stimulus += "</div>";
         }
+
         stimulus += "</div>";
+      }
+      stimulus += "</div>";
 
-        flip_stimuli[grid_counter] = stimulus;
-        grid_counter++;
+      flip_stimuli[grid_counter] = stimulus;
+      grid_counter++;
 
-      } // each pair on grid
-    } // each grid
+    } // each pair on grid
+  } // each grid
 
-    return flip_stimuli;
+  return flip_stimuli;
 
 }; // function
