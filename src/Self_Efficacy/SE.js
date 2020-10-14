@@ -72,8 +72,6 @@ function SE(nbBlocks, nbTrials){
 
       timelineTask.push(trial_number)
 
-      sliderIni[0]    = randi(0,29);
-      sliderIni[1]     = randi(sliderIni[0],29);
 
       // SE QUESTION //
       var SE_conf = {
@@ -82,6 +80,11 @@ function SE(nbBlocks, nbTrials){
         trial_duration: time.SEconf,
         prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour vous atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         start: sliderIni,
+        on_start: function(trial){
+          sliderIni[0]     = randi(0,29);
+          sliderIni[1]     = randi(sliderIni[0],29);
+          trial.start = sliderIni;
+        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -212,7 +215,7 @@ function SE(nbBlocks, nbTrials){
           // TESTING PHASE //
           for (var test_i = 0; test_i < numbersImg.length; test_i++) {
 
-        //    var pair_1st = randi(0,1); // randomly select which of pair is shown and which is hidden
+            //    var pair_1st = randi(0,1); // randomly select which of pair is shown and which is hidden
             var pair_1st = 0; // for non-matching version of task, show numbers and test animals
             var pair_2nd = 1 - pair_1st;
 
@@ -227,54 +230,54 @@ function SE(nbBlocks, nbTrials){
 
           }
 
-            var test = {
-              type: 'serial-reaction-time-mouse-WH',
-              timeline: test_trials,
-              grid: grid_dim,
-              grid_square_size: screen.height/7,
-              response_ends_trial: true,
-              highlight: time.highlight,
-              allow_nontarget_responses: true,
-              prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
-              pre_target_duration: 0,
-              choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
-              on_start: function(){var clicked = [null,null]},
-              on_finish: function(data){
-                if (data.correct){
-                  nCorrect++
-                  correct_i[test_counter] = 1;
-                }
-                clicked = [data.response_row, data.response_col];
-                clicked_i[test_counter] = clicked;
-                test_counter++
-                if (data.button_pressed == 1){jsPsych.endCurrentTimeline();}
-              },
-              data: {
-                blockNb: block_i,
-                trialNb: trial_counter,
-                TinB: trial_i,
-                testNb: test_i,
-                target_score: target_scores_all[trial_counter],
-                test_part: 'test'
+          var test = {
+            type: 'serial-reaction-time-mouse-WH',
+            timeline: test_trials,
+            grid: grid_dim,
+            grid_square_size: screen.height/7,
+            response_ends_trial: true,
+            highlight: time.highlight,
+            allow_nontarget_responses: true,
+            prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
+            pre_target_duration: 0,
+            choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
+            on_start: function(){var clicked = [null,null]},
+            on_finish: function(data){
+              if (data.correct){
+                nCorrect++
+                correct_i[test_counter] = 1;
               }
-            };
+              clicked = [data.response_row, data.response_col];
+              clicked_i[test_counter] = clicked;
+              test_counter++
+              if (data.button_pressed == 1){jsPsych.endCurrentTimeline();}
+            },
+            data: {
+              blockNb: block_i,
+              trialNb: trial_counter,
+              TinB: trial_i,
+              testNb: test_i,
+              target_score: target_scores_all[trial_counter],
+              test_part: 'test'
+            }
+          };
 
-            // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
-            var if_test = {
-              timeline: [fullscreenExp, test],
-              conditional_function: function(){
-                var data = jsPsych.data.get().last(2).values()[0];
-                if (data.button_pressed == 1){
-                  return false;
-                } else {
-                  return true;
-                }
+          // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
+          var if_test = {
+            timeline: [fullscreenExp, test],
+            conditional_function: function(){
+              var data = jsPsych.data.get().last(2).values()[0];
+              if (data.button_pressed == 1){
+                return false;
+              } else {
+                return true;
               }
             }
+          }
 
-            // PUSH TO TIMELINE //
-            timelineTask.push(fullscreenExp);
-            timelineTask.push(if_test);
+          // PUSH TO TIMELINE //
+          timelineTask.push(fullscreenExp);
+          timelineTask.push(if_test);
 
           // CONFIDENCE QUESTION //
 
@@ -301,7 +304,7 @@ function SE(nbBlocks, nbTrials){
             type: 'animation-WH',
             frame_time: time.showFeedback,
             stimuli: grid_stimuli[trial_counter],
-          //  clicked: function(){clicked_i},
+            //  clicked: function(){clicked_i},
             target: target_i,
             choices: jsPsych.NO_KEYS,
             prompt: function(){

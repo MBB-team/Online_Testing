@@ -77,7 +77,6 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
 
       display_element.querySelector('#jspsych-SE-confidence-slider-stimulus-cell-'+i+'').style.borderTop = "4px solid red";
       display_element.querySelector('#jspsych-SE-confidence-slider-stimulus-cell-'+i+'').style.borderBottom = "4px solid red";
-
     }
 
     // for when the participant is responding
@@ -138,7 +137,6 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
         response = info;
         endTrial();
       }
-
     };
 
 
