@@ -163,7 +163,7 @@ Per trial:
     var numbersImg2  = [];
     var numbersImg2_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg2[t-1] = 'Stimuli/Images2/image'+t+'.PNG'; // pre-load all the stimuli numbers
+      numbersImg2[t-1] = 'Stimuli/Images2/image'+t+'.jpg'; // pre-load all the stimuli numbers
       numbersImg2_html[t-1] = '<img src="'+numbersImg2[t-1]+'"></img>';
     };
 
