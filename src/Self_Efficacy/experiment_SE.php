@@ -155,7 +155,7 @@ Per trial:
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jfif'; // pre-load all the stimuli numbers
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jpg'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
 
@@ -174,7 +174,7 @@ Per trial:
     // Grids
     var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
-    var matching_pairs = 0; // if the two images are the same or not
+    var matching_pairs = 1; // if the two images are the same or not
     var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
 
     var grid_stimuli = []; // slice array into chunks of 8
