@@ -494,8 +494,9 @@ function writeData($table)
 
             $data_array = json_decode($data_json, true);
             
+            //disabled for performance issue.                                             /!\ May lead to some duplicate
             //check already saved /!\ assume only one data per $data_array
-            if( isset($clientIds["runID"]) && 
+/*             if( isset($clientIds["runID"]) && 
                 isset($key) && 
                 isset($clientIds["runKey"]) && 
                 isset($data_array[0]["date"]) && 
@@ -519,7 +520,7 @@ function writeData($table)
                         continue; //skip recording
                     }
                 }
-            }
+            } */
 
 
             // If a value is missing from a particular trial, then NULL is inserted
