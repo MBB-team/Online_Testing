@@ -115,31 +115,35 @@ foreach($tasks as $key=>$task)
         $lastTaskID = $task["taskID"];
         $taskIDlist[$idGroup] = $lastTaskID;
         $dataTaskTableName = getDataTaskTableName($dataTaskTables, $lastTaskID);
-        echo "groups.add({
-            id: ".$idGroup.",\n";
         
         /*** group content ***/
-        $content = "'<div class=\\'groupTask\\'>";
+        echo "\ngroupContent = document.createElement('div');
+        groupContent.className = 'groupTask';\n";
         //display taskID
-        $content .= $task["taskID"]."<br>";
+        $contentInnerHTML = $task["taskID"]."<br>";
 
         //download button
         if(!empty($dataTaskTableName))
         {
-            $content .= "<button class=\\'download\\' tableName=\\'".$dataTaskTableName."\\' onClick=\\'showDownloadTaskData();\\' title=\\'Exporter les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' tableName=\\'".$dataTaskTableName."\\'>get_app</i></button>";
-            $content .= "<button class=\\'checkDataButton\\' taskID=\\'".$task["taskID"]."\\' onClick=\\'showCheckData();\\' title=\\'Vérifier les données la tâche ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'".$task["taskID"]."\\'>broken_image</i><i class=\\'material-icons\\' taskID=\\'".$task["taskID"]."\\'>build</i></button>";
+            $contentInnerHTML .= "<button class='download' tableName='".$dataTaskTableName."' onClick='showDownloadTaskData();' title='Exporter les données la tâche ".$task["taskID"]."'><i class='material-icons' tableName='".$dataTaskTableName."'>get_app</i></button>";
+            $contentInnerHTML .= "<button class='checkDataButton' taskID='".$task["taskID"]."' onClick='showCheckData();' title='Vérifier les données la tâche ".$task["taskID"]."'><i class='material-icons' taskID='".$task["taskID"]."'>broken_image</i><i class='material-icons' taskID='".$task["taskID"]."'>build</i></button>";
         }
         else
         {
-            $content .= "<button class=\\'download\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>get_app</i></button>";
-            $content .= "<button class=\\'checkDataButton\\' title=\\'Cette tâche ne sauvegarde pas de données\\' disabled><i class=\\'material-icons\\'>broken_image</i><i class=\\'material-icons\\'>build</i></button>";
+            $contentInnerHTML .= "<button class='download' title='Cette tâche ne sauvegarde pas de données' disabled><i class='material-icons'>get_app</i></button>";
+            $contentInnerHTML .= "<button class='checkDataButton' title='Cette tâche ne sauvegarde pas de données' disabled><i class='material-icons'>broken_image</i><i class='material-icons'>build</i></button>";
         }
 
         //add session button
-        $content .= "<br><button class=\\'addSession\\' taskID=\\'[\"".$task["taskID"]."\"]\\' onClick=\\'showAddSession();\\' title=\\'Ajouter une session ".$task["taskID"]."\\'><i class=\\'material-icons\\' taskID=\\'[\"".$task["taskID"]."\"]\\'>add</i></button>";
-        $content .= "</div>',\n";
+        $contentInnerHTML .= "<br><button class='addSession' taskID='[\\\"".$task["taskID"]."\\\"]' onClick='showAddSession();' title='Ajouter une session ".$task["taskID"]."'><i class='material-icons' taskID='[\\\"".$task["taskID"]."\\\"]'>add</i></button>";
+
+        echo "groupContent.innerHTML = \"".$contentInnerHTML."\"\n";
         /*** group content end***/
-        echo "content: ".$content;
+
+        echo "groups.add({
+            id: ".$idGroup.",\n";
+
+        echo "content: groupContent,\n";
 
         echo "order: ".$idGroup."
         });\n";
@@ -174,6 +178,28 @@ foreach($taskSessions as $key=>$taskSession)
 
     $dataTaskTableName = getDataTaskTableName($dataTaskTables, $taskSession['task_taskID']);
 
+        //echo $taskSession["sessionName"];
+    // display session infos
+    echo "\nitemContent = document.createElement('div');
+    itemContent.className = 'taskSession';\n
+    itemContent.classList.add('".$status."');\n";
+
+    $itemContentInnerHTML = "<span class='sessionName'>".$taskSession["sessionName"]."</span><br>";
+    $doneRun = isset($doneRuns[$taskSession['taskSessionID']])?$doneRuns[$taskSession['taskSessionID']]:"0";
+    $itemContentInnerHTML .= "<span><i class='material-icons' style='color:green'>done</i>".$doneRun."</span><span> <i class='material-icons'>remove</i></span>";
+    $onlyStartedRun = isset($onlyStartedRuns[$taskSession['taskSessionID']])?$onlyStartedRuns[$taskSession['taskSessionID']]:"0";
+    $itemContentInnerHTML .= "<span><i class='material-icons' style='color:red'>priority_high</i>".$onlyStartedRun."</span><br>";
+    if(!empty($dataTaskTableName))
+        $itemContentInnerHTML .= "<button class='download' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."' onClick='showDownloadSessionData();' title='Exporter les données de la session ".$taskSession["sessionName"]." uniquement'><i class='material-icons' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."'>get_app</i></button>";
+    else
+        $itemContentInnerHTML .= "<button class='download' title='Cette tâche ne sauvegarde pas de données' disabled><i class='material-icons'>get_app</i></button>";
+    if( ($status == "taskSessionNotOpen") || ($status == "taskSessionOpen") )
+        $itemContentInnerHTML .= "<button class='edit' sessionName='".$taskSession["sessionName"]."' sessionID='".$taskSession["taskSessionID"]."' openingTime='".$openingTime."' closingTime='".$closingTime."' onClick='showEditSession();' title='Modifier les dates de la session ".$taskSession["sessionName"]."'><i class='material-icons' sessionName='".$taskSession["sessionName"]."' sessionID='".$taskSession["taskSessionID"]."' openingTime='".$openingTime."' closingTime='".$closingTime."'>edit</i></button>";
+    else
+        $itemContentInnerHTML .= "<button class='edit' title='Une session passée ne peut pas être modifiée' disabled><i class='material-icons'>edit</i></button>";
+
+    echo "itemContent.innerHTML = \"".$itemContentInnerHTML."\"\n";
+
     echo "items.add({
         id: ".$idItem.",
         group: ". $idGroup .",
@@ -181,30 +207,8 @@ foreach($taskSessions as $key=>$taskSession)
         end: ". ($closingTime*1000-1000) .",
         className: '". $itemCellStatus ."',
         type: 'range',
-        content: '";
-
-        //echo $taskSession["sessionName"];
-    // display session infos
-    $itemContent = "<div class='taskSession ".$status."'>\n";
-    $itemContent .= "<span class='sessionName'>".$taskSession["sessionName"]."</span><br>\n";
-    $doneRun = isset($doneRuns[$taskSession['taskSessionID']])?$doneRuns[$taskSession['taskSessionID']]:"0";
-    $itemContent .= "<span><i class='material-icons' style='color:green'>done</i>".$doneRun."</span><span> <i class='material-icons'>remove</i></span>\n";
-    $onlyStartedRun = isset($onlyStartedRuns[$taskSession['taskSessionID']])?$onlyStartedRuns[$taskSession['taskSessionID']]:"0";
-    $itemContent .= "<span><i class='material-icons' style='color:red'>priority_high</i>".$onlyStartedRun."</span><br>\n";
-    if(!empty($dataTaskTableName))
-        $itemContent .= "<button class='download' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."' onClick='showDownloadSessionData();' title='Exporter les données de la session ".$taskSession["sessionName"]." uniquement'><i class='material-icons' tableName='".$dataTaskTableName."' sessionID='".$taskSession["taskSessionID"]."'>get_app</i></button>\n";
-    else
-        $itemContent .= "<button class='download' title='Cette tâche ne sauvegarde pas de données' disabled><i class='material-icons'>get_app</i></button>\n";
-    if( ($status == "taskSessionNotOpen") || ($status == "taskSessionOpen") )
-        $itemContent .= "<button class='edit' sessionName='".$taskSession["sessionName"]."' sessionID='".$taskSession["taskSessionID"]."' openingTime='".$openingTime."' closingTime='".$closingTime."' onClick='showEditSession();' title='Modifier les dates de la session ".$taskSession["sessionName"]."'><i class='material-icons' sessionName='".$taskSession["sessionName"]."' sessionID='".$taskSession["taskSessionID"]."' openingTime='".$openingTime."' closingTime='".$closingTime."'>edit</i></button>\n";
-    else
-        $itemContent .= "<button class='edit' title='Une session passée ne peut pas être modifiée' disabled><i class='material-icons'>edit</i></button>\n";
-    $itemContent .= "</div>";
-    $itemContent = str_replace("'", "\\'", $itemContent);
-    $itemContent = str_replace("\n", "\\\n", $itemContent);
-    echo $itemContent;
-
-    echo "'\n});\n"; //close items.add
+        content: itemContent,
+    });\n"; //close items.add
 }
 ?>
 var options = {
