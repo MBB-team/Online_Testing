@@ -55,17 +55,17 @@ Per trial:
                main:           true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+  const exp = {name:           "SE_DMS",
+               nbTrials:       20,
+               nbBlocks:       4};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
-                showFeedback:  2000,
-                fixation:      1000,
+                showFeedback:  1000,
+                fixation:      500,
                 rewatch:       5000};
 
   // instructions
