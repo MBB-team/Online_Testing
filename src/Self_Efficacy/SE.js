@@ -16,7 +16,7 @@ function SE(nbBlocks, nbTrials){
 
   // Target Scores
   var target_scores = [3, 4, 5, 6, 7, 8];
-  var target_scores_all = (jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat(target_scores,3)));
+  var target_scores_all = (jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat(target_scores,nbBlocks-2)));
 
   target_scores_all.unshift(...target_scores);
 
