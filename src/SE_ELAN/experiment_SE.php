@@ -49,13 +49,13 @@ Per trial:
   // --------------------------------- PARAMETERS --------------------------------//
 
   // What to do
-  const cfg = {debug:          false,
+  const cfg = {debug:          true,
                cheat:          false,
                instructions:   false,
                main:           true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "SE_DMS",
+  const exp = {name:           "SE_ELAN",
                nbTrials:       20,
                nbBlocks:       4};
 
@@ -155,7 +155,7 @@ Per trial:
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jpg'; // pre-load all the stimuli numbers
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.PNG'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
 
