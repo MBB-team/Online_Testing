@@ -60,7 +60,7 @@ Per trial:
                nbBlocks:       1};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
+  const time = {flipSpeed:     200, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,

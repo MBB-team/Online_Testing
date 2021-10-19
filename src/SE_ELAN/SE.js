@@ -266,7 +266,9 @@ function SE(nbBlocks, nbTrials){
         timelineTask.push(looping_chunk);
 
         // IF CONF OR TESTING //
-        if (trial_counter == conf_trials_idx[conf_counter]){
+        // if (trial_counter == conf_trials_idx[conf_counter]){
+        if (trial_counter == 0){
+
           var test_conf = {
             type: 'html-slider-response-WH',
             stimulus:'<p>Combien d’effort avez-vous fourni pour mémoriser les paires ?</p><p>0% = <b>Aucune charge mentale</b> et 100% = <b>Charge mentale maximale</b>',
@@ -426,7 +428,6 @@ function SE(nbBlocks, nbTrials){
               feedback.clicked = clicked_i;
             },
             on_finish: function(){ // reset counters
-              
               if (nCorrect >= target_scores_all[trial_counter]){
                 nTS++;
               }
@@ -462,8 +463,11 @@ function SE(nbBlocks, nbTrials){
     var nbTrialsRewarded = nbTrials-target_scores.length;
     var finish = {
       type: 'html-button-response-WH',
-      stimulus: '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b></p><p><b>Merci beaucoup pour votre participation !</b></p>',
-      choices: ['Ne cliquez sur ce bouton que lorsque l&#39expérimentateur a vu cet écran'],
+      stimulus: function(){
+        var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
+        return finish_stim;
+      },
+      choices: ['Ne cliquez pas sur ce bouton avant que  l&#39expérimentateur n&#39ait vu cet écran'],
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
