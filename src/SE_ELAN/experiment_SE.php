@@ -49,7 +49,7 @@ Per trial:
   // --------------------------------- PARAMETERS --------------------------------//
 
   // What to do
-  const cfg = {debug:          true,
+  const cfg = {debug:          false,
                cheat:          false,
                instructions:   false,
                main:           true};
@@ -60,11 +60,11 @@ Per trial:
                nbBlocks:       4};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
+  const time = {flipSpeed:     200, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
-                showFeedback:  1000,
+                showFeedback:  200,
                 fixation:      500,
                 rewatch:       5000};
 
@@ -229,7 +229,7 @@ Per trial:
         }
       };
 
-      exp_timeline.push(instructions);
+      // exp_timeline.push(instructions);
 
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
