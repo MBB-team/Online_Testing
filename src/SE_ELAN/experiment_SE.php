@@ -78,7 +78,7 @@ Per trial:
         case 'http:':
         case 'https:':
               //theses lines are not executed unless the file is on a web server (assuming with php module)
-              dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_SE.php');
+              dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
               dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}'));
               break;
         case 'file':
@@ -155,7 +155,7 @@ Per trial:
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.PNG'; // pre-load all the stimuli numbers
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.png'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
 
