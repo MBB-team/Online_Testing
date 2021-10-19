@@ -108,6 +108,10 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
+
     var CorB = 0;
     var startTime = -1;
     var response = {
@@ -201,7 +205,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 		}
 
     function endTrial() {
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       var button_response     = 999;
 
       if (CorB == 2) {
@@ -229,7 +234,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         "target_col":       trial.target_location[1],   // integer
         "correct_row":      trial.correct_location[0],   // integer
         "correct_col":      trial.correct_location[1],   // integer
-        "correct":          (response.row == trial.correct_location[0] && response.column == trial.correct_location[1])?1:0   // BOOL
+        "correct":          (response.row == trial.correct_location[0] && response.column == trial.correct_location[1])?1:0,   // BOOL
+        "trial_time_elapsed": timeDiff  // integer
       };
 
       // clear the display

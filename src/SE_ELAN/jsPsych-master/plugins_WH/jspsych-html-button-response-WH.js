@@ -77,6 +77,10 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
+
     // display stimulus
     var html = '<div id="jspsych-html-button-response-stimulus">'+trial.stimulus+'</div>';
 
@@ -157,7 +161,8 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       // gather the data to store for the trial
       var trial_data = {
         "rt":               response.rt,   // integer
@@ -176,7 +181,8 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
         "target_col":       999,   // integer
         "correct_row":      999,   // integer
         "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "correct":          null,   // BOOL
+        "trial_time_elapsed": timeDiff  // integer
       };
 
       // clear the display

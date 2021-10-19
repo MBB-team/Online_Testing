@@ -102,6 +102,10 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
+
     var html = '<div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;">';
     html += '<div id="jspsych-html-slider-response-stimulus">' + trial.stimulus + '</div>';
     html += '<div class="jspsych-html-slider-response-container" style="position:relative; margin: 0 auto 3em auto; ';
@@ -159,7 +163,8 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
     function end_trial(){
 
       jsPsych.pluginAPI.clearAllTimeouts();
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       // save data
       var trial_data = {
         "rt":               response.rt,   // integer
@@ -178,7 +183,8 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
         "target_col":       999,   // integer
         "correct_row":      999,   // integer
         "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "correct":          null,   // BOOL
+        "trial_time_elapsed": timeDiff  // integer
       };
 
       display_element.innerHTML = '';
