@@ -5,6 +5,7 @@ function SE(nbBlocks, nbTrials){
   var trial_counter = 0; // counting the number of trials
   var flip_counter  = 1; // counting the number of flips on a trial
   var nCorrect      = 0; // the number of correct responses given by the pts
+  var nTS           = 0; // the number of target scores achieved by the pts
   var test_counter  = 0; // counter for looping through test trials during execution
   var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
@@ -40,7 +41,8 @@ function SE(nbBlocks, nbTrials){
       TinB: 999,
       testNb: 999,
       target_score: 999,
-      test_part: 'calibration_ini'
+      test_part: 'calibration_ini',
+      nTS: 999
     }
   }; // calibration_ini
 
@@ -56,7 +58,8 @@ function SE(nbBlocks, nbTrials){
       TinB: 999,
       testNb: 999,
       target_score: 999,
-      test_part: 'flip_cal'
+      test_part: 'flip_cal',
+      nTS: 999
     }
   };
 
@@ -71,7 +74,8 @@ function SE(nbBlocks, nbTrials){
       TinB: 999,
       testNb: 999,
       target_score: 999,
-      test_part: 'calibration_ini'
+      test_part: 'calibration_ini',
+      nTS: 999
     }
   }; // calibration_ini
 
@@ -101,7 +105,8 @@ function SE(nbBlocks, nbTrials){
         TinB: cal_i,
         testNb: 999,
         target_score: target_scores_cal[cal_i],
-        test_part: 'SE_slider_cal'
+        test_part: 'SE_slider_cal',
+        nTS: 999
       }
     };
 
@@ -120,7 +125,8 @@ function SE(nbBlocks, nbTrials){
       TinB: 999,
       testNb: 999,
       target_score: 999,
-      test_part: 'task_start'
+      test_part: 'task_start',
+      nTS: 999
     }
   }; // calibration_ini
 
@@ -162,7 +168,8 @@ function SE(nbBlocks, nbTrials){
           TinB: trial_i,
           testNb: 999,
           target_score: target_scores_all[trial_counter],
-          test_part: 'trialNb'
+          test_part: 'trialNb',
+          nTS: 999
         }
       }; // trial number
 
@@ -187,7 +194,8 @@ function SE(nbBlocks, nbTrials){
           TinB: trial_i,
           testNb: 999,
           target_score: target_scores_all[trial_counter],
-          test_part: 'SE_slider'
+          test_part: 'SE_slider',
+          nTS: 999
         }
       };
 
@@ -207,7 +215,8 @@ function SE(nbBlocks, nbTrials){
           TinB: trial_i,
           testNb: 999,
           target_score: target_scores_all[trial_counter],
-          test_part: 'flip'
+          test_part: 'flip',
+          nTS: 999
         }
       };
 
@@ -235,7 +244,8 @@ function SE(nbBlocks, nbTrials){
             TinB: trial_i,
             testNb: 999,
             target_score: target_scores_all[trial_counter],
-            test_part: 'rewatch'
+            test_part: 'rewatch',
+            nTS: 999
           }
         } // rewatch
 
@@ -271,7 +281,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'test_conf'
+              test_part: 'test_conf',
+              nTS: 999
             }
           };
 
@@ -295,7 +306,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'fixation'
+              test_part: 'fixation',
+              nTS: 999
             }
           };
 
@@ -353,7 +365,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: test_i,
               target_score: target_scores_all[trial_counter],
-              test_part: 'test'
+              test_part: 'test',
+              nTS: 999
             }
           };
 
@@ -386,7 +399,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'post_test_conf'
+              test_part: 'post_test_conf',
+              nTS: 999
             }
           };
 
@@ -410,6 +424,9 @@ function SE(nbBlocks, nbTrials){
             correct_responses: function(){return correct_i},
             on_start: function(feedback){
               feedback.clicked = clicked_i;
+              if (nCorrect >= target_scores_all[trial_counter]){
+                nTS++;
+              }
             },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
@@ -423,7 +440,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'feedback'
+              test_part: 'feedback',
+              nTS: 999
             }
           };
 
@@ -440,17 +458,19 @@ function SE(nbBlocks, nbTrials){
       }; // trial
     }; // block
 
+    var nbTrialsRewarded = nbTrials-target_scores.length;
     var finish = {
       type: 'html-button-response-WH',
-      stimulus: '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
-      choices: ['Fin'],
+      stimulus: '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b></p><p><b>Merci beaucoup pour votre participation !</b></p>',
+      choices: ['Ne cliquez sur ce bouton que lorsque l&#39expérimentateur a vu cet écran'],
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
         TinB: trial_i,
         testNb: 999,
         target_score: target_scores_all[trial_counter],
-        test_part: 'finish'
+        test_part: 'finish',
+        nTS: nTS
       }
     }
 
