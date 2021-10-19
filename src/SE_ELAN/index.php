@@ -4,7 +4,7 @@ include('../portailLib/session.php');
 if(isIdentified())
 {
     //start run
-    $run = prepareTask("SE"); //modify this with taskID
+    $run = prepareTask("SE_ELAN"); //modify this with taskID
     if(empty($run))
     {
         //redirect to homepage
