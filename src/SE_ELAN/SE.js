@@ -49,7 +49,7 @@ function SE(nbBlocks, nbTrials){
   // FLIP //
   var flip = {
     type: 'animation-WH',
-    stimuli: grid_stimuli[10],
+    stimuli: grid_stimuli[0],
     frame_time: time.flipSpeed,
     choices: jsPsych.NO_KEYS,
     data: {
@@ -424,11 +424,12 @@ function SE(nbBlocks, nbTrials){
             correct_responses: function(){return correct_i},
             on_start: function(feedback){
               feedback.clicked = clicked_i;
+            },
+            on_finish: function(){ // reset counters
+              
               if (nCorrect >= target_scores_all[trial_counter]){
                 nTS++;
               }
-            },
-            on_finish: function(){ // reset counters
               nCorrect       = 0;
               correct_i      = [0,0,0,0,0,0,0,0];
               test_counter   = 0;
