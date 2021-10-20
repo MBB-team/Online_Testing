@@ -56,15 +56,15 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "SE_ELAN",
-               nbTrials:       1,
-               nbBlocks:       1};
+               nbTrials:       20,
+               nbBlocks:       4};
 
   // Timings
-  const time = {flipSpeed:     200, // in ms so 1 sec
+  const time = {flipSpeed:     1000, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
-                showFeedback:  200,
+                showFeedback:  1000,
                 fixation:      500,
                 rewatch:       5000};
 
