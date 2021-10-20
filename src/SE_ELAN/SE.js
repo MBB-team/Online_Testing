@@ -66,7 +66,7 @@ function SE(nbBlocks, nbTrials){
 
   var calibration_ini = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous aimerions évaluer vos croyances initiales sur votre capacité à la mémoriser.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous musurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -129,6 +129,9 @@ function SE(nbBlocks, nbTrials){
       nTS: 999
     }
   }; // calibration_ini
+
+  timelineTask.push(task_start)
+  timelineTask.push(fullscreenExp)
 
 
   // START OF BLOCK //
@@ -467,7 +470,7 @@ function SE(nbBlocks, nbTrials){
         var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
         return finish_stim;
       },
-      choices: ['Ne cliquez pas sur ce bouton avant que  l&#39expérimentateur n&#39ait vu cet écran'],
+      choices: ['Fin'],
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
