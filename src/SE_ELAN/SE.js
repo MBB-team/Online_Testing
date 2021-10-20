@@ -475,7 +475,7 @@ function SE(nbBlocks, nbTrials){
     var finish = {
       type: 'html-button-response-WH',
       stimulus: function(){
-        var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
+        var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b>.</p><p><b>Merci beaucoup pour votre participation !</b></p>';
         return finish_stim;
       },
       choices: ['Fin'],
