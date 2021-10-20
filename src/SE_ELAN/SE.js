@@ -4,6 +4,7 @@ function SE(nbBlocks, nbTrials){
   var timelineTask  = [];
   var trial_counter = 0; // counting the number of trials
   var flip_counter  = 1; // counting the number of flips on a trial
+  var flip_fb;           // giving participant feedback on the number of flips they did
   var nCorrect      = 0; // the number of correct responses given by the pts
   var nTS           = 0; // the number of target scores achieved by the pts
   var test_counter  = 0; // counter for looping through test trials during execution
@@ -49,7 +50,7 @@ function SE(nbBlocks, nbTrials){
   // FLIP //
   var flip = {
     type: 'animation-WH',
-    stimuli: grid_stimuli[0],
+    stimuli: grid_stimuli[10],
     frame_time: time.flipSpeed,
     choices: jsPsych.NO_KEYS,
     data: {
@@ -66,7 +67,7 @@ function SE(nbBlocks, nbTrials){
 
   var calibration_ini = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous musurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous mesurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -117,7 +118,7 @@ function SE(nbBlocks, nbTrials){
 
   var task_start = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Merci !.</p><p>Maintenant l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Merci !</p><p>Maintenant l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -159,11 +160,12 @@ function SE(nbBlocks, nbTrials){
     for (var trial_i = 0; trial_i < nbTperB; trial_i++) {
 
       var trial_n = trial_i + 1;
+      var nbTrial_counter = trial_counter+1;
 
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+trial_n+'</b>.</p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
         choices: ['C&#39est parti !'],
         data: {
           blockNb: block_i,
@@ -238,6 +240,7 @@ function SE(nbBlocks, nbTrials){
               flip_counter++;
             } else {
               data.flips = flip_counter;
+              flip_fb      = flip_counter;
               flip_counter = 1;
             }
           },
@@ -269,8 +272,8 @@ function SE(nbBlocks, nbTrials){
         timelineTask.push(looping_chunk);
 
         // IF CONF OR TESTING //
-        // if (trial_counter == conf_trials_idx[conf_counter]){
-        if (trial_counter == 0){
+        if (trial_counter == conf_trials_idx[conf_counter]){
+          // if (trial_counter == 0){
 
           var test_conf = {
             type: 'html-slider-response-WH',
@@ -362,7 +365,9 @@ function SE(nbBlocks, nbTrials){
               clicked = [data.response_row, data.response_col];
               clicked_i[test_counter] = clicked;
               test_counter++
-              if (data.button_pressed == 1){jsPsych.endCurrentTimeline();}
+              if (data.button_pressed == 1){
+                jsPsych.endCurrentTimeline();
+              }
             },
             data: {
               blockNb: block_i,
@@ -422,22 +427,25 @@ function SE(nbBlocks, nbTrials){
             target: target_i,
             choices: jsPsych.NO_KEYS,
             prompt: function(){
-              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b>';
+              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
               return feedback_prompt;
             },
             feedback: true,
             correct_responses: function(){return correct_i},
+            target_score: target_scores_all[trial_counter],
             on_start: function(feedback){
               feedback.clicked = clicked_i;
-            },
-            on_finish: function(){ // reset counters
-              if (nCorrect >= target_scores_all[trial_counter]){
+              var TS = feedback.target_score;
+              if (nCorrect >= TS){
                 nTS++;
               }
+            },
+            on_finish: function(){ // reset counters
               nCorrect       = 0;
               correct_i      = [0,0,0,0,0,0,0,0];
               test_counter   = 0;
               clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];;
+
             },
             data: {
               blockNb: block_i,
@@ -471,6 +479,9 @@ function SE(nbBlocks, nbTrials){
         return finish_stim;
       },
       choices: ['Fin'],
+      on_finish: function(data){
+        data.nTS = nTS;
+      },
       data: {
         blockNb: block_i,
         trialNb: trial_counter,

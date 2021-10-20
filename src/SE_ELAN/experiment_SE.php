@@ -94,7 +94,7 @@ Per trial:
     var wrong_browser = {
       type: 'html-button-response-WH',
       choices: [],
-      stimulus: "<p>Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p>"
+      stimulus: "<p>Cette exp\351rience n'est compatible que avec Google Chrome ou Mozilla Firefox. </p>"
                +"<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>"
              };
 

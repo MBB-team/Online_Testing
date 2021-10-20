@@ -82,6 +82,12 @@ jsPsych.plugins["animation-WH"] = (function() {
         default: null,
         array: true,
         description: 'Grid indexes of where the target was.'
+      },
+      target_score: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Trial target score',
+        default: null,
+        array: true,
       }
     }
   }
