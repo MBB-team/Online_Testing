@@ -56,20 +56,20 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "SE_ELAN",
-               nbTrials:       1,
-               nbBlocks:       1};
+               nbTrials:       20,
+               nbBlocks:       4};
 
   // Timings
-  const time = {flipSpeed:     200, // in ms so 1 sec
+  const time = {flipSpeed:     1000, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
-                showFeedback:  200,
+                showFeedback:  1000,
                 fixation:      500,
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 34;
+  const nbInstr              = 35;
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {
@@ -94,7 +94,7 @@ Per trial:
     var wrong_browser = {
       type: 'html-button-response-WH',
       choices: [],
-      stimulus: "<p>Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p>"
+      stimulus: "<p>Cette exp\351rience n'est compatible que avec Google Chrome ou Mozilla Firefox. </p>"
                +"<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>"
              };
 
@@ -229,7 +229,7 @@ Per trial:
         }
       };
 
-      // exp_timeline.push(instructions);
+      exp_timeline.push(instructions);
 
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
