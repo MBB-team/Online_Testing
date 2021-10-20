@@ -122,7 +122,8 @@ Per trial:
         TinB: 999,
         testNb: 999,
         target_score: 999,
-        test_part: 'firstFullscreen'
+        test_part: 'firstFullscreen',
+        nTS: 999
       }
     };
 
@@ -136,7 +137,8 @@ Per trial:
             TinB: 999,
             testNb: 999,
             target_score: 999,
-            test_part: 'fullscreenExp'
+            test_part: 'fullscreenExp',
+            nTS: 999
           }
         };
 
@@ -225,7 +227,8 @@ Per trial:
           TinB: 999,
           testNb: 999,
           target_score: 999,
-          test_part: 'instructions'
+          test_part: 'instructions',
+          nTS: 999
         }
       };
 
