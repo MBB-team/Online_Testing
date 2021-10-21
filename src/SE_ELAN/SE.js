@@ -4,7 +4,9 @@ function SE(nbBlocks, nbTrials){
   var timelineTask  = [];
   var trial_counter = 0; // counting the number of trials
   var flip_counter  = 1; // counting the number of flips on a trial
+  var flip_fb;           // giving participant feedback on the number of flips they did
   var nCorrect      = 0; // the number of correct responses given by the pts
+  var nTS           = 0; // the number of target scores achieved by the pts
   var test_counter  = 0; // counter for looping through test trials during execution
   var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
@@ -15,13 +17,13 @@ function SE(nbBlocks, nbTrials){
   var sliderIni     = Array(2);
 
   // Target Scores
-  var target_scores = [3, 4, 5, 6, 7, 8];
+  var target_scores = [4, 5, 6, 7, 8];
   var target_scores_all = (jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat(target_scores,nbBlocks-2)));
 
   target_scores_all.unshift(...target_scores);
 
   // No test trials
-  var conf_trials_idx = Array(6);
+  var conf_trials_idx = Array(target_scores.length);
   var conf_trials_TS = jsPsych.randomization.repeat(target_scores, 1);
   for (var i = 0; i < conf_trials_idx.length; i++) {
     var ii = randi(2,5) + i*5
@@ -29,36 +31,141 @@ function SE(nbBlocks, nbTrials){
     target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
   };
 
+  // Insert practice plus calibrations
+  var flip_ini = {
+    type: 'html-button-response-WH',
+    stimulus: '<p>Lorsque vous e&#770tes pre&#770t.e à voir la grille, cliquez sur le bouton.</p>',
+    choices: ['Continuer'],
+    data: {
+      blockNb: -1,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: 999,
+      test_part: 'calibration_ini',
+      nTS: 999
+    }
+  }; // calibration_ini
+
+  // FLIP //
+  var flip = {
+    type: 'animation-WH',
+    stimuli: grid_stimuli[10],
+    frame_time: time.flipSpeed,
+    choices: jsPsych.NO_KEYS,
+    data: {
+      blockNb: -1,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: 999,
+      test_part: 'flip_cal',
+      nTS: 999
+    }
+  };
+
+
+  var calibration_ini = {
+    type: 'html-button-response-WH',
+    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous mesurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    choices: ['Continuer'],
+    data: {
+      blockNb: -1,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: 999,
+      test_part: 'calibration_ini',
+      nTS: 999
+    }
+  }; // calibration_ini
+
+  timelineTask.push(flip_ini)
+  timelineTask.push(flip)
+  timelineTask.push(calibration_ini)
+  timelineTask.push(fullscreenExp)
+
+  // SE CALIBRATION QUESTIONS //
+  var target_scores_cal = [4, 6, 8];
+  for (var cal_i = 0; cal_i < target_scores_cal.length; cal_i++){
+
+    var SE_conf = {
+      type: 'SE-confidence-slider-WH',
+      range: 30,
+      trial_duration: time.SEconf,
+      prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+      start: sliderIni,
+      on_start: function(trial){
+        sliderIni[0]     = randi(0,29);
+        sliderIni[1]     = randi(sliderIni[0],29);
+        trial.start = sliderIni;
+      },
+      data: {
+        blockNb: -1,
+        trialNb: cal_i,
+        TinB: cal_i,
+        testNb: 999,
+        target_score: target_scores_cal[cal_i],
+        test_part: 'SE_slider_cal',
+        nTS: 999
+      }
+    };
+
+    timelineTask.push(SE_conf)
+    timelineTask.push(fullscreenExp)
+
+  }; // SE CALIBRATION QUESTIONS
+
+  var task_start = {
+    type: 'html-button-response-WH',
+    stimulus: '<p>Merci !</p><p>Maintenant l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    choices: ['Continuer'],
+    data: {
+      blockNb: -1,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: 999,
+      test_part: 'task_start',
+      nTS: 999
+    }
+  }; // calibration_ini
+
+  timelineTask.push(task_start)
+  timelineTask.push(fullscreenExp)
+
+
   // START OF BLOCK //
   for (var block_i = 0; block_i < nbBlocks; block_i++) {
     var block_n = block_i + 1;
 
-    // BLOCK NUMBER //
-    var block_number = {
-      type: 'html-button-response-WH',
-      stimulus: '<p>C&#39est le de&#769but du bloc <b>'+block_n+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
-      choices: ['C&#39est parti !'],
-      data: {
-        blockNb: block_i,
-        trialNb: trial_counter,
-        TinB: 999,
-        testNb: 999,
-        target_score: target_scores_all[trial_counter],
-        test_part: 'blockNb'
-      }
-    }; // block number
+    // // BLOCK NUMBER //
+    // var block_number = {
+    //   type: 'html-button-response-WH',
+    //   stimulus: '<p>C&#39est le de&#769but du bloc <b>'+block_n+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    //   choices: ['C&#39est parti !'],
+    //   data: {
+    //     blockNb: block_i,
+    //     trialNb: trial_counter,
+    //     TinB: 999,
+    //     testNb: 999,
+    //     target_score: target_scores_all[trial_counter],
+    //     test_part: 'blockNb'
+    //   }
+    // }; // block number
 
-    timelineTask.push(block_number)
+    // timelineTask.push(block_number)
 
     // TRIAL LOOP //
     for (var trial_i = 0; trial_i < nbTperB; trial_i++) {
 
       var trial_n = trial_i + 1;
+      var nbTrial_counter = trial_counter+1;
 
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+trial_n+'</b> du bloc <b><p>'+block_n+'</b>.</p></p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
         choices: ['C&#39est parti !'],
         data: {
           blockNb: block_i,
@@ -66,7 +173,8 @@ function SE(nbBlocks, nbTrials){
           TinB: trial_i,
           testNb: 999,
           target_score: target_scores_all[trial_counter],
-          test_part: 'trialNb'
+          test_part: 'trialNb',
+          nTS: 999
         }
       }; // trial number
 
@@ -78,7 +186,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour vous atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         start: sliderIni,
         on_start: function(trial){
           sliderIni[0]     = randi(0,29);
@@ -91,7 +199,8 @@ function SE(nbBlocks, nbTrials){
           TinB: trial_i,
           testNb: 999,
           target_score: target_scores_all[trial_counter],
-          test_part: 'SE_slider'
+          test_part: 'SE_slider',
+          nTS: 999
         }
       };
 
@@ -111,7 +220,8 @@ function SE(nbBlocks, nbTrials){
           TinB: trial_i,
           testNb: 999,
           target_score: target_scores_all[trial_counter],
-          test_part: 'flip'
+          test_part: 'flip',
+          nTS: 999
         }
       };
 
@@ -130,6 +240,7 @@ function SE(nbBlocks, nbTrials){
               flip_counter++;
             } else {
               data.flips = flip_counter;
+              flip_fb      = flip_counter;
               flip_counter = 1;
             }
           },
@@ -139,7 +250,8 @@ function SE(nbBlocks, nbTrials){
             TinB: trial_i,
             testNb: 999,
             target_score: target_scores_all[trial_counter],
-            test_part: 'rewatch'
+            test_part: 'rewatch',
+            nTS: 999
           }
         } // rewatch
 
@@ -161,14 +273,15 @@ function SE(nbBlocks, nbTrials){
 
         // IF CONF OR TESTING //
         if (trial_counter == conf_trials_idx[conf_counter]){
+          // if (trial_counter == 0){
 
           var test_conf = {
             type: 'html-slider-response-WH',
-            stimulus:'<p>Pensez-vous que vous auriez atteint le score cible de <b>'+target_scores_all[trial_counter]+'</b>, si vous aviez e&#769te&#769 teste&#769 ?</p><p>-100% = <b>Certainement pas</b>, 0% = <b>Je ne sais pas</b>, et 100% = <b>Absolument</b>',
-            labels: ['-100%','0%','100%'],
-            min: -100,
+            stimulus:'<p>Combien d’effort avez-vous fourni pour mémoriser les paires ?</p><p>0% = <b>Aucune charge mentale</b> et 100% = <b>Charge mentale maximale</b>',
+            labels: ['0%','25%','50%','75%','100%'],
+            min: 0,
             max: 100,
-            start: function(){return randi(-100,100);},
+            start: function(){return randi(0,100);},
             require_movement: true,
             data: {
               blockNb: block_i,
@@ -176,7 +289,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'test_conf'
+              test_part: 'test_conf',
+              nTS: 999
             }
           };
 
@@ -200,7 +314,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'fixation'
+              test_part: 'fixation',
+              nTS: 999
             }
           };
 
@@ -250,7 +365,9 @@ function SE(nbBlocks, nbTrials){
               clicked = [data.response_row, data.response_col];
               clicked_i[test_counter] = clicked;
               test_counter++
-              if (data.button_pressed == 1){jsPsych.endCurrentTimeline();}
+              if (data.button_pressed == 1){
+                jsPsych.endCurrentTimeline();
+              }
             },
             data: {
               blockNb: block_i,
@@ -258,7 +375,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: test_i,
               target_score: target_scores_all[trial_counter],
-              test_part: 'test'
+              test_part: 'test',
+              nTS: 999
             }
           };
 
@@ -291,7 +409,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'post_test_conf'
+              test_part: 'post_test_conf',
+              nTS: 999
             }
           };
 
@@ -308,19 +427,25 @@ function SE(nbBlocks, nbTrials){
             target: target_i,
             choices: jsPsych.NO_KEYS,
             prompt: function(){
-              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b>';
+              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
               return feedback_prompt;
             },
             feedback: true,
             correct_responses: function(){return correct_i},
+            target_score: target_scores_all[trial_counter],
             on_start: function(feedback){
               feedback.clicked = clicked_i;
+              var TS = feedback.target_score;
+              if (nCorrect >= TS){
+                nTS++;
+              }
             },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
               correct_i      = [0,0,0,0,0,0,0,0];
               test_counter   = 0;
               clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];;
+
             },
             data: {
               blockNb: block_i,
@@ -328,7 +453,8 @@ function SE(nbBlocks, nbTrials){
               TinB: trial_i,
               testNb: 999,
               target_score: target_scores_all[trial_counter],
-              test_part: 'feedback'
+              test_part: 'feedback',
+              nTS: 999
             }
           };
 
@@ -345,17 +471,25 @@ function SE(nbBlocks, nbTrials){
       }; // trial
     }; // block
 
+    var nbTrialsRewarded = nbTrials-target_scores.length;
     var finish = {
       type: 'html-button-response-WH',
-      stimulus: '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p><b>Merci beaucoup !</b></p>',
+      stimulus: function(){
+        var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+nbTrialsRewarded+'</b>.</p><p><b>Merci beaucoup pour votre participation !</b></p>';
+        return finish_stim;
+      },
       choices: ['Fin'],
+      on_finish: function(data){
+        data.nTS = nTS;
+      },
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
         TinB: trial_i,
         testNb: 999,
         target_score: target_scores_all[trial_counter],
-        test_part: 'finish'
+        test_part: 'finish',
+        nTS: nTS
       }
     }
 
