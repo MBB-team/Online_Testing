@@ -26,7 +26,7 @@ function SE(nbBlocks, nbTrials){
   var conf_trials_idx = Array(target_scores.length);
   var conf_trials_TS = jsPsych.randomization.repeat(target_scores, 1);
   for (var i = 0; i < conf_trials_idx.length; i++) {
-    var ii = randi(2,5) + i*5
+    var ii = randi(2,target_scores.length) + i*nbBlocks;
     conf_trials_idx[i] = ii-1; // index of location to insert conf trial
     target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
   };
@@ -167,6 +167,10 @@ function SE(nbBlocks, nbTrials){
         type: 'html-button-response-WH',
         stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
         choices: ['C&#39est parti !'],
+        on_start: function(){
+          var filenametosave = jsPsych.data.getLastTrialData().values()[0].filename;
+          jsPsych.data.get().localSave('csv',filenametosave.concat('','.csv'));
+        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -479,6 +483,10 @@ function SE(nbBlocks, nbTrials){
         return finish_stim;
       },
       choices: ['Fin'],
+      on_start: function(){
+        var filenametosave = jsPsych.data.getLastTrialData().values()[0].filename;
+        jsPsych.data.get().localSave('csv',filenametosave.concat('','.csv'));
+      },
       on_finish: function(data){
         data.nTS = nTS;
       },

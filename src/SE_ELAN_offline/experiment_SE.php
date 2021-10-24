@@ -24,6 +24,7 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-survey-text-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
             <script   src  = 'SE.js'></script>
@@ -217,6 +218,32 @@ Per trial:
       exp_timeline.push(firstFullscreen)
 
       // Execute the experiment
+      // Gather participant identifier
+      var ident = {
+        type: 'survey-text-WH',
+        questions: [
+          {prompt: 'Quel est l&#39identifiant du participant?', required: true},
+        ],
+        button_label: 'Continuer',
+        on_finish: function(data){
+          var identifier = JSON.parse(jsPsych.data.getLastTrialData().values()[0].responses).Q0;
+          var filename = identifier.concat('',`_${(new Date().toJSON())}`);
+          jsPsych.data.addProperties({subject_ID: identifier, filename: filename})
+        },
+        data: {
+          blockNb: 999,
+          trialNb: 999,
+          TinB: 999,
+          testNb: 999,
+          target_score: 999,
+          test_part: 'identifier',
+          nTS: 999
+        }
+      };
+
+      exp_timeline.push(ident)
+
+      // Instructions
       var instructions = {
         type: 'instructions-WH',
         pages: instrImg_html,
