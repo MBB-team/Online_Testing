@@ -484,6 +484,9 @@ function SE(nbBlocks, nbTrials){
       },
       choices: ['Fin'],
       on_start: function(){
+        var today           = new Date();
+        var donetime        = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+        jsPsych.data.addProperties({doneTime: donetime})
         var filenametosave = jsPsych.data.getLastTrialData().values()[0].filename;
         jsPsych.data.get().localSave('csv',filenametosave.concat('','.csv'));
       },

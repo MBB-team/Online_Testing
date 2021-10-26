@@ -227,9 +227,9 @@ Per trial:
         button_label: 'Continuer',
         on_finish: function(data){
           var identifier = JSON.parse(jsPsych.data.getLastTrialData().values()[0].responses).Q0;
-          var filename = identifier.concat('',date);
+          var filename = identifier.concat('_',date);
           var startTime = date;
-          jsPsych.data.addProperties({subject_ID: identifier, filename: filename, startTime: date})
+          jsPsych.data.addProperties({subject_ID: identifier, filename: filename, startTime: date, doneTime: ""})
         },
         data: {
           blockNb: 999,
@@ -275,9 +275,6 @@ Per trial:
              saveData(); // edit out if not on server
        },
         on_finish: function(){
-          var today           = new Date();
-          var donetime        = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-          jsPsych.data.addProperties({doneTime: donetime})
           jspsych_finish();
         },
       });
