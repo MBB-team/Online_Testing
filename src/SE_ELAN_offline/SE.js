@@ -17,10 +17,15 @@ function SE(nbBlocks, nbTrials){
   var sliderIni     = Array(2);
 
   // Target Scores
-  var target_scores = [4, 5, 6, 7, 8];
-  var target_scores_all = (jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat(target_scores,nbBlocks-2)));
+  var target_scores = [4, 5, 6, 7];
+  var target_scores_all = Array(nbBlocks-1);
+  for (var nB = 0; nB < nbBlocks-1; nB++){
+    target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores)
+  };
 
-  target_scores_all.unshift(...target_scores);
+  var target_scores_all = target_scores_all.flat();
+
+  // target_scores_all.unshift(...target_scores);
 
   // No test trials
   var conf_trials_idx = Array(target_scores.length);
