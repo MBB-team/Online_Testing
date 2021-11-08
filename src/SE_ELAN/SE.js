@@ -361,7 +361,7 @@ function SE(nbBlocks, nbTrials){
             allow_nontarget_responses: true,
             prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
             pre_target_duration: 0,
-            choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
+            choices: ['Montrez-moi la prochaine paire'],
             on_start: function(){var clicked = [null,null]},
             on_finish: function(data){
               if (data.correct){
