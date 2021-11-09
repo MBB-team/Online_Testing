@@ -33,6 +33,7 @@ function SE(nbBlocks, nbTrials){
   var conf_trials_TS = jsPsych.randomization.repeat(target_scores, 1);
   for (var i = 0; i < conf_trials_idx.length; i++) {
     var ii = randi(2,target_scores.length) + i*nbBlocks;
+    if (ii > nbTrials){ii = nbTrials};
     conf_trials_idx[i] = ii-1; // index of location to insert conf trial
     target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
   };
