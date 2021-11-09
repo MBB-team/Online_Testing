@@ -6,6 +6,7 @@ function SE(nbBlocks, nbTrials){
   var flip_counter  = 1; // counting the number of flips on a trial
   var flip_fb;           // giving participant feedback on the number of flips they did
   var nCorrect      = 0; // the number of correct responses given by the pts
+  var nClicked      = 0; // the number of guesses pt makes
   var nTS           = 0; // the number of target scores achieved by the pts
   var test_counter  = 0; // counter for looping through test trials during execution
   var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
@@ -17,10 +18,15 @@ function SE(nbBlocks, nbTrials){
   var sliderIni     = Array(2);
 
   // Target Scores
-  var target_scores = [4, 5, 6, 7, 8];
-  var target_scores_all = (jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat(target_scores,nbBlocks-2)));
+  var target_scores = [4, 5, 6, 7];
+  var target_scores_all = Array(nbBlocks-1);
+  for (var nB = 0; nB < nbBlocks-1; nB++){
+    target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores)
+  };
 
-  target_scores_all.unshift(...target_scores);
+  var target_scores_all = target_scores_all.flat();
+
+  // target_scores_all.unshift(...target_scores);
 
   // No test trials
   var conf_trials_idx = Array(target_scores.length);
@@ -355,7 +361,7 @@ function SE(nbBlocks, nbTrials){
             allow_nontarget_responses: true,
             prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
             pre_target_duration: 0,
-            choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
+            choices: ['Montrez-moi la prochaine paire'],
             on_start: function(){var clicked = [null,null]},
             on_finish: function(data){
               if (data.correct){
@@ -367,7 +373,15 @@ function SE(nbBlocks, nbTrials){
               test_counter++
               if (data.button_pressed == 1){
                 jsPsych.endCurrentTimeline();
-              }
+              };
+              if (isNaN(clicked[0])){
+              } else {
+                nClicked++;
+              };
+              if (nClicked == data.target_score){
+                nClicked = 0;
+                jsPsych.endCurrentTimeline();
+              };
             },
             data: {
               blockNb: block_i,
@@ -426,10 +440,10 @@ function SE(nbBlocks, nbTrials){
             //  clicked: function(){clicked_i},
             target: target_i,
             choices: jsPsych.NO_KEYS,
-            prompt: function(){
-              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
-              return feedback_prompt;
-            },
+            // prompt: function(){
+            //   var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
+            //   return feedback_prompt;
+            // },
             feedback: true,
             correct_responses: function(){return correct_i},
             target_score: target_scores_all[trial_counter],
@@ -438,7 +452,8 @@ function SE(nbBlocks, nbTrials){
               var TS = feedback.target_score;
               if (nCorrect >= TS){
                 nTS++;
-              }
+              };
+              feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/'+feedback.target_score+' !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
             },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
