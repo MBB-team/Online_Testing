@@ -418,6 +418,9 @@ function SE(nbBlocks, nbTrials){
             type: 'html-button-response-WH',
             stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement deviné ?</p>',
             choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+            on_start: function(){
+              nClicked = 0;
+            },
             data: {
               blockNb: block_i,
               trialNb: trial_counter,
