@@ -55,7 +55,7 @@ Per trial:
                main:           true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "SE_ELAN",
+  const exp = {name:           "SE_Glioma",
                nbTrials:       12,
                nbBlocks:       3};
 
