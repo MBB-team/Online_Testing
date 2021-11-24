@@ -118,7 +118,8 @@ jsPsych.plugins["fullscreen-WH"] = (function() {
             "target_col":       999,   // integer
             "correct_row":      999,   // integer
             "correct_col":      999,   // integer
-            "correct":          null   // BOOL
+            "correct":          null,   // BOOL
+            "trial_time_elapsed": 999  // integer
           };
 
           jsPsych.finishTrial(trial_data);

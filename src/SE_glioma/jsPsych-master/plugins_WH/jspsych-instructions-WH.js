@@ -80,6 +80,10 @@ jsPsych.plugins["instructions-WH"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
+
     var current_page = 0;
 
     var view_history = [];
@@ -183,7 +187,8 @@ jsPsych.plugins["instructions-WH"] = (function() {
       }
 
       display_element.innerHTML = '';
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       // gather trial data
       var trial_data = {
         "rt":               performance.now() - start_time,   // integer
@@ -202,7 +207,8 @@ jsPsych.plugins["instructions-WH"] = (function() {
         "target_col":       999,   // integer
         "correct_row":      999,   // integer
         "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "correct":          null,   // BOOL
+        "trial_time_elapsed": timeDiff  // integer
       };
 
       jsPsych.finishTrial(trial_data);

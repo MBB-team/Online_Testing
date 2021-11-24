@@ -55,17 +55,17 @@ Per trial:
                main:           true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "exp_01",
-               nbTrials:       30,
-               nbBlocks:       5};
+  const exp = {name:           "SE_ELAN",
+               nbTrials:       12,
+               nbBlocks:       3};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
-                showFeedback:  2000,
-                fixation:      1000,
+                showFeedback:  1000,
+                fixation:      500,
                 rewatch:       5000};
 
   // instructions
@@ -94,7 +94,7 @@ Per trial:
     var wrong_browser = {
       type: 'html-button-response-WH',
       choices: [],
-      stimulus: "<p>Cette exp\351rience n'est compatible que avev Google Chrome ou Mozilla Firefox. </p>"
+      stimulus: "<p>Cette exp\351rience n'est compatible que avec Google Chrome ou Mozilla Firefox. </p>"
                +"<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>"
              };
 
@@ -122,7 +122,8 @@ Per trial:
         TinB: 999,
         testNb: 999,
         target_score: 999,
-        test_part: 'firstFullscreen'
+        test_part: 'firstFullscreen',
+        nTS: 999
       }
     };
 
@@ -136,7 +137,8 @@ Per trial:
             TinB: 999,
             testNb: 999,
             target_score: 999,
-            test_part: 'fullscreenExp'
+            test_part: 'fullscreenExp',
+            nTS: 999
           }
         };
 
@@ -155,7 +157,7 @@ Per trial:
     var numbersImg  = [];
     var numbersImg_html = [];
     for (var t=1; t <= 8; t++){
-      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.jpg'; // pre-load all the stimuli numbers
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.png'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
 
@@ -225,7 +227,8 @@ Per trial:
           TinB: 999,
           testNb: 999,
           target_score: 999,
-          test_part: 'instructions'
+          test_part: 'instructions',
+          nTS: 999
         }
       };
 

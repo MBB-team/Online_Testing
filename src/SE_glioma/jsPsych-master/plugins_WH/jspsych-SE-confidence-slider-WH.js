@@ -45,6 +45,10 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
+
     var response = {
       rt: null,
       max: null,
@@ -146,7 +150,8 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
     }
 
     function endTrial (){
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       // data saving
       var trial_data = {
         "rt":               response.rt,   // integer
@@ -165,7 +170,8 @@ jsPsych.plugins["SE-confidence-slider-WH"] = (function() {
         "target_col":       999,   // integer
         "correct_row":      999,   // integer
         "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "correct":          null,   // BOOL
+        "trial_time_elapsed": timeDiff  // integer
       };
 
       // clear the display

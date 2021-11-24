@@ -46,6 +46,10 @@ jsPsych.plugins['vsl-grid-scene-WH'] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
+
     display_element.innerHTML = plugin.generate_stimulus(trial.stimuli, trial.image_size);
 
     jsPsych.pluginAPI.setTimeout(function() {
@@ -53,7 +57,8 @@ jsPsych.plugins['vsl-grid-scene-WH'] = (function() {
     }, trial.trial_duration);
 
     function endTrial() {
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       display_element.innerHTML = '';
 
       var trial_data = {

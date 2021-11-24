@@ -82,6 +82,12 @@ jsPsych.plugins["animation-WH"] = (function() {
         default: null,
         array: true,
         description: 'Grid indexes of where the target was.'
+      },
+      target_score: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Trial target score',
+        default: null,
+        array: true,
       }
     }
   }
@@ -95,6 +101,9 @@ jsPsych.plugins["animation-WH"] = (function() {
     var animation_sequence = [];
     var responses = [];
     var current_stim = "";
+    var t0 = new Date();
+    var t1;
+    var timeDiff;
 
     var animate_interval = setInterval(function() {
       var showImage = true;
@@ -187,7 +196,8 @@ jsPsych.plugins["animation-WH"] = (function() {
     function endTrial() {
 
       jsPsych.pluginAPI.cancelKeyboardResponse(response_listener);
-
+      t1 = new Date();
+      timeDiff = t1-t0;
       // gather trial data
       var trial_data = {
         "rt":               999,   // integer
@@ -206,7 +216,8 @@ jsPsych.plugins["animation-WH"] = (function() {
         "target_col":       999,   // integer
         "correct_row":      999,   // integer
         "correct_col":      999,   // integer
-        "correct":          null   // BOOL
+        "correct":          null,   // BOOL
+        "trial_time_elapsed": timeDiff  // integer
       };
 
       jsPsych.finishTrial(trial_data);
