@@ -4,7 +4,7 @@ include('../portailLib/session.php');
 if(isIdentified())
 {
     //start run
-    $run = prepareTask("QUEST"); //modify this with taskID
+    $run = prepareTask("QUEST_GLIOMA"); //modify this with taskID
     if(empty($run))
     {
         //redirect to homepage

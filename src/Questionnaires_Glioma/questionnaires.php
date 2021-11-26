@@ -42,7 +42,7 @@
             case 'http:':
             case 'https:':
                   //theses lines are not executed unless the file is on a web server (assuming with php module)
-                  dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data_quest.php');
+                  dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
                   dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}')); 
                   break;
             case 'file':
