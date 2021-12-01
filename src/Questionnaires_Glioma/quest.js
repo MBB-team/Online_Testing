@@ -6,7 +6,7 @@ function quest() {
 	var  begin_qns = {
 		type: 'html-keyboard-response',
 		stimulus: "<H3> <p> Questionnaires </p> </H3>" +
-		'<p> Nous allons maintenant vous demander de remplir deux questionnairest.</p>' +
+		'<p> Nous allons maintenant vous demander de remplir deux questionnaires.</p>' +
 		"<p> S'il vous plait, lisez les questions avec soin et r\351pondez selon les options pr\351sent\351es." +
 		"<p> Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \351prouvez, qu'une r\351ponse longuement m\351dit\351e." +
 		"<p> <br> <br> Appuyez sur la barre d'espace pour continuer </p>",
@@ -64,7 +64,8 @@ function quest() {
 			{prompt: "8) Pensez-vous que votre performance dépend de l&#39effort que vous fournissez lorsque vous apprenez la position des paires d&#39tems? Si oui, comment?"},
 			{prompt: "9) Pensez-vous avoir amélioré votre auto-évaluation au cours du temps? Si oui, comment?"},
 			{prompt: "10) Avous-vous une dernière remarque à faire?"}
-		]
+		],
+		data:{test_part: 'debrief',trial_type: 'quest'}
 	};
 
 	var  end_qns = {
@@ -78,8 +79,9 @@ function quest() {
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
 	qns.push(fullscreenExp);
-	qns.push(hads)
-
+	qns.push(hads);
+	qns.push(debriefing);
+	qns.push(end_qns);
 
 	return qns;
 
