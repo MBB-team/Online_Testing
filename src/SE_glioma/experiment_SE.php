@@ -56,8 +56,8 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "SE_Glioma",
-               nbTrials:       12,
-               nbBlocks:       3};
+               nbTrials:       25,
+               nbBlocks:       5};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
