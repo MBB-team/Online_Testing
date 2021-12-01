@@ -17,26 +17,67 @@ function SE(nbBlocks, nbTrials){
   var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
 
-  // Target Scores
-  var target_scores = [4, 5, 6, 7];
-  var target_scores_all = Array(nbBlocks-1);
-  for (var nB = 0; nB < nbBlocks-1; nB++){
-    target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores)
-  };
-
-  var target_scores_all = target_scores_all.flat();
-
-  // target_scores_all.unshift(...target_scores);
+  var target_scores = [4, 5, 6, 7, 8];
+  var conf_trials_idx = Array(target_scores.length);
 
   // No test trials
-  var conf_trials_idx = Array(target_scores.length);
-  var conf_trials_TS = jsPsych.randomization.repeat(target_scores, 1);
-  for (var i = 0; i < conf_trials_idx.length; i++) {
-    var ii = randi(2,target_scores.length) + i*nbBlocks;
-    if (ii > nbTrials){ii = nbTrials};
-    conf_trials_idx[i] = ii-1; // index of location to insert conf trial
-    target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
-  };
+  if (nbBlocks == target_scores.length){
+    var conf_gen = 0;
+    while (conf_gen == 0){
+      var target_scores_all = Array(nbBlocks);
+
+      for (var nB = 0; nB < nbBlocks; nB++){
+        target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores);
+      };
+      var conf_trials_TS = jsPsych.randomization.shuffle(target_scores);
+      if (conf_trials_TS[0] != target_scores_all[0][0]){
+        if (conf_trials_TS[0] != target_scores_all[0][1]){ // make sure that the first effort question isn't the first or second trial
+          for (var i = 0; i < nbBlocks; i++) {
+            conf_trials_idx[i] = i*nbBlocks + target_scores_all[i].findIndex(x => x === conf_trials_TS[i]);
+          };
+          var target_scores_all = target_scores_all.flat();
+
+          var contiguous_TS = 0;
+          for (var i = 0; i < target_scores_all.length; i++){ // check if there are contiguous target scoress
+            if (target_scores_all[i] == target_scores_all[i+1]){
+              contiguous_TS = 1;
+            };
+          }
+
+          var contiguous_conf = 0;
+          for (var i = 0; i < conf_trials_idx.length; i++){ // check if there are contiguous effort questions
+            if (conf_trials_idx[i] == conf_trials_idx[i+1]){
+              contiguous_conf = 1;
+            };
+          }
+
+          if (contiguous_TS != 1 & contiguous_conf != 1){
+            conf_gen = 1;
+          };
+        };
+      };
+    };
+
+  } else {
+    var target_scores_all = Array(nbBlocks-1);
+    for (var nB = 0; nB < nbBlocks-1; nB++){
+      target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores)
+    };
+
+    var target_scores_all = target_scores_all.flat();
+
+    // target_scores_all.unshift(...target_scores);
+
+    var conf_trials_TS = jsPsych.randomization.shuffle(target_scores);
+    for (var i = 0; i < conf_trials_idx.length; i++) {
+      var ii = randi(2,target_scores.length) + i*nbBlocks;
+      if (ii > nbTrials){ii = nbTrials};
+      conf_trials_idx[i] = ii-1; // index of location to insert conf trial
+      target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
+    };
+  }
+
+
 
   // Insert practice plus calibrations
   var flip_ini = {
@@ -125,7 +166,7 @@ function SE(nbBlocks, nbTrials){
 
   var task_start = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Merci !</p><p>Maintenant l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Merci !</p><p>Maintenant, l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -489,6 +530,55 @@ function SE(nbBlocks, nbTrials){
 
       }; // trial
     }; // block
+
+    var calibration_fin = {
+      type: 'html-button-response-WH',
+      stimulus: '<p>Vous avez comple&#769te&#769 l&#39expe&#769rience principale - bravo!</p><p>Maintenant, nous mesurerons votre capacité finale à auto-évaluer correctement vos compétences mentales,</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+      choices: ['Continuer'],
+      data: {
+        blockNb: -1,
+        trialNb: 999,
+        TinB: 999,
+        testNb: 999,
+        target_score: 999,
+        test_part: 'calibration_fin',
+        nTS: 999
+      }
+    }; // calibration_fin
+
+    timelineTask.push(calibration_fin)
+    timelineTask.push(fullscreenExp)
+
+    // SE CALIBRATION QUESTIONS //
+    var target_scores_cal = [4, 6, 8];
+    for (var cal_i = 0; cal_i < target_scores_cal.length; cal_i++){
+
+      var SE_conf = {
+        type: 'SE-confidence-slider-WH',
+        range: 30,
+        trial_duration: time.SEconf,
+        prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        start: sliderIni,
+        on_start: function(trial){
+          sliderIni[0]     = randi(0,29);
+          sliderIni[1]     = randi(sliderIni[0],29);
+          trial.start = sliderIni;
+        },
+        data: {
+          blockNb: -2,
+          trialNb: cal_i,
+          TinB: cal_i,
+          testNb: 999,
+          target_score: target_scores_cal[cal_i],
+          test_part: 'SE_slider_cal_fin',
+          nTS: 999
+        }
+      };
+
+      timelineTask.push(SE_conf)
+      timelineTask.push(fullscreenExp)
+
+    }; // SE CALIBRATION QUESTIONS
 
     var nbTrialsRewarded = nbTrials-target_scores.length;
     var finish = {
