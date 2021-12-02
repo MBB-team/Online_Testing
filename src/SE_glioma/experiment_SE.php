@@ -27,6 +27,7 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-keyboard-response-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids_test.js'></script>
             <script   src  = 'SE.js'></script>
             <script   src  = 'SE_instruction_video.js'></script>
             <script   src = "../js/dataSaver.js"></script>
@@ -176,14 +177,19 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
-    var square_size = screen.height/6;
+    var grid_indexes_shuffled = grid_indexes; //jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var square_size = screen.height/8;
     var matching_pairs = 1; // if the two images are the same or not
     var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
+    var all_flip_stimuli_test = generate_grids_test(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
 
     var grid_stimuli = []; // slice array into chunks of 8
     for (var i=0; i<all_flip_stimuli.length; i+=8) {
          grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
+    }
+    var grid_stimuli_test = []; // slice array into chunks of 8
+    for (var i=0; i<all_flip_stimuli_test.length; i+=8) {
+         grid_stimuli_test.push(all_flip_stimuli_test.slice(i,i+8));
     }
 
     function updateLoadedCount(nLoaded){
@@ -208,7 +214,7 @@ Per trial:
     var exp_timeline = [];
 
     if (cfg.debug == false) {
-      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2, greySquare],
+      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2, greySquare, 'Stimuli/SE_video_resume.png', 'Stimuli/SE_video_variation.png'],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
 
