@@ -24,9 +24,11 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-keyboard-response-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
             <script   src  = 'SE.js'></script>
+            <script   src  = 'SE_instruction_video.js'></script>
             <script   src = "../js/dataSaver.js"></script>
             <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link rel='icon' href='/favicon.ico' />
@@ -51,7 +53,7 @@ Per trial:
   // What to do
   const cfg = {debug:          false,
                cheat:          false,
-               instructions:   false,
+               instructions:   true,
                main:           true};
 
   // Configuration parameters of experiment
@@ -232,7 +234,14 @@ Per trial:
         }
       };
 
-      exp_timeline.push(instructions);
+      if (cfg.instructions){
+        var video_inst = SE_instruction_video();
+        for (var i = 0; i < video_inst.length; i++) {
+          exp_timeline.push(video_inst[i]);
+        }
+      } else {
+        exp_timeline.push(instructions);
+      };
 
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
@@ -241,7 +250,7 @@ Per trial:
 
       jsPsych.init({
         timeline: exp_timeline,
-        show_progress_bar: true,
+        show_progress_bar: false,
         on_trial_finish: function() {
              jsPsych.data.addProperties({date: date});
              saveData(); // edit out if not on server
