@@ -245,8 +245,8 @@ Per trial:
           response_ends_trial: false,
           trial_ends_after_video: true,
           rate: 1,
-          width: screen.width,
-          height: screen.height,
+          width: screen.width*0.9,
+          height: screen.height*0.9,
           data: {
             blockNb: 999,
             trialNb: 999,
