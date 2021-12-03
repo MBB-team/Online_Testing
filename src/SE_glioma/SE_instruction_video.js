@@ -23,7 +23,7 @@ function SE_instruction_video(){
   var principe = {
     type: 'html-keyboard-response-WH',
     stimulus: grid_stimuli[0][0],
-    prompt: '<p>Lors de chaque exercise de mémoire, vous devrez vous souvenir de la position de 8 paires de chiffres disposés sur une grille carrée.</p>'+
+    prompt: '<p>Lors de chaque exercice de mémoire, vous devrez vous souvenir de la position de 8 paires de chiffres disposés sur une grille carrée.</p>'+
     '<p>Dans cet exemple, les deux chiffres « 1 » forment une paire, dont chaque element est positionné sur un emplacement de la grille.</p>'
   };
 
@@ -165,7 +165,7 @@ function SE_instruction_video(){
     response_ends_trial: true,
     highlight: time.highlight,
     allow_nontarget_responses: true,
-    prompt: '<p>Durant la phase de test, nous vous montrerons l&#39un des chiffres composant la paire (dans l&#39ordre).</p>'+
+    prompt: '<p>Durant la phase de test, nous vous montrerons successivement un chiffre de chaque paire.</p>'+
     '<p>Vous devrez cliquer sur l&#39emplacement de l&#39autre chiffre composant cette paire.</p>',
     pre_target_duration: 0,
     choices: ['Montrez-moi la prochaine paire']
