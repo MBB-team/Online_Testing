@@ -25,6 +25,7 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-survey-text-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-video-keyboard-response-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
             <script   src  = 'SE.js'></script>
@@ -52,7 +53,7 @@ Per trial:
   // What to do
   const cfg = {debug:          false,
                cheat:          false,
-               instructions:   false,
+               instructions:   true,
                main:           true};
 
   // Configuration parameters of experiment
@@ -61,7 +62,7 @@ Per trial:
                nbBlocks:       5};
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
+  const time = {flipSpeed:     1200, // in ms so 1 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
@@ -174,6 +175,9 @@ Per trial:
     var greySquare = 'Stimuli/grey-square.png';
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
+    // Video Instructions
+    var inst_video = 'Stimuli/file_example_MP4_480_1_5MG.mp4';
+
     // Grids
     var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
@@ -186,7 +190,7 @@ Per trial:
     }
 
     function updateLoadedCount(nLoaded){
-      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + 1)  * 100), 100);
+      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + numbersImg2.length + greySquare.length + 1)  * 100), 100);
       document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
       //console.log('Loaded '+percentcomplete+'% of images');
     }
@@ -210,14 +214,12 @@ Per trial:
       jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2, greySquare],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
-
     }
 
     function startExperiment(){
 
       exp_timeline.push(firstFullscreen)
 
-      // Execute the experiment
       // Gather participant identifier
       var ident = {
         type: 'survey-text-WH',
@@ -244,24 +246,93 @@ Per trial:
 
       exp_timeline.push(ident)
 
-      // Instructions
-      var instructions = {
-        type: 'instructions-WH',
-        pages: instrImg_html,
-        show_clickable_nav: true,
-        data: {
-          blockNb: 999,
-          trialNb: 999,
-          TinB: 999,
-          testNb: 999,
-          target_score: 999,
-          test_part: 'instructions',
-          nTS: 999
-        }
-      };
+      if (cfg.instructions){
 
-      exp_timeline.push(instructions);
+        var video_instructions_ready = {
+          type: 'html-button-response-WH',
+          stimulus: '<p>Lorsque vous e&#770tes pre&#770t.e à regarder la vidéo d&#39instructions, cliquez sur le bouton.</p>',
+          choices: ['Continuer'],
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions_ready',
+            nTS: 999
+          }
+        }; // calibration_ini
 
+
+        // Execute the experiment
+        var video_instructions = {
+          type: 'video-keyboard-response-WH',
+          sources: [inst_video],
+          choices: jsPsych.NO_KEYS,
+          response_ends_trial: false,
+          trial_ends_after_video: true,
+          rate: 4,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions',
+            nTS: 999
+          }
+        };
+
+        var video_instructions_rewatch = {
+          type: 'html-button-response-WH',
+          stimulus: '<p>Si vous avez des questions, n&#39hésitez pas à les poser au chercheur/à la chercheuse dès maintenant.</p><p>Si vous souhaitez revoir la video d&#39instructions, cliquez sur « Oui ».</p><p>Si vous souhaitez passer à l&#39expérience, cliquez sur « Non ».</p>',
+          choices: ['Oui','Non'],
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions_rewatch',
+            nTS: 999
+          }
+        }; // calibration_ini
+
+        // LOOP THE FLIPS //
+        var looping_video_instructions = {
+          timeline: [video_instructions_ready, fullscreenExp, video_instructions, fullscreenExp, video_instructions_rewatch],
+          loop_function: function(data){
+            response = jsPsych.data.getLastTrialData().values()[0]["button_pressed"];
+            if (response == 0){
+              return true;
+            } else {
+              return false;
+            };
+          }
+        }; // loop
+
+        exp_timeline.push(looping_video_instructions);
+
+      } else {
+
+        // Execute the experiment
+        var instructions = {
+          type: 'instructions-WH',
+          pages: instrImg_html,
+          show_clickable_nav: true,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'instructions',
+            nTS: 999
+          }
+        };
+
+        exp_timeline.push(instructions);
+      }
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
