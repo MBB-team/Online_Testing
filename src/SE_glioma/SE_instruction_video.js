@@ -74,13 +74,13 @@ function SE_instruction_video(){
   // TRIAL NUMBER and TARGET SCORE //
   var trial_number3 = {
     type: 'html-keyboard-response-WH',
-    stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>6</b>.</p><p>Le score cible pour cet exercice est: <b>4</b>.',
-    prompt: '<br><p>Nous vous indiquerons le score cible au début de chaque exercice, comme ci-dessus.</p>',
+    stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>6</b>.</p><p>Le score cible pour cet exercice est: <b>5</b>.',
+    prompt: '<br><p>Nous vous indiquerons le score cible (c&#39est-à-dire le nombre de réponses correctes que vous devrez donner pour réussier l&#39exercice) au début de chaque exercice, comme ci-dessus.</p>',
   }; // trial number
 
   var summary2 = {
     type: 'html-keyboard-response-WH',
-    stimulus: '<p>Au total, le test comprend 25 exercices de mémoire.</p><p>Chaque exercice se compose de deux phases :</p>'+
+    stimulus: '<p>Au total, le test comprend 25 exercices de mémorisation.</p><p>Chaque exercice se compose de deux phases :</p>'+
     '<p>1) La phase de mémorisation</p><p>2) La phase de test</p>'+
     '<p>En résumé, lors de chaque exercice de mémoire, vous adapterez votre effort pour essayer d&#39atteindre le score cible de l&#39exercice. Cela dit, vous ne serez pas toujours capable de réussir.</p>'+
     '<p>Pendant chaque exercice, nous vous demanderons donc de vous auto-évaluer deux fois. Ces auto-évaluations sont aussi importantes que la réussite des exercices !</p>'
@@ -91,11 +91,23 @@ function SE_instruction_video(){
     stimulus: 'Nous allons maintenant vous détailler les deux phases.'
   };
 
+  var flip1 = {
+    type: 'html-keyboard-response-WH',
+    stimulus: 'Pendant la phase de mémorisation, nous vous montrerons la grille et vous devrez mémoriser les paires de chiffres. Voici un nouveau exemple de la grille.'
+  };
+
+  var flip2 = {
+    type: 'animation-WH',
+    stimuli: grid_stimuli[0],
+    frame_time: 123
+  };
+
+
   var rewatch1 = {
     type: 'html-button-response-WH',
     stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>5</b>.',
-    prompt: '<p>Vous avez vu la grille <b>4</b> fois.</p><br>'+
-    '<p>Pendant la phase de mémorisation, comme noté, vous pourrez voir et revoir les chiffres de la grille autant de fois que vous le désirez.</p>'+
+    prompt: '<p>Vous avez vu la grille <b>2</b> fois.</p><br>'+
+    '<p>Comme noté, vous pourrez voir et revoir les chiffres de la grille autant de fois que vous le désirez.</p>'+
     '<p>Après chaque visualisation de la grille, nous vous demanderons si vous souhaitez revoir la grille.</p><p>Si oui, cliquez sur le bouton « Oui ».</p>',
     choices: ['Oui','Non']
   };
@@ -111,7 +123,7 @@ function SE_instruction_video(){
     type: 'html-button-response-WH',
     stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>5</b>.</p>',
     choices: ['Oui','Non'],
-    prompt: '<p>Vous avez vu la grille <b>5</b> fois.</p><br>'+
+    prompt: '<p>Vous avez vu la grille <b>3</b> fois.</p><br>'+
     '<p>Si vous ne souhaitez plus revoir la grille, cliquez sur le bouton « Non » et passer à la phase de test.</p>'
   };
 
@@ -119,7 +131,7 @@ function SE_instruction_video(){
     type: 'html-button-response-WH',
     stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>5</b>.</p>',
     choices: ['Oui','Non'],
-    prompt: '<p>Vous avez vu la grille <b>5</b> fois.</p><br>'+
+    prompt: '<p>Vous avez vu la grille <b>3</b> fois.</p><br>'+
     '<p>Note: vous avez 8 secondes seulement pour répondre, après quoi la phase de phase de test démarrera...</p>'
   };
 
@@ -215,7 +227,7 @@ function SE_instruction_video(){
     feedback: true,
     correct_responses: [1,1,1,1,0,0,0,0],
     on_start: function(feedback){
-      feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>4/8 !</b> Vous avez vu la grille <b>6</b> fois.';
+      feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>4/8 !</b> Vous avez vu la grille <b>3</b> fois.';
       feedback.clicked = [[3,0],[2,0],[1,3],[3,1],[2,3],[null,null],[null,null],[0,1]]; // for indexing the location of the participants click
     }
   };
@@ -330,6 +342,8 @@ function SE_instruction_video(){
   timelineInst.push(trial_number3);
   timelineInst.push(summary2);
   timelineInst.push(summary3);
+  timelineInst.push(flip1);
+  timelineInst.push(flip2);
   timelineInst.push(rewatch1);
   timelineInst.push(rewatch2);
   timelineInst.push(rewatch3);
