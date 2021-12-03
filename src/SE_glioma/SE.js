@@ -115,7 +115,7 @@ function SE(nbBlocks, nbTrials){
 
   var calibration_ini = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous mesurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Pour commencer, nous voudrions mesurer votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -128,8 +128,8 @@ function SE(nbBlocks, nbTrials){
     }
   }; // calibration_ini
 
-  timelineTask.push(flip_ini)
-  timelineTask.push(flip)
+  // timelineTask.push(flip_ini)
+  // timelineTask.push(flip)
   timelineTask.push(calibration_ini)
   timelineTask.push(fullscreenExp)
 

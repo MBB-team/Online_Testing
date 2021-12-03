@@ -173,6 +173,9 @@ Per trial:
     var greySquare = 'Stimuli/grey-square.png';
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
+    // Video Instructions
+    var inst_video = 'Stimuli/file_example_MP4_480_1_5MG.mp4';
+
     // Grids
     var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
@@ -216,24 +219,44 @@ Per trial:
 
       exp_timeline.push(firstFullscreen)
 
-      // Execute the experiment
-      var instructions = {
-        type: 'instructions-WH',
-        pages: instrImg_html,
-        show_clickable_nav: true,
-        data: {
-          blockNb: 999,
-          trialNb: 999,
-          TinB: 999,
-          testNb: 999,
-          target_score: 999,
-          test_part: 'instructions',
-          nTS: 999
-        }
-      };
+      if (cfg.instructions){
 
-      exp_timeline.push(instructions);
+        // Execute the experiment
+        var video_instructions = {
+          type: 'video-keyboard-response-WH',
+          stimulus: [inst_video],
+          choices: ,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions',
+            nTS: 999
+          }
+        };
 
+      } else {
+
+        // Execute the experiment
+        var instructions = {
+          type: 'instructions-WH',
+          pages: instrImg_html,
+          show_clickable_nav: true,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'instructions',
+            nTS: 999
+          }
+        };
+
+        exp_timeline.push(instructions);
+      }
       var task = SE(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
