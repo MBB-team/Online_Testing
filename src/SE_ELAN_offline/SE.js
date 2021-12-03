@@ -115,7 +115,7 @@ function SE(nbBlocks, nbTrials){
 
   var calibration_ini = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Pour commencer, nous voudrions mesurer votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Pour commencer, nous voudrions mesurer votre capacité initiale à auto-évaluer correctement votre fonctionnement mental.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -537,7 +537,7 @@ function SE(nbBlocks, nbTrials){
 
     var calibration_fin = {
       type: 'html-button-response-WH',
-      stimulus: '<p>Vous avez comple&#769te&#769 l&#39expe&#769rience principale - bravo!</p><p>Maintenant, nous mesurerons votre capacité finale à auto-évaluer correctement vos compétences mentales,</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+      stimulus: '<p>Vous avez comple&#769te&#769 l&#39expe&#769rience principale - bravo!</p><p>Maintenant, nous mesurerons votre capacité finale à auto-évaluer correctement votre fonctionnement mental.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
       choices: ['Continuer'],
       data: {
         blockNb: -1,
