@@ -15,7 +15,7 @@ function SE_instruction_video(){
   var summary = {
     type: 'html-keyboard-response-WH',
     stimulus: '<p>Ce test dure environs 55 minutes.</p><p>Il s&#39agit d&#39un test mesurant votre capacité à auto-évaluer correctement votre fonctionnement mental.'+
-    'C&#39est ce qu&#39on appelle la métacognition.</p><p>En résumé, vous allez effectuer une série d&#39exercices de mémoire. Ces exercices seront plus ou moins difficiles. Pour chacun d&#39entre eux, nous vous demanderons d&#39auto-évaluer votre performance.</p>'
+    ' C&#39est ce qu&#39on appelle la métacognition.</p><p>En résumé, vous allez effectuer une série d&#39exercices de mémoire. Ces exercices seront plus ou moins difficiles. Pour chacun d&#39entre eux, nous vous demanderons d&#39auto-évaluer votre performance.</p>'
   };
 
 
@@ -93,7 +93,7 @@ function SE_instruction_video(){
 
   var flip1 = {
     type: 'html-keyboard-response-WH',
-    stimulus: 'Pendant la phase de mémorisation, nous vous montrerons la grille et vous devrez mémoriser les paires de chiffres. Voici un nouveau exemple de la grille.'
+    stimulus: 'Pendant la phase de mémorisation, nous vous montrerons la grille et vous devrez mémoriser les paires de chiffres. Voici un nouvel exemple de la grille.'
   };
 
   var flip2 = {
@@ -124,7 +124,7 @@ function SE_instruction_video(){
     stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>5</b>.</p>',
     choices: ['Oui','Non'],
     prompt: '<p>Vous avez vu la grille <b>3</b> fois.</p><br>'+
-    '<p>Si vous ne souhaitez plus revoir la grille, cliquez sur le bouton « Non » et passer à la phase de test.</p>'
+    '<p>Si vous ne souhaitez plus revoir la grille, cliquez sur le bouton « Non » pour passer à la phase de test.</p>'
   };
 
   var rewatch4 = {
@@ -132,7 +132,7 @@ function SE_instruction_video(){
     stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>5</b>.</p>',
     choices: ['Oui','Non'],
     prompt: '<p>Vous avez vu la grille <b>3</b> fois.</p><br>'+
-    '<p>Note: vous avez 8 secondes seulement pour répondre, après quoi la phase de phase de test démarrera...</p>'
+    '<p>Note: vous avez 8 secondes seulement pour répondre, après quoi la phase de test démarrera...</p>'
   };
 
   var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
