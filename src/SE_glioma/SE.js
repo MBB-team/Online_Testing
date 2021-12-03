@@ -498,7 +498,7 @@ function SE(nbBlocks, nbTrials){
               if (nCorrect >= TS){
                 nTS++;
               };
-              feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/'+feedback.target_score+' !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
+              feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
             },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
