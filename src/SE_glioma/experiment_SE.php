@@ -175,7 +175,7 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Video Instructions
-    var inst_video = 'Stimuli/file_example_MP4_480_1_5MG.mp4';
+    var inst_video = 'Stimuli/test_video_inst.mp4';
 
     // Grids
     var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
@@ -244,7 +244,9 @@ Per trial:
           choices: jsPsych.NO_KEYS,
           response_ends_trial: false,
           trial_ends_after_video: true,
-          rate: 4,
+          rate: 1,
+          width: screen.width,
+          height: screen.height,
           data: {
             blockNb: 999,
             trialNb: 999,
