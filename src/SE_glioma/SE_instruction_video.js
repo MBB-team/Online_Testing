@@ -14,7 +14,7 @@ function SE_instruction_video(){
   // summary screen
   var summary = {
     type: 'html-keyboard-response-WH',
-    stimulus: '<p>Ce test dure environs 55 minutes.</p><p>Il s&#39agit d&#39un test mesurant votre capacité à auto-évaluer correctement vos fonctionnement mentales.'+
+    stimulus: '<p>Ce test dure environs 55 minutes.</p><p>Il s&#39agit d&#39un test mesurant votre capacité à auto-évaluer correctement votre fonctionnement mental.'+
     'C&#39est ce qu&#39on appelle la métacognition.</p><p>En résumé, vous allez effectuer une série d&#39exercices de mémoire. Ces exercices seront plus ou moins difficiles. Pour chacun d&#39entre eux, nous vous demanderons d&#39auto-évaluer votre performance.</p>'
   };
 
@@ -24,7 +24,7 @@ function SE_instruction_video(){
     type: 'html-keyboard-response-WH',
     stimulus: grid_stimuli[0][0],
     prompt: '<p>Lors de chaque exercice de mémoire, vous devrez vous souvenir de la position de 8 paires de chiffres disposés sur une grille carrée.</p>'+
-    '<p>Dans cet exemple, les deux chiffres « 1 » forment une paire, dont chaque element est positionné sur un emplacement de la grille.</p>'
+    '<p>Dans cet exemple, les deux chiffres « 1 » forment une paire, dont chaque élément est positionné sur un emplacement de la grille.</p>'
   };
 
   // phase de memoire screen
@@ -75,7 +75,7 @@ function SE_instruction_video(){
   var trial_number3 = {
     type: 'html-keyboard-response-WH',
     stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>6</b>.</p><p>Le score cible pour cet exercice est: <b>5</b>.',
-    prompt: '<br><p>Nous vous indiquerons le score cible (c&#39est-à-dire le nombre de réponses correctes que vous devrez donner pour réussier l&#39exercice) au début de chaque exercice, comme ci-dessus.</p>',
+    prompt: '<br><p>Nous vous indiquerons le score cible (c&#39est-à-dire le nombre de réponses correctes que vous devrez donner pour réussir l&#39exercice) au début de chaque exercice, comme ci-dessus.</p>',
   }; // trial number
 
   var summary2 = {
