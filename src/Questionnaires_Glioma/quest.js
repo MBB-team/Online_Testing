@@ -6,13 +6,30 @@ function quest() {
 	var  begin_qns = {
 		type: 'html-keyboard-response',
 		stimulus: "<H3> <p> Questionnaires </p> </H3>" +
-		'<p> Nous allons maintenant vous demander de remplir deux questionnaires.</p>' +
+		'<p> Nous allons maintenant vous demander de remplir trois questionnaires.</p>' +
 		"<p> S'il vous plait, lisez les questions avec soin et r\351pondez selon les options pr\351sent\351es." +
 		"<p> Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \351prouvez, qu'une r\351ponse longuement m\351dit\351e." +
 		"<p> <br> <br> Appuyez sur la barre d'espace pour continuer </p>",
 		choices: [32],
 		data: {test_part: 'questinstruction'}
 	};
+
+
+	// Demogrpahic
+	var demo1 = {
+		type: 'survey-text',
+		questions: [{prompt: "Quel est votre &#226ge?", required: true}],
+	};
+
+	var demo2 = {
+		type: 'survey-multi-choice',
+		questions: [
+			{prompt: "Etes-vous un homme ou une femme ?", options: ["Un homme","Un femme","Autre"], required: true},
+			// {prompt: "Quelle catégorie représente le mieux votre situation professionnelle ?", options: ["Employé(e), je travaille 1-35 h / semaine","Employé(e), je travaille plus de 35 h / semaine","Au ch&#244mage avec recherche d'emploi","Au ch&#244mage sans recherche d'emploi","Retraité(e)","Dans l&#39incapacité de travailler"], required: true},
+			{prompt: "Quel est le niveau de votre formation acquise ?", options: ["Brevet des collèges","Baccalauréat","Supérieur de cycle court (ex. : DUT)","Licence (Bac + 3)","Master (Bac + 5)","Doctorat (Bac + 7)"], required: true}
+		]
+	};
+
 
 	var anx1 = ["La plupart du temps",  "Souvent", "De temps en temps",  "Jamais"];
 	var anx2 = ["Oui, tr\350s nettement",  "Oui, mais ce n'est pas grave", "Un peu, mais cela ne m'inqui\350te pas",  "Pas du tout"];
@@ -79,6 +96,8 @@ function quest() {
 	//PUSH QUESTIONNAIRE INSTRUCTIONS
 	qns.push(begin_qns);
 	qns.push(fullscreenExp);
+	qns.push(demo1);
+	qns.push(demo2);
 	qns.push(hads);
 	qns.push(debriefing);
 	qns.push(end_qns);
