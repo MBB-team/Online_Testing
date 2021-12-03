@@ -75,28 +75,28 @@ function SE_instruction_video(){
   var trial_number3 = {
     type: 'html-keyboard-response-WH',
     stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>6</b>.</p><p>Le score cible pour cet exercice est: <b>4</b>.',
-    prompt: '<br><p>Comme ci-dessus, nous vous indiquerons le score cible au début de chaque exercice.</p>',
+    prompt: '<br><p>Nous vous indiquerons le score cible au début de chaque exercice, comme ci-dessus.</p>',
   }; // trial number
 
   var summary2 = {
     type: 'html-keyboard-response-WH',
     stimulus: '<p>Au total, le test comprend 25 exercices de mémoire.</p><p>Chaque exercice se compose de deux phases :</p>'+
     '<p>1) La phase de mémorisation</p><p>2) La phase de test</p>'+
-    '<p>En résume, lors de chaque exercice de mémoire, vous adapterez votre effort pour essayer d&#39atteindre le score cible de l&#39exercice. Cela dit, vous ne serez pas toujours capable de réussir.</p>'+
+    '<p>En résumé, lors de chaque exercice de mémoire, vous adapterez votre effort pour essayer d&#39atteindre le score cible de l&#39exercice. Cela dit, vous ne serez pas toujours capable de réussir.</p>'+
     '<p>Pendant chaque exercice, nous vous demanderons donc de vous auto-évaluer deux fois. Ces auto-évaluations sont aussi importantes que la réussite des exercices !</p>'
   };
 
   var summary3 = {
     type: 'html-keyboard-response-WH',
-    stimulus: 'Nous allons maintenant vous détailler les deux phase'
+    stimulus: 'Nous allons maintenant vous détailler les deux phases.'
   };
 
   var rewatch1 = {
     type: 'html-button-response-WH',
     stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>5</b>.',
     prompt: '<p>Vous avez vu la grille <b>4</b> fois.</p><br>'+
-    '<p>Pendant la phase de memorisation, comme noté, vous pourrez voir et revoir les chiffres de la grille autant de fois que vous le désirez.</p>'+
-    '<p>Après chaque visualisation de la grille nous vous demanderons si vous souhaitez revoir la grille.</p><p>Si oui, cliquez sur le bouton « Oui ».</p>',
+    '<p>Pendant la phase de mémorisation, comme noté, vous pourrez voir et revoir les chiffres de la grille autant de fois que vous le désirez.</p>'+
+    '<p>Après chaque visualisation de la grille, nous vous demanderons si vous souhaitez revoir la grille.</p><p>Si oui, cliquez sur le bouton « Oui ».</p>',
     choices: ['Oui','Non']
   };
 
@@ -228,7 +228,7 @@ function SE_instruction_video(){
 
   var two_qs = {
     type: 'html-keyboard-response-WH',
-    stimulus: 'Comme noté, nous vous poserons aussi deux questions supplémentaires, une dans chacune des phases.'
+    stimulus: 'Comme noté, nous vous poserons aussi deux questions supplémentaires, une dans la phase de mémorisation et une de la phase de test.'
   };
 
   var SE_q1 = {
