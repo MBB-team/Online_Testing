@@ -115,7 +115,7 @@ function SE(nbBlocks, nbTrials){
 
   var calibration_ini = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous mesurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Pour commencer, nous voudrions mesurer votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -128,8 +128,8 @@ function SE(nbBlocks, nbTrials){
     }
   }; // calibration_ini
 
-  timelineTask.push(flip_ini)
-  timelineTask.push(flip)
+  // timelineTask.push(flip_ini)
+  // timelineTask.push(flip)
   timelineTask.push(calibration_ini)
   timelineTask.push(fullscreenExp)
 
@@ -502,7 +502,7 @@ function SE(nbBlocks, nbTrials){
               if (nCorrect >= TS){
                 nTS++;
               };
-              feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/'+feedback.target_score+' !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
+              feedback.prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
             },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
