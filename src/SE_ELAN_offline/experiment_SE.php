@@ -271,7 +271,9 @@ Per trial:
           choices: jsPsych.NO_KEYS,
           response_ends_trial: false,
           trial_ends_after_video: true,
-          rate: 4,
+          rate: 1,
+          width: screen.width*0.9,
+          height: screen.height*0.9,
           data: {
             blockNb: 999,
             trialNb: 999,
