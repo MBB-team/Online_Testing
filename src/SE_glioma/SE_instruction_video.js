@@ -37,7 +37,7 @@ function SE_instruction_video(){
   var principe_flip = {
     type: 'animation-WH',
     stimuli: grid_stimuli[0],
-    frame_time: 123
+    frame_time: 1230
   };
 
   // phase de memoire screen
@@ -80,7 +80,7 @@ function SE_instruction_video(){
 
   var summary2 = {
     type: 'html-keyboard-response-WH',
-    stimulus: '<p>Au total, le test comprend 25 exercices de mémorisation.</p><p>Chaque exercice se compose de deux phases :</p>'+
+    stimulus: '<p>Au total, le test comprend 25 exercices de mémoire.</p><p>Chaque exercice se compose de deux phases :</p>'+
     '<p>1) La phase de mémorisation</p><p>2) La phase de test</p>'+
     '<p>En résumé, lors de chaque exercice de mémoire, vous adapterez votre effort pour essayer d&#39atteindre le score cible de l&#39exercice. Cela dit, vous ne serez pas toujours capable de réussir.</p>'+
     '<p>Pendant chaque exercice, nous vous demanderons donc de vous auto-évaluer deux fois. Ces auto-évaluations sont aussi importantes que la réussite des exercices !</p>'
@@ -99,7 +99,7 @@ function SE_instruction_video(){
   var flip2 = {
     type: 'animation-WH',
     stimuli: grid_stimuli[0],
-    frame_time: 123
+    frame_time: 1230
   };
 
 
@@ -115,7 +115,7 @@ function SE_instruction_video(){
   var rewatch2 = {
     type: 'animation-WH',
     stimuli: grid_stimuli[0],
-    frame_time: 123,
+    frame_time: 1230,
     prompt: '<p>La grille vous sera à nouveau montrée.</p>'
   };
 
