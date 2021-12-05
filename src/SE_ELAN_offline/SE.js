@@ -17,7 +17,7 @@ function SE(nbBlocks, nbTrials){
   var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
 
-  var target_scores = [4, 5, 6, 7, 8];
+  var target_scores = [3, 4, 5, 6, 7];
   var conf_trials_idx = Array(target_scores.length);
 
   // No test trials
