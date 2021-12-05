@@ -176,7 +176,7 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Video Instructions
-    var inst_video = 'Stimuli/file_example_MP4_480_1_5MG.mp4';
+    var inst_video = 'Stimuli/SE_instruction_video.mp4';
 
     // Grids
     var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
