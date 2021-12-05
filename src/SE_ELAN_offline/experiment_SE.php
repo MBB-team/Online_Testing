@@ -268,8 +268,8 @@ Per trial:
         var video_instructions = {
           type: 'video-keyboard-response-WH',
           sources: [inst_video],
-          choices: jsPsych.NO_KEYS,
-          response_ends_trial: false,
+          choices: ['Enter'],
+          response_ends_trial: true,
           trial_ends_after_video: true,
           rate: 1,
           width: screen.width*0.9,
