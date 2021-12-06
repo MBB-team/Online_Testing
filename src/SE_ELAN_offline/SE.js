@@ -279,7 +279,7 @@ function SE(nbBlocks, nbTrials){
 
       // REWATCH QUESTION //
       var rewatch = {
-        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>5 secondes</b> pour re&#769pondre!</p>',
+        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>8 secondes</b> pour re&#769pondre!</p>',
         type: 'html-button-response-WH',
         prompt: function(){
           var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.</p>';

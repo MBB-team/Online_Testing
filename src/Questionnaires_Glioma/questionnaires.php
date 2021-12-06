@@ -107,7 +107,7 @@
               button_label: 'Continuer',
               on_finish: function(data){
                 var identifier = JSON.parse(jsPsych.data.getLastTrialData().values()[0].responses).Q0;
-                var filename = identifier.concat('_',date);
+                var filename = identifier.concat('_Q_G_',date);
                 var startTime = date;
                 jsPsych.data.addProperties({subject_ID: identifier, filename: filename, startTime: date, doneTime: ""})
               }
