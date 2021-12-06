@@ -231,7 +231,7 @@ Per trial:
           var identifier = JSON.parse(jsPsych.data.getLastTrialData().values()[0].responses).Q0;
           var filename = identifier.concat('_SE_G_',date);
           var startTime = date;
-          jsPsych.data.addProperties({subject_ID: identifier, filename: filename, startTime: date, doneTime: ""})
+          jsPsych.data.addProperties({participant_participantID: identifier, filename: filename, startTime: date, doneTime: ""})
         },
         data: {
           blockNb: 999,
