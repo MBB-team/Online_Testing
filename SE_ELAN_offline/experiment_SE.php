@@ -1,0 +1,449 @@
+<!--  Code for Self-Efficacy task online using Javascript and jsPsych Library
+Author: William Hopper (williamjthopper@gmail.com)
+Created: 23/04/2020
+
+Data Output:
+-
+Per trial:
+-
+
+-->
+
+<!DOCTYPE html>
+<html>
+      <head>
+            <meta charset="utf-8"/>
+            <title> Self-Efficacy </title>
+            <script   src  = "jsPsych-master/jspsych.js"></script> <!-- import the library, should be downloaded and put into your experiment folder -->
+            <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+            <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
+            <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE-confidence-slider-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-survey-text-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-video-keyboard-response-WH.js'></script>
+            <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
+            <script   src  = 'SE.js'></script>
+            <script   src = "../js/dataSaver.js"></script>
+            <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+            <link rel='icon' href='/favicon.ico' />
+      </head>
+      <body>
+            <div id='jspsych-target' style='width:auto; height:auto; position:relative;'>
+              <p><br></br><br></br>
+              <center>
+                                Chargement en cours ...<br>
+                                <br><span id="loadingPercent"></span><br>
+                                <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>
+              </center>
+              </p>
+            </div>
+            <canvas class = "canvas" id="myCanvas"></canvas>
+      </body>
+
+<script type="application/javascript">
+
+  // --------------------------------- PARAMETERS --------------------------------//
+
+  // What to do
+  const cfg = {debug:          false,
+               cheat:          false,
+               instructions:   true,
+               main:           true};
+
+  // Configuration parameters of experiment
+  const exp = {name:           "SE_ELAN_offline",
+               nbTrials:       25,
+               nbBlocks:       5};
+
+  // Timings
+  const time = {flipSpeed:     1200, // in ms so 1 sec
+                responseSpeed: 3000,
+                SEconf:        180000,
+                highlight:     500,
+                showFeedback:  1000,
+                fixation:      500,
+                rewatch:       8000};
+
+  // instructions
+  const nbInstr              = 33;
+
+  // --------------------------------- INITIALISATION  --------------------------- //
+  switch(window.location.protocol) {
+        case 'http':
+        case 'https':
+        case 'http:':
+        case 'https:':
+              //theses lines are not executed unless the file is on a web server (assuming with php module)
+              dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
+              dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}'));
+              break;
+        case 'file':
+        case 'file:':
+              dataSaver = new DataSaver(dataSaverModes.LOG);
+              break;
+  }
+
+  // Checks if the browser is Chrome or Firefox (best compatibility)
+  var browserInfo = getBrowserInfo();
+
+  if (browserInfo.browser !== 'Chrome' && browserInfo.browser !== 'Firefox') {
+    var wrong_browser = {
+      type: 'html-button-response-WH',
+      choices: [],
+      stimulus: "<p>Cette exp\351rience n'est compatible que avec Google Chrome ou Mozilla Firefox. </p>"
+               +"<p> Veuillez rouvrir l'exp\351rience dans l'un de ces navigateurs. </p>"
+             };
+
+             jsPsych.init({
+               timeline: [wrong_browser]
+             })
+
+  } else { // If the browswer is ok, proceed to the experiment
+
+    // General function that is needed
+    function randi(min, max) { // min and max included (acts like randi of Matlab)
+          return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    // Create "Variable/function" that makes sure you remain in FullScreen
+    var firstFullscreen =	{
+      type: 'fullscreen-WH',
+      message:"<p>  Pour participer \340 l'exp\351rience, votre navigateur doit \352tre en mode plein \351cran. </p>"+"<p> La sortie du mode plein \351cran suspendra l'exp\351rience. </p>"+"<p> Veuillez cliquer sur le bouton ci-dessous pour activer le mode plein \351cran et continuer. </p>",
+      button_label: 'Mettre en plein \351cran',
+      delay_after: 300,
+      check_fullscreen: true,
+      data: {
+        blockNb: 999,
+        trialNb: 999,
+        TinB: 999,
+        testNb: 999,
+        target_score: 999,
+        test_part: 'firstFullscreen',
+        nTS: 999
+      }
+    };
+
+    var fullscreenExp = {
+          type: 'fullscreen-WH',
+          message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
+          fullscreen_mode: false,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'fullscreenExp',
+            nTS: 999
+          }
+        };
+
+
+    // ------------------------------ PRE-LOAD MEDIA ----------------------------- //
+
+    // Instructions
+    var instrImg = [];
+    var instrImg_html = [];
+    for (var t=1; t <= nbInstr; t++){
+      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.PNG'; // pre-load all instructions
+      instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
+    };
+
+    // Numbers (1st)
+    var numbersImg  = [];
+    var numbersImg_html = [];
+    for (var t=1; t <= 8; t++){
+      numbersImg[t-1] = 'Stimuli/Images/image'+t+'.png'; // pre-load all the stimuli numbers
+      numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
+    };
+
+    // Numbers (2nd)
+    var numbersImg2  = [];
+    var numbersImg2_html = [];
+    for (var t=1; t <= 8; t++){
+      numbersImg2[t-1] = 'Stimuli/Images2/image'+t+'.jpg'; // pre-load all the stimuli numbers
+      numbersImg2_html[t-1] = '<img src="'+numbersImg2[t-1]+'"></img>';
+    };
+
+    // Grey square
+    var greySquare = 'Stimuli/grey-square.png';
+    var greySquareHTML = '<img src="'+greySquare+'"></img>';
+
+    // Video Instructions
+    var inst_video = 'Stimuli/SE_instruction_video.mp4';
+
+    // Grids
+    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var square_size = screen.height/6;
+    var matching_pairs = 1; // if the two images are the same or not
+    var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
+
+    var grid_stimuli = []; // slice array into chunks of 8
+    for (var i=0; i<all_flip_stimuli.length; i+=8) {
+         grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
+    }
+
+    function updateLoadedCount(nLoaded){
+      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + numbersImg2.length + greySquare.length + 1)  * 100), 100);
+      document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
+      //console.log('Loaded '+percentcomplete+'% of images');
+    }
+
+// --------------------------------- SAVING DATA  ----------------------------//
+
+    // CODE TO SAVE FULLDATA AT THE END
+
+    function saveData() {
+        dataSaver.save(jsPsych.data.getLastTrialData().json());
+   }
+
+// ------------------------------ BEGIN EXPERIMENT --------------------------- //
+
+    var today           = new Date();
+    var date            = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+
+    var exp_timeline = [];
+
+    if (cfg.debug == false) {
+      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2, greySquare],
+      function(){ startExperiment();},
+      function(nLoaded){updateLoadedCount(nLoaded);});
+    }
+
+    function startExperiment(){
+
+      exp_timeline.push(firstFullscreen)
+
+      // Gather participant identifier
+      var ident = {
+        type: 'survey-text-WH',
+        questions: [
+          {prompt: 'Quel est l&#39identifiant du participant?', required: true},
+        ],
+        button_label: 'Continuer',
+        on_finish: function(data){
+          var identifier = JSON.parse(jsPsych.data.getLastTrialData().values()[0].responses).Q0;
+          var filename = identifier.concat('_SE_G_',date);
+          var startTime = date;
+          jsPsych.data.addProperties({participant_participantID: identifier, filename: filename, startTime: date, doneTime: ""})
+        },
+        data: {
+          blockNb: 999,
+          trialNb: 999,
+          TinB: 999,
+          testNb: 999,
+          target_score: 999,
+          test_part: 'identifier',
+          nTS: 999
+        }
+      };
+
+      exp_timeline.push(ident)
+
+      if (cfg.instructions){
+
+        var video_instructions_ready = {
+          type: 'html-button-response-WH',
+          stimulus: '<p>Lorsque vous e&#770tes pre&#770t.e à regarder la vidéo d&#39instructions, cliquez sur le bouton.</p>',
+          choices: ['Continuer'],
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions_ready',
+            nTS: 999
+          }
+        }; // calibration_ini
+
+
+        // Execute the experiment
+        var video_instructions = {
+          type: 'video-keyboard-response-WH',
+          sources: [inst_video],
+          choices: ['Enter'],
+          response_ends_trial: true,
+          trial_ends_after_video: true,
+          rate: 1,
+          width: screen.width*0.9,
+          height: screen.height*0.9,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions',
+            nTS: 999
+          }
+        };
+
+        var video_instructions_rewatch = {
+          type: 'html-button-response-WH',
+          stimulus: '<p>Si vous avez des questions, n&#39hésitez pas à les poser au chercheur/à la chercheuse dès maintenant.</p><p>Si vous souhaitez revoir la video d&#39instructions, cliquez sur « Oui ».</p><p>Si vous souhaitez passer à l&#39expérience, cliquez sur « Non ».</p>',
+          choices: ['Oui','Non'],
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'video_instructions_rewatch',
+            nTS: 999
+          }
+        }; // calibration_ini
+
+        // LOOP THE FLIPS //
+        var looping_video_instructions = {
+          timeline: [video_instructions_ready, fullscreenExp, video_instructions, fullscreenExp, video_instructions_rewatch],
+          loop_function: function(data){
+            response = jsPsych.data.getLastTrialData().values()[0]["button_pressed"];
+            if (response == 0){
+              return true;
+            } else {
+              return false;
+            };
+          }
+        }; // loop
+
+        exp_timeline.push(looping_video_instructions);
+
+      } else {
+
+        // Execute the experiment
+        var instructions = {
+          type: 'instructions-WH',
+          pages: instrImg_html,
+          show_clickable_nav: true,
+          data: {
+            blockNb: 999,
+            trialNb: 999,
+            TinB: 999,
+            testNb: 999,
+            target_score: 999,
+            test_part: 'instructions',
+            nTS: 999
+          }
+        };
+
+        exp_timeline.push(instructions);
+      }
+      var task = SE(exp.nbBlocks, exp.nbTrials);
+      for (var i = 0; i < task.length; i++) {
+        exp_timeline.push(task[i]);
+      }
+
+      jsPsych.init({
+        timeline: exp_timeline,
+        show_progress_bar: true,
+        on_trial_finish: function() {
+             jsPsych.data.addProperties({date: date});
+             saveData(); // edit out if not on server
+       },
+        on_finish: function(){
+          jspsych_finish();
+        },
+      });
+    } // end of startExperiment
+
+    // helper function to use a setTimeout as a promise.
+    function allowUpdate() {
+                  return new Promise((f) => {
+                        setTimeout(f, 0);
+                  });
+            }
+
+    async function endTask() {
+      /*update messages and hide retry button*/
+      var errorMessage = document.getElementById('dataSendError');
+      var buttonRetry = document.getElementById('dataRetrySend');
+      var infoMessage = document.getElementById('dataLeftText');
+      var sendAnimation = document.getElementById('sendAnimation');
+
+      errorMessage.innerHTML = "";
+      buttonRetry.style.visibility = 'hidden';
+      infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
+      sendAnimation.style.visibility = 'visible';
+
+      // step 1 : send buffered data
+      var failedRetry = 0;
+      var lastLeftToSend = dataSaver.bufferLength();
+      while(dataSaver.sendAll()>0)
+      {
+            var leftToSend = dataSaver.bufferLength();
+            if(leftToSend == lastLeftToSend)
+            {
+                  failedRetry += 1;
+                  errorMessage.innerHTML += ". ";
+                  console.log('Failed to send datas. Retries : ' + failedRetry);
+            }
+            else
+            {
+                  infoMessage.innerHTML = leftToSend + " restants";
+                  console.log('Datas left to send : ' + leftToSend);
+            }
+            lastLeftToSend = leftToSend;
+            if(failedRetry>9)
+            {
+                  break;
+            }
+            await allowUpdate();
+      }
+      infoMessage.innerHTML = dataSaver.bufferLength() + " restants";
+      console.log('Datas left to send : ' + dataSaver.bufferLength());
+      if(dataSaver.bufferLength()>0)
+      {
+            errorMessage.innerHTML="Une erreur réseau est survenue pendant l'enregistrement des données. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
+            buttonRetry.style.visibility='visible';
+            sendAnimation.style.visibility = 'hidden';
+            return; //don't try to send endTask
+      }
+
+      // step 2 : send endTask
+      var endTaskSuccess = dataSaver.sendEndTask();
+      if(endTaskSuccess)
+      {
+            sendAnimation.style.visibility = 'hidden';
+            errorMessage.innerHTML="Toutes les données ont été enregistrées.<br>Vous allez être redirigié vers la page d'accueil. (sinon, cliquez <a href='/'>ici</a>)";
+            //redirect to home page after 5 secs if error
+            setTimeout(function () {
+                        window.location.replace("/");
+                  }, 3000);
+      }
+      else
+      {
+            errorMessage.innerHTML="Une erreur réseau est survenue pendant la validation de la tâche. cliquez sur \"Réessayer\".<br>Si le problème persiste, vérifiez votre connexion internet <span style='font-weight:bold;'>sans fermer cette page</span>.";
+            buttonRetry.style.visibility='visible';
+            sendAnimation.style.visibility = 'hidden';
+      }
+   }
+
+   function jspsych_finish() {
+          //jsPsych.data.displayData();// Disable once online, use to look at data while coding
+          document.body.innerHTML = '<p><br></br><br></br><center>\
+                Merci pour votre participation!<br>\
+                <br>Enregistrement des données (<span id="dataLeftText">'+dataSaver.bufferLength()+' restants'+'</span>)<br>\
+                <div id="sendAnimation" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><br>\
+                <span id="dataSendError"></span><br>\
+                <button id="dataRetrySend" style="visibility: hidden;" onclick="endTask()">Réessayer</button>\
+                </center><p>';
+          //ensure exited fullscreen
+          if (document.fullscreenElement)
+          {
+                document.exitFullscreen()
+                .then(() => console.log("Document Exited form Full screen mode"))
+                .catch((err) => console.error(err))
+          }
+          setTimeout(function(){endTask()},3300); //wait for last async request end before retry
+    }
+
+  } // end of browser checking
+</script>
+</html>
