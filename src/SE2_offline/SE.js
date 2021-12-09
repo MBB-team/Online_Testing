@@ -98,7 +98,7 @@ function SE(nbBlocks, nbTrials){
   // FLIP //
   var flip = {
     type: 'animation-WH',
-    stimuli: grid_stimuli[10],
+    stimuli: [all_flip_stimuli[10]],
     frame_time: time.flipSpeed,
     choices: jsPsych.NO_KEYS,
     data: {
@@ -260,12 +260,30 @@ function SE(nbBlocks, nbTrials){
       timelineTask.push(fullscreenExp);
       timelineTask.push(SE_conf);
 
+      var ready_flip = {
+        type: 'html-button-response-WH',
+        stimulus: '<p>La phase de mémorisation est sur le point de commencer.</p><p><b>Tenez-vous pre&#770t.e !</b></p>',
+        choices: [],
+        trial_duration: time.fixation,
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999,
+          target_score: target_scores_all[trial_counter],
+          test_part: 'flip_fixation',
+          nTS: 999
+        }
+      };
+
+      timelineTask.push(ready_flip);
+
       // FLIP //
       var flip = {
-        type: 'animation-WH',
-        stimuli: grid_stimuli[trial_counter],
-        frame_time: time.flipSpeed,
-        choices: jsPsych.NO_KEYS,
+        type: 'html-button-response-WH',
+        stimulus: all_flip_stimuli[trial_counter],
+        trial_duration: time.flipSpeed,
+        choices: [],
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -485,7 +503,7 @@ function SE(nbBlocks, nbTrials){
           var feedback = {
             type: 'animation-WH',
             frame_time: time.showFeedback,
-            stimuli: grid_stimuli[trial_counter],
+            stimuli: test_grid_stimuli[trial_counter],
             //  clicked: function(){clicked_i},
             target: target_i,
             choices: jsPsych.NO_KEYS,

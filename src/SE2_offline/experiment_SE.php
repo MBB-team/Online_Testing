@@ -28,6 +28,7 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-video-keyboard-response-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids_SE2.js'></script>
             <script   src  = 'SE.js'></script>
             <script   src = "../js/dataSaver.js"></script>
             <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
@@ -62,12 +63,12 @@ Per trial:
                nbBlocks:       5};
 
   // Timings
-  const time = {flipSpeed:     1200, // in ms so 1 sec
+  const time = {flipSpeed:     5000, // in ms so 5 sec
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
                 showFeedback:  1000,
-                fixation:      500,
+                fixation:      1500,
                 rewatch:       8000};
 
   // instructions
@@ -182,11 +183,14 @@ Per trial:
     var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     var square_size = screen.height/6;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli = generate_grids(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
+    var all_flip_stimuli = generate_grids_SE2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
+    var all_test_stimuli = generate_grids(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
 
-    var grid_stimuli = []; // slice array into chunks of 8
-    for (var i=0; i<all_flip_stimuli.length; i+=8) {
-         grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
+
+
+    var test_grid_stimuli = []; // slice array into chunks of 8
+    for (var i=0; i<all_test_stimuli.length; i+=8) {
+         test_grid_stimuli.push(all_test_stimuli.slice(i,i+8));
     }
 
     function updateLoadedCount(nLoaded){
@@ -313,7 +317,7 @@ Per trial:
           }
         }; // loop
 
-        exp_timeline.push(looping_video_instructions);
+        // exp_timeline.push(looping_video_instructions);
 
       } else {
 
