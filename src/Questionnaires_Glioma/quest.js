@@ -82,7 +82,7 @@ function quest() {
 			{prompt: "7) Pensez-vous que vos auto-évaluations étaient décalées par rapport à vos performances réelles? Si oui, comment?"},
 			{prompt: "8) Pensez-vous que votre performance dépend de l&#39effort que vous fournissez lorsque vous apprenez la position des paires d&#39tems? Si oui, comment?"},
 			{prompt: "9) Pensez-vous avoir amélioré votre auto-évaluation au cours du temps? Si oui, comment?"},
-			{prompt: "10) Avous-vous une dernière remarque à faire?"},
+			{prompt: "10) Aves-vous une dernière remarque à faire?"},
 		],
 		// preamble: ["Veuillez, s&#39il vous plait, répondre"],
 		data:{test_part: 'debrief',trial_type: 'quest'}

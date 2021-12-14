@@ -141,7 +141,7 @@ function SE(nbBlocks, nbTrials){
       type: 'SE-confidence-slider-WH',
       range: 30,
       trial_duration: time.SEconf,
-      prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+      prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
       start: sliderIni,
       on_start: function(trial){
         sliderIni[0]     = randi(0,29);
@@ -238,7 +238,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         start: sliderIni,
         on_start: function(trial){
           sliderIni[0]     = randi(0,29);
@@ -561,7 +561,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         start: sliderIni,
         on_start: function(trial){
           sliderIni[0]     = randi(0,29);
