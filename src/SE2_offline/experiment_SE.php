@@ -317,7 +317,7 @@ Per trial:
           }
         }; // loop
 
-        // exp_timeline.push(looping_video_instructions);
+        exp_timeline.push(looping_video_instructions);
 
       } else {
 
