@@ -66,8 +66,8 @@ Per trial:
                 responseSpeed: 3000,
                 SEconf:        180000,
                 highlight:     500,
-                showFeedback:  1000,
-                fixation:      500,
+                showFeedback:  1200,
+                fixation:      1000,
                 rewatch:       8000};
 
   // instructions
