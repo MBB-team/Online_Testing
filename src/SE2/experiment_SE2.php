@@ -28,6 +28,7 @@ Per trial:
             <script   src  = 'Stimuli/Grids/grid_indexes_SE2.js'></script>
             <script   src  = 'Stimuli/Grids/generate_grids2.js'></script>
             <script   src  = 'Stimuli/Conditions/Condition_perms.js'></script>
+            <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
             <script   src  = 'SE2.js'></script>
             <script   src = "../js/dataSaver.js"></script>
             <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>

@@ -8,16 +8,16 @@ function SE2(nbBlocks, nbTrials){
   var correct_i     = [0,0,0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter  = 0; // counter for looping through test trials during execution
   var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
-  var conf_counter  = 0; // counter for looping through confidence trials
+  var conf_counter  = 0; // counter for looping through effort question trials
   var nbTperB       = nbTrials/nbBlocks;
   var grid_dim      = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
   var sliderIni     = Array(2);
-
+  var flib_fb       = []; // flip length of time for feedback
 
 
   // Conditions
   var cond_pt = cond_perms[randi(0,cond_perms.length)];
-
+  var eff_q_pt = eff_q[randi(0,eff_q.length)];
 
   // START OF BLOCK //
   for (var block_i = 0; block_i < nbBlocks; block_i++) {
@@ -44,7 +44,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'trialNb',
           nTS: 999
         }
@@ -57,18 +58,24 @@ function SE2(nbBlocks, nbTrials){
       // How much "effort" does the participant want?
       var effort_want = {
         type: 'html-slider-response-WH',
-        stimulus:'<p>Combien de secondes souhaitez-vous voir la grille ?</p>',
+        stimulus:'<p>Pendant combien de secondes souhaitez-vous voir la grille ?</p>',
         labels: ['0','60'],
         min: 0,
         max: 60,
         start: function(){return randi(0,60);},
         require_movement: true,
+        effort: true,
+        on_finish: function(data){
+          flip_fb = data.conf_response;
+          console.log(flip_fb)
+        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'effort_want',
           nTS: 999
         }
@@ -83,7 +90,7 @@ function SE2(nbBlocks, nbTrials){
         type: 'SE2-confidence-slider-WH',
         range: numbersImg.length+1,
         trial_duration: time.SEconf,
-        prompt: '<p>Combien d&#39emplacements pensez-vous pouvoir e&#768tre capable de mémoriser correctement avec cette durée ?</p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        prompt: '<p>Combien d&#39emplacements pensez-vous pouvoir mémoriser correctement avec cette durée ?</p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur Entre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         start: sliderIni,
         on_start: function(trial){
           sliderIni[0]     = randi(0,numbersImg.length);
@@ -95,7 +102,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'SE_slider',
           nTS: 999
         }
@@ -114,7 +122,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'fixation',
           nTS: 999
         }
@@ -140,7 +149,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'flip',
           nTS: 999
         }
@@ -160,7 +170,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'fixation',
           nTS: 999
         }
@@ -221,7 +232,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: test_i,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'test',
           nTS: 999
         }
@@ -252,12 +264,15 @@ function SE2(nbBlocks, nbTrials){
         trial_duration: time.showFeedback,
         target: target_i,
         correct_responses: function(){return correct_i},
-        target_score: TS,
+        target_score: exp.TS_levels[cond_pt[trial_i]],
         target_correct: target_corr_i,
         on_start: function(feedback){
           var TS_current = feedback.target_score;
           if (nCorrect >= TS_current){
             nTS++;
+            feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez atteint le score cible. Votre score: <b>'+nCorrect+'/'+numbersImg.length+' !</b> Vous avez vu la grille pendant <b>'+flip_fb+'</b> secondes.';
+          } else {
+            feedback.prompt = '<p style="font-size:25px; margin:0px">Vous n&#39avez pas atteint le score cible. Votre score: <b>'+nCorrect+'/'+numbersImg.length+' !</b> Vous avez vu la grille pendant <b>'+flip_fb+'</b> secondes.';
           }
         },
         on_finish: function(){ // reset counters
@@ -271,7 +286,8 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
           test_part: 'feedback',
           nTS: 999
         }
@@ -281,12 +297,36 @@ function SE2(nbBlocks, nbTrials){
       timelineTask.push(fullscreenExp);
       timelineTask.push(feedback);
 
+      var test_conf = {
+        type: 'html-slider-response-WH',
+        stimulus:'<p>Combien d’effort avez-vous fourni pour mémoriser les paires ?</p><p>0% = <b>Aucune charge mentale</b> et 100% = <b>Charge mentale maximale</b>',
+        labels: ['0%','25%','50%','75%','100%'],
+        min: 0,
+        max: 100,
+        start: function(){return randi(0,100);},
+        require_movement: true,
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999,
+          target_score: exp.TS_levels[cond_pt[trial_i]],
+          reward: exp.rew_levels[cond_pt[trial_i]],
+          test_part: 'test_conf',
+          nTS: 999
+        }
+      };
 
 
+      if (trial_counter == eff_q_pt[conf_counter]-1){
 
+        // PUSH TO TIMELINE //
+        timelineTask.push(fullscreenExp);
+        timelineTask.push(test_conf);
 
-
-
+        // INCREMENT THE conf_counter
+        conf_counter++;
+      }
 
 
       trial_counter++;

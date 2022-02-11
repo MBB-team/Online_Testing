@@ -140,18 +140,20 @@ jsPsych.plugins["html-button-response-fb-WH"] = (function() {
     for (var pair_i = 0; pair_i < numbersImg.length; pair_i++){
       // Highlight the pair we showed yellow
       var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[pair_i][0]+'-'+trial.target[pair_i][1]); // get the cell
-      square_target.style.outline = "5px solid yellow"; // set its outline to yellow
+      // square_target.style.outline = "5px solid yellow"; // set its outline to yellow
       // Highlight the pair the participant click on depending if they were correct or not and if they clicked it
       if (trial.correct_responses[pair_i] !== null){
         var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target_correct[pair_i][0]+'-'+trial.target_correct[pair_i][1])
       };
       if (square_clicked !== null){
         if(trial.correct_responses[pair_i]){
+          square_target.style.outline = "5px solid rgb(51, 204, 51)";
           square_clicked.style.outline = "5px solid rgb(51, 204, 51)";
         } else {
           square_clicked.style.outline = "5px solid rgb(255, 0, 0)";
+          square_target.style.outline = "5px solid rgb(255, 0, 0)";
         }
-      }
+      };
     };
 
     // start time

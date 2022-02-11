@@ -1,12 +1,12 @@
 /**
- * jspsych-html-slider-response
- * a jspsych plugin for free response survey questions
- *
- * Josh de Leeuw
- *
- * documentation: docs.jspsych.org
- *
- */
+* jspsych-html-slider-response
+* a jspsych plugin for free response survey questions
+*
+* Josh de Leeuw
+*
+* documentation: docs.jspsych.org
+*
+*/
 
 
 jsPsych.plugins['html-slider-response-WH'] = (function() {
@@ -97,6 +97,12 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
         default: true,
         description: 'If true, trial will end when user makes a response.'
       },
+      effort: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Is this the effort want question?',
+        default: false,
+        description: 'If true, a number will appear below the slider indicating its current value'
+      },
     }
   }
 
@@ -114,8 +120,9 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
     }
     html += '">';
     html += '<input type="range" value="'+trial.start+'" min="'+trial.min+'" max="'+trial.max+'" step="'+trial.step+'" style="width: 100%;" id="jspsych-html-slider-response-response" oninput="this.nextElementSibling.value = this.value"></input>';
-    html += '<output>'+trial.start+'</output> secondes'
-
+    if (trial.effort){
+      html += '<output>'+trial.start+'</output> secondes'
+    }
     html += '<div>'
     for(var j=0; j < trial.labels.length; j++){
       var width = 100/(trial.labels.length-1);
