@@ -21,7 +21,18 @@ help() {
     echo " gitTag          Tag a commit and push the tags."
 }
 
+dockerLogin() {
+    isLogged=`cat ~/.docker/config.json | grep "$REGISTRY"` || true
+    if [ -z "$isLogged" ]; then
+        echo "Docker login to $REGISTRY using .env gitlab username and password ..."
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASSWORD $REGISTRY
+    else
+      echo "Already logged to $REGISTRY."
+    fi
+}
+
 init() {
+    dockerLogin
     docker-compose down --volumes
     docker-compose pull
     dockerComposeUp

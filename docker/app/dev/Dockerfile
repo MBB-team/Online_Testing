@@ -1,6 +1,6 @@
 ARG image_tag=staging
 
-FROM registry.gitlab.com/icm-institute/mbb/cogmood/cogmood/app-base:$image_tag
+FROM registry.gitlab.com/icm-institute/mbb/cogmood/cogmood-github-mirror/app-base:$image_tag
 
 # Install Xdebug extensions. xdebug-2.7.2 is compatible with PHP 7.3
 RUN pecl install xdebug-2.7.2 \

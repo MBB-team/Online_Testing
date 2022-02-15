@@ -2,27 +2,25 @@
 Codes for Online Testing Using JavaScript and JsPsych.
 
 # Installation
-1. Copy Online_Testing/.env.tpl to Online_Testing/.env   
-2. Copy Online_Testing/portailLib/database_config_template.php to Online_Testing/portailLib/database_config.php   
-3. Execute this :   
+1. Clone the project
+2. Copy Online_Testing/.env.tpl to Online_Testing/.env
+3. Replace variables such as gitlab username and token in Online_Testing/.env
+4. Ensure passwords are set in Online_Testing/portailLib/database_config.php and Online_Testing/src/portailLib/backofficeSecrets.php
+5. Execute this :   
 ```bash
 cd Online_Testing
-sudo rm -rf Online_Testing/docker/letsencrypt
-docker system prune --all --force # Reset docker
-docker-compose up --force-recreate # Start docker images : see docker-compose.yml
+./start.sh init
 ```
-4. Wait for mariadb initialization before connecting with a client :   
+(Optional) Wait for mariadb initialization before connecting with a client :   
 mariadb-docker_1  | 2020-05-06 11:24:35 0 [Note] mysqld: ready for connections.   
-5. Connect with a browser
+(Optional) Connect with a browser
 ```bash
 google-chrome http://localhost:50195/index.php
 google-chrome http://localhost:50195/Emotion_Regulation_JS/index.php
 ```
 
 # SQL
-Exemple 1 : I want to INSERT new data in an existing table. => Use /sql/02.insert.xx_test.sql with INSERT statements.   
-Exemple 2 : I want to CREATE a new table. => Use /sql/01.create.xx_newtable.sql with CREATE statements.   
-Exemple 3 : I want to add or remove a column from an existing table. => Use /migration/01.alter.xx_alter.sql with ALTER statements.
+Put all migration files in the folder sql.
 
 # Command line to php or mariadb
 ```bash
@@ -79,9 +77,9 @@ sudo ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 ## 3. Clone source code
 ```bash
-git clone https://gitlab.com/icm-institute/mbb/cogmood/cogmood
-cd cogmood/   
-git checkout prod
+git clone https://gitlab.com/icm-institute/mbb/cogmood/cogmood-github-mirror
+cd cogmood-github-mirror/   
+git checkout develop
 ```
 
 ## 4. Config
