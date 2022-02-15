@@ -77,8 +77,8 @@ sudo ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 ## 3. Clone source code
 ```bash
-git clone https://gitlab.com/icm-institute/mbb/cogmood/cogmood-github-mirror
-cd cogmood-github-mirror/   
+git clone https://gitlab.com/icm-institute/mbb/cogmood/cogmood
+cd cogmood/
 git checkout develop
 ```
 

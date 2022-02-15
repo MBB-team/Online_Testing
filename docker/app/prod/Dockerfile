@@ -1,6 +1,6 @@
 ARG image_tag=staging
 
-FROM registry.gitlab.com/icm-institute/mbb/cogmood/cogmood-github-mirror/app-base:$image_tag
+FROM registry.gitlab.com/icm-institute/mbb/cogmood/cogmood/app-base:$image_tag
 
 # Must be after FROM
 ARG MYSQL_ROOT_PASSWORD=MYSQL_ROOT_PASSWORD

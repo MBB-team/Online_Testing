@@ -5,7 +5,7 @@ MYSQL_DATABASE=databaseEmo
 PHP_DOCKER_PORT=80
 
 # URL to the gitlab mirror branch
-REGISTRY_IMAGE=registry.gitlab.com/icm-institute/mbb/cogmood/cogmood-github-mirror
+REGISTRY_IMAGE=registry.gitlab.com/icm-institute/mbb/cogmood/cogmood
 # Docker image branch name (on each commit, a new docker image is built in the specific commit's branch)
 REF_NAME=develop
 
