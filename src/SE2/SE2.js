@@ -59,7 +59,7 @@ function SE2(nbBlocks, nbTrials){
       var effort_want = {
         type: 'html-slider-response-WH',
         stimulus:'<p>Pendant combien de secondes souhaitez-vous voir la grille ?</p>',
-        labels: ['0','60'],
+        labels: ['0 secondes','60 secondes'],
         min: 0,
         max: 60,
         start: function(){return randi(0,60);},
@@ -103,7 +103,7 @@ function SE2(nbBlocks, nbTrials){
           testNb: 999,
           target_score: exp.TS_levels[cond_pt[trial_i]],
           reward: exp.rew_levels[cond_pt[trial_i]],
-          test_part: 'SE_slider',
+          test_part: 'SE2_slider',
           nTS: 999
         }
       };
