@@ -67,7 +67,6 @@ function SE2(nbBlocks, nbTrials){
         effort: true,
         on_finish: function(data){
           flip_fb = data.conf_response;
-          console.log(flip_fb)
         },
         data: {
           blockNb: block_i,
