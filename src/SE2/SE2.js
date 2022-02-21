@@ -110,6 +110,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         stimulus: grid_stimuli[trial_counter],
         choices: ['Souhaitez-vous passer à la phase de test ?'],
         trial_duration: 5000,
+        timer: true,
         on_start: function(flip){
           var data = jsPsych.data.get().last(4).values()[0];
           var effort_want_s = data.conf_response;

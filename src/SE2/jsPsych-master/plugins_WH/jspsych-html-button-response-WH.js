@@ -1,12 +1,12 @@
 /**
- * jspsych-html-button-response
- * Josh de Leeuw
- *
- * plugin for displaying a stimulus and getting a keyboard response
- *
- * documentation: docs.jspsych.org
- *
- **/
+* jspsych-html-button-response
+* Josh de Leeuw
+*
+* plugin for displaying a stimulus and getting a keyboard response
+*
+* documentation: docs.jspsych.org
+*
+**/
 
 jsPsych.plugins["html-button-response-WH"] = (function() {
 
@@ -72,6 +72,12 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
         default: true,
         description: 'If true, then trial will end when user responds.'
       },
+      timer: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Do we show a timer?',
+        default: false,
+        description: 'If true, then a timer will appear next to the prompt.'
+      },
     }
   }
 
@@ -80,9 +86,15 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
     var t0 = new Date();
     var t1;
     var timeDiff;
+    var html = '';
+
+    // show timer if needed
+    if (trial.timer){
+       html += '<canvas class="jspsych-html-timer"></canvas>';
+    }
 
     // display stimulus
-    var html = '<div id="jspsych-html-button-response-stimulus">'+trial.stimulus+'</div>';
+    html += '<div id="jspsych-html-button-response-stimulus">'+trial.stimulus+'</div>';
 
     //display buttons
     var buttons = [];
@@ -108,7 +120,55 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
     if (trial.prompt !== null) {
       html += trial.prompt;
     }
+
     display_element.innerHTML = html;
+
+    if (trial.timer){
+      can = display_element.querySelector('.jspsych-html-timer');
+      ctx = can.getContext('2d'),
+      sta = -Math.PI / 2,
+      dur = trial.trial_duration;
+
+      can.width = 100;
+      can.height = 100;
+      // document.body.appendChild(can);
+      ctx.font = "normal 30px Arial";
+
+      var myTimer = new Timer(dur, {
+        ontick: function () {
+          var pct = this.elapsed / dur,
+          sec = Math.ceil((dur - this.elapsed) / 1000),
+          wid = ctx.measureText(sec).width;
+
+          ctx.clearRect(0, 0, 100, 100);
+
+          ctx.fillStyle = "#777";
+          ctx.arc(50, 50, 50, 0, 2 * Math.PI);
+          ctx.fill();
+
+          ctx.fillStyle = "#f00";
+          ctx.beginPath();
+          ctx.moveTo(50, 50);
+          ctx.arc(50, 50, 50, sta, sta + 2 * Math.PI * pct);
+          ctx.fill();
+
+          ctx.fillStyle = "#111";
+          ctx.fillText(sec, 50 - wid / 2 + 1, 61);
+          ctx.fillStyle = "#eee";
+          ctx.fillText(sec, 50 - wid / 2, 60);
+        },
+        onend: function () {
+          this.ontick();
+        },
+        interval: 1000 / 60
+      }).start();
+
+      var timer2 = new Timer(dur);
+      timer2.ontick = function () {
+        console.log(this.elapsed);
+      };
+      timer2.start();
+    }
 
     // start time
     var start_time = performance.now();
@@ -155,9 +215,9 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
     // function to end trial when it is time
     function end_trial() {
 
-          if(response.button == null){
-                response.button = 20
-          }
+      if(response.button == null){
+        response.button = 20
+      }
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();

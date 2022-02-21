@@ -29,6 +29,7 @@ Per trial:
             <script   src  = 'Stimuli/Grids/generate_grids2.js'></script>
             <script   src  = 'Stimuli/Conditions/Condition_perms.js'></script>
             <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
+            <script   src  = 'Stimuli/Timer/timer.js'></script>
             <script   src  = 'SE2.js'></script>
             <script   src = "../js/dataSaver.js"></script>
             <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
@@ -113,8 +114,9 @@ Per trial:
 
     // General function that is needed
     function randi(min, max) { // min and max included (acts like randi of Matlab)
-          return Math.floor(Math.random() * (max - min + 1) + min);
+      return Math.floor(Math.random() * (max - min + 1) + min);
     }
+
 
     // Create "Variable/function" that makes sure you remain in FullScreen
     var firstFullscreen =	{
