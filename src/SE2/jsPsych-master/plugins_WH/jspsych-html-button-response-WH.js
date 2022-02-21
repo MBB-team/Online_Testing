@@ -129,8 +129,10 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
       sta = -Math.PI / 2,
       dur = trial.trial_duration;
 
-      can.width = 100;
-      can.height = 100;
+      var timer_size = screen.height/12;
+      can.height = timer_size;
+      can.width = timer_size;
+
       // document.body.appendChild(can);
       ctx.font = "normal 30px Arial";
 
@@ -140,22 +142,22 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
           sec = Math.ceil((dur - this.elapsed) / 1000),
           wid = ctx.measureText(sec).width;
 
-          ctx.clearRect(0, 0, 100, 100);
+          ctx.clearRect(0, 0, timer_size/2, timer_size/2);
 
           ctx.fillStyle = "#777";
-          ctx.arc(50, 50, 50, 0, 2 * Math.PI);
+          ctx.arc(timer_size/2, timer_size/2, timer_size/2, 0, 2 * Math.PI);
           ctx.fill();
 
           ctx.fillStyle = "#f00";
           ctx.beginPath();
-          ctx.moveTo(50, 50);
-          ctx.arc(50, 50, 50, sta, sta + 2 * Math.PI * pct);
+          ctx.moveTo(timer_size/2, timer_size/2);
+          ctx.arc(timer_size/2, timer_size/2, timer_size/2, sta, sta + 2 * Math.PI * pct);
           ctx.fill();
 
           ctx.fillStyle = "#111";
-          ctx.fillText(sec, 50 - wid / 2 + 1, 61);
+          ctx.fillText(sec, timer_size/2 - wid / 2 + 1, 1.22*(timer_size/2));
           ctx.fillStyle = "#eee";
-          ctx.fillText(sec, 50 - wid / 2, 60);
+          ctx.fillText(sec, timer_size/2 - wid / 2, 1.2*(timer_size/2));
         },
         onend: function () {
           this.ontick();
@@ -165,7 +167,7 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
 
       var timer2 = new Timer(dur);
       timer2.ontick = function () {
-        console.log(this.elapsed);
+        // console.log(this.elapsed);
       };
       timer2.start();
     }

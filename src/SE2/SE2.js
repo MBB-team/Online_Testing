@@ -108,7 +108,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
       var flip = {
         type: 'html-button-response-WH',
         stimulus: grid_stimuli[trial_counter],
-        choices: ['Souhaitez-vous passer à la phase de test ?'],
+        choices: [],
         trial_duration: 5000,
         timer: true,
         on_start: function(flip){
