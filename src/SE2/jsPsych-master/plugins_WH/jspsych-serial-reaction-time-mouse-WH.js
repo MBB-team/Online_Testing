@@ -1,16 +1,16 @@
 /**
- * jspsych-serial-reaction-time
- * Josh de Leeuw
- *
- * plugin for running a serial reaction time task
- *
- * documentation: docs.jspsych.org
- *
- * MODIFIED BY WILLIAM HOPPER - 26/04/2020
- * Modified to make stimuli images displayed as html
- * Modified so that response location is not the same as target_image location
- *
- **/
+* jspsych-serial-reaction-time
+* Josh de Leeuw
+*
+* plugin for running a serial reaction time task
+*
+* documentation: docs.jspsych.org
+*
+* MODIFIED BY WILLIAM HOPPER - 26/04/2020
+* Modified to make stimuli images displayed as html
+* Modified so that response location is not the same as target_image location
+*
+**/
 
 jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
@@ -99,7 +99,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       button_html: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Button HTML',
-        default: '<button class="jspsych-btn">%choice%</button>',
+        default: '<button class="jspsych-btn" disabled>%choice%</button>',
         array: true,
         description: 'The html of the button. Can create own style.'
       }
@@ -112,13 +112,14 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     var t1;
     var timeDiff;
 
-    var CorB = 0;
     var startTime = -1;
     var response = {
-      rt: null,
-      row: null,
-      column: null
+      rt: [],
+      row: [],
+      column: [],
+      button: null,
     }
+    var correct_response = 999;
 
     //show prompt if there is one
     if (trial.prompt !== null) {
@@ -159,17 +160,18 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
 
 
 
-		if(trial.pre_target_duration <= 0){
-			showTarget();
-		} else {
-			jsPsych.pluginAPI.setTimeout(function(){
-				showTarget();
-			}, trial.pre_target_duration);
-		}
+    if(trial.pre_target_duration <= 0){
+      showTarget();
+    } else {
+      jsPsych.pluginAPI.setTimeout(function(){
+        showTarget();
+      }, trial.pre_target_duration);
+    }
 
-		function showTarget(){
+    function showTarget(){
       var resp_targets;
-      var response = 0;
+      var resp = 0;
+      var resp_c = -1;
 
       if(!trial.allow_nontarget_responses){
         resp_targets = [display_element.querySelector('#jspsych-serial-reaction-time-stimulus-cell-'+trial.target_location[0]+'-'+trial.target_location[1])]
@@ -182,43 +184,44 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
           if(startTime == -1){
             return;
           } else {
-            if (response == 0) {
-               var info = {}
-               e.currentTarget.style.outline = "5px solid yellow";
-               e.currentTarget.setAttribute('clicked', '_1');
-               info.row = e.currentTarget.getAttribute('data-row');
-               info.column = e.currentTarget.getAttribute('data-column');
-               info.rt = performance.now() - startTime;
-               after_response_click(info);
-               response = 1;
-            }
+            if (resp == 1){
+              display_element.querySelector('[clicked=_1]').style.outline = '';
+              display_element.querySelector('[clicked=_1]').setAttribute('clicked','_0');
+            };
+            var info = {};
+            resp_c++;
+            e.currentTarget.style.outline = "5px solid yellow";
+            e.currentTarget.setAttribute('clicked', '_1');
+            info.row = e.currentTarget.getAttribute('data-row');
+            info.column = e.currentTarget.getAttribute('data-column');
+            info.rt = performance.now() - startTime;
+            after_response_click(info);
+            resp = 1;
           }
         });
       }
 
       startTime = performance.now();
 
-			if(trial.trial_duration !== null){
-				jsPsych.pluginAPI.setTimeout(endTrial, trial.trial_duration);
-			}
+      if(trial.trial_duration !== null){
+        jsPsych.pluginAPI.setTimeout(endTrial, trial.trial_duration);
+      }
 
-		}
+    }
 
     function endTrial() {
       t1 = new Date();
       timeDiff = t1-t0;
-      var button_response     = 999;
 
-      if (CorB == 2) {
-        button_response = parseInt(response.button);
-      }
+      var button_response = parseInt(response.button);
+
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // gather the data to store for the trial
       var trial_data = {
-        "rt":               response.rt,   // integer
+        "rt":               JSON.stringify(response.rt),   // string
         "stimulus":        "999",  // string
         "button_pressed":   button_response,   // integer
         "flips":            999,   // integer
@@ -228,13 +231,13 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         "SE_min":           999,   // integer
         "SE_max_ini":       999,   // integer
         "SE_min_ini":       999,   // integer
-        "response_row":     parseInt(response.row),   // integer
-        "response_col":     parseInt(response.column),   // integer
+        "response_row":     JSON.stringify(response.row),   // Str
+        "response_col":     JSON.stringify(response.column),   // Str
         "target_row":       trial.target_location[0],   // integer
         "target_col":       trial.target_location[1],   // integer
         "correct_row":      trial.correct_location[0],   // integer
         "correct_col":      trial.correct_location[1],   // integer
-        "correct":          (response.row == trial.correct_location[0] && response.column == trial.correct_location[1])?1:0,   // BOOL
+        "correct":          correct_response,   // BOOL
         "trial_time_elapsed": timeDiff  // integer
       };
 
@@ -249,28 +252,37 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     // function to handle click responses by the subject
     function after_response_click(info) {
 
-      CorB = 1; // click
+      response.row.push(info.row);
+      response.column.push(info.column);
+      response.rt.push(info.rt);
 
-			// only record first response
-      response = response.rt == null ? info : response;
+      // enable buttons
+      var btns = document.querySelectorAll('.jspsych-html-button-response-button button');
+      for(var i=0; i<btns.length; i++){
+        btns[i].disabled = false;
+      }
+      // only record first response
+      // response = response.rt == null ? info : response;
 
       //display_element.querySelectorAll('.jspsych-serial-reaction-time-stimulus-cell').removeEventListener('mousedown', responseListener());
 
-      if (trial.response_ends_trial) {
-        jsPsych.pluginAPI.setTimeout(function(){endTrial()}, trial.highlight);
-      }
+      // if (trial.response_ends_trial) {
+      //   jsPsych.pluginAPI.setTimeout(function(){endTrial()}, trial.highlight);
+      // }
     };
 
     // function to handle button responses by the subject
     function after_response_btn(choice) {
 
-      CorB = 2;
-
       // measure rt
       var end_time = performance.now();
       var rt = end_time - startTime;
       response.button = choice;
-      response.rt = rt;
+      response.rt.push = rt;
+
+      // were they correct?
+      var nRes = response.row.length;
+      correct_response = (response.row[nRes-1] == trial.correct_location[0] && response.column[nRes-1] == trial.correct_location[1]) ? 1:0;
 
       // disable all the buttons after a response
       var btns = document.querySelectorAll('.jspsych-html-button-response-button button');
@@ -294,8 +306,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         var classname = 'jspsych-serial-reaction-time-stimulus-cell';
 
         stimulus += "<div class='"+classname+"' id='jspsych-serial-reaction-time-stimulus-cell-"+i+"-"+j+"' "+
-          "data-row="+i+" data-column="+j+" clicked='_0' "+
-          "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
+        "data-row="+i+" data-column="+j+" clicked='_0' "+
+        "style='width:"+square_size+"px; height:"+square_size+"px; display:table-cell; vertical-align:middle; text-align: center; cursor: pointer; font-size:"+square_size/2+"px;";
 
         if(grid[i][j] == 1){
           stimulus += "border: 2px solid black;"

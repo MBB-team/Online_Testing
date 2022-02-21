@@ -65,7 +65,7 @@ Per trial:
                rew_levels:    [0, 0, 0, 1, 1, 1, 2, 2, 2],
                TS_levels:     [0, 1, 2, 0, 1, 2, 0, 1, 2],
                TS:            [4, 6, 8],
-               rew:           [0.1, 1, 10]};
+               rew:           [1, 10, 100]};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec

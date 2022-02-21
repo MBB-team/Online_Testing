@@ -32,19 +32,19 @@ function SE2(nbBlocks, nbTrials, cond_pt){
 
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_i]]];
       var TS  = exp.TS[exp.TS_levels[cond_pt[trial_i]]];
-
+      var points = rew==1? 'point':'points'
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+TS+'</b>.</p><p style="font-size:30px">Le bonus pour cet exercice est: <b>'+rew+' &euro;</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Votre objectif est de retrouver <b>'+TS+' emplacements</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous receverez <b>'+rew+' ' + points + '</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
         choices: ['C&#39est parti !'],
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'trialNb',
           nTS: 999
         }
@@ -72,8 +72,8 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'effort_want',
           nTS: 999
         }
@@ -93,8 +93,8 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'fixation',
           nTS: 999
         }
@@ -121,8 +121,8 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'flip',
           nTS: 999
         }
@@ -142,8 +142,8 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'fixation',
           nTS: 999
         }
@@ -183,11 +183,12 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         response_ends_trial: true,
         highlight: time.highlight,
         allow_nontarget_responses: true,
-        prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' €</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
+        prompt: '<p id="jspsych-prompt" style="margin:0px">L&#39objectif pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' €</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
         pre_target_duration: 0,
-        choices: [],
+        choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis s&ucirc;r.e pas'],
         on_start: function(){var clicked = [null,null]},
         on_finish: function(data){
+          console.log(data)
           if (data.correct){
             nCorrect++
             correct_i[test_counter] = 1;
@@ -195,79 +196,58 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           clicked = [data.response_row, data.response_col];
           clicked_i[test_counter] = clicked;
           test_counter++
-          if (data.button_pressed == 1){
-            jsPsych.endCurrentTimeline();
-          }
+          // if (data.button_pressed == 1){
+          //   jsPsych.endCurrentTimeline();
+          // }
         },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: test_i,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'test',
           nTS: 999
         }
       }; // test
 
-      // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
-      var if_test = {
-        timeline: [fullscreenExp, test],
-        conditional_function: function(){
-          var data = jsPsych.data.get().last(2).values()[0];
-          if (data.button_pressed == 1){
-            return false;
-          } else {
-            return true;
-          }
-        }
-      }; // test if
+      // // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
+      // var if_test = {
+      //   timeline: [fullscreenExp, test],
+      //   conditional_function: function(){
+      //     var data = jsPsych.data.get().last(2).values()[0];
+      //     if (data.button_pressed == 1){
+      //       return false;
+      //     } else {
+      //       return true;
+      //     }
+      //   }
+      // }; // test if
 
       // PUSH TO TIMELINE //
       timelineTask.push(fullscreenExp);
-      timelineTask.push(if_test);
+      timelineTask.push(test);
 
-
-      var feedback = {
-        type: 'html-button-response-fb-WH',
-        stimulus: grid_stimuli[trial_counter],
-        choices: [],
-        trial_duration: time.showFeedback,
-        target: target_i,
-        correct_responses: function(){return correct_i},
-        target_score: exp.TS_levels[cond_pt[trial_i]],
-        target_correct: target_corr_i,
-        on_start: function(feedback){
-          var TS_current = feedback.target_score;
-          if (nCorrect >= TS_current){
-            nTS++;
-            feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez atteint le score cible. Votre score: <b>'+nCorrect+'/'+numbersImg.length+' !</b> Vous avez vu la grille pendant <b>'+flip_fb+'</b> secondes.';
-          } else {
-            feedback.prompt = '<p style="font-size:25px; margin:0px">Vous n&#39avez pas atteint le score cible. Votre score: <b>'+nCorrect+'/'+numbersImg.length+' !</b> Vous avez vu la grille pendant <b>'+flip_fb+'</b> secondes.';
-          }
-        },
-        on_finish: function(){ // reset counters
-          nCorrect       = 0;
-          correct_i      = [0,0,0,0,0,0,0,0,0,0];
-          test_counter   = 0;
-          clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
-        },
+      // EXPECTATION QUESTION //
+      var EnS = {
+        type: 'html-button-response-WH',
+        stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
+        choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
-          test_part: 'feedback',
+          target_score: TS,
+          reward: rew,
+          test_part: 'post_test_conf',
           nTS: 999
         }
-      }; // effort
+      };
 
-      // PUSH TO TIMELINE //
       timelineTask.push(fullscreenExp);
-      timelineTask.push(feedback);
+      timelineTask.push(EnS);
 
       var test_conf = {
         type: 'html-slider-response-WH',
@@ -282,14 +262,14 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
+          target_score: TS,
+          reward: rew,
           test_part: 'test_conf',
           nTS: 999
         }
       };
 
-
+      // push to timeline if it is an effort question trial
       if (trial_counter == eff_q_pt[conf_counter]-1){
 
         // PUSH TO TIMELINE //
@@ -299,6 +279,101 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         // INCREMENT THE conf_counter
         conf_counter++;
       }
+
+
+      var feedback_with_grid = {
+        type: 'html-button-response-fb-WH',
+        stimulus: grid_stimuli[trial_counter],
+        grid: true,
+        choices: [],
+        trial_duration: time.showFeedback,
+        target: target_i,
+        correct_responses: function(){return correct_i},
+        target_score: TS,
+        target_correct: target_corr_i,
+        on_start: function(feedback){
+          var TS_current = feedback.target_score;
+          var rew_current = feedback.rew;
+          var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
+          if (nCorrect >= TS_current){
+            nTS++;
+            if (rew_current == 1){
+              feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
+            } else {
+              feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' points.</p>';
+            }
+          } else {
+            feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous n&#39avez pas donc attient l&#39objectif.</p><p>Vous avez gagné 0 points.</p>';
+          }
+        },
+        on_finish: function(){ // reset counters
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+          clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+        },
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999,
+          target_score: TS,
+          reward: rew,
+          test_part: 'feedback',
+          nTS: 999
+        }
+      }; // fb with grid
+
+      var feedback_sans_grid = {
+        type: 'html-button-response-fb-WH',
+        stimulus: '',
+        grid: false,
+        choices: [],
+        trial_duration: time.showFeedback,
+        target: target_i,
+        correct_responses: function(){return correct_i},
+        target_score: TS,
+        reward: rew,
+        target_correct: target_corr_i,
+        on_start: function(feedback){
+          var TS_current = feedback.target_score;
+          var rew_current = feedback.rew;
+          var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
+          if (nCorrect >= TS_current){
+            nTS++;
+            if (rew_current == 1){
+              feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
+            } else {
+              feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' points.</p>';
+            }
+          } else {
+            feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous n&#39avez pas donc attient l&#39objectif.</p><p>Vous avez gagné 0 points.</p>';
+          }
+        },
+        on_finish: function(){ // reset counters
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+          clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+        },
+        data: {
+          blockNb: block_i,
+          trialNb: trial_counter,
+          TinB: trial_i,
+          testNb: 999,
+          target_score: TS,
+          reward: rew,
+          test_part: 'feedback',
+          nTS: 999
+        }
+      }; // fb without grid
+
+
+      // PUSH TO TIMELINE //
+      timelineTask.push(fullscreenExp);
+      timelineTask.push(feedback_sans_grid);
+
+
 
 
       trial_counter++;

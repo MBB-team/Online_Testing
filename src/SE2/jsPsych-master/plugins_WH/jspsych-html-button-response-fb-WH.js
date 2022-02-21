@@ -1,12 +1,12 @@
 /**
- * jspsych-html-button-response
- * Josh de Leeuw
- *
- * plugin for displaying a stimulus and getting a keyboard response with highlighting of target and clicked locations
- *
- * documentation: docs.jspsych.org
- *
- **/
+* jspsych-html-button-response
+* Josh de Leeuw
+*
+* plugin for displaying a stimulus and getting a keyboard response with highlighting of target and clicked locations
+*
+* documentation: docs.jspsych.org
+*
+**/
 
 jsPsych.plugins["html-button-response-fb-WH"] = (function() {
 
@@ -97,6 +97,12 @@ jsPsych.plugins["html-button-response-fb-WH"] = (function() {
         pretty_name: 'Trial target score',
         default: null,
         array: true,
+      },
+      grid: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Do we show a grid?',
+        default: false,
+        description: 'If true, we show the participant a grid of their responses.'
       }
     }
   }
@@ -136,26 +142,27 @@ jsPsych.plugins["html-button-response-fb-WH"] = (function() {
     }
     display_element.innerHTML = html;
 
-    // Highlight the appropriate cells
-    for (var pair_i = 0; pair_i < numbersImg.length; pair_i++){
-      // Highlight the pair we showed yellow
-      var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[pair_i][0]+'-'+trial.target[pair_i][1]); // get the cell
-      // square_target.style.outline = "5px solid yellow"; // set its outline to yellow
-      // Highlight the pair the participant click on depending if they were correct or not and if they clicked it
-      if (trial.correct_responses[pair_i] !== null){
-        var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target_correct[pair_i][0]+'-'+trial.target_correct[pair_i][1])
+    if (trial.grid){
+      // Highlight the appropriate cells
+      for (var pair_i = 0; pair_i < numbersImg.length; pair_i++){
+        // Highlight the pair we showed yellow
+        var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[pair_i][0]+'-'+trial.target[pair_i][1]); // get the cell
+        // square_target.style.outline = "5px solid yellow"; // set its outline to yellow
+        // Highlight the pair the participant click on depending if they were correct or not and if they clicked it
+        if (trial.correct_responses[pair_i] !== null){
+          var square_clicked = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target_correct[pair_i][0]+'-'+trial.target_correct[pair_i][1])
+        };
+        if (square_clicked !== null){
+          if(trial.correct_responses[pair_i]){
+            square_target.style.outline = "5px solid rgb(51, 204, 51)";
+            square_clicked.style.outline = "5px solid rgb(51, 204, 51)";
+          } else {
+            square_clicked.style.outline = "5px solid rgb(255, 0, 0)";
+            square_target.style.outline = "5px solid rgb(255, 0, 0)";
+          }
+        };
       };
-      if (square_clicked !== null){
-        if(trial.correct_responses[pair_i]){
-          square_target.style.outline = "5px solid rgb(51, 204, 51)";
-          square_clicked.style.outline = "5px solid rgb(51, 204, 51)";
-        } else {
-          square_clicked.style.outline = "5px solid rgb(255, 0, 0)";
-          square_target.style.outline = "5px solid rgb(255, 0, 0)";
-        }
-      };
-    };
-
+    }
     // start time
     var start_time = performance.now();
 
@@ -201,9 +208,9 @@ jsPsych.plugins["html-button-response-fb-WH"] = (function() {
     // function to end trial when it is time
     function end_trial() {
 
-          if(response.button == null){
-                response.button = 20
-          }
+      if(response.button == null){
+        response.button = 20
+      }
 
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
