@@ -3,7 +3,7 @@
 // and save as backofficeSecrets.php
 
 $backofficeUsers = array(
-   'admin' => '',
+   'admin' => 'zPaQGd6AcVuvBB6DtxJP4', # A password used for local debug only
 );
 
 ?>

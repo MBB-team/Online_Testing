@@ -11,11 +11,9 @@ COPY src /var/www/html/
 
 # set database password
 COPY src/portailLib/database_config_session_template.php /var/www/html/portailLib/database_config_session.php
-RUN sed -i "/password =/c\  \$password = '$MYSQL_ROOT_PASSWORD';" /var/www/html/portailLib/database_config_session.php
 
 # set backend password
 COPY src/portailLib/backofficeSecrets_template.php /var/www/html/portailLib/backofficeSecrets.php
-RUN sed -i "/'admin' => '/c\  'admin' => '$BACK_OFFICE_PASSWORD'" /var/www/html/portailLib/backofficeSecrets.php
 
 # COPY sql migration files
 RUN mkdir /sql
