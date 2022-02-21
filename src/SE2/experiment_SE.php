@@ -31,8 +31,8 @@ Per trial:
             <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
             <script   src  = 'SE2.js'></script>
             <script   src = "../js/dataSaver.js"></script>
-            <link href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
-            <link rel='icon' href='/favicon.ico' />
+            <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
+            <link     rel='icon' href='/favicon.ico' />
       </head>
       <body>
             <div id='jspsych-target' style='width:auto; height:auto; position:relative;'>
@@ -163,7 +163,7 @@ Per trial:
     // Numbers (1st)
     var numbersImg  = [];
     var numbersImg_html = [];
-    for (var t=1; t <= 10; t++){
+    for (var t=1; t <= 8; t++){
       numbersImg[t-1] = 'Stimuli/Images/image'+t+'.png'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
@@ -181,10 +181,24 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var grid_indexes_shuffled = jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
+    var cond_pt_ind = Array(exp.nbBlocks);
+
+    for (var bNi=0; bNi<exp.nbBlocks; bNi++){
+      var ind = Array.from(Array(exp.TS_levels.length).keys());
+      ind = ind.map(x => x + bNi*exp.TS_levels.length);
+      cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
+    }
+    cond_pt_ind = cond_pt_ind.flat()
+
+    // (pseudo-)shuffle grids
+    var grid_indexes_shuffled = Array(exp.nbTrials);
+    for (var trNi=0; trNi<cond_pt_ind.length; trNi++){
+      grid_indexes_shuffled[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    }
     var square_size = screen.height/6;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs);
+    var all_flip_stimuli = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt);
 
     var grid_stimuli = all_flip_stimuli;
     // var grid_stimuli = []; // slice array into chunks of 8
@@ -242,7 +256,7 @@ Per trial:
 
       // exp_timeline.push(instructions);
 
-      var task = SE2(exp.nbBlocks, exp.nbTrials);
+      var task = SE2(exp.nbBlocks, exp.nbTrials, cond_pt);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
       }

@@ -2,21 +2,24 @@
 *
 * Generates a set of nbTrial grids
 * Bits taken from jsPsych-serial-reaction time plugin and modified to have two images
+* 4x4 grid that only shows images up to TS
 * William Hopper - 30/04/2020
 *
 */
 
-function generate_grids2(nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs){
+function generate_grids2(nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt){
 
   var flip_stimuli = Array(nbTrials);
   var grid_counter = 0;
-  var grid = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+  var grid = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
 
-
+  var n_TS;
   for (var grid_i = 0; grid_i <= nbTrials-1; grid_i++){ // for each grid
-    var grid_num = [[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null],[null,null,null,null,null]];
+    var grid_num = [[999,999,999,999],[999,999,999,999],[999,999,999,999],[999,999,999,999]];
 
-    for (var pair_i = 0; pair_i <= numbersImg.length-1; pair_i++){
+    n_TS = exp.TS[exp.TS_levels[cond_pt[grid_i]]];
+
+    for (var pair_i = 0; pair_i < n_TS; pair_i++){
       var row_i = [];
       var col_i = [];
 
@@ -45,8 +48,11 @@ function generate_grids2(nbTrials, numbersImg, numbersImg2, grid_indexes_shuffle
         }
         stimulus += ">";
         // first image location
-        stimulus += '<img src="'+numbersImg[grid_num[i][j]]+'" style="height:'+square_size+'px; width:auto"></img>';
-
+        if (grid_num[i][j] != 999){
+          stimulus += '<img src="'+numbersImg[grid_num[i][j]]+'" style="height:'+square_size+'px; width:auto"></img>';
+        } else {
+          // stimulus += '<img src="'+numbersImg[grid_num[i][j]]+'" style="height:'+square_size+'px; width:auto"></img>';
+        }
         // // second image location
         // if(matching_pairs == 1){ // are both numbers the same?
         //   stimulus += '<img src="'+numbersImg[grid_num[i][j]]+'"  style="height:'+square_size+'px; width:auto"></img>';

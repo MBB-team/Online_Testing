@@ -1,22 +1,21 @@
-function SE2(nbBlocks, nbTrials){
+function SE2(nbBlocks, nbTrials, cond_pt){
 
   // INITIALISATION //
   var timelineTask  = [];
   var trial_counter = 0; // counting the number of trials
   var nCorrect      = 0; // the number of correct responses given by the pts
   var nTS           = 0; // the number of target scores achieved by the pts
-  var correct_i     = [0,0,0,0,0,0,0,0,0,0]; // array of correct response indexes
+  var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter  = 0; // counter for looping through test trials during execution
-  var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
+  var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
   var conf_counter  = 0; // counter for looping through effort question trials
   var nbTperB       = nbTrials/nbBlocks;
-  var grid_dim      = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+  var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
 
 
   // Conditions
-  var cond_pt = cond_perms[randi(0,cond_perms.length)];
   var eff_q_pt = eff_q[randi(0,eff_q.length)];
 
   // START OF BLOCK //
@@ -25,14 +24,14 @@ function SE2(nbBlocks, nbTrials){
 
     // TRIAL LOOP //
     for (var trial_i = 0; trial_i < nbTperB; trial_i++) {
-      var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
-      var target_corr_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
+      var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
+      var target_corr_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
 
       var trial_n = trial_i + 1;
       var nbTrial_counter = trial_counter+1;
 
-      var rew = exp.rew[exp.rew_levels[cond_pt[trial_i]-1]];
-      var TS  = exp.TS[exp.TS_levels[cond_pt[trial_i]-1]];
+      var rew = exp.rew[exp.rew_levels[cond_pt[trial_i]]];
+      var TS  = exp.TS[exp.TS_levels[cond_pt[trial_i]]];
 
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
@@ -84,33 +83,6 @@ function SE2(nbBlocks, nbTrials){
       timelineTask.push(fullscreenExp);
       timelineTask.push(effort_want);
 
-      // SE QUESTION //
-      var SE2_conf = {
-        type: 'SE2-confidence-slider-WH',
-        range: numbersImg.length+1,
-        trial_duration: time.SEconf,
-        prompt: '<p>Combien d&#39emplacements pensez-vous pouvoir mémoriser correctement avec cette durée ?</p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur Entre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
-        start: sliderIni,
-        on_start: function(trial){
-          sliderIni[0]     = randi(0,numbersImg.length);
-          sliderIni[1]     = randi(sliderIni[0],numbersImg.length);
-          trial.start = sliderIni;
-        },
-        data: {
-          blockNb: block_i,
-          trialNb: trial_counter,
-          TinB: trial_i,
-          testNb: 999,
-          target_score: exp.TS_levels[cond_pt[trial_i]],
-          reward: exp.rew_levels[cond_pt[trial_i]],
-          test_part: 'SE2_slider',
-          nTS: 999
-        }
-      };
-
-      timelineTask.push(SE2_conf)
-      timelineTask.push(fullscreenExp)
-
       var effort_phase = {
         type: 'html-button-response-WH',
         stimulus: '<p>La phase de mémorisation est sur le point de commencer.</p><p><b>Tenez-vous pre&#770t.e !</b></p>',
@@ -139,7 +111,7 @@ function SE2(nbBlocks, nbTrials){
         choices: ['Souhaitez-vous passer à la phase de test ?'],
         trial_duration: 5000,
         on_start: function(flip){
-          var data = jsPsych.data.get().last(6).values()[0];
+          var data = jsPsych.data.get().last(4).values()[0];
           var effort_want_s = data.conf_response;
           flip.trial_duration = effort_want_s*1000; // x1000 to put in ms
         },
@@ -185,7 +157,7 @@ function SE2(nbBlocks, nbTrials){
       var test_trials      = [];
 
       // TESTING PHASE //
-      for (var test_i = 0; test_i < numbersImg.length; test_i++) {
+      for (var test_i = 0; test_i < TS; test_i++) {
 
         var pair_1st = randi(0,1); // randomly select which of pair is shown and which is hidden
         // var pair_1st = 0; // for non-matching version of task, show numbers and test animals
@@ -212,7 +184,7 @@ function SE2(nbBlocks, nbTrials){
         allow_nontarget_responses: true,
         prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' €</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
         pre_target_duration: 0,
-        choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
+        choices: [],
         on_start: function(){var clicked = [null,null]},
         on_finish: function(data){
           if (data.correct){
