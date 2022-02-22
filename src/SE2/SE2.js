@@ -13,6 +13,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
   var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
+  var points_total  = 0;
 
 
   // Conditions
@@ -174,7 +175,6 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         });
 
       }; // initialise test locations
-
       var test = {
         type: 'serial-reaction-time-mouse-WH',
         timeline: test_trials,
@@ -183,7 +183,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         response_ends_trial: true,
         highlight: time.highlight,
         allow_nontarget_responses: true,
-        prompt: '<p id="jspsych-prompt" style="margin:0px">L&#39objectif pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' €</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
+        prompt: '<p id="jspsych-prompt" style="margin:0px">L&#39objectif pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' '+points+'</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
         pre_target_duration: 0,
         choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis s&ucirc;r.e pas'],
         on_start: function(){var clicked = [null,null]},
@@ -290,12 +290,14 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         target: target_i,
         correct_responses: function(){return correct_i},
         target_score: TS,
+        reward: rew,
         target_correct: target_corr_i,
         on_start: function(feedback){
           var TS_current = feedback.target_score;
-          var rew_current = feedback.rew;
+          var rew_current = feedback.reward;
           var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
           if (nCorrect >= TS_current){
+            points_total = points_total + rew_current;
             nTS++;
             if (rew_current == 1){
               feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
@@ -328,8 +330,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         type: 'html-button-response-fb-WH',
         stimulus: '',
         grid: false,
-        choices: [],
-        trial_duration: time.showFeedback,
+        choices: ['Montrez-moi la grille','Continuer à la prochaine exercice'],
         target: target_i,
         correct_responses: function(){return correct_i},
         target_score: TS,
@@ -337,9 +338,11 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         target_correct: target_corr_i,
         on_start: function(feedback){
           var TS_current = feedback.target_score;
-          var rew_current = feedback.rew;
+          var rew_current = feedback.reward;
           var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
           if (nCorrect >= TS_current){
+            points_total = points_total + rew_current;
+            console.log(points_total)
             nTS++;
             if (rew_current == 1){
               feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
@@ -373,15 +376,57 @@ function SE2(nbBlocks, nbTrials, cond_pt){
       timelineTask.push(fullscreenExp);
       timelineTask.push(feedback_sans_grid);
 
+      // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
+      var if_explicit_feedback = {
+        timeline: [fullscreenExp, feedback_with_grid],
+        conditional_function: function(){
+          var data = jsPsych.data.get().last(1).values()[0];
+          if (data.button_pressed == 1){
+            return false;
+          } else {
+            return true;
+          }
+        }
+      }
 
-
+      timelineTask.push(if_explicit_feedback);
 
       trial_counter++;
 
     } // trial
   } // block
+  var points_fin = points_total == 1 ? 'point':'points';
+  var finish = {
+    type: 'html-button-response-WH',
+    stimulus: function(){
+      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
+      var max_euro   = exp.rew_euro[1];
+      var min_euro   = exp.rew_euro[0];
+      var euro_rew   = Math.round((((max_euro - min_euro)*(points_total - 0))/(max_points - 0)) + min_euro);
+      var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+exp.nbTrials+'</b>.</p><p>En total, vous avez gagné : <b>'+points_total+' '+points_fin+'</b>. Vous serez donc payer : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
+      return finish_stim;
+    },
+    choices: ['Fin'],
+    on_finish: function(data){
+      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
+      var max_euro   = exp.rew_euro[1];
+      var min_euro   = exp.rew_euro[0];
+      var euro_rew   = Math.round((((max_euro - min_euro)*(points_total - 0))/(max_points - 0)) + min_euro);
+      data.nTS = JSON.stringify([nTS, points_total, euro_rew]);
+    },
+    data: {
+      blockNb: block_i,
+      trialNb: trial_counter,
+      TinB: trial_i,
+      testNb: 999,
+      target_score: 999,
+      reward: 999,
+      test_part: 'finish',
+      nTS: 999
+    }
+  }
 
-
+  timelineTask.push(finish);
 
   return timelineTask;
 

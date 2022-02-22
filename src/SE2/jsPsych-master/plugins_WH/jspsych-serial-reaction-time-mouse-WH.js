@@ -252,8 +252,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
     // function to handle click responses by the subject
     function after_response_click(info) {
 
-      response.row.push(info.row);
-      response.column.push(info.column);
+      response.row.push(parseInt(info.row));
+      response.column.push(parseInt(info.column));
       response.rt.push(info.rt);
 
       // enable buttons
