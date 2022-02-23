@@ -99,7 +99,7 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
     html += '<div><canvas class="jspsych-html-timer" style="float: none;"></canvas></div>';
     html += '<div>'+trial.stimulus+'</div>';
     var points = trial.reward == 1 ? 'point':'points';
-    html += '<div><p style="float: right;">Vous jouez pour '+trial.reward+' ' + points + '</p></div>';
+    html += '<div><p style="float: right;">Bonus : '+trial.reward+' ' + points + '</p></div>';
     html += '</div>';
 
     //display buttons
