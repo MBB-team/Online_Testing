@@ -95,11 +95,11 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
     var html = '';
 
     // display stimulus
-    html += '<div id="jspsych-html-button-response-stimulus" style="display:flex;">'
-    html += '<div><canvas class="jspsych-html-timer" style="float: none;"></canvas></div>';
-    html += '<div>'+trial.stimulus+'</div>';
+    html += '<div id="jspsych-html-button-response-stimulus" style="display:flex; justify-content: center;">'
+    html += '<div><canvas class="jspsych-html-timer"></canvas></div>';
+    html += '<div style="">'+trial.stimulus+'</div>';
     var points = trial.reward == 1 ? 'point':'points';
-    html += '<div><p style="float: right;">Bonus : '+trial.reward+' ' + points + '</p></div>';
+    html += '<div><p>Bonus : '+trial.reward+' ' + points + '</p></div>';
     html += '</div>';
 
     //display buttons
@@ -135,7 +135,7 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
       sta = -Math.PI / 2,
       dur = trial.trial_duration;
 
-      var timer_size = screen.height/12;
+      var timer_size = screen.height/8;
       can.height = timer_size;
       can.width = timer_size;
 
