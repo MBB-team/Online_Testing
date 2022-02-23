@@ -14,6 +14,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
   var points_total  = 0;
+  var EnS_choices = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6', '7', '8']];
 
 
   // Conditions
@@ -117,7 +118,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         on_start: function(flip){
           var data = jsPsych.data.get().last(4).values()[0];
           var effort_want_s = data.conf_response;
-          flip.trial_duration = effort_want_s*100000; // x1000 to put in ms
+          flip.trial_duration = effort_want_s*1000; // x1000 to put in ms
         },
         data: {
           blockNb: block_i,
@@ -185,7 +186,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         response_ends_trial: true,
         highlight: time.highlight,
         allow_nontarget_responses: true,
-        prompt: '<p id="jspsych-prompt" style="margin:0px">L&#39objectif pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' '+points+'</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
+        prompt: '<p id="jspsych-prompt" style="margin:0px"><p><b>Cliquez</b> sur l&#39autre chiffre de la paire.</p>',
         pre_target_duration: 0,
         choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis pas s&ucirc;r.e'],
         on_start: function(){var clicked = [null,null]},
@@ -231,11 +232,12 @@ function SE2(nbBlocks, nbTrials, cond_pt){
       timelineTask.push(fullscreenExp);
       timelineTask.push(test);
 
+
       // EXPECTATION QUESTION //
       var EnS = {
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-        choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+        choices: EnS_choices[exp.TS_levels[cond_pt[trial_i]]],
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -287,8 +289,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         type: 'html-button-response-fb-WH',
         stimulus: grid_stimuli[trial_counter],
         grid: true,
-        choices: [],
-        trial_duration: time.showFeedback,
+        choices: ['Passer au prochain excercice'],
         target: target_i,
         correct_responses: function(){return correct_i},
         target_score: TS,
@@ -301,13 +302,6 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           if (nCorrect >= TS_current){
             points_total = points_total + rew_current;
             nTS++;
-            if (rew_current == 1){
-              feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
-            } else {
-              feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' points.</p>';
-            }
-          } else {
-            feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous n&#39avez pas donc attient l&#39objectif.</p><p>Vous avez gagné 0 points.</p>';
           }
         },
         on_finish: function(){ // reset counters
@@ -332,7 +326,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         type: 'html-button-response-fb-WH',
         stimulus: '',
         grid: false,
-        choices: ['Montrez-moi la grille','Continuer à la prochaine exercice'],
+        choices: ['Montrez-moi la grille','Passer au prochain exercice'],
         target: target_i,
         correct_responses: function(){return correct_i},
         target_score: TS,
@@ -347,12 +341,12 @@ function SE2(nbBlocks, nbTrials, cond_pt){
             console.log(points_total)
             nTS++;
             if (rew_current == 1){
-              feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
+              feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
             } else {
-              feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez donc attient l&#39objectif.</p><p>Vous avez gagné '+feedback.reward+' points.</p>';
+              feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné '+feedback.reward+' points.</p>';
             }
           } else {
-            feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous n&#39avez pas donc attient l&#39objectif.</p><p>Vous avez gagné 0 points.</p>';
+            feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné 0 points.</p>';
           }
         },
         on_finish: function(data){ // reset counters
@@ -407,7 +401,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
       var euro_rew   = Math.round((((max_euro - min_euro)*(points_total - 0))/(max_points - 0)) + min_euro);
-      var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>Vous avez reussi <b>'+nTS+' exercises sur '+exp.nbTrials+'</b>.</p><p>En total, vous avez gagné : <b>'+points_total+' '+points_fin+'</b>. Vous serez donc payer : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
+      var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>En total, vous avez gagné : <b>'+points_total+' '+points_fin+'</b>. Vous recevrez : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
       return finish_stim;
     },
     choices: ['Fin'],
