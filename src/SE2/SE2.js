@@ -86,7 +86,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
 
       var effort_phase = {
         type: 'html-button-response-WH',
-        stimulus: '<p>La phase de mémorisation est sur le point de commencer.</p><p><b>Tenez-vous pre&#770t.e !</b></p>',
+        stimulus: '<p><b>Tenez-vous pre&#770t.e !</b></p>',
         choices: [],
         trial_duration: time.fixation,
         data: {
@@ -135,7 +135,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
 
       var test_phase = {
         type: 'html-button-response-WH',
-        stimulus: '<p>La phase de test est sur le point de commencer.</p><p><b>Tenez-vous pre&#770t.e !</b></p>',
+        stimulus: '<p><b>Tenez-vous pre&#770t.e !</b></p>',
         choices: [],
         trial_duration: time.fixation,
         data: {
