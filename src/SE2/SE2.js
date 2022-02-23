@@ -353,11 +353,13 @@ function SE2(nbBlocks, nbTrials, cond_pt){
             feedback.stimulus = '<p style="font-size:25px; margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous n&#39avez pas donc attient l&#39objectif.</p><p>Vous avez gagné 0 points.</p>';
           }
         },
-        on_finish: function(){ // reset counters
-          nCorrect       = 0;
-          correct_i      = [0,0,0,0,0,0,0,0];
-          test_counter   = 0;
-          clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+        on_finish: function(data){ // reset counters
+          if (data.button == 1){
+            nCorrect       = 0;
+            correct_i      = [0,0,0,0,0,0,0,0];
+            test_counter   = 0;
+            clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+          }
         },
         data: {
           blockNb: block_i,
