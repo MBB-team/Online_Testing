@@ -9,12 +9,12 @@
 */
 
 
-jsPsych.plugins['html-slider-response-WH'] = (function() {
+jsPsych.plugins['html-slider-response-effort-want-WH'] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: 'html-slider-response-WH',
+    name: 'html-slider-response-effort-want-WH',
     description: '',
     parameters: {
       stimulus: {
@@ -112,25 +112,24 @@ jsPsych.plugins['html-slider-response-WH'] = (function() {
     var t1;
     var timeDiff;
 
-    var html = '<div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;">';
+    var html = '<div id="jspsych-html-slider-response-wrapper" style="margin: 50px 0px;">';
     html += '<div id="jspsych-html-slider-response-stimulus">' + trial.stimulus + '</div>';
-    html += '<div class="jspsych-html-slider-response-container" style="position:relative; margin: 0 auto 3em auto; ';
+    html += '<div class="jspsych-html-slider-response-container" style="display:flex; position:relative; margin: 0 auto 1em auto; ';
     if(trial.slider_width !== null){
       html += 'width:'+trial.slider_width+'px;';
     }
     html += '">';
-    html += '<input type="range" value="'+trial.start+'" min="'+trial.min+'" max="'+trial.max+'" step="'+trial.step+'" style="width: 100%;" id="jspsych-html-slider-response-response" oninput="this.nextElementSibling.value = this.value"></input>';
+    html += '<div style="display: inline-block; position: relative; text-align: center; width: auto; margin: 0 1em 0 1em">';
+    html += '<span style="text-align: center; font-size: 100%;">Min: 0 secondes</span>';
+    html += '</div>';
+    html += '<div style="width:auto; display: inline-block; position: relative;"><input type="range" value="'+trial.start+'" min="'+trial.min+'" max="'+trial.max+'" step="'+trial.step+'" style="width: 100%;" id="jspsych-html-slider-response-response" oninput="this.nextElementSibling.value = this.value"></input>';
     if (trial.effort){
-      html += 'Vous avez choisi <output>'+trial.start+'</output> secondes'
+      html += 'Vous avez choisi <output>'+trial.start+'</output> secondes';
     }
-    html += '<div>'
-    for(var j=0; j < trial.labels.length; j++){
-      var width = 100/(trial.labels.length-1);
-      var left_offset = (j * (100 /(trial.labels.length - 1))) - (width/2);
-      html += '<div style="display: inline-block; position: absolute; left:'+left_offset+'%; text-align: center; width: '+width+'%;">';
-      html += '<span style="text-align: center; font-size: 80%;">'+trial.labels[j]+'</span>';
-      html += '</div>'
-    }
+    html += '</div>';
+    html += '<div style="display: inline-block; position: relative; text-align: center; width: auto; margin: 0 1em 0 1em">';
+    html += '<span style="text-align: center; font-size: 100%;">Max: 60 secondes</span>';
+
     html += '</div>';
     html += '</div>';
     html += '</div>';

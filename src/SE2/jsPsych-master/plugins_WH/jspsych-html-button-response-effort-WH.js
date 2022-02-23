@@ -8,12 +8,12 @@
 *
 **/
 
-jsPsych.plugins["html-button-response-WH"] = (function() {
+jsPsych.plugins["html-button-response-effort-WH"] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: 'html-button-response-WH',
+    name: 'html-button-response-effort-WH',
     description: '',
     parameters: {
       stimulus: {
@@ -94,20 +94,13 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
     var timeDiff;
     var html = '';
 
-    html += '<div>'
-    // show timer if needed
-    if (trial.timer){
-      html += '<canvas class="jspsych-html-timer" style="float: none;"></canvas>';
-    }
-    // show the bonus
-    if (trial.reward !== null){
-      var points = trial.reward == 1 ? 'point':'points';
-      html += '<p style="float: right;">Vous jouez pour '+trial.reward+' ' + points + '</p>';
-    };
-    html += '</div>'
-
     // display stimulus
-    html += '<div id="jspsych-html-button-response-stimulus">'+trial.stimulus+'</div>';
+    html += '<div id="jspsych-html-button-response-stimulus" style="display:flex;">'
+    html += '<div><canvas class="jspsych-html-timer" style="float: none;"></canvas></div>';
+    html += '<div>'+trial.stimulus+'</div>';
+    var points = trial.reward == 1 ? 'point':'points';
+    html += '<div><p style="float: right;">Vous jouez pour '+trial.reward+' ' + points + '</p></div>';
+    html += '</div>';
 
     //display buttons
     var buttons = [];

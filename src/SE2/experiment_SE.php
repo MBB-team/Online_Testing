@@ -20,8 +20,10 @@ Per trial:
             <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-effort-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-fb-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
+            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-effort-want-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE2-confidence-slider-WH.js'></script>

@@ -37,8 +37,9 @@ function SE2(nbBlocks, nbTrials, cond_pt){
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
-        stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Votre objectif est de retrouver <b>'+TS+' emplacements</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous receverez <b>'+rew+' ' + points + '</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
-        choices: ['C&#39est parti !'],
+        stimulus: '<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p>',
+        choices: ['Ok'],
+        // button_html: '<button class="jspsych-btn" style="font-size: ">%choice%</button>',
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -57,8 +58,8 @@ function SE2(nbBlocks, nbTrials, cond_pt){
 
       // How much "effort" does the participant want?
       var effort_want = {
-        type: 'html-slider-response-WH',
-        stimulus:'<p>Pendant combien de secondes souhaitez-vous voir la grille ?</p>',
+        type: 'html-slider-response-effort-want-WH',
+        stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         labels: ['0 secondes','60 secondes'],
         min: 0,
         max: 60,
@@ -107,7 +108,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
 
       // effort //
       var flip = {
-        type: 'html-button-response-WH',
+        type: 'html-button-response-effort-WH',
         stimulus: grid_stimuli[trial_counter],
         choices: [],
         trial_duration: 5000,
@@ -116,7 +117,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         on_start: function(flip){
           var data = jsPsych.data.get().last(4).values()[0];
           var effort_want_s = data.conf_response;
-          flip.trial_duration = effort_want_s*1000; // x1000 to put in ms
+          flip.trial_duration = effort_want_s*100000; // x1000 to put in ms
         },
         data: {
           blockNb: block_i,
@@ -186,7 +187,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         allow_nontarget_responses: true,
         prompt: '<p id="jspsych-prompt" style="margin:0px">L&#39objectif pour cet exercice est: <b>'+TS+'</b></p><p>Le bonus pour cet exercice est: <b>'+rew+' '+points+'</b>.</p><p><b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
         pre_target_duration: 0,
-        choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis s&ucirc;r.e pas'],
+        choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis pas s&ucirc;r.e'],
         on_start: function(){var clicked = [null,null]},
         on_finish: function(data){
           console.log(data)
