@@ -15,12 +15,17 @@ cd Online_Testing
 mariadb-docker_1  | 2020-05-06 11:24:35 0 [Note] mysqld: ready for connections.   
 (Optional) Connect with a browser
 ```bash
-google-chrome http://localhost:50195/index.php
-google-chrome http://localhost:50195/Emotion_Regulation_JS/index.php
+google-chrome http://localhost:80/backofficeDashboard.php
+google-chrome http://localhost:80/index.php
+google-chrome http://localhost:80/Emotion_Regulation_JS/index.php
 ```
 
 # SQL
-Put all migration files in the folder sql.
+Put all migration files in the folder ./migration
+
+# Gitlab
+All the CI (continuous integration) is managed by gitlab (./.gitlab-ci.yml).   
+On each commit, 3 docker images (Base, Dev and Prod) are built and pushed to a private gitlab registry.
 
 # Command line to php or mariadb
 ```bash
@@ -38,7 +43,6 @@ sql : all sql files executed on start.
 src/index.php : main app entry point.   
 src/task : tasks.   
 src/task/jsPsych-master : web framework.   
-
 
 # AWS
 ## 1. Config sur console aws
