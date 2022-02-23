@@ -10,6 +10,7 @@ services:
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
       - ./migration:/migration
+      - ./dump:/dump
     expose:
       - 3306
 
