@@ -78,6 +78,12 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
         default: false,
         description: 'If true, then a timer will appear next to the prompt.'
       },
+      reward: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Reward',
+        default: null,
+        description: 'The bonus of this trial.'
+      },
     }
   }
 
@@ -88,10 +94,17 @@ jsPsych.plugins["html-button-response-WH"] = (function() {
     var timeDiff;
     var html = '';
 
+    html += '<div>'
     // show timer if needed
     if (trial.timer){
-       html += '<canvas class="jspsych-html-timer"></canvas>';
+      html += '<canvas class="jspsych-html-timer" style="float: none;"></canvas>';
     }
+    // show the bonus
+    if (trial.reward !== null){
+      var points = trial.reward == 1 ? 'point':'points';
+      html += '<p style="float: right;">Vous jouez pour '+trial.reward+' ' + points + '</p>';
+    };
+    html += '</div>'
 
     // display stimulus
     html += '<div id="jspsych-html-button-response-stimulus">'+trial.stimulus+'</div>';

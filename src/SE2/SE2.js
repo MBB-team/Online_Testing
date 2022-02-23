@@ -111,6 +111,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         stimulus: grid_stimuli[trial_counter],
         choices: [],
         trial_duration: 5000,
+        reward: rew,
         timer: true,
         on_start: function(flip){
           var data = jsPsych.data.get().last(4).values()[0];
