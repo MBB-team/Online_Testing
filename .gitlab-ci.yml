@@ -3,7 +3,6 @@ stages:
   - dev docker image
   - prod docker image
   - deploy staging
-  # - destroy
 
 variables:
   CONTAINER_BASE_IMAGE: $CI_REGISTRY_IMAGE/app-base:$CI_COMMIT_REF_NAME
@@ -76,20 +75,3 @@ deploy staging:
   rules:
     - if: '$CI_COMMIT_REF_NAME == "develop"'
       when: on_success
-
-# destroy_infra_staging:
-#   stage: destroy
-#   variables:
-#     APP_NAME: $CI_PROJECT_NAME
-#     ENVIRONMENT: staging
-#     REF_NAME: $CI_COMMIT_REF_NAME
-#     TARGET_AWS_ACCOUNT: $AWS_ACCOUNT_DEV
-#     VAULT_ENV_ROLE: assume-role-dev
-#     SKIP_TERRAFORM_PROCESS: "false"
-#   trigger:
-#     project: icm-institute/iconics/software-factory/deployer
-#     branch: next
-#     strategy: depend # wait result of deployer pipeline to get state of main pipeline
-#   rules:
-#     # Will include the job if the build if for the master branch
-#     - if: '$CI_COMMIT_REF_NAME =~ /^destroy-infra/'

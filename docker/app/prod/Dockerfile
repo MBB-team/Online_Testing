@@ -18,5 +18,7 @@ COPY src/portailLib/backofficeSecrets_template.php /var/www/html/portailLib/back
 # COPY sql migration files
 RUN mkdir /sql
 COPY sql/ /sql/
+RUN mkdir /migration
+COPY migration/ /migration/
 
 WORKDIR /var/www/html/

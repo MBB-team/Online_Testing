@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - ./sql:/docker-entrypoint-initdb.d # excute all SQL files in this folder
+      - ./migration:/migration
     expose:
       - 3306
 
