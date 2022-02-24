@@ -26,6 +26,7 @@ Put all migration files in the folder ./migration
 # Gitlab
 All the CI (continuous integration) is managed by gitlab (./.gitlab-ci.yml).   
 On each commit, 3 docker images (Base, Dev and Prod) are built and pushed to a private gitlab registry.
+![Alt text](docs/infra/infra_doc.drawio.png?raw=true "Infrastructure")
 
 # Command line to php or mariadb
 ```bash
