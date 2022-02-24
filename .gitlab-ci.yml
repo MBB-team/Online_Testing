@@ -71,7 +71,7 @@ deploy staging:
     SKIP_TERRAFORM_PROCESS: "true"
   trigger:
     project: icm-institute/iconics/software-factory/deployer
-    branch: next
+    branch: cogmood
     strategy: depend
   rules:
     - if: '$CI_COMMIT_REF_NAME == "develop"'
