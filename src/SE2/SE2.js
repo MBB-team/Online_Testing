@@ -1,4 +1,4 @@
-function SE2(nbBlocks, nbTrials, cond_pt, points_total){
+function SE2(nbBlocks, nbTrials){
 
   // INITIALISATION //
   var timelineTask  = [];
@@ -7,18 +7,36 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
   var nTS           = 0; // the number of target scores achieved by the pts
   var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter  = 0; // counter for looping through test trials during execution
-  var clicked_i     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
   var conf_counter  = 0; // counter for looping through effort question trials
   var nbTperB       = nbTrials/nbBlocks;
   var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
-  // var points_total  = 0;
+  var points_total  = 0;
   var EnS_choices = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6', '7', '8']];
 
 
   // Conditions
   var eff_q_pt = eff_q[randi(0,eff_q.length)];
+
+  var cheat = {
+    type: 'html-button-response-WH',
+    stimulus: '<p style="width:'+screen.width/2+'px">Ayant déjà mené une version similaire de cette expérience, nous pourrons détecter si vous avez triché lors d&#39un exercice et <b>vous ne recevrez pas de paiement</b> si nous soupçonnons que c&#39est le cas.</p>',
+    choices: ['Je m&#39engage à ne pas tricher'],
+    data: {
+      blockNb: -1,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: TS,
+      reward: 999,
+      test_part: 'cheat',
+      nTS: 999
+    }
+  };
+
+  timelineTask.push(cheat);
+
 
   // START OF BLOCK //
   for (var block_i = 0; block_i < nbBlocks; block_i++) {
@@ -32,16 +50,20 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
       var trial_n = trial_i + 1;
       var nbTrial_counter = trial_counter+1;
 
-      var rew = exp.rew[exp.rew_levels[cond_pt[trial_i]]];
-      var TS  = exp.TS[exp.TS_levels[cond_pt[trial_i]]];
+      var rew = exp.rew[exp.rew_levels[cond_pt[trial_counter]]];
+      var TS  = exp.TS[exp.TS_levels[cond_pt[trial_counter]]];
       var points = rew==1? 'point':'points';
-
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
         stimulus: '<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p>',
         choices: ['Ok'],
-        // button_html: '<button class="jspsych-btn" style="font-size: ">%choice%</button>',
+        on_start: function(){
+          console.log(correct_i)
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -195,13 +217,10 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
           if (data.correct){
             nCorrect++
             correct_i[test_counter] = 1;
+            console.log("correct")
           }
           clicked = [data.response_row, data.response_col];
-          clicked_i[test_counter] = clicked;
-          test_counter++
-          // if (data.button_pressed == 1){
-          //   jsPsych.endCurrentTimeline();
-          // }
+          test_counter++;
         },
         data: {
           blockNb: block_i,
@@ -237,7 +256,7 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
       var EnS = {
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-        choices: EnS_choices[exp.TS_levels[cond_pt[trial_i]]],
+        choices: EnS_choices[exp.TS_levels[cond_pt[trial_counter]]],
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -299,7 +318,6 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
           nCorrect       = 0;
           correct_i      = [0,0,0,0,0,0,0,0];
           test_counter   = 0;
-          clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
         },
         data: {
           blockNb: block_i,
@@ -345,7 +363,6 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
             nCorrect       = 0;
             correct_i      = [0,0,0,0,0,0,0,0];
             test_counter   = 0;
-            clicked_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
           }
         },
         data: {
@@ -384,15 +401,16 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
 
     } // trial
   } // block
-  var points_fin = points_total == 1 ? 'point':'points';
   var finish = {
     type: 'html-button-response-WH',
     stimulus: function(){
-      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
+      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length + 1;
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
-      var euro_rew   = Math.round((((max_euro - min_euro)*(points_total - 0))/(max_points - 0)) + min_euro);
-      var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>En total, vous avez gagné : <b>'+points_total+' '+points_fin+'</b>. Vous recevrez : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
+      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var points_fin = total_points == 1 ? 'point':'points';
+      var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
+      var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>En total, vous avez gagné : <b>'+total_points+' '+points_fin+'</b>. Vous recevrez : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
       return finish_stim;
     },
     choices: ['Fin'],
@@ -400,8 +418,9 @@ function SE2(nbBlocks, nbTrials, cond_pt, points_total){
       var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
-      var euro_rew   = Math.round((((max_euro - min_euro)*(points_total - 0))/(max_points - 0)) + min_euro);
-      data.nTS = JSON.stringify([nTS, points_total, euro_rew]);
+      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
+      data.nTS = JSON.stringify([nTS, total_points, euro_rew]);
     },
     data: {
       blockNb: block_i,

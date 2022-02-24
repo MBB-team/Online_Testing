@@ -81,7 +81,7 @@ Per trial:
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 7;
+  const nbInstr              = 8;
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {
@@ -130,8 +130,8 @@ Per trial:
       delay_after: 300,
       check_fullscreen: true,
       data: {
-        blockNb: 99,
-        trialNb: 99,
+        blockNb: 999,
+        trialNb: 999,
         TinB: 999,
         testNb: 999,
         target_score: 999,
@@ -146,8 +146,8 @@ Per trial:
           message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
           fullscreen_mode: false,
           data: {
-            blockNb: 99,
-            trialNb: 99,
+            blockNb: 999,
+            trialNb: 999,
             TinB: 999,
             testNb: 999,
             target_score: 999,
@@ -189,7 +189,9 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
+    // var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
+    var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
+
     var cond_pt_ind = Array(exp.nbBlocks);
 
     for (var bNi=0; bNi<exp.nbBlocks; bNi++){
@@ -197,7 +199,7 @@ Per trial:
       ind = ind.map(x => x + bNi*exp.TS_levels.length);
       cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
     }
-    cond_pt_ind = cond_pt_ind.flat()
+    cond_pt_ind = cond_pt_ind.flat();
 
     // (pseudo-)shuffle grids
     var grid_indexes_shuffled = Array(exp.nbTrials);
@@ -250,12 +252,13 @@ Per trial:
 
       // Execute the experiment
       // Training phase
+      var points_total = 0;
       var task_training = SE2_training();
       for (var i = 0; i < task_training.length; i++){
-        exp_timeline.push(task_training[0][i]);
+        // exp_timeline.push(task_training[i]);
       };
 
-      var task = SE2(exp.nbBlocks, exp.nbTrials, cond_pt, points_total);
+      var task = SE2(exp.nbBlocks, exp.nbTrials);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
       };

@@ -13,6 +13,7 @@ function SE2_training(){
   var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
   var grid_dim_train      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var points_total_train  = 0;
+
   // First instructions
   var instructions1 = {
     type: 'instructions-WH',
@@ -362,6 +363,7 @@ function SE2_training(){
         test_counter_train   = 0;
         clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
       }
+      data.nTS = points_total_train;
     },
     data: {
       blockNb: -1,
@@ -418,5 +420,5 @@ function SE2_training(){
 
 
 
-  return [timelineTask_train, points_total_train]
+  return timelineTask_train;
 }
