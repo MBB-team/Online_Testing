@@ -57,6 +57,7 @@ build and push prod image:
       changes:
         - docker/*
         - sql/*
+        - migration/*
         - src/*
 
 deploy staging:
