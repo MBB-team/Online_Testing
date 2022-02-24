@@ -33,6 +33,7 @@ Per trial:
             <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
             <script   src  = 'Stimuli/Timer/timer.js'></script>
             <script   src  = 'SE2.js'></script>
+            <script   src  = 'SE2_training.js'></script>
             <script   src = "../js/dataSaver.js"></script>
             <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link     rel='icon' href='/favicon.ico' />
@@ -80,7 +81,7 @@ Per trial:
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 35;
+  const nbInstr              = 7;
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {
@@ -129,11 +130,12 @@ Per trial:
       delay_after: 300,
       check_fullscreen: true,
       data: {
-        blockNb: 999,
-        trialNb: 999,
+        blockNb: 99,
+        trialNb: 99,
         TinB: 999,
         testNb: 999,
         target_score: 999,
+        reward: 999,
         test_part: 'firstFullscreen',
         nTS: 999
       }
@@ -144,11 +146,12 @@ Per trial:
           message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
           fullscreen_mode: false,
           data: {
-            blockNb: 999,
-            trialNb: 999,
+            blockNb: 99,
+            trialNb: 99,
             TinB: 999,
             testNb: 999,
             target_score: 999,
+            reward: 999,
             test_part: 'fullscreenExp',
             nTS: 999
           }
@@ -203,9 +206,11 @@ Per trial:
     }
     var square_size = screen.height/6;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt);
+    var all_flip_stimuli       = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt);
+    var all_flip_stimuli_train = generate_grids2(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [0])
 
     var grid_stimuli = all_flip_stimuli;
+    var grid_stimuli_train = all_flip_stimuli_train;
     // var grid_stimuli = []; // slice array into chunks of 8
     // for (var i=0; i<all_flip_stimuli.length; i+=8) {
     //      grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
@@ -244,27 +249,16 @@ Per trial:
       exp_timeline.push(firstFullscreen)
 
       // Execute the experiment
-      var instructions = {
-        type: 'instructions-WH',
-        pages: instrImg_html,
-        show_clickable_nav: true,
-        data: {
-          blockNb: 999,
-          trialNb: 999,
-          TinB: 999,
-          testNb: 999,
-          target_score: 999,
-          test_part: 'instructions',
-          nTS: 999
-        }
+      // Training phase
+      var task_training = SE2_training();
+      for (var i = 0; i < task_training.length; i++){
+        exp_timeline.push(task_training[i]);
       };
-
-      // exp_timeline.push(instructions);
 
       var task = SE2(exp.nbBlocks, exp.nbTrials, cond_pt);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
-      }
+      };
 
       jsPsych.init({
         timeline: exp_timeline,

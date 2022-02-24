@@ -35,6 +35,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_i]]];
       var TS  = exp.TS[exp.TS_levels[cond_pt[trial_i]]];
       var points = rew==1? 'point':'points'
+
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
         type: 'html-button-response-WH',
@@ -295,15 +296,6 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         target_score: TS,
         reward: rew,
         target_correct: target_corr_i,
-        on_start: function(feedback){
-          var TS_current = feedback.target_score;
-          var rew_current = feedback.reward;
-          var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
-          if (nCorrect >= TS_current){
-            points_total = points_total + rew_current;
-            nTS++;
-          }
-        },
         on_finish: function(){ // reset counters
           nCorrect       = 0;
           correct_i      = [0,0,0,0,0,0,0,0];
