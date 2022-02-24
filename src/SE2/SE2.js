@@ -1,4 +1,4 @@
-function SE2(nbBlocks, nbTrials, cond_pt){
+function SE2(nbBlocks, nbTrials, cond_pt, points_total){
 
   // INITIALISATION //
   var timelineTask  = [];
@@ -13,7 +13,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
   var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
-  var points_total  = 0;
+  // var points_total  = 0;
   var EnS_choices = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6', '7', '8']];
 
 
@@ -34,7 +34,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
 
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_i]]];
       var TS  = exp.TS[exp.TS_levels[cond_pt[trial_i]]];
-      var points = rew==1? 'point':'points'
+      var points = rew==1? 'point':'points';
 
       // TRIAL NUMBER and TARGET SCORE //
       var trial_number = {
@@ -192,7 +192,6 @@ function SE2(nbBlocks, nbTrials, cond_pt){
         choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis pas s&ucirc;r.e'],
         on_start: function(){var clicked = [null,null]},
         on_finish: function(data){
-          console.log(data)
           if (data.correct){
             nCorrect++
             correct_i[test_counter] = 1;
@@ -309,7 +308,7 @@ function SE2(nbBlocks, nbTrials, cond_pt){
           testNb: 999,
           target_score: TS,
           reward: rew,
-          test_part: 'feedback',
+          test_part: 'feedback_grid',
           nTS: 999
         }
       }; // fb with grid

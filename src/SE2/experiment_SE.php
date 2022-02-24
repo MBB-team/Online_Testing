@@ -252,10 +252,10 @@ Per trial:
       // Training phase
       var task_training = SE2_training();
       for (var i = 0; i < task_training.length; i++){
-        exp_timeline.push(task_training[i]);
+        exp_timeline.push(task_training[0][i]);
       };
 
-      var task = SE2(exp.nbBlocks, exp.nbTrials, cond_pt);
+      var task = SE2(exp.nbBlocks, exp.nbTrials, cond_pt, points_total);
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
       };
