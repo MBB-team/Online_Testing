@@ -99,7 +99,7 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
     html += '<div><canvas class="jspsych-html-timer"></canvas></div>';
     html += '<div style="">'+trial.stimulus+'</div>';
     var points = trial.reward == 1 ? 'point':'points';
-    html += '<div><p id="jspsych-html-bonus">Bonus :<br>'+trial.reward+' ' + points + '</p></div>';
+    html += '<div id="jspsych-html-bonus"><p style="margin:0%">Bonus :<br>'+trial.reward+' ' + points + '</p></div>';
     html += '</div>';
 
     //display buttons
@@ -139,7 +139,7 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
       can.height = timer_size;
       can.width = timer_size;
       var bonus = display_element.querySelector('#jspsych-html-bonus')
-      bonus.style.width = timer_size;
+      bonus.style.width = ''+timer_size+'px';
 
       // document.body.appendChild(can);
       ctx.font = "normal 30px Arial";

@@ -209,7 +209,7 @@ function SE2(nbBlocks, nbTrials){
         response_ends_trial: true,
         highlight: time.highlight,
         allow_nontarget_responses: true,
-        prompt: '<p id="jspsych-prompt" style="margin:0px"><p><b>Cliquez</b> sur l&#39autre chiffre de la paire.</p>',
+        prompt: '<p id="jspsych-prompt" style="margin:0px"><p style="margin:0px"><b>Cliquez</b> sur l&#39autre chiffre de la paire.</p>',
         pre_target_duration: 0,
         choices: ['OK, je suis s&ucirc;r.e','OK, mais je ne suis pas s&ucirc;r.e'],
         on_start: function(){var clicked = [null,null]},
@@ -217,7 +217,6 @@ function SE2(nbBlocks, nbTrials){
           if (data.correct){
             nCorrect++
             correct_i[test_counter] = 1;
-            console.log("correct")
           }
           clicked = [data.response_row, data.response_col];
           test_counter++;
