@@ -21,7 +21,7 @@ function SE2(nbBlocks, nbTrials){
 
   var cheat = {
     type: 'html-button-response-WH',
-    stimulus: '<p style="width:'+screen.width/2+'px">Ayant déjà mené une version similaire de cette expérience, nous pourrons détecter si vous avez triché lors d&#39un exercice et <b>vous ne recevrez pas de paiement</b> si nous soupçonnons que c&#39est le cas.</p>',
+    stimulus: '<p style="width:'+screen.width*0.66+'px">Ayant déjà mené une version similaire de cette expérience, nous pourrons détecter si vous avez triché lors d&#39un exercice et <b>vous ne recevrez pas de paiement</b> si nous soupçonnons que c&#39est le cas.</p>',
     choices: ['Je m&#39engage à ne pas tricher'],
     data: {
       blockNb: -1,

@@ -15,10 +15,10 @@ function SE2_training(){
   var points_total_train  = 0;
 
   // First instructions
-  var instructions1 = {
-    type: 'instructions-WH',
-    pages: instrImg_html.slice(0,2),
-    show_clickable_nav: true,
+  var instructions0 = {
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[0]],
+    choices: ['Ok'],
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -28,7 +28,25 @@ function SE2_training(){
       test_part: 'instructions',
       nTS: 999
     }
-  };
+  }
+
+  timelineTask_train.push(fullscreenExp);
+  timelineTask_train.push(instructions0);
+
+  var instructions1 = {
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[1]],
+    choices: ['Ok'],
+    data: {
+      blockNb: 999,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: 999,
+      test_part: 'instructions',
+      nTS: 999
+    }
+  }
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions1);
@@ -85,9 +103,9 @@ function SE2_training(){
 
   // instructions2
   var instructions2 = {
-    type: 'instructions-WH',
-    pages: [instrImg_html[2]],
-    show_clickable_nav: true,
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[2]],
+    choices: ['Ok'],
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -97,7 +115,7 @@ function SE2_training(){
       test_part: 'instructions',
       nTS: 999
     }
-  };
+  }
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions2);
@@ -149,9 +167,9 @@ function SE2_training(){
 
   // instructions3
   var instructions3 = {
-    type: 'instructions-WH',
-    pages: [instrImg_html[3]],
-    show_clickable_nav: true,
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[3]],
+    choices: ['Ok'],
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -161,7 +179,7 @@ function SE2_training(){
       test_part: 'instructions',
       nTS: 999
     }
-  };
+  }
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions3);
@@ -247,9 +265,9 @@ function SE2_training(){
 
   // instructions4
   var instructions4 = {
-    type: 'instructions-WH',
-    pages: [instrImg_html[4]],
-    show_clickable_nav: true,
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[4]],
+    choices: ['Ok'],
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -259,7 +277,7 @@ function SE2_training(){
       test_part: 'instructions',
       nTS: 999
     }
-  };
+  }
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions4);
@@ -286,9 +304,9 @@ function SE2_training(){
 
   // instructions5
   var instructions5 = {
-    type: 'instructions-WH',
-    pages: [instrImg_html[5]],
-    show_clickable_nav: true,
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[5]],
+    choices: ['Ok'],
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -298,7 +316,7 @@ function SE2_training(){
       test_part: 'instructions',
       nTS: 999
     }
-  };
+  }
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions5);
@@ -403,16 +421,15 @@ function SE2_training(){
     stimulus: [instrImg_html[6]],
     choices: ['C&#39est parti !'],
     data: {
-      blockNb: -1,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
-      target_score: train_TS,
-      reward: train_rew,
+      target_score: 999,
       test_part: 'instructions',
       nTS: 999
     }
-  }; // trial number
+  }
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions6);
