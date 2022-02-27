@@ -51,30 +51,28 @@ function SE2_training(){
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions1);
 
-  // TRIAL NUMBER and TARGET SCORE //
-  var trial_number_train = {
+  var instructions2 = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p>',
+    stimulus: [instrImg_html[2]],
     choices: ['Ok'],
-    // button_html: '<button class="jspsych-btn" style="font-size: ">%choice%</button>',
     data: {
-      blockNb: -1,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
-      target_score: train_TS,
-      reward: train_rew,
-      test_part: 'trialNb_train',
+      target_score: 999,
+      test_part: 'instructions',
       nTS: 999
     }
-  }; // trial number
+  }
 
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(trial_number_train);
+  timelineTask_train.push(instructions2);
 
   // How much "effort" does the participant want?
   var effort_want_train = {
     type: 'html-slider-response-effort-want-WH',
+    prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
     stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
     labels: ['0 secondes','60 secondes'],
     min: 0,
@@ -102,9 +100,9 @@ function SE2_training(){
   timelineTask_train.push(effort_want_train);
 
   // instructions2
-  var instructions2 = {
+  var instructions3 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[2]],
+    stimulus: [instrImg_html[3]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -118,7 +116,7 @@ function SE2_training(){
   }
 
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions2);
+  timelineTask_train.push(instructions3);
 
   var effort_phase = {
     type: 'html-button-response-WH',
@@ -166,9 +164,9 @@ function SE2_training(){
   timelineTask_train.push(flip_train);
 
   // instructions3
-  var instructions3 = {
+  var instructions4 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[3]],
+    stimulus: [instrImg_html[4]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -182,7 +180,7 @@ function SE2_training(){
   }
 
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions3);
+  timelineTask_train.push(instructions4);
 
   var test_phase = {
     type: 'html-button-response-WH',
@@ -263,10 +261,10 @@ function SE2_training(){
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(test_train);
 
-  // instructions4
-  var instructions4 = {
+  // instructions5
+  var instructions5 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[4]],
+    stimulus: [instrImg_html[5]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -280,7 +278,7 @@ function SE2_training(){
   }
 
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions4);
+  timelineTask_train.push(instructions5);
 
   // EXPECTATION QUESTION //
   var EnS_train = {
@@ -303,9 +301,9 @@ function SE2_training(){
   timelineTask_train.push(EnS_train);
 
   // instructions5
-  var instructions5 = {
+  var instructions6 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[5]],
+    stimulus: [instrImg_html[6]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -319,13 +317,13 @@ function SE2_training(){
   }
 
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions5);
+  timelineTask_train.push(instructions6);
 
   var feedback_with_grid_train = {
     type: 'html-button-response-fb-WH',
     stimulus: [grid_stimuli_train],
     grid: true,
-    choices: ['Ok'],
+    choices: ['Terminer l&#39entra&icirc;nement'],
     target: target_i_train,
     correct_responses: function(){return correct_i_train},
     target_score: train_TS,
@@ -353,7 +351,7 @@ function SE2_training(){
     type: 'html-button-response-fb-WH',
     stimulus: '',
     grid: false,
-    choices: ['Montrez-moi la grille','Passer au prochain exercice'],
+    choices: ['Montrez-moi la grille','Terminer l&#39entra&icirc;nement'],
     target: target_i_train,
     correct_responses: function(){return correct_i_train},
     target_score: train_TS,
@@ -416,10 +414,10 @@ function SE2_training(){
   timelineTask_train.push(if_explicit_feedback_train);
 
   // instructions - resume
-  var instructions6 = {
+  var instructions7 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[6]],
-    choices: ['C&#39est parti !'],
+    stimulus: [instrImg_html[7]],
+    choices: ['Commencer le test principal !'],
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -432,7 +430,7 @@ function SE2_training(){
   }
 
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions6);
+  timelineTask_train.push(instructions7);
 
 
 

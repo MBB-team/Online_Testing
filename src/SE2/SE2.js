@@ -53,36 +53,11 @@ function SE2(nbBlocks, nbTrials){
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_counter]]];
       var TS  = exp.TS[exp.TS_levels[cond_pt[trial_counter]]];
       var points = rew==1? 'point':'points';
-      // TRIAL NUMBER and TARGET SCORE //
-      var trial_number = {
-        type: 'html-button-response-WH',
-        stimulus: '<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p>',
-        choices: ['Ok'],
-        on_start: function(){
-          console.log(correct_i)
-          nCorrect       = 0;
-          correct_i      = [0,0,0,0,0,0,0,0];
-          test_counter   = 0;
-        },
-        data: {
-          blockNb: block_i,
-          trialNb: trial_counter,
-          TinB: trial_i,
-          testNb: 999,
-          target_score: TS,
-          reward: rew,
-          test_part: 'trialNb',
-          nTS: 999
-        }
-      }; // trial number
-
-      timelineTask.push(fullscreenExp);
-      timelineTask.push(trial_number)
-
 
       // How much "effort" does the participant want?
       var effort_want = {
         type: 'html-slider-response-effort-want-WH',
+        prompt: '<p> Exercice : '+nbTrial_counter+'/'+nbTrials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p><div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         labels: ['0 secondes','60 secondes'],
         min: 0,
@@ -90,6 +65,11 @@ function SE2(nbBlocks, nbTrials){
         start: function(){return randi(0,60);},
         require_movement: true,
         effort: true,
+        on_start: function(){
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+        },
         on_finish: function(data){
           flip_fb = data.conf_response;
         },
@@ -135,14 +115,9 @@ function SE2(nbBlocks, nbTrials){
         type: 'html-button-response-effort-WH',
         stimulus: grid_stimuli[trial_counter],
         choices: [],
-        trial_duration: 5000,
+        trial_duration: function(){ return flip_fb*1000;},
         reward: rew,
         timer: true,
-        on_start: function(flip){
-          var data = jsPsych.data.get().last(4).values()[0];
-          var effort_want_s = data.conf_response;
-          flip.trial_duration = effort_want_s*1000; // x1000 to put in ms
-        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,

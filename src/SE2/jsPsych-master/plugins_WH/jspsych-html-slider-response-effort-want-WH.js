@@ -113,6 +113,11 @@ jsPsych.plugins['html-slider-response-effort-want-WH'] = (function() {
     var timeDiff;
 
     var html = '<div id="jspsych-html-slider-response-wrapper" style="margin: 50px 0px;">';
+
+    if (trial.prompt !== null){
+      html += trial.prompt;
+    }
+    
     html += '<div id="jspsych-html-slider-response-stimulus">' + trial.stimulus + '</div>';
     html += '<div class="jspsych-html-slider-response-container" style="display:flex; position:relative; margin: 0 auto 1em auto; ';
     if(trial.slider_width !== null){
@@ -133,10 +138,6 @@ jsPsych.plugins['html-slider-response-effort-want-WH'] = (function() {
     html += '</div>';
     html += '</div>';
     html += '</div>';
-
-    if (trial.prompt !== null){
-      html += trial.prompt;
-    }
 
     // add submit button
     html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" '+ (trial.require_movement ? "disabled" : "") + '>'+trial.button_label+'</button>';
