@@ -189,8 +189,8 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    // var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
-    var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
+    var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
+    // var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
 
     var cond_pt_ind = Array(exp.nbBlocks);
 
