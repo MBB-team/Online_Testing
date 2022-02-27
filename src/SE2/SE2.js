@@ -282,7 +282,7 @@ function SE2(nbBlocks, nbTrials){
         type: 'html-button-response-fb-WH',
         stimulus: grid_stimuli[trial_counter],
         grid: true,
-        choices: ['Passer au prochain excercice'],
+        choices: ['Passer au prochain exercice'],
         target: target_i,
         correct_responses: function(){return correct_i},
         target_score: TS,
