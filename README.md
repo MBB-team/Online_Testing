@@ -1,28 +1,32 @@
 # Online_testing
-Codes for Online Testing Using JavaScript and JsPsych 
+Codes for Online Testing Using JavaScript and JsPsych.
 
 # Installation
-1. Copy Online_Testing/.env.tpl to Online_Testing/.env   
-2. Copy Online_Testing/portailLib/database_config_template.php to Online_Testing/portailLib/database_config.php   
-3. Execute this :   
+1. Clone the project
+2. Copy Online_Testing/.env.tpl to Online_Testing/.env
+3. Replace variables such as gitlab username and token in Online_Testing/.env
+4. Ensure passwords are set in Online_Testing/portailLib/database_config.php and Online_Testing/src/portailLib/backofficeSecrets.php
+5. Execute this :   
 ```bash
 cd Online_Testing
-sudo rm -rf Online_Testing/docker/letsencrypt
-docker system prune --all --force # Reset docker
-docker-compose up --force-recreate # Start docker images : see docker-compose.yml
+./start.sh init
 ```
-4. Wait for mariadb initialization before connecting with a client :   
+(Optional) Wait for mariadb initialization before connecting with a client :   
 mariadb-docker_1  | 2020-05-06 11:24:35 0 [Note] mysqld: ready for connections.   
-5. Connect with a browser
+(Optional) Connect with a browser
 ```bash
-firefox http://localhost:50195/index.php
-firefox http://localhost:50195/Emotion_Regulation_JS/index.php
+google-chrome http://localhost:80/backofficeDashboard.php
+google-chrome http://localhost:80/index.php
+google-chrome http://localhost:80/Emotion_Regulation_JS/index.php
 ```
 
 # SQL
-Exemple 1 : I want to INSERT new data in an existing table. => Use /sql/02.insert.xx_test.sql with INSERT statements.
-Exemple 2 : I want to CREATE a new table. => Use /sql/01.create.xx_newtable.sql with CREATE statements.
-Exemple 3 : I want to add or remove a column from an existing table. => Use /migration/01.alter.xx_alter.sql with ALTER statements.
+Put all migration files in the folder ./migration
+
+# Gitlab
+All the CI (continuous integration) is managed by gitlab (./.gitlab-ci.yml).   
+On each commit, 3 docker images (Base, Dev and Prod) are built and pushed to a private gitlab registry.
+![Alt text](docs/infra/infra_doc.drawio.png?raw=true "Infrastructure")
 
 # Command line to php or mariadb
 ```bash
@@ -30,7 +34,7 @@ docker-compose exec php bash
 ```
 
 # Debug
-To debug php, use Vscode with Xdebug.   
+To debug php, use Vscode with Xdebug. Find and replace your docker ip with `ip addr show docker0` in docker-compose.yml, section XDEBUG_CONFIG.   
 To debug js, use Chrome debug tool.   
 To debug sql, use Dbeaver.
 
@@ -40,7 +44,6 @@ sql : all sql files executed on start.
 src/index.php : main app entry point.   
 src/task : tasks.   
 src/task/jsPsych-master : web framework.   
-
 
 # AWS
 ## 1. Config sur console aws
@@ -56,86 +59,72 @@ Elastic ip : associer l'adresse
 
 ## 2. SSH
 ssh -i "iconics-staging.pem" ec2-user@172.21.2.249 # replace ip with private ip
-### Install and start Docker
-sudo yum update -y   
-sudo amazon-linux-extras install docker -y   
-sudo service docker start   
-### Add ec2-user to the Docker group
-sudo usermod -a -G docker ec2-user  
-sudo systemctl enable docker   
-### Install Docker-Compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose   
-sudo chmod +x /usr/local/bin/docker-compose   
-docker-compose --version   
-### Set Timezone
+```bash
+# Install Docker
+yum update -y
+amazon-linux-extras install docker epel -y
+systemctl start docker.service
+systemctl enable docker
+groupadd docker
+usermod -aG docker $USER
+newgrp docker
+
+# Install Docker-Compose
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose --version
+
+# Set Timezone
 sudo rm /etc/localtime   
 sudo ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
-### Install git
-sudo yum install -y git
+```
 
 ## 3. Clone source code
-git clone https://github.com/MBB-team/Online_Testing   
-cd Online_Testing/   
-git checkout prod
+```bash
+git clone https://gitlab.com/icm-institute/mbb/cogmood/cogmood
+cd cogmood/
+git checkout develop
+```
 
 ## 4. Config
+```bash
 cp .env.tpl .env
-vim .env
+vim .env # set database password
 cp src/portailLib/database_config_session_template.php src/portailLib/database_config_session.php
-vim src/portailLib/database_config_session.php
+vim src/portailLib/database_config_session.php # set database password
 cp src/portailLib/backofficeSecrets_template.php src/portailLib/backofficeSecrets.php
-vim src/portailLib/backofficeSecrets.php
+vim src/portailLib/backofficeSecrets.php # set backend password
+```
 
-## 5. Configure letsencrypt
-cd Online_Testing/   
-docker-compose down --rmi all --volumes --remove-orphans   
-docker system prune --all --force
-docker volume prune -f
-sudo rm -rf docker/letsencrypt
-docker-compose -f docker-compose-prod.yml up --force-recreate
-sudo vim /home/ec2-user/Online_Testing/docker/letsencrypt/nginx/site-confs/default
-Change :
-location / {
-try_files $uri $uri/ /index.html /index.php?$args =404;
-}
-To :
-location / {
-  proxy_pass http://php-docker:80/;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-}
-Delete section
-location ~ \.php$ {
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass 127.0.0.1:9000;
-        fastcgi_index index.php;
-        include /etc/nginx/fastcgi_params;
-}
-Then restart docker-compose :
-docker-compose -f docker-compose-prod.yml up --force-recreate
-
-## 6. Open ports on aws
+## 5. Open ports on aws
 New security group -> Allow https and mariadb port   
 Assign security group
 
-## 7. Connect to the url
-firefox https://mbb-sondage.icm-institute.org/
+## 6. Connect to the url
+google-chrome https://cogmood-staging.icm-institute.org/
 
 
 # Create dump
+```bash
 docker-compose exec -T mariadb-docker bash -c "mysqldump -u root --password=${SQLpassword} databaseEmo > /save/dumps/${NOW}_refresh_dump.sql"
+```
 
-# Restaure dump
+# Restore dump
+```bash
 docker-compose exec -T mariadb-docker bash -c "mysqladmin -u root --password=${SQLpassword} -h localhost drop databaseEmo --force"
 sleep 10
 docker-compose exec -T mariadb-docker bash -c "mysql -u root --password=${SQLpassword} -h localhost -e 'create database databaseEmo;'"
 sleep 3
 docker-compose exec -T mariadb-docker bash -c "mysql -u root --password=${SQLpassword} -h localhost databaseEmo < /save/dumps/${NOW}_refresh_dump.sql"
 countverifafter=`docker-compose exec -T mariadb-docker bash -c "mysql -u root --password=${SQLpassword} -h localhost -e 'select count(*) from databaseEmo.tableEmo;'" |tail -1`
+```
 
 # Deploy a new version
+```bash
 cd ~/Online_Testing   
 docker-compose down
 git checkout prod   
 git pull   
 docker-compose up -d   
+```
