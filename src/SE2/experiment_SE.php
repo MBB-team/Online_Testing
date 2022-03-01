@@ -81,7 +81,7 @@ Per trial:
                 rewatch:       5000};
 
   // instructions
-  const nbInstr              = 8;
+  const nbInstr              = 7;
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {

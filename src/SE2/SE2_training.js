@@ -17,7 +17,7 @@ function SE2_training(){
   // First instructions
   var instructions0 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[0]],
+    stimulus: '<p style="font-size:70px">Test de métacognition</p><p style="font-size:50px">Veuillez lire attentivement les instructions qui vont suivre.</p>',
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -35,7 +35,7 @@ function SE2_training(){
 
   var instructions1 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[1]],
+    stimulus: [instrImg_html[0]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -53,7 +53,7 @@ function SE2_training(){
 
   var instructions2 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[2]],
+    stimulus: [instrImg_html[1]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -102,7 +102,7 @@ function SE2_training(){
   // instructions2
   var instructions3 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[3]],
+    stimulus: [instrImg_html[2]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -166,7 +166,7 @@ function SE2_training(){
   // instructions3
   var instructions4 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[4]],
+    stimulus: [instrImg_html[3]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -264,7 +264,7 @@ function SE2_training(){
   // instructions5
   var instructions5 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[5]],
+    stimulus: [instrImg_html[4]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -303,7 +303,7 @@ function SE2_training(){
   // instructions5
   var instructions6 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[6]],
+    stimulus: [instrImg_html[5]],
     choices: ['Ok'],
     data: {
       blockNb: 999,
@@ -416,7 +416,7 @@ function SE2_training(){
   // instructions - resume
   var instructions7 = {
     type: 'html-button-response-WH',
-    stimulus: [instrImg_html[7]],
+    stimulus: [instrImg_html[6]],
     choices: ['Commencer le test principal !'],
     data: {
       blockNb: 999,
