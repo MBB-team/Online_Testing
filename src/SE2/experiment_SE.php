@@ -164,7 +164,7 @@ Per trial:
     var instrImg = [];
     var instrImg_html = [];
     for (var t=1; t <= nbInstr; t++){
-      instrImg[t-1] = 'Stimuli/Instruction_slides/Slide'+t+'.PNG'; // pre-load all instructions
+      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.PNG'; // pre-load all instructions
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
     };
 
