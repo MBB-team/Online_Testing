@@ -321,7 +321,6 @@ function SE2(nbBlocks, nbTrials){
           var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
           if (nCorrect >= TS_current){
             points_total = points_total + rew_current;
-            console.log(points_total)
             nTS++;
             if (rew_current == 1){
               feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
@@ -375,6 +374,34 @@ function SE2(nbBlocks, nbTrials){
 
     } // trial
   } // block
+
+  var score = {
+    type: 'html-button-response-WH',
+    stimulus: '',
+    choices: [],
+    trial_duration: 1,
+    on_finish: function(data){
+      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
+      var max_euro   = exp.rew_euro[1];
+      var min_euro   = exp.rew_euro[0];
+      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
+      data.nTS = JSON.stringify([nTS, total_points, euro_rew]);
+    },
+    data: {
+      blockNb: 999,
+      trialNb: 999,
+      TinB: 999,
+      testNb: 999,
+      target_score: 999,
+      reward: 999,
+      test_part: 'total_score',
+      nTS: 999
+    }
+  }
+
+  timelineTask.push(score);
+
   var finish = {
     type: 'html-button-response-WH',
     stimulus: function(){
@@ -388,14 +415,6 @@ function SE2(nbBlocks, nbTrials){
       return finish_stim;
     },
     choices: ['Fin'],
-    on_finish: function(data){
-      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
-      var max_euro   = exp.rew_euro[1];
-      var min_euro   = exp.rew_euro[0];
-      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
-      var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
-      data.nTS = JSON.stringify([nTS, total_points, euro_rew]);
-    },
     data: {
       blockNb: block_i,
       trialNb: trial_counter,
