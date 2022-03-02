@@ -25,6 +25,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -43,6 +44,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -61,6 +63,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -110,6 +113,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -174,6 +178,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -272,6 +277,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -311,6 +317,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
@@ -424,6 +431,7 @@ function SE2_training(){
       TinB: 999,
       testNb: 999,
       target_score: 999,
+      reward: 999,
       test_part: 'instructions',
       nTS: 999
     }
