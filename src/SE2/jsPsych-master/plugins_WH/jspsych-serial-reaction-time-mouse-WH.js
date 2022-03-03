@@ -276,7 +276,7 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
       var end_time = performance.now();
       var rt = end_time - startTime;
       response.button = choice;
-      response.rt.push = rt;
+      response.rt.push(rt);
 
       // were they correct?
       var nRes = response.row.length;
