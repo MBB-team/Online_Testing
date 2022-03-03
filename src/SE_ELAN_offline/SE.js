@@ -6,6 +6,7 @@ function SE(nbBlocks, nbTrials){
   var flip_counter  = 1; // counting the number of flips on a trial
   var flip_fb;           // giving participant feedback on the number of flips they did
   var nCorrect      = 0; // the number of correct responses given by the pts
+  var nClicked      = 0; // the number of guesses pt makes
   var nTS           = 0; // the number of target scores achieved by the pts
   var test_counter  = 0; // counter for looping through test trials during execution
   var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
@@ -16,20 +17,67 @@ function SE(nbBlocks, nbTrials){
   var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var sliderIni     = Array(2);
 
-  // Target Scores
-  var target_scores = [4, 5, 6, 7, 8];
-  var target_scores_all = (jsPsych.randomization.shuffleNoRepeats(jsPsych.randomization.repeat(target_scores,nbBlocks-2)));
-
-  target_scores_all.unshift(...target_scores);
+  var target_scores = [3, 4, 5, 6, 7];
+  var conf_trials_idx = Array(target_scores.length);
 
   // No test trials
-  var conf_trials_idx = Array(target_scores.length);
-  var conf_trials_TS = jsPsych.randomization.repeat(target_scores, 1);
-  for (var i = 0; i < conf_trials_idx.length; i++) {
-    var ii = randi(2,5) + i*5
-    conf_trials_idx[i] = ii-1; // index of location to insert conf trial
-    target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
-  };
+  if (nbBlocks == target_scores.length){
+    var conf_gen = 0;
+    while (conf_gen == 0){
+      var target_scores_all = Array(nbBlocks);
+
+      for (var nB = 0; nB < nbBlocks; nB++){
+        target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores);
+      };
+      var conf_trials_TS = jsPsych.randomization.shuffle(target_scores);
+      if (conf_trials_TS[0] != target_scores_all[0][0]){
+        if (conf_trials_TS[0] != target_scores_all[0][1]){ // make sure that the first effort question isn't the first or second trial
+          for (var i = 0; i < nbBlocks; i++) {
+            conf_trials_idx[i] = i*nbBlocks + target_scores_all[i].findIndex(x => x === conf_trials_TS[i]);
+          };
+          var target_scores_all = target_scores_all.flat();
+
+          var contiguous_TS = 0;
+          for (var i = 0; i < target_scores_all.length; i++){ // check if there are contiguous target scoress
+            if (target_scores_all[i] == target_scores_all[i+1]){
+              contiguous_TS = 1;
+            };
+          }
+
+          var contiguous_conf = 0;
+          for (var i = 0; i < conf_trials_idx.length; i++){ // check if there are contiguous effort questions
+            if (conf_trials_idx[i] == conf_trials_idx[i+1]){
+              contiguous_conf = 1;
+            };
+          }
+
+          if (contiguous_TS != 1 & contiguous_conf != 1){
+            conf_gen = 1;
+          };
+        };
+      };
+    };
+
+  } else {
+    var target_scores_all = Array(nbBlocks-1);
+    for (var nB = 0; nB < nbBlocks-1; nB++){
+      target_scores_all[nB] = jsPsych.randomization.shuffleNoRepeats(target_scores)
+    };
+
+    var target_scores_all = target_scores_all.flat();
+
+    // target_scores_all.unshift(...target_scores);
+
+    var conf_trials_TS = jsPsych.randomization.shuffle(target_scores);
+    for (var i = 0; i < conf_trials_idx.length; i++) {
+      var ii = randi(2,target_scores.length) + i*nbBlocks;
+      if (ii > nbTrials){ii = nbTrials};
+      conf_trials_idx[i] = ii-1; // index of location to insert conf trial
+      target_scores_all.splice(conf_trials_idx[i], 0, conf_trials_TS[i]);
+    };
+  }
+
+
 
   // Insert practice plus calibrations
   var flip_ini = {
@@ -67,7 +115,7 @@ function SE(nbBlocks, nbTrials){
 
   var calibration_ini = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Maintenant que vous avez vu la grille une fois, nous mesurerons votre capacité initiale à auto-évaluer correctement vos compétences mentales.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Pour commencer, nous voudrions mesurer votre capacité initiale à auto-évaluer correctement votre fonctionnement mental.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -80,8 +128,8 @@ function SE(nbBlocks, nbTrials){
     }
   }; // calibration_ini
 
-  timelineTask.push(flip_ini)
-  timelineTask.push(flip)
+  // timelineTask.push(flip_ini)
+  // timelineTask.push(flip)
   timelineTask.push(calibration_ini)
   timelineTask.push(fullscreenExp)
 
@@ -93,7 +141,7 @@ function SE(nbBlocks, nbTrials){
       type: 'SE-confidence-slider-WH',
       range: 30,
       trial_duration: time.SEconf,
-      prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+      prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
       start: sliderIni,
       on_start: function(trial){
         sliderIni[0]     = randi(0,29);
@@ -118,7 +166,7 @@ function SE(nbBlocks, nbTrials){
 
   var task_start = {
     type: 'html-button-response-WH',
-    stimulus: '<p>Merci !</p><p>Maintenant l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+    stimulus: '<p>Merci !</p><p>Maintenant, l&#39expérience principale va commencer.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
     choices: ['Continuer'],
     data: {
       blockNb: -1,
@@ -167,6 +215,10 @@ function SE(nbBlocks, nbTrials){
         type: 'html-button-response-WH',
         stimulus: '<p>C&#39est le de&#769but de l&#39exercice <b>'+nbTrial_counter+'</b>.</p><p style="font-size:30px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
         choices: ['C&#39est parti !'],
+        on_start: function(){
+          var filenametosave = jsPsych.data.getLastTrialData().values()[0].filename;
+          jsPsych.data.get().localSave('csv',filenametosave.concat('','.csv'));
+        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -186,7 +238,7 @@ function SE(nbBlocks, nbTrials){
         type: 'SE-confidence-slider-WH',
         range: 30,
         trial_duration: time.SEconf,
-        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilizer les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        prompt: '<p>Le score cible: <b>'+target_scores_all[trial_counter]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
         start: sliderIni,
         on_start: function(trial){
           sliderIni[0]     = randi(0,29);
@@ -227,7 +279,7 @@ function SE(nbBlocks, nbTrials){
 
       // REWATCH QUESTION //
       var rewatch = {
-        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>5 secondes</b> pour re&#769pondre!</p>',
+        stimulus: '<p>Souhaitez-vous revoir la grille ?</p><p>Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>.</p><p>Vous avez <b>8 secondes</b> pour re&#769pondre!</p>',
         type: 'html-button-response-WH',
         prompt: function(){
           var rewatch_prompt = '<p>Vous avez vu la grille <b>'+flip_counter+'</b> fois.</p>';
@@ -355,7 +407,7 @@ function SE(nbBlocks, nbTrials){
             allow_nontarget_responses: true,
             prompt: '<p id="jspsych-prompt" style="margin:0px">Le score cible pour cet exercice est: <b>'+target_scores_all[trial_counter]+'</b>. <b>Cliquez</b> sur l&#39emplacement de l&#39autre paire.</p>',
             pre_target_duration: 0,
-            choices: ['Montrez-moi la prochaine paire', 'Je crois avoir atteint le score cible. Terminez la phase de test !'],
+            choices: ['Montrez-moi la prochaine paire'],
             on_start: function(){var clicked = [null,null]},
             on_finish: function(data){
               if (data.correct){
@@ -367,7 +419,15 @@ function SE(nbBlocks, nbTrials){
               test_counter++
               if (data.button_pressed == 1){
                 jsPsych.endCurrentTimeline();
-              }
+              };
+              if (isNaN(clicked[0])){
+              } else {
+                nClicked++;
+              };
+              if (nClicked == data.target_score){
+                nClicked = 0;
+                // jsPsych.endCurrentTimeline();
+              };
             },
             data: {
               blockNb: block_i,
@@ -403,6 +463,9 @@ function SE(nbBlocks, nbTrials){
             type: 'html-button-response-WH',
             stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement deviné ?</p>',
             choices: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+            on_start: function(){
+              nClicked = 0;
+            },
             data: {
               blockNb: block_i,
               trialNb: trial_counter,
@@ -426,10 +489,10 @@ function SE(nbBlocks, nbTrials){
             //  clicked: function(){clicked_i},
             target: target_i,
             choices: jsPsych.NO_KEYS,
-            prompt: function(){
-              var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
-              return feedback_prompt;
-            },
+            // prompt: function(){
+            //   var feedback_prompt = '<p style="font-size:25px; margin:0px">Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
+            //   return feedback_prompt;
+            // },
             feedback: true,
             correct_responses: function(){return correct_i},
             target_score: target_scores_all[trial_counter],
@@ -438,7 +501,10 @@ function SE(nbBlocks, nbTrials){
               var TS = feedback.target_score;
               if (nCorrect >= TS){
                 nTS++;
-              }
+                feedback.prompt = '<p style="font-size:25px; margin:0px">Vous avez atteint le score cible. Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
+              } else {
+                feedback.prompt = '<p style="font-size:25px; margin:0px">Vous n&#39avez pas atteint le score cible. Votre score: <b>'+nCorrect+'/8 !</b> Vous avez vu la grille <b>'+flip_fb+'</b> fois.';
+              };
             },
             on_finish: function(){ // reset counters
               nCorrect       = 0;
@@ -471,6 +537,55 @@ function SE(nbBlocks, nbTrials){
       }; // trial
     }; // block
 
+    var calibration_fin = {
+      type: 'html-button-response-WH',
+      stimulus: '<p>Vous avez comple&#769te&#769 l&#39expe&#769rience principale - bravo!</p><p>Maintenant, nous mesurerons votre capacité finale à auto-évaluer correctement votre fonctionnement mental.</p><p>Lorsque vous e&#770tes pre&#770t.e, cliquez sur le bouton.</p>',
+      choices: ['Continuer'],
+      data: {
+        blockNb: -1,
+        trialNb: 999,
+        TinB: 999,
+        testNb: 999,
+        target_score: 999,
+        test_part: 'calibration_fin',
+        nTS: 999
+      }
+    }; // calibration_fin
+
+    timelineTask.push(calibration_fin)
+    timelineTask.push(fullscreenExp)
+
+    // SE CALIBRATION QUESTIONS //
+    var target_scores_cal = [4, 6, 8];
+    for (var cal_i = 0; cal_i < target_scores_cal.length; cal_i++){
+
+      var SE_conf = {
+        type: 'SE-confidence-slider-WH',
+        range: 30,
+        trial_duration: time.SEconf,
+        prompt: '<p>Imaginez que le score cible était: <b>'+target_scores_cal[cal_i]+'</b>.</p><p><b>Combien de fois aurez-vous besoin de voir les chiffres de la grille pour atteindre le score cible ?</b></p><p>Utilisez les fle&#768ches gauche et droite pour positionner la barre. Utilisez les fle&#768ches du haut et du bas pour augmenter ou raccourcir la longueur de la barre.</p><p> Appuyez sur E&#769ntre&#769e pour confirmer votre choix.</p><p>Vous avez <b>3 minutes</b> pour re&#769pondre.</p>',
+        start: sliderIni,
+        on_start: function(trial){
+          sliderIni[0]     = randi(0,29);
+          sliderIni[1]     = randi(sliderIni[0],29);
+          trial.start = sliderIni;
+        },
+        data: {
+          blockNb: -2,
+          trialNb: cal_i,
+          TinB: cal_i,
+          testNb: 999,
+          target_score: target_scores_cal[cal_i],
+          test_part: 'SE_slider_cal_fin',
+          nTS: 999
+        }
+      };
+
+      timelineTask.push(SE_conf)
+      timelineTask.push(fullscreenExp)
+
+    }; // SE CALIBRATION QUESTIONS
+
     var nbTrialsRewarded = nbTrials-target_scores.length;
     var finish = {
       type: 'html-button-response-WH',
@@ -481,6 +596,11 @@ function SE(nbBlocks, nbTrials){
       choices: ['Fin'],
       on_finish: function(data){
         data.nTS = nTS;
+        var today           = new Date();
+        var donetime        = today.getHours()+":"+today.getMinutes()+" "+today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+        jsPsych.data.addProperties({doneTime: donetime})
+        var filenametosave = jsPsych.data.getLastTrialData().values()[0].filename;
+        jsPsych.data.get().localSave('csv',filenametosave.concat('','.csv'));
       },
       data: {
         blockNb: block_i,
