@@ -7,7 +7,7 @@ function SE2_training(){
   var test_counter_train  = 0; // counter for looping through test trials during execution
   var clicked_i_train     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
   var flib_fb_train       = []; // flip length of time for feedback
-  var train_TS            = 4;
+  var train_TS            = 6;
   var train_rew           = 1;
   var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
@@ -290,7 +290,7 @@ function SE2_training(){
   var EnS_train = {
     type: 'html-button-response-WH',
     stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-    choices: ['0','1','2','3','4'],
+    choices: ['0','1','2','3','4','5','6'],
     data: {
       blockNb: -1,
       trialNb: 999,

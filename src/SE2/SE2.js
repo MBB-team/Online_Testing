@@ -13,7 +13,7 @@ function SE2(nbBlocks, nbTrials){
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
   var points_total  = 0;
-  var EnS_choices = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6', '7', '8']];
+  var EnS_choices = [['0', '1', '2', '3', '4', '5', '6']];
 
 
   // Conditions
@@ -28,7 +28,7 @@ function SE2(nbBlocks, nbTrials){
       trialNb: 999,
       TinB: 999,
       testNb: 999,
-      target_score: TS,
+      target_score: 999,
       reward: 999,
       test_part: 'cheat',
       nTS: 999
@@ -52,6 +52,7 @@ function SE2(nbBlocks, nbTrials){
 
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_counter]]];
       var TS  = exp.TS[exp.TS_levels[cond_pt[trial_counter]]];
+      var TD  = exp.TD[exp.TD_levels[cond_pt[trial_counter]]];
       var points = rew==1? 'point':'points';
 
       // How much "effort" does the participant want?
@@ -78,7 +79,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'effort_want',
           nTS: 999
@@ -99,7 +100,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'fixation',
           nTS: 999
@@ -115,7 +116,12 @@ function SE2(nbBlocks, nbTrials){
         type: 'html-button-response-effort-WH',
         stimulus: grid_stimuli[trial_counter],
         choices: [],
-        trial_duration: function(){ return flip_fb*1000;},
+        trial_duration: function(){
+          var current_block = jsPsych.data.getLastTrialData().values()[0].blockNb;
+          var current_TD = exp.TD[exp.TD_levels[current_block]];
+          console.log(flip_fb*1000*current_TD)
+          return flip_fb*1000*current_TD;
+        },
         reward: rew,
         timer: true,
         data: {
@@ -123,7 +129,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'flip',
           nTS: 999
@@ -131,7 +137,7 @@ function SE2(nbBlocks, nbTrials){
       }; // effort
 
       // PUSH TO TIMELINE //
-      timelineTask.push(fullscreenExp);
+      // timelineTask.push(fullscreenExp);
       timelineTask.push(flip);
 
       var test_phase = {
@@ -144,7 +150,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'fixation',
           nTS: 999
@@ -201,7 +207,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: test_i,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'test',
           nTS: 999
@@ -236,7 +242,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'post_test_conf',
           nTS: 999
@@ -259,7 +265,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'test_conf',
           nTS: 999
@@ -298,7 +304,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'feedback_grid',
           nTS: 999
@@ -343,7 +349,7 @@ function SE2(nbBlocks, nbTrials){
           trialNb: trial_counter,
           TinB: trial_i,
           testNb: 999,
-          target_score: TS,
+          target_score: TD,
           reward: rew,
           test_part: 'feedback',
           nTS: 999
@@ -380,14 +386,6 @@ function SE2(nbBlocks, nbTrials){
     stimulus: '',
     choices: [],
     trial_duration: 1,
-    on_finish: function(data){
-      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
-      var max_euro   = exp.rew_euro[1];
-      var min_euro   = exp.rew_euro[0];
-      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
-      var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
-      data.nTS = JSON.stringify([nTS, total_points, euro_rew]);
-    },
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -396,7 +394,15 @@ function SE2(nbBlocks, nbTrials){
       target_score: 999,
       reward: 999,
       test_part: 'total_score',
-      nTS: 999
+      nTS: function(){
+        var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
+        var max_euro   = exp.rew_euro[1];
+        var min_euro   = exp.rew_euro[0];
+        var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+        var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
+        var nTS = JSON.stringify([nTS, total_points, euro_rew]);
+        return nTS
+      }
     }
   }
 

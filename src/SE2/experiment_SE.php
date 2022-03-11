@@ -63,13 +63,15 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "SE2",
-               nbTrials:       27,
-               nbBlocks:       3,
-               rew_levels:    [0, 0, 0, 1, 1, 1, 2, 2, 2],
-               TS_levels:     [0, 1, 2, 0, 1, 2, 0, 1, 2],
-               TS:            [4, 6, 8],
-               rew:           [1, 10, 100],
-               rew_euro:      [10, 25]};
+               nbTrials:       6,
+               nbBlocks:       6,
+               rew_levels:    [0, 1],
+               TS_levels:     [0, 0],
+               TS:            [6],
+               rew:           [1, 10],
+               rew_euro:      [10, 25],
+               TD_levels:     [1, 0, 2, 0, 2, 1],
+               TD:            [0.7, 1, 1.3]};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -192,14 +194,19 @@ Per trial:
     var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
     // var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
 
-    var cond_pt_ind = Array(exp.nbBlocks);
 
-    for (var bNi=0; bNi<exp.nbBlocks; bNi++){
-      var ind = Array.from(Array(exp.TS_levels.length).keys());
-      ind = ind.map(x => x + bNi*exp.TS_levels.length);
-      cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
-    }
-    cond_pt_ind = cond_pt_ind.flat();
+    // if we need cond_pt indexes to be scaled up across blocks such that cond in block:bN = cond + (bN-1)*n_trialsinblock
+    // var cond_pt_ind = Array(exp.nbBlocks);
+    //
+    // for (var bNi=0; bNi<exp.nbBlocks; bNi++){
+    //   var ind = Array.from(Array(exp.TS_levels.length).keys());
+    //   ind = ind.map(x => x + bNi*exp.TS_levels.length);
+    //   cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
+    // }
+    // cond_pt_ind = cond_pt_ind.flat();
+
+    // else we just want a vector of 1:exp.nbTrials
+    var cond_pt_ind = Array.from(Array(exp.nbTrials).keys());
 
     // (pseudo-)shuffle grids
     var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original);
@@ -257,7 +264,7 @@ Per trial:
       var points_total = 0;
       var task_training = SE2_training();
       for (var i = 0; i < task_training.length; i++){
-        exp_timeline.push(task_training[i]);
+        // exp_timeline.push(task_training[i]);
       };
 
       var task = SE2(exp.nbBlocks, exp.nbTrials);
