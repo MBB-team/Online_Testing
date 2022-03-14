@@ -129,17 +129,19 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
 
     display_element.innerHTML = html;
 
-    if (trial.timer){
-      can = display_element.querySelector('.jspsych-html-timer');
-      ctx = can.getContext('2d'),
-      sta = -Math.PI / 2,
-      dur = trial.trial_duration;
+    // even if we aren't drawing the timer, we need a blank HTML element for correct spacing
+    can = display_element.querySelector('.jspsych-html-timer');
+    ctx = can.getContext('2d'),
+    sta = -Math.PI / 2,
+    dur = trial.trial_duration;
 
-      var timer_size = screen.height/8;
-      can.height = timer_size;
-      can.width = timer_size;
-      var bonus = display_element.querySelector('#jspsych-html-bonus')
-      bonus.style.width = ''+timer_size+'px';
+    var timer_size = screen.height/8;
+    can.height = timer_size;
+    can.width = timer_size;
+    var bonus = display_element.querySelector('#jspsych-html-bonus')
+    bonus.style.width = ''+timer_size+'px';
+
+    if (trial.timer){
 
       // document.body.appendChild(can);
       ctx.font = "normal 30px Arial";
