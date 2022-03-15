@@ -123,7 +123,7 @@ function SE2(nbBlocks, nbTrials){
           return flip_fb*1000*current_TD;
         },
         reward: rew,
-        timer: true,
+        timer: false,
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
