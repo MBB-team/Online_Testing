@@ -264,7 +264,7 @@ Per trial:
       var points_total = 0;
       var task_training = SE2_training();
       for (var i = 0; i < task_training.length; i++){
-        // exp_timeline.push(task_training[i]);
+        exp_timeline.push(task_training[i]);
       };
 
       var task = SE2(exp.nbBlocks, exp.nbTrials);
