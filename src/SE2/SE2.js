@@ -5,11 +5,11 @@ function SE2(nbBlocks, nbTrials){
   var trial_counter = 0; // counting the number of trials
   var nCorrect      = 0; // the number of correct responses given by the pts
   var nTS           = 0; // the number of target scores achieved by the pts
-  var correct_i     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
+  var correct_i     = [0,0,0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter  = 0; // counter for looping through test trials during execution
   var conf_counter  = 0; // counter for looping through effort question trials
   var nbTperB       = nbTrials/nbBlocks;
-  var grid_dim      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+  var grid_dim      = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
   var points_total  = 0;
@@ -41,34 +41,34 @@ function SE2(nbBlocks, nbTrials){
   // START OF BLOCK //
   for (var block_i = 0; block_i < nbBlocks; block_i++) {
     var block_n = block_i + 1;
+    var TD  = exp.TD[exp.TD_levels[block_i]];
 
     // TRIAL LOOP //
     for (var trial_i = 0; trial_i < nbTperB; trial_i++) {
-      var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
-      var target_corr_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
+      var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
+      var target_corr_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
 
       var trial_n = trial_i + 1;
       var nbTrial_counter = trial_counter+1;
 
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_counter]]];
       var TS  = exp.TS[exp.TS_levels[cond_pt[trial_counter]]];
-      var TD  = exp.TD[exp.TD_levels[cond_pt[trial_counter]]];
       var points = rew==1? 'point':'points';
 
       // How much "effort" does the participant want?
       var effort_want = {
         type: 'html-slider-response-effort-want-WH',
-        prompt: '<p> Exercice : '+nbTrial_counter+'/'+nbTrials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p><div><br></div>',
+        prompt: '<p> Exercice : '+nbTrial_counter+'/'+nbTrials+'.</p><p style="font-size:30px">Si vous retrouvez correctement les emplacements de toutes les paires, vous recevrez un bonus de <br><b>'+rew+' ' + points + '</b>.</p><div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         labels: ['0 secondes','60 secondes'],
-        min: 0,
+        min: 15,
         max: 60,
-        start: function(){return randi(0,60);},
+        start: function(){return randi(15,60);},
         require_movement: true,
         effort: true,
         on_start: function(){
           nCorrect       = 0;
-          correct_i      = [0,0,0,0,0,0,0,0];
+          correct_i      = [0,0,0,0,0,0,0,0,0,0];
           test_counter   = 0;
         },
         on_finish: function(data){
@@ -296,7 +296,7 @@ function SE2(nbBlocks, nbTrials){
         target_correct: target_corr_i,
         on_finish: function(){ // reset counters
           nCorrect       = 0;
-          correct_i      = [0,0,0,0,0,0,0,0];
+          correct_i      = [0,0,0,0,0,0,0,0,0,0];
           test_counter   = 0;
         },
         data: {
@@ -340,7 +340,7 @@ function SE2(nbBlocks, nbTrials){
         on_finish: function(data){ // reset counters
           if (data.button == 1){
             nCorrect       = 0;
-            correct_i      = [0,0,0,0,0,0,0,0];
+            correct_i      = [0,0,0,0,0,0,0,0,0,0];
             test_counter   = 0;
           }
         },
@@ -378,8 +378,32 @@ function SE2(nbBlocks, nbTrials){
 
       trial_counter++;
 
-    } // trial
-  } // block
+    }; // trial
+
+    // PROBE QUESTION //
+    var probe = {
+      type: 'html-button-response-WH',
+      stimulus: '<p>Imaginez que nous vous ayons montré la grille avec 10 paires de chiffres et nous vous donnerions 90 secondes pour le mémoriser. Combien d’emplacements pensez-vous etre capable de correctement retrouver ?</p>',
+      choices: ['0','1','2','3','4','5','6','7','8','9','10'],
+      data: {
+        blockNb: block_i,
+        trialNb: trial_counter,
+        TinB: trial_i,
+        testNb: 999,
+        target_score: TD,
+        reward: 999,
+        test_part: 'probe',
+        nTS: 999
+      }
+    };
+
+    // PUSH TO TIMELINE //
+    if (block_i != 0 && block_i != nbBlocks-1){
+      timelineTask.push(fullscreenExp);
+      timelineTask.push(probe);
+    }
+
+  }; // block
 
   var score = {
     type: 'html-button-response-WH',
@@ -395,7 +419,7 @@ function SE2(nbBlocks, nbTrials){
       reward: 999,
       test_part: 'total_score',
       nTS: function(){
-        var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length;
+        var max_points = exp.max_points;
         var max_euro   = exp.rew_euro[1];
         var min_euro   = exp.rew_euro[0];
         var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
@@ -411,7 +435,7 @@ function SE2(nbBlocks, nbTrials){
   var finish = {
     type: 'html-button-response-WH',
     stimulus: function(){
-      var max_points = exp.rew.reduce((pv,cv)=>pv+cv,0)*exp.nbBlocks*exp.TS.length + 1;
+      var max_points = exp.max_points;
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
       var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS

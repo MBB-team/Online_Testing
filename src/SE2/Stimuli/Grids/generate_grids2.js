@@ -11,11 +11,11 @@ function generate_grids2(nbTrials, numbersImg, numbersImg2, grid_indexes_shuffle
 
   var flip_stimuli = Array(nbTrials);
   var grid_counter = 0;
-  var grid = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+  var grid = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
 
   var n_TS;
   for (var grid_i = 0; grid_i <= nbTrials-1; grid_i++){ // for each grid
-    var grid_num = [[999,999,999,999],[999,999,999,999],[999,999,999,999],[999,999,999,999]];
+    var grid_num = [[999,999,999,999,999],[999,999,999,999,999],[999,999,999,999,999],[999,999,999,999,999]];
 
     n_TS = exp.TS[exp.TS_levels[cond_pt[grid_i]]];
 

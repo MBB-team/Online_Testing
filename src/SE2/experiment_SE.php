@@ -70,6 +70,7 @@ Per trial:
                TS:            [6],
                rew:           [1, 10],
                rew_euro:      [10, 25],
+               max_points:    [330],
                TD_levels:     [1, 0, 2, 0, 2, 1],
                TD:            [0.7, 1, 1.3]};
 
@@ -173,7 +174,7 @@ Per trial:
     // Numbers (1st)
     var numbersImg  = [];
     var numbersImg_html = [];
-    for (var t=1; t <= 8; t++){
+    for (var t=1; t <= 10; t++){
       numbersImg[t-1] = 'Stimuli/Images/image'+t+'.png'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
@@ -264,7 +265,9 @@ Per trial:
       var points_total = 0;
       var task_training = SE2_training();
       for (var i = 0; i < task_training.length; i++){
-        exp_timeline.push(task_training[i]);
+        if (cfg.instructions){
+          exp_timeline.push(task_training[i]);
+        }
       };
 
       var task = SE2(exp.nbBlocks, exp.nbTrials);

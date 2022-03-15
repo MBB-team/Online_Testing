@@ -3,15 +3,15 @@ function SE2_training(){
   // INITIALISATION //
   var timelineTask_train  = [];
   var nCorrect_train      = 0; // the number of correct responses given by the pts
-  var correct_i_train     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
+  var correct_i_train     = [0,0,0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter_train  = 0; // counter for looping through test trials during execution
-  var clicked_i_train     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
+  var clicked_i_train     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
   var flib_fb_train       = []; // flip length of time for feedback
   var train_TS            = 6;
   var train_rew           = 1;
-  var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
-  var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
-  var grid_dim_train      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+  var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
+  var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
+  var grid_dim_train      = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
   var points_total_train  = 0;
 
   // First instructions
@@ -75,12 +75,13 @@ function SE2_training(){
   // How much "effort" does the participant want?
   var effort_want_train = {
     type: 'html-slider-response-effort-want-WH',
-    prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
+    // prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
+    prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p></p><p>Si vous retrouvez correctement les emplacements de toutes les paires, vous recevrez un bonus de <br><b>'+train_rew+' point</b>.</p><div><br></div>',
     stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
     labels: ['0 secondes','60 secondes'],
-    min: 0,
+    min: 15,
     max: 60,
-    start: function(){return randi(0,60);},
+    start: function(){return randi(15,60);},
     require_movement: true,
     effort: true,
     on_finish: function(data){
@@ -338,9 +339,9 @@ function SE2_training(){
     target_correct: target_corr_i_train,
     on_finish: function(){ // reset counters
       nCorrect_train       = 0;
-      correct_i_train      = [0,0,0,0,0,0,0,0];
+      correct_i_train      = [0,0,0,0,0,0,0,0,0,0];
       test_counter_train   = 0;
-      clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+      clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
     },
     data: {
       blockNb: -1,
@@ -382,9 +383,9 @@ function SE2_training(){
     on_finish: function(data){ // reset counters
       if (data.button == 1){
         nCorrect_train       = 0;
-        correct_i_train      = [0,0,0,0,0,0,0,0];
+        correct_i_train      = [0,0,0,0,0,0,0,0,0,0];
         test_counter_train   = 0;
-        clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+        clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
       }
       data.nTS = points_total_train;
     },
