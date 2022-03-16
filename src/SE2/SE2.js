@@ -3,6 +3,8 @@ function SE2(nbBlocks, nbTrials){
   // INITIALISATION //
   var timelineTask  = [];
   var trial_counter = 0; // counting the number of trials
+  var main_counter  = -1; // counting just the main experiment
+  var filler_counter = -1; // counting the filler trials
   var nbTrial_counter = 0; // in real index (not JS)
   var nCorrect      = 0; // the number of correct responses given by the pts
   var nTS           = 0; // the number of target scores achieved by the pts
@@ -15,11 +17,12 @@ function SE2(nbBlocks, nbTrials){
   var flib_fb       = []; // flip length of time for feedback
   var points_total  = 0;
   var EnS_choices   = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6','7','8']];
+  var EnS_filler    = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6','7','8']];
 
   // Conditions
   var eff_q_pt       = eff_q[cond_perm_pt];
   var tot_trials     = nbTrials + exp.block0nTr;
-
+console.log(eff_q_pt)
 
   var cheat = {
     type: 'html-button-response-WH',
@@ -56,7 +59,7 @@ function SE2(nbBlocks, nbTrials){
       prompt: '<p> Exercice : '+nbTrial_counter+'/'+tot_trials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p><div><br></div>',
       stimulus: '<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
       labels: ['0 secondes','60 secondes'],
-      min: 15,
+      min: 0,
       max: 60,
       start: function(){return randi(15,60);},
       require_movement: true,
@@ -109,7 +112,7 @@ function SE2(nbBlocks, nbTrials){
     // effort //
     var flip = {
       type: 'html-button-response-effort-WH',
-      stimulus: grid_stimuli[trial_counter],
+      stimulus: grid_stimuli_block0[trial_i],
       choices: [],
       trial_duration: function(){
         return flip_fb*1000;
@@ -164,12 +167,12 @@ function SE2(nbBlocks, nbTrials){
       // var pair_1st = 0; // for non-matching version of task, show numbers and test animals
       var pair_2nd = 1 - pair_1st;
 
-      target_i[test_i]      = grid_indexes_shuffled_block0[trial_counter][test_i][pair_1st].map(function(v){return (v - 1)})
-      target_corr_i[test_i] = grid_indexes_shuffled_block0[trial_counter][test_i][pair_2nd].map(function(v){return (v - 1)})
+      target_i[test_i]      = grid_indexes_shuffled_block0[trial_i][test_i][pair_1st].map(function(v){return (v - 1)})
+      target_corr_i[test_i] = grid_indexes_shuffled_block0[trial_i][test_i][pair_2nd].map(function(v){return (v - 1)})
 
       test_trials.push({
         target_location:  target_i[test_i],
-        correct_location: grid_indexes_shuffled_block0[trial_counter][test_i][pair_2nd].map(function(v){return (v - 1)}),
+        correct_location: grid_indexes_shuffled_block0[trial_i][test_i][pair_2nd].map(function(v){return (v - 1)}),
         target_image:     numbersImg[test_i]
       });
 
@@ -271,28 +274,158 @@ function SE2(nbBlocks, nbTrials){
       conf_counter++;
     }
 
+    var feedback_with_grid = {
+      type: 'html-button-response-fb-WH',
+      stimulus: grid_stimuli_block0[trial_i],
+      grid: true,
+      choices: ['Passer au prochain exercice'],
+      target: target_i,
+      correct_responses: function(){return correct_i},
+      target_score: TS,
+      reward: rew,
+      target_correct: target_corr_i,
+      on_finish: function(){ // reset counters
+        nCorrect       = 0;
+        correct_i      = [0,0,0,0,0,0,0,0,0,0];
+        test_counter   = 0;
+      },
+      data: {
+        blockNb: block_i,
+        trialNb: trial_counter,
+        TinB: trial_i,
+        testNb: 999,
+        target_score: TD,
+        reward: rew,
+        test_part: 'feedback_grid',
+        nTS: 999
+      }
+    }; // fb with grid
+
+    var feedback_sans_grid = {
+      type: 'html-button-response-fb-WH',
+      stimulus: '',
+      grid: false,
+      choices: ['Montrez-moi la grille','Passer au prochain exercice'],
+      target: target_i,
+      correct_responses: function(){return correct_i},
+      target_score: TS,
+      reward: rew,
+      target_correct: target_corr_i,
+      on_start: function(feedback){
+        var TS_current = feedback.target_score;
+        var rew_current = feedback.reward;
+        var emplacements = nCorrect==1 ? ' emplacement ':' emplacements '
+        if (nCorrect >= TS_current){
+          points_total = points_total + rew_current;
+          nTS++;
+          if (rew_current == 1){
+            feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné '+feedback.reward+' point.</p>';
+          } else {
+            feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné '+feedback.reward+' points.</p>';
+          }
+        } else {
+          feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné 0 points.</p>';
+        }
+      },
+      on_finish: function(data){ // reset counters
+        if (data.button == 1){
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+        }
+      },
+      data: {
+        blockNb: block_i,
+        trialNb: trial_counter,
+        TinB: trial_i,
+        testNb: 999,
+        target_score: TD,
+        reward: rew,
+        test_part: 'feedback',
+        nTS: 999
+      }
+    }; // fb without grid
+
+
+    // PUSH TO TIMELINE //
+    timelineTask.push(fullscreenExp);
+    timelineTask.push(feedback_sans_grid);
+
+    // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
+    var if_explicit_feedback = {
+      timeline: [fullscreenExp, feedback_with_grid],
+      conditional_function: function(){
+        var data = jsPsych.data.get().last(1).values()[0];
+        if (data.button_pressed == 1){
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    timelineTask.push(if_explicit_feedback);
+
+
     trial_counter++;
   } // first block
 
 
 
 
-
+  // MAIN EXPERIMENT //
   // START OF BLOCK //
   for (var block_i = 0; block_i < nbBlocks; block_i++) {
     var block_n = block_i + 1;
-    var TD  = exp.TD[exp.TD_levels[block_i]];
-
     // TRIAL LOOP //
     for (var trial_i = 0; trial_i < nbTperB; trial_i++) {
       var target_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
       var target_corr_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
 
+      // What is the stimuli for this trial?
+      if (trial_i+1 != nbTperB){
+
+        main_counter++;
+        var trial_stimuli = grid_stimuli_main[main_counter];
+        var trial_grid_indexes = grid_indexes_shuffled_main[main_counter];
+        var TS = exp.TS[0];
+        var EnS_btns = EnS_choices[1];
+        var TD  = exp.TD[exp.TD_levels[block_i]];
+      } else {
+
+        filler_counter++;
+        var trial_stimuli = grid_stimuli_filler[filler_counter];
+        var trial_grid_indexes = grid_indexes_shuffled_filler[filler_counter];
+        var TS = exp.filler_TS[exp.filler_TS_lvl[filler_counter]];
+        var EnS_btns = EnS_filler[exp.filler_TS_lvl[filler_counter]];
+        var TD  = 1;
+
+        // PROBE QUESTION //
+        var probe = {
+          type: 'html-button-response-WH',
+          stimulus: '<p>Imaginez que nous vous ayons montré la grille avec 10 paires de chiffres et nous vous donnerions 90 secondes pour le mémoriser. Combien d’emplacements pensez-vous etre capable de correctement retrouver ?</p>',
+          choices: ['0','1','2','3','4','5','6','7','8','9','10'],
+          data: {
+            blockNb: block_i,
+            trialNb: trial_counter-1,
+            TinB: trial_i-1,
+            testNb: 999,
+            target_score: TD,
+            reward: 999,
+            test_part: 'probe',
+            nTS: 999
+          }
+        };
+
+        timelineTask.push(fullscreenExp);
+        timelineTask.push(probe);
+
+      };
+
       var trial_n = trial_i + 1;
       nbTrial_counter++;
 
       var rew = exp.rew[exp.rew_levels[cond_pt[trial_counter]]];
-      var TS  = exp.TS[exp.TS_levels[cond_pt[trial_counter]]];
       var points = rew==1? 'point':'points';
 
       // How much "effort" does the participant want?
@@ -301,7 +434,7 @@ function SE2(nbBlocks, nbTrials){
         prompt: '<p> Exercice : '+nbTrial_counter+'/'+tot_trials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p><div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         labels: ['0 secondes','60 secondes'],
-        min: 15,
+        min: 0,
         max: 60,
         start: function(){return randi(15,60);},
         require_movement: true,
@@ -354,7 +487,7 @@ function SE2(nbBlocks, nbTrials){
       // effort //
       var flip = {
         type: 'html-button-response-effort-WH',
-        stimulus: grid_stimuli[trial_counter],
+        stimulus: trial_stimuli,
         choices: [],
         trial_duration: function(){
           var current_block = jsPsych.data.getLastTrialData().values()[0].blockNb;
@@ -412,12 +545,12 @@ function SE2(nbBlocks, nbTrials){
         // var pair_1st = 0; // for non-matching version of task, show numbers and test animals
         var pair_2nd = 1 - pair_1st;
 
-        target_i[test_i]      = grid_indexes_shuffled_main[trial_counter][test_i][pair_1st].map(function(v){return (v - 1)})
-        target_corr_i[test_i] = grid_indexes_shuffled_main[trial_counter][test_i][pair_2nd].map(function(v){return (v - 1)})
+        target_i[test_i]      = trial_grid_indexes[test_i][pair_1st].map(function(v){return (v - 1)})
+        target_corr_i[test_i] = trial_grid_indexes[test_i][pair_2nd].map(function(v){return (v - 1)})
 
         test_trials.push({
           target_location:  target_i[test_i],
-          correct_location: grid_indexes_shuffled_main[trial_counter][test_i][pair_2nd].map(function(v){return (v - 1)}),
+          correct_location: trial_grid_indexes[test_i][pair_2nd].map(function(v){return (v - 1)}),
           target_image:     numbersImg[test_i]
         });
 
@@ -476,7 +609,7 @@ function SE2(nbBlocks, nbTrials){
       var EnS = {
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-        choices: EnS_choices[exp.TS_levels[cond_pt[trial_counter]]],
+        choices: EnS_btns,
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -526,7 +659,7 @@ function SE2(nbBlocks, nbTrials){
 
       var feedback_with_grid = {
         type: 'html-button-response-fb-WH',
-        stimulus: grid_stimuli[trial_counter],
+        stimulus: trial_stimuli,
         grid: true,
         choices: ['Passer au prochain exercice'],
         target: target_i,
@@ -620,28 +753,7 @@ function SE2(nbBlocks, nbTrials){
 
     }; // trial
 
-    // PROBE QUESTION //
-    var probe = {
-      type: 'html-button-response-WH',
-      stimulus: '<p>Imaginez que nous vous ayons montré la grille avec 10 paires de chiffres et nous vous donnerions 90 secondes pour le mémoriser. Combien d’emplacements pensez-vous etre capable de correctement retrouver ?</p>',
-      choices: ['0','1','2','3','4','5','6','7','8','9','10'],
-      data: {
-        blockNb: block_i,
-        trialNb: trial_counter,
-        TinB: trial_i,
-        testNb: 999,
-        target_score: TD,
-        reward: 999,
-        test_part: 'probe',
-        nTS: 999
-      }
-    };
 
-    // PUSH TO TIMELINE //
-    if (block_i != 0 && block_i != nbBlocks-1){
-      timelineTask.push(fullscreenExp);
-      timelineTask.push(probe);
-    }
 
   }; // block
 

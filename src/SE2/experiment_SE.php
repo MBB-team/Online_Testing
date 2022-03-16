@@ -28,7 +28,8 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE2-confidence-slider-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes_SE2.js'></script>
-            <script   src  = 'Stimuli/Grids/generate_grids2.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids_TS.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids_main.js'></script>
             <script   src  = 'Stimuli/Conditions/Condition_perms.js'></script>
             <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
             <script   src  = 'Stimuli/Timer/timer.js'></script>
@@ -69,6 +70,8 @@ Per trial:
                rew_levels:    [0, 1],
                TS_levels:     [0, 0],
                TS:            [6],
+               filler_TS_lvl: [1, 0, 1, 0],
+               filler_TS:     [4, 8],
                block0TS:      [4],
                rew:           [1, 10],
                rew_euro:      [10, 25],
@@ -216,26 +219,36 @@ Per trial:
     var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original); // shuffled across blocks
     var grid_indexes          = grid_indexes_packed.flat();
     var grid_indexes_shuffled_main = Array(exp.nbTrials-exp.nbBlocks);
-    for (var trNi=0; trNi<exp.nbTrial-exp.nbBlocks; trNi++){
+    for (var trNi=0; trNi<exp.nbTrials-exp.nbBlocks; trNi++){
       grid_indexes_shuffled_main[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     }
 
     // (pseudo-)shuffle grids for block0
-    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_block0_original);
+    var grid_indexes_packed   = [jsPsych.randomization.shuffle(grid_indexes_block0_original)];
     var grid_indexes          = grid_indexes_packed.flat();
     var grid_indexes_shuffled_block0 = Array(exp.block0nTr);
     for (var trNi=0; trNi<exp.block0nTr; trNi++){
       grid_indexes_shuffled_block0[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     }
+    // filler
+    var grid_indexes_packed   = [grid_indexes_filler_original];
+    var grid_indexes          = grid_indexes_packed.flat();
+    var grid_indexes_shuffled_filler = Array(4);
+    for (var trNi=0; trNi<4; trNi++){
+      grid_indexes_shuffled_filler[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    }
 
     var square_size = screen.height/7;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli_main   = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt);
-    var all_flip_stimuli_block0 = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs, cond_pt);
-    var all_flip_stimuli_train  = generate_grids2(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [0])
+    var all_flip_stimuli_main   = generate_grids_main(exp.nbTrials-exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt);
+    var all_flip_stimuli_block0 = generate_grids_TS(exp.block0nTr, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs,  Array(exp.block0nTr).fill(exp.block0TS));
+    var all_flip_stimuli_filler = generate_grids_TS(exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_filler, square_size, matching_pairs, [8, 4, 8, 4]);
+    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, 4)
 
-    var grid_stimuli = all_flip_stimuli;
-    var grid_stimuli_train = all_flip_stimuli_train;
+    var grid_stimuli_main   = all_flip_stimuli_main;
+    var grid_stimuli_block0 = all_flip_stimuli_block0;
+    var grid_stimuli_filler = all_flip_stimuli_filler;
+    var grid_stimuli_train  = all_flip_stimuli_train;
     // var grid_stimuli = []; // slice array into chunks of 8
     // for (var i=0; i<all_flip_stimuli.length; i+=8) {
     //      grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
