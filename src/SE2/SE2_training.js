@@ -7,7 +7,7 @@ function SE2_training(){
   var test_counter_train  = 0; // counter for looping through test trials during execution
   var clicked_i_train     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
   var flib_fb_train       = []; // flip length of time for feedback
-  var train_TS            = 6;
+  var train_TS            = 4;
   var train_rew           = 1;
   var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
@@ -20,7 +20,7 @@ function SE2_training(){
     stimulus: '<p style="font-size:70px">Test de métacognition</p><p style="font-size:50px">Veuillez lire attentivement les instructions qui vont suivre.</p>',
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -39,7 +39,7 @@ function SE2_training(){
     stimulus: [instrImg_html[0]],
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -58,7 +58,7 @@ function SE2_training(){
     stimulus: [instrImg_html[1]],
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -75,8 +75,8 @@ function SE2_training(){
   // How much "effort" does the participant want?
   var effort_want_train = {
     type: 'html-slider-response-effort-want-WH',
-    // prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
-    prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p></p><p>Si vous retrouvez correctement les emplacements de toutes les paires, vous recevrez un bonus de <br><b>'+train_rew+' point</b>.</p><div><br></div>',
+    prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
+    // prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p></p><p>Si vous retrouvez correctement les emplacements de toutes les paires, vous recevrez un bonus de <br><b>'+train_rew+' point</b>.</p><div><br></div>',
     stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
     labels: ['0 secondes','60 secondes'],
     min: 15,
@@ -88,7 +88,7 @@ function SE2_training(){
       flip_fb_train = data.conf_response;
     },
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -109,7 +109,7 @@ function SE2_training(){
     stimulus: [instrImg_html[2]],
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -129,7 +129,7 @@ function SE2_training(){
     choices: [],
     trial_duration: time.fixation,
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -153,7 +153,7 @@ function SE2_training(){
     reward: train_rew,
     timer: true,
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -174,7 +174,7 @@ function SE2_training(){
     stimulus: [instrImg_html[3]],
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -194,7 +194,7 @@ function SE2_training(){
     choices: [],
     trial_duration: time.fixation,
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -252,7 +252,7 @@ function SE2_training(){
       test_counter_train++
     },
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: test_i,
@@ -273,7 +273,7 @@ function SE2_training(){
     stimulus: [instrImg_html[4]],
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -293,7 +293,7 @@ function SE2_training(){
     stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
     choices: ['0','1','2','3','4','5','6'],
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -313,7 +313,7 @@ function SE2_training(){
     stimulus: [instrImg_html[5]],
     choices: ['Ok'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -344,7 +344,7 @@ function SE2_training(){
       clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
     },
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -390,7 +390,7 @@ function SE2_training(){
       data.nTS = points_total_train;
     },
     data: {
-      blockNb: -1,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -427,7 +427,7 @@ function SE2_training(){
     stimulus: [instrImg_html[6]],
     choices: ['Commencer le test principal !'],
     data: {
-      blockNb: 999,
+      blockNb: -2,
       trialNb: 999,
       TinB: 999,
       testNb: 999,

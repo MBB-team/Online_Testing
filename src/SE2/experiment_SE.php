@@ -63,15 +63,17 @@ Per trial:
 
   // Configuration parameters of experiment
   const exp = {name:           "SE2",
-               nbTrials:       6,
-               nbBlocks:       6,
+               nbTrials:       40,
+               nbBlocks:       4,
+               block0nTr:      6,
                rew_levels:    [0, 1],
                TS_levels:     [0, 0],
                TS:            [6],
+               block0TS:      [4],
                rew:           [1, 10],
                rew_euro:      [10, 25],
-               max_points:    [330],
-               TD_levels:     [1, 0, 2, 0, 2, 1],
+               max_points:    [254],
+               TD_levels:     [0, 2, 0, 2],
                TD:            [0.7, 1, 1.3]};
 
   // Timings
@@ -192,7 +194,8 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
+    var cond_perm_pt = randi(0,cond_perms.length);
+    var cond_pt = cond_perms[cond_perm_pt].map(x => x - 1);
     // var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
 
 
@@ -209,17 +212,27 @@ Per trial:
     // else we just want a vector of 1:exp.nbTrials
     var cond_pt_ind = Array.from(Array(exp.nbTrials).keys());
 
-    // (pseudo-)shuffle grids
-    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original);
+    // (pseudo-)shuffle grids for main experiment
+    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original); // shuffled across blocks
     var grid_indexes          = grid_indexes_packed.flat();
-    var grid_indexes_shuffled = Array(exp.nbTrials);
-    for (var trNi=0; trNi<cond_pt_ind.length; trNi++){
-      grid_indexes_shuffled[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var grid_indexes_shuffled_main = Array(exp.nbTrials-exp.nbBlocks);
+    for (var trNi=0; trNi<exp.nbTrial-exp.nbBlocks; trNi++){
+      grid_indexes_shuffled_main[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     }
+
+    // (pseudo-)shuffle grids for block0
+    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_block0_original);
+    var grid_indexes          = grid_indexes_packed.flat();
+    var grid_indexes_shuffled_block0 = Array(exp.block0nTr);
+    for (var trNi=0; trNi<exp.block0nTr; trNi++){
+      grid_indexes_shuffled_block0[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    }
+
     var square_size = screen.height/7;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli       = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt);
-    var all_flip_stimuli_train = generate_grids2(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [0])
+    var all_flip_stimuli_main   = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt);
+    var all_flip_stimuli_block0 = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs, cond_pt);
+    var all_flip_stimuli_train  = generate_grids2(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [0])
 
     var grid_stimuli = all_flip_stimuli;
     var grid_stimuli_train = all_flip_stimuli_train;
