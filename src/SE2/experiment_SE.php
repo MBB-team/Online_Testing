@@ -202,7 +202,7 @@ Per trial:
     cond_pt_ind = cond_pt_ind.flat();
 
     // (pseudo-)shuffle grids
-    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original);
+    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original); // shuffle at the level of blocks
     var grid_indexes          = grid_indexes_packed.flat();
     var grid_indexes_shuffled = Array(exp.nbTrials);
     for (var trNi=0; trNi<cond_pt_ind.length; trNi++){
