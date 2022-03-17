@@ -59,7 +59,7 @@ Per trial:
   // What to do
   const cfg = {debug:          false,
                cheat:          false,
-               instructions:   false,
+               instructions:   true,
                main:           true};
 
   // Configuration parameters of experiment
@@ -77,7 +77,8 @@ Per trial:
                rew_euro:      [10, 25],
                max_points:    [254],
                TD_levels:     [0, 2, 0, 2],
-               TD:            [0.7, 1, 1.3]};
+               TD:            [0.8, 1, 1.2],
+               eff:           [0, 60]};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -243,7 +244,7 @@ Per trial:
     var all_flip_stimuli_main   = generate_grids_main(exp.nbTrials-exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt);
     var all_flip_stimuli_block0 = generate_grids_TS(exp.block0nTr, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs,  Array(exp.block0nTr).fill(exp.block0TS));
     var all_flip_stimuli_filler = generate_grids_TS(exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_filler, square_size, matching_pairs, [8, 4, 8, 4]);
-    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, 4)
+    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [4])
 
     var grid_stimuli_main   = all_flip_stimuli_main;
     var grid_stimuli_block0 = all_flip_stimuli_block0;

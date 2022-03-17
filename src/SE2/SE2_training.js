@@ -78,10 +78,10 @@ function SE2_training(){
     prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
     // prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p></p><p>Si vous retrouvez correctement les emplacements de toutes les paires, vous recevrez un bonus de <br><b>'+train_rew+' point</b>.</p><div><br></div>',
     stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
-    labels: ['0 secondes','60 secondes'],
-    min: 15,
-    max: 60,
-    start: function(){return randi(15,60);},
+    labels: [''],
+    min: exp.eff[0],
+    max: exp.eff[1],
+    start: function(){return randi(exp.eff[0],exp.eff[1]);},
     require_movement: true,
     effort: true,
     on_finish: function(data){
@@ -151,7 +151,7 @@ function SE2_training(){
     choices: [],
     trial_duration: function(){return flip_fb_train*1000;},
     reward: train_rew,
-    timer: true,
+    timer: false,
     data: {
       blockNb: -2,
       trialNb: 999,
@@ -291,7 +291,7 @@ function SE2_training(){
   var EnS_train = {
     type: 'html-button-response-WH',
     stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-    choices: ['0','1','2','3','4','5','6'],
+    choices: ['0','1','2','3','4'],
     data: {
       blockNb: -2,
       trialNb: 999,

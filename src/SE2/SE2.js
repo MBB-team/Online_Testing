@@ -16,13 +16,12 @@ function SE2(nbBlocks, nbTrials){
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
   var points_total  = 0;
-  var EnS_choices   = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6','7','8']];
+  var EnS_main      = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6'],['0', '1', '2', '3', '4', '5', '6','7','8']];
   var EnS_filler    = [['0', '1', '2', '3', '4'],['0', '1', '2', '3', '4', '5', '6','7','8']];
 
   // Conditions
   var eff_q_pt       = eff_q[cond_perm_pt];
   var tot_trials     = nbTrials + exp.block0nTr;
-console.log(eff_q_pt)
 
   var cheat = {
     type: 'html-button-response-WH',
@@ -58,10 +57,10 @@ console.log(eff_q_pt)
       type: 'html-slider-response-effort-want-WH',
       prompt: '<p> Exercice : '+nbTrial_counter+'/'+tot_trials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p><div><br></div>',
       stimulus: '<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
-      labels: ['0 secondes','60 secondes'],
-      min: 0,
-      max: 60,
-      start: function(){return randi(15,60);},
+      labels: [''],
+      min: exp.eff[0],
+      max: exp.eff[1],
+      start: function(){return randi(exp.eff[0],exp.eff[1]);},
       require_movement: true,
       effort: true,
       on_start: function(){
@@ -75,9 +74,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: -1,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'effort_want',
         nTS: 999
@@ -96,9 +95,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: -1,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'fixation',
         nTS: 999
@@ -122,9 +121,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: -1,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'flip',
         nTS: 999
@@ -143,9 +142,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: -1,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'fixation',
         nTS: 999
@@ -200,9 +199,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: test_i,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'test',
         nTS: 999
@@ -230,13 +229,13 @@ console.log(eff_q_pt)
     var EnS = {
       type: 'html-button-response-WH',
       stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-      choices: EnS_choices[0],
+      choices: EnS_main[0],
       data: {
         blockNb: -1,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'post_test_conf',
         nTS: 999
@@ -254,9 +253,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: -1,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'test_conf',
         nTS: 999
@@ -292,9 +291,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'feedback_grid',
         nTS: 999
@@ -337,9 +336,9 @@ console.log(eff_q_pt)
       data: {
         blockNb: block_i,
         trialNb: trial_counter,
-        TinB: trial_i,
+        TinB: TD,
         testNb: 999,
-        target_score: TD,
+        target_score: TS,
         reward: rew,
         test_part: 'feedback',
         nTS: 999
@@ -389,7 +388,7 @@ console.log(eff_q_pt)
         var trial_stimuli = grid_stimuli_main[main_counter];
         var trial_grid_indexes = grid_indexes_shuffled_main[main_counter];
         var TS = exp.TS[0];
-        var EnS_btns = EnS_choices[1];
+        var EnS_btns = EnS_main[1];
         var TD  = exp.TD[exp.TD_levels[block_i]];
       } else {
 
@@ -403,14 +402,14 @@ console.log(eff_q_pt)
         // PROBE QUESTION //
         var probe = {
           type: 'html-button-response-WH',
-          stimulus: '<p>Imaginez que nous vous ayons montré la grille avec 10 paires de chiffres et nous vous donnerions 90 secondes pour le mémoriser. Combien d’emplacements pensez-vous etre capable de correctement retrouver ?</p>',
+          stimulus: '<p>Imaginez que nous vous ayons montré la grille avec 10 paires de chiffres et nous vous donnerions 90 secondes pour le mémoriser.<br>Combien d’emplacements pensez-vous &ecirctre capable de correctement retrouver ?</p>',
           choices: ['0','1','2','3','4','5','6','7','8','9','10'],
           data: {
             blockNb: block_i,
             trialNb: trial_counter-1,
-            TinB: trial_i-1,
+            TinB: TD,
             testNb: 999,
-            target_score: TD,
+            target_score: TS,
             reward: 999,
             test_part: 'probe',
             nTS: 999
@@ -433,10 +432,10 @@ console.log(eff_q_pt)
         type: 'html-slider-response-effort-want-WH',
         prompt: '<p> Exercice : '+nbTrial_counter+'/'+tot_trials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TS+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rew+' ' + points + '</b>.</p><div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
-        labels: ['0 secondes','60 secondes'],
-        min: 0,
-        max: 60,
-        start: function(){return randi(15,60);},
+        labels: [''],
+        min: exp.eff[0],
+        max: exp.eff[1],
+        start: function(){return randi(exp.eff[0],exp.eff[1]);},
         require_movement: true,
         effort: true,
         on_start: function(){
@@ -450,9 +449,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'effort_want',
           nTS: 999
@@ -471,9 +470,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'fixation',
           nTS: 999
@@ -500,9 +499,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'flip',
           nTS: 999
@@ -521,9 +520,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'fixation',
           nTS: 999
@@ -578,9 +577,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: test_i,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'test',
           nTS: 999
@@ -613,9 +612,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'post_test_conf',
           nTS: 999
@@ -636,9 +635,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'test_conf',
           nTS: 999
@@ -675,9 +674,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'feedback_grid',
           nTS: 999
@@ -720,9 +719,9 @@ console.log(eff_q_pt)
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
-          TinB: trial_i,
+          TinB: TD,
           testNb: 999,
-          target_score: TD,
+          target_score: TS,
           reward: rew,
           test_part: 'feedback',
           nTS: 999
@@ -800,7 +799,7 @@ console.log(eff_q_pt)
     data: {
       blockNb: block_i,
       trialNb: trial_counter,
-      TinB: trial_i,
+      TinB: TD,
       testNb: 999,
       target_score: 999,
       reward: 999,
