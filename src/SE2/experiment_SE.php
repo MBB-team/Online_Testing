@@ -59,8 +59,9 @@ Per trial:
   // What to do
   const cfg = {debug:          false,
                cheat:          false,
-               instructions:   true,
-               main:           true};
+               instructions:   false,
+               main:           true,
+               block0:         true};
 
   // Configuration parameters of experiment
   const exp = {name:           "SE2",
