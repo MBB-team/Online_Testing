@@ -7,26 +7,25 @@
 *
 */
 
-function generate_grids2(nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt){
+function generate_grids_main(nbTrials, numbersImg, numbersImg2, GIS, square_size, matching_pairs, cond_pt){
 
   var flip_stimuli = Array(nbTrials);
   var grid_counter = 0;
-  var grid = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
+  var grid = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
 
   var n_TS;
   for (var grid_i = 0; grid_i <= nbTrials-1; grid_i++){ // for each grid
-    var grid_num = [[999,999,999,999],[999,999,999,999],[999,999,999,999],[999,999,999,999]];
+    var grid_num = [[999,999,999,999,999],[999,999,999,999,999],[999,999,999,999,999],[999,999,999,999,999]];
 
     n_TS = exp.TS[exp.TS_levels[cond_pt[grid_i]]];
 
     for (var pair_i = 0; pair_i < n_TS; pair_i++){
-      var row_i = [];
-      var col_i = [];
+      var row_i = [null,null];
+      var col_i = [null,null];
 
       for (var number_i = 0; number_i < 2; number_i++){ // for each number in the pair
-
-        row_i[number_i] = grid_indexes_shuffled[grid_i][pair_i][number_i][0] - 1; // row index
-        col_i[number_i] = grid_indexes_shuffled[grid_i][pair_i][number_i][1] - 1; // column index
+        row_i[number_i] = GIS[grid_i][pair_i][number_i][0] - 1; // row index
+        col_i[number_i] = GIS[grid_i][pair_i][number_i][1] - 1; // column index
 
         grid_num[row_i[number_i]][col_i[number_i]] = pair_i; // assign each number to its location in the grid
 

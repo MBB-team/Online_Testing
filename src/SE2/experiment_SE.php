@@ -28,7 +28,8 @@ Per trial:
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE2-confidence-slider-WH.js'></script>
             <script   src  = 'Stimuli/Grids/grid_indexes_SE2.js'></script>
-            <script   src  = 'Stimuli/Grids/generate_grids2.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids_TS.js'></script>
+            <script   src  = 'Stimuli/Grids/generate_grids_main.js'></script>
             <script   src  = 'Stimuli/Conditions/Condition_perms.js'></script>
             <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
             <script   src  = 'Stimuli/Timer/timer.js'></script>
@@ -59,17 +60,26 @@ Per trial:
   const cfg = {debug:          false,
                cheat:          false,
                instructions:   false,
-               main:           true};
+               main:           true,
+               block0:         true};
 
   // Configuration parameters of experiment
   const exp = {name:           "SE2",
-               nbTrials:       27,
-               nbBlocks:       3,
-               rew_levels:    [0, 0, 0, 1, 1, 1, 2, 2, 2],
-               TS_levels:     [0, 1, 2, 0, 1, 2, 0, 1, 2],
-               TS:            [4, 6, 8],
-               rew:           [1, 10, 100],
-               rew_euro:      [10, 25]};
+               nbTrials:       40,
+               nbBlocks:       4,
+               block0nTr:      6,
+               rew_levels:    [0, 1],
+               TS_levels:     [0, 0],
+               TS:            [6],
+               filler_TS_lvl: [1, 0, 1, 0],
+               filler_TS:     [4, 8],
+               block0TS:      [4],
+               rew:           [1, 10],
+               rew_euro:      [10, 25],
+               max_points:    [254],
+               TD_levels:     [0, 2, 0, 2],
+               TD:            [0.8, 1, 1.2],
+               eff:           [15, 60]};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -171,7 +181,7 @@ Per trial:
     // Numbers (1st)
     var numbersImg  = [];
     var numbersImg_html = [];
-    for (var t=1; t <= 8; t++){
+    for (var t=1; t <= 10; t++){
       numbersImg[t-1] = 'Stimuli/Images/image'+t+'.png'; // pre-load all the stimuli numbers
       numbersImg_html[t-1] = '<img src="'+numbersImg[t-1]+'"></img>';
     };
@@ -189,32 +199,58 @@ Per trial:
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
 
     // Grids
-    var cond_pt = cond_perms[randi(0,cond_perms.length)].map(x => x - 1);
+    var cond_perm_pt = randi(0,cond_perms.length);
+    var cond_pt = cond_perms[cond_perm_pt].map(x => x - 1);
     // var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
 
-    var cond_pt_ind = Array(exp.nbBlocks);
 
-    for (var bNi=0; bNi<exp.nbBlocks; bNi++){
-      var ind = Array.from(Array(exp.TS_levels.length).keys());
-      ind = ind.map(x => x + bNi*exp.TS_levels.length);
-      cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
-    }
-    cond_pt_ind = cond_pt_ind.flat();
+    // if we need cond_pt indexes to be scaled up across blocks such that cond in block:bN = cond + (bN-1)*n_trialsinblock
+    // var cond_pt_ind = Array(exp.nbBlocks);
+    //
+    // for (var bNi=0; bNi<exp.nbBlocks; bNi++){
+    //   var ind = Array.from(Array(exp.TS_levels.length).keys());
+    //   ind = ind.map(x => x + bNi*exp.TS_levels.length);
+    //   cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
+    // }
+    // cond_pt_ind = cond_pt_ind.flat();
 
-    // (pseudo-)shuffle grids
-    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original);
+    // else we just want a vector of 1:exp.nbTrials
+    var cond_pt_ind = Array.from(Array(exp.nbTrials).keys());
+
+    // (pseudo-)shuffle grids for main experiment
+    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original); // shuffled across blocks
     var grid_indexes          = grid_indexes_packed.flat();
-    var grid_indexes_shuffled = Array(exp.nbTrials);
-    for (var trNi=0; trNi<cond_pt_ind.length; trNi++){
-      grid_indexes_shuffled[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    var grid_indexes_shuffled_main = Array(exp.nbTrials-exp.nbBlocks);
+    for (var trNi=0; trNi<exp.nbTrials-exp.nbBlocks; trNi++){
+      grid_indexes_shuffled_main[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     }
+
+    // (pseudo-)shuffle grids for block0
+    var grid_indexes_packed   = [jsPsych.randomization.shuffle(grid_indexes_block0_original)];
+    var grid_indexes          = grid_indexes_packed.flat();
+    var grid_indexes_shuffled_block0 = Array(exp.block0nTr);
+    for (var trNi=0; trNi<exp.block0nTr; trNi++){
+      grid_indexes_shuffled_block0[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    }
+    // filler
+    var grid_indexes_packed   = [grid_indexes_filler_original];
+    var grid_indexes          = grid_indexes_packed.flat();
+    var grid_indexes_shuffled_filler = Array(4);
+    for (var trNi=0; trNi<4; trNi++){
+      grid_indexes_shuffled_filler[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
+    }
+
     var square_size = screen.height/7;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli       = generate_grids2(exp.nbTrials, numbersImg, numbersImg2, grid_indexes_shuffled, square_size, matching_pairs, cond_pt);
-    var all_flip_stimuli_train = generate_grids2(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [0])
+    var all_flip_stimuli_main   = generate_grids_main(exp.nbTrials-exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt);
+    var all_flip_stimuli_block0 = generate_grids_TS(exp.block0nTr, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs,  Array(exp.block0nTr).fill(exp.block0TS));
+    var all_flip_stimuli_filler = generate_grids_TS(exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_filler, square_size, matching_pairs, [8, 4, 8, 4]);
+    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [4])
 
-    var grid_stimuli = all_flip_stimuli;
-    var grid_stimuli_train = all_flip_stimuli_train;
+    var grid_stimuli_main   = all_flip_stimuli_main;
+    var grid_stimuli_block0 = all_flip_stimuli_block0;
+    var grid_stimuli_filler = all_flip_stimuli_filler;
+    var grid_stimuli_train  = all_flip_stimuli_train;
     // var grid_stimuli = []; // slice array into chunks of 8
     // for (var i=0; i<all_flip_stimuli.length; i+=8) {
     //      grid_stimuli.push(all_flip_stimuli.slice(i,i+8));
@@ -257,7 +293,9 @@ Per trial:
       var points_total = 0;
       var task_training = SE2_training();
       for (var i = 0; i < task_training.length; i++){
-        exp_timeline.push(task_training[i]);
+        if (cfg.instructions){
+          exp_timeline.push(task_training[i]);
+        }
       };
 
       var task = SE2(exp.nbBlocks, exp.nbTrials);
