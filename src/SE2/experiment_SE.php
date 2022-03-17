@@ -79,7 +79,7 @@ Per trial:
                max_points:    [254],
                TD_levels:     [0, 2, 0, 2],
                TD:            [0.8, 1, 1.2],
-               eff:           [0, 60]};
+               eff:           [15, 60]};
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
