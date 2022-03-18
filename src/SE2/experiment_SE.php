@@ -59,27 +59,28 @@ Per trial:
   // What to do
   const cfg = {debug:          false,
                cheat:          false,
-               instructions:   false,
+               instructions:   true,
                main:           true,
                block0:         true};
 
   // Configuration parameters of experiment
   const exp = {name:           "SE2",
-               nbTrials:       40,
-               nbBlocks:       4,
-               block0nTr:      6,
-               rew_levels:    [0, 1],
-               TS_levels:     [0, 0],
-               TS:            [6],
-               filler_TS_lvl: [1, 0, 1, 0],
-               filler_TS:     [4, 8],
-               block0TS:      [4],
-               rew:           [1, 10],
-               rew_euro:      [10, 25],
-               max_points:    [254],
-               TD_levels:     [0, 2, 0, 2],
-               TD:            [0.8, 1, 1.2],
-               eff:           [15, 60]};
+               nbTrials:       40, // 40
+               nbBlocks:       4, // 4
+               block0nTr:      6, // 6
+               rew_levels:    [0, 1], // 0 1
+               TS_levels:     [0, 0], // 0 0
+               TS:            [6], // 6
+               filler_TS_lvl: [1, 0, 1, 0], // 1 0 1 0
+               filler_TS:     [4, 8], // 4 8
+               block0TS:      [4], // 4
+               rew:           [1, 10], // 1 10
+               rew_euro:      [10, 25], // 10 25
+               max_points:    [254], // 254
+               TD_levels:     [0, 2, 0, 2], // 0 2 0 2
+               TD:            [0.75, 1, 1.25], // 0.75 1 1.25
+               eff:           [15, 75], //15 75
+               grid:          [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]]}; // 4x6
 
   // Timings
   const time = {flipSpeed:     1000, // in ms so 1 sec
@@ -194,6 +195,14 @@ Per trial:
       numbersImg2_html[t-1] = '<img src="'+numbersImg2[t-1]+'"></img>';
     };
 
+    // Letters
+    var lettersImg  = [];
+    var lettersImg_html = [];
+    for (var t=1; t <= 26; t++){
+      lettersImg[t-1] = 'Stimuli/Letters/Letter'+t+'.png'; // pre-load all the stimuli numbers
+      lettersImg_html[t-1] = '<img src="'+lettersImg[t-1]+'"></img>';
+    };
+
     // Grey square
     var greySquare = 'Stimuli/grey-square.png';
     var greySquareHTML = '<img src="'+greySquare+'"></img>';
@@ -226,14 +235,14 @@ Per trial:
     }
 
     // (pseudo-)shuffle grids for block0
-    var grid_indexes_packed   = [jsPsych.randomization.shuffle(grid_indexes_block0_original)];
+    var grid_indexes_packed   = [jsPsych.randomization.shuffle(grid_indexes_block0_original)]; // shuffle within the block
     var grid_indexes          = grid_indexes_packed.flat();
     var grid_indexes_shuffled_block0 = Array(exp.block0nTr);
     for (var trNi=0; trNi<exp.block0nTr; trNi++){
       grid_indexes_shuffled_block0[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
     }
     // filler
-    var grid_indexes_packed   = [grid_indexes_filler_original];
+    var grid_indexes_packed   = [grid_indexes_filler_original]; // don't shuffle
     var grid_indexes          = grid_indexes_packed.flat();
     var grid_indexes_shuffled_filler = Array(4);
     for (var trNi=0; trNi<4; trNi++){
@@ -242,10 +251,10 @@ Per trial:
 
     var square_size = screen.height/7;
     var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli_main   = generate_grids_main(exp.nbTrials-exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt);
-    var all_flip_stimuli_block0 = generate_grids_TS(exp.block0nTr, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs,  Array(exp.block0nTr).fill(exp.block0TS));
-    var all_flip_stimuli_filler = generate_grids_TS(exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_filler, square_size, matching_pairs, [8, 4, 8, 4]);
-    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [4])
+    var all_flip_stimuli_main   = generate_grids_main(exp.nbTrials-exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt, exp.grid);
+    var all_flip_stimuli_block0 = generate_grids_TS(exp.block0nTr, numbersImg, numbersImg2, grid_indexes_shuffled_block0, square_size, matching_pairs,  Array(exp.block0nTr).fill(exp.block0TS), exp.grid);
+    var all_flip_stimuli_filler = generate_grids_TS(exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_filler, square_size, matching_pairs, [8, 4, 8, 4], exp.grid);
+    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [4], exp.grid)
 
     var grid_stimuli_main   = all_flip_stimuli_main;
     var grid_stimuli_block0 = all_flip_stimuli_block0;

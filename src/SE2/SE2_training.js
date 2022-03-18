@@ -11,7 +11,7 @@ function SE2_training(){
   var train_rew           = 1;
   var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
-  var grid_dim_train      = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+  var grid_dim_train      = exp.grid;
   var points_total_train  = 0;
 
   // First instructions

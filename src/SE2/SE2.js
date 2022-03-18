@@ -12,7 +12,7 @@ function SE2(nbBlocks, nbTrials){
   var test_counter  = 0; // counter for looping through test trials during execution
   var conf_counter  = 0; // counter for looping through effort question trials
   var nbTperB       = nbTrials/nbBlocks;
-  var grid_dim      = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]];
+  var grid_dim      = exp.grid;
   var sliderIni     = Array(2);
   var flib_fb       = []; // flip length of time for feedback
   var points_total  = 0;
@@ -198,7 +198,7 @@ function SE2(nbBlocks, nbTrials){
           test_counter++;
         },
         data: {
-          blockNb: block_i,
+          blockNb: -1,
           trialNb: trial_counter,
           TinB: TD,
           testNb: test_i,
@@ -290,7 +290,7 @@ function SE2(nbBlocks, nbTrials){
           test_counter   = 0;
         },
         data: {
-          blockNb: block_i,
+          blockNb: -1,
           trialNb: trial_counter,
           TinB: TD,
           testNb: 999,
@@ -335,7 +335,7 @@ function SE2(nbBlocks, nbTrials){
           }
         },
         data: {
-          blockNb: block_i,
+          blockNb: -1,
           trialNb: trial_counter,
           TinB: TD,
           testNb: 999,
@@ -369,6 +369,25 @@ function SE2(nbBlocks, nbTrials){
 
       trial_counter++;
     } // first block
+    // PROBE QUESTION //
+    var probe = {
+      type: 'html-button-response-WH',
+      stimulus: '<p>Imaginez que vous ayez 100 secondes pour memoriser une grille complété (avec 12 paires de chiffres).<br>Combien d&#39emplacements pensez-vous pouvoir correctement retrouver ?</p>',
+      choices: ['0','1','2','3','4','5','6','7','8','9','10','11','12'],
+      data: {
+        blockNb: -1,
+        trialNb: trial_counter,
+        TinB: TD,
+        testNb: 999,
+        target_score: TS,
+        reward: 999,
+        test_part: 'probe',
+        nTS: 999
+      }
+    };
+
+    timelineTask.push(fullscreenExp);
+    timelineTask.push(probe);
   } // if first block
 
 
@@ -383,7 +402,7 @@ function SE2(nbBlocks, nbTrials){
       var target_corr_i = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
 
       // What is the stimuli for this trial?
-      if (trial_i+1 != nbTperB){
+      if (trial_i+1 != nbTperB){ // if this is a normal trial
 
         main_counter++;
         var trial_stimuli = grid_stimuli_main[main_counter];
@@ -391,7 +410,8 @@ function SE2(nbBlocks, nbTrials){
         var TS = exp.TS[0];
         var EnS_btns = EnS_main[1];
         var TD  = exp.TD[exp.TD_levels[block_i]];
-      } else {
+
+      } else { // if this is a filler trial
 
         filler_counter++;
         var trial_stimuli = grid_stimuli_filler[filler_counter];
@@ -403,8 +423,8 @@ function SE2(nbBlocks, nbTrials){
         // PROBE QUESTION //
         var probe = {
           type: 'html-button-response-WH',
-          stimulus: '<p>Imaginez que nous vous ayons montré la grille avec 10 paires de chiffres et nous vous donnerions 90 secondes pour le mémoriser.<br>Combien d’emplacements pensez-vous &ecirctre capable de correctement retrouver ?</p>',
-          choices: ['0','1','2','3','4','5','6','7','8','9','10'],
+          stimulus: '<p>Imaginez que vous ayez 100 secondes pour memoriser une grille complété (avec 12 paires de chiffres).<br>Combien d&#39emplacements pensez-vous pouvoir correctement retrouver ?</p>',
+          choices: ['0','1','2','3','4','5','6','7','8','9','10','11','12'],
           data: {
             blockNb: block_i,
             trialNb: trial_counter-1,
