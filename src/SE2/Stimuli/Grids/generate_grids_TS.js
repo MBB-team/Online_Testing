@@ -28,7 +28,7 @@ function generate_grids_TS(nbTrials, numbersImg, numbersImg2, GIS, square_size, 
     // fill the rest of the grid with randomly pulled numbers
     var n_filler_letters = grid.length*grid[0].length - n_TS*2;
     var filler_letters   = jsPsych.randomization.sampleWithoutReplacement([0, 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],n_filler_letters);
-    var filler_counter   = 0;
+    var filler_counter   = -1;
 
     for (var pair_i = 0; pair_i < n_TS; pair_i++){
       var row_i = [null,null];
@@ -61,11 +61,8 @@ function generate_grids_TS(nbTrials, numbersImg, numbersImg2, GIS, square_size, 
         if (grid_num[i][j] != 999){
           stimulus += '<img src="'+numbersImg[grid_num[i][j]]+'" style="height:'+square_size+'px; width:auto"></img>';
         } else {
-          stimulus += '<img src="'+lettersImg[filler_letters[filler_counter]]+'" style="height:'+square_size+'px; width:auto"></img>';
           filler_counter++;
-          if (lettersImg[filler_letters[filler_counter]] === undefined){
-            console.log(lettersImg[filler_letters[filler_counter]])
-          }
+          stimulus += '<img src="'+lettersImg[filler_letters[filler_counter]]+'" style="height:'+square_size+'px; width:auto"></img>';
         }
         // // second image location
         // if(matching_pairs == 1){ // are both numbers the same?
