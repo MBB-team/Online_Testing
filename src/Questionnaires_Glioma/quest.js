@@ -9,6 +9,7 @@ function quest() {
 		'<p> Nous allons maintenant vous demander de remplir un questionnaire.</p>' +
 		"<p> S'il vous plait, lisez les questions avec soin et r\351pondez selon les options pr\351sent\351es." +
 		// "<p> Ne vous attardez pas sur la r\351ponse \340 faire: votre r\351action imm\351diate \340 chaque question fournira probablement une meilleure indication de ce que vous \351prouvez, qu'une r\351ponse longuement m\351dit\351e." +
+		"<p> Vos commentaires sont très précieux et nous permettent d&#39améliorer la qualité de nos recherches." +
 		"<p> <br> <br> Appuyez sur la barre d'espace pour continuer </p>",
 		choices: [32],
 		data: {test_part: 'questinstruction'}
@@ -54,24 +55,30 @@ function quest() {
 	var debriefing = {
 		type: 'survey-text',
 		questions: [
-			{prompt: "1) A votre avis, quel était le but de l&#39expérience?"},
-			{prompt: "2) Est-ce que les instructions étaient claires? Y a-t-il quoi que ce soit que vous n&#39ayes pas compris?"},
-			{prompt: "3) Le test était-il trop facile ou trop difficile? Si oui, pourquoi?"},
-			{prompt: "4) Votre concentration a-t-elle varié au cours de l&#39expérience? Si oui, quand et pourquoi?"},
-			{prompt: "5) Quelle a été votre stratégie pour vous souvenir de la position des paires d&#39items? Avez-vous changé votre stratégie au cours du temps? Si oui, comment?"},
-			{prompt: "6) Comment avez-vous effectué les auto-évaluations? Etait-ce difficile? Avez-vous changé la manière dont vous avez effectué ces auto-évaluations au cours du temps? Si oui, comment?"},
-			{prompt: "7) Pensez-vous que vos auto-évaluations étaient décalées par rapport à vos performances réelles? Si oui, comment?"},
-			{prompt: "8) Pensez-vous que votre performance dépend de l&#39effort que vous fournissez lorsque vous apprenez la position des paires d&#39tems? Si oui, comment?"},
-			{prompt: "9) Pensez-vous avoir amélioré votre auto-évaluation au cours du temps? Si oui, comment?"},
-			{prompt: "10) Avous-vous une dernière remarque à faire?"}
+			{prompt: "1) A votre avis, quel était le but de l&#39expérience ?", required:true},
+			{prompt: "2) Est-ce que les instructions étaient claires ? Y a-t-il quoi que ce soit que vous n&#39ayiez pas compris ?", required:true},
+			{prompt: "3) Le test était-il trop facile ou trop difficile ? Si oui, pourquoi ?", required:true},
+			{prompt: "4) Votre concentration a-t-elle varié au cours de l&#39expérience ? Si oui, quand et pourquoi ?", required:true},
+			{prompt: "5) Avez-vous remarqué quoi que ce soit qui ait change au cours de l&#39experience ? Si oui, quoi et quand ?", required:true},
+			{prompt: "6) Pensez-vous que votre performance ait change au cours de la tâche ? Si oui, comment ?", required:true},
+			{prompt: "7) Quelle a été votre stratégie pour vous souvenir de la position des paires d&#39items ? Avez-vous changé votre stratégie au cours du temps ? Si oui, comment ?", required:true},
+			{prompt: "8) Comment avez-vous effectué les auto-évaluations  Etait-ce difficile ? Avez-vous changé la manière dont vous avez effectué ces auto-évaluations au cours du temps ? Si oui, comment ?", required:true},
+			{prompt: "9) Pensez-vous que vos auto-évaluations étaient décalées par rapport à vos performances réelles ? Si oui, comment ?", required:true},
+			{prompt: "10) Pensez-vous que votre performance dépend de l&#39effort que vous fournissez lorsque vous apprenez la position des paires d&#39tems ? Si oui, comment ?", required:true},
+			{prompt: "11) Les durées que nous avons données, étaient-elles trop longues/courtes ? Si oui, quand et comment ?", required:true},
+			{prompt: "12) Pensez-vous avoir amélioré votre auto-évaluation au cours du temps ? Si oui, comment ?", required:true},
+			{prompt: "13) Avez-vous remarque quelque-chose d’étrange pendant l&#39expérience ? Si oui, quoi et quand ?", required:true},
+			{prompt: "14) Pensez-vous que nous avons manipulé un aspect de l&#39expérience sans que vous ne le sachiez ? Si oui, quel aspect et comment ? (soyez aussi précis.e que possible).", required:true},
+			{prompt: "15) Qu&#39est-ce qui pourrait être amélioré ?", required:true},
+			{prompt: "16) Avez-vous une dernière remarque à faire ?"},
 		],
 		data:{test_part: 'debrief',trial_type: 'quest'}
 	};
 
 	var  end_qns = {
 		type: 'html-keyboard-response',
-		stimulus: "<H3> <p> Merci d'avoir pris le temps de r\351pondre \340 l'ensemble de ces questions. </p> </H3>" +
-		"<p>  <br> <br> Appuyez sur la barre d'espace pour continuer.</p>",
+		stimulus: "<H3> <p> Merci d&#39avoir pris le temps de r\351pondre \340 l&#39ensemble de ces questions. </p> </H3>" +
+		"<p>  <br> <br> Appuyez sur la barre d&#39espace pour continuer.</p>",
 		choices: [32],
 		data: {test_part: 'questinstruction',trial_type: 'quest'}
 	};
