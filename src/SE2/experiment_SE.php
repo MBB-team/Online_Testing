@@ -199,7 +199,7 @@ Per trial:
     var lettersImg  = [];
     var lettersImg_html = [];
     for (var t=1; t <= 26; t++){
-      lettersImg[t-1] = 'Stimuli/Letters/Letter'+t+'.png'; // pre-load all the stimuli numbers
+      lettersImg[t-1] = 'Stimuli/Letters/letter'+t+'.png'; // pre-load all the stimuli numbers
       lettersImg_html[t-1] = '<img src="'+lettersImg[t-1]+'"></img>';
     };
 
