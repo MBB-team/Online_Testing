@@ -785,6 +785,14 @@ function SE2(nbBlocks, nbTrials){
     stimulus: '',
     choices: [],
     trial_duration: 1,
+    on_finish: function(data){
+      var max_points = exp.max_points;
+      var max_euro   = exp.rew_euro[1];
+      var min_euro   = exp.rew_euro[0];
+      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
+      data.nTS = JSON.stringify([nTS, total_points, euro_rew]);
+    },
     data: {
       blockNb: 999,
       trialNb: 999,
@@ -793,15 +801,7 @@ function SE2(nbBlocks, nbTrials){
       target_score: 999,
       reward: 999,
       test_part: 'total_score',
-      nTS: function(){
-        var max_points = exp.max_points;
-        var max_euro   = exp.rew_euro[1];
-        var min_euro   = exp.rew_euro[0];
-        var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
-        var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
-        var nTS = JSON.stringify([nTS, total_points, euro_rew]);
-        return nTS
-      }
+      nTS: 999
     }
   }
 
