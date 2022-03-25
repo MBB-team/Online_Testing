@@ -78,7 +78,7 @@ Per trial:
                rew_euro:      [10, 25], // 10 25
                max_points:    [254], // 254
                TD_levels:     [0, 2, 0, 2], // 0 2 0 2
-               TD:            [0.75, 1, 1.25], // 0.75 1 1.25
+               TD:            [0.8, 1, 1.2], // 0.75 1 1.25
                eff:           [15, 75], //15 75
                grid:          [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]]}; // 4x6
 
@@ -199,7 +199,7 @@ Per trial:
     var lettersImg  = [];
     var lettersImg_html = [];
     for (var t=1; t <= 26; t++){
-      lettersImg[t-1] = 'Stimuli/Letters/Letter'+t+'.png'; // pre-load all the stimuli numbers
+      lettersImg[t-1] = 'Stimuli/Letters/letter'+t+'.png'; // pre-load all the stimuli numbers
       lettersImg_html[t-1] = '<img src="'+lettersImg[t-1]+'"></img>';
     };
 

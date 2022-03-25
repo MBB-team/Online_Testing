@@ -414,16 +414,18 @@ function SE2(nbBlocks, nbTrials){
       } else { // if this is a filler trial
 
         filler_counter++;
+        var EnS_btns = EnS_filler[exp.filler_TS_lvl[filler_counter]];
         var trial_stimuli = grid_stimuli_filler[filler_counter];
         var trial_grid_indexes = grid_indexes_shuffled_filler[filler_counter];
-        var TS = exp.filler_TS[exp.filler_TS_lvl[filler_counter]];
-        var EnS_btns = EnS_filler[exp.filler_TS_lvl[filler_counter]];
         var TD  = 1;
+        var TS = exp.filler_TS[exp.filler_TS_lvl[filler_counter]];
+        // var TD  = exp.TD[exp.TD_levels[block_i]];
+        // var TS = 6;
 
         // PROBE QUESTION //
         var probe = {
           type: 'html-button-response-WH',
-          stimulus: '<p>Imaginez que vous ayez 100 secondes pour memoriser une grille complété (avec 12 paires de chiffres).<br>Combien d&#39emplacements pensez-vous pouvoir correctement retrouver ?</p>',
+          stimulus: '<p>Imaginez que vous ayez 100 secondes pour memoriser une grille complète (avec 12 paires de chiffres).<br>Combien d&#39emplacements pensez-vous pouvoir correctement retrouver ?</p>',
           choices: ['0','1','2','3','4','5','6','7','8','9','10','11','12'],
           data: {
             blockNb: block_i,
