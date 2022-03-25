@@ -84,6 +84,12 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
         default: null,
         description: 'The bonus of this trial.'
       },
+      target_score: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Target Score',
+        default: null,
+        description: 'The target score of this trial.'
+      },
     }
   }
 
@@ -99,8 +105,9 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
     html += '<div><canvas class="jspsych-html-timer"></canvas></div>';
     html += '<div style="">'+trial.stimulus+'</div>';
     var points = trial.reward == 1 ? 'point':'points';
-    html += '<div id="jspsych-html-bonus"><p style="margin:0%">Bonus :<br>'+trial.reward+' ' + points + '</p></div>';
+    html += '<div id="jspsych-html-bonus"><p style="margin:0%">Bonus :<br>'+trial.reward+' ' + points + '<br><br>Objectif :<br>'+trial.target_score+' paires</p></div>';
     html += '</div>';
+
 
     //display buttons
     var buttons = [];

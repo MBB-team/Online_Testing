@@ -118,6 +118,7 @@ function SE2(nbBlocks, nbTrials){
           return flip_fb*1000;
         },
         reward: rew,
+        target_score: TS,
         timer: false,
         data: {
           blockNb: -1,
@@ -517,6 +518,7 @@ function SE2(nbBlocks, nbTrials){
           return flip_fb*1000*current_TD;
         },
         reward: rew,
+        target_score: TS,
         timer: false,
         data: {
           blockNb: block_i,
