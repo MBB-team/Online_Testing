@@ -151,7 +151,6 @@ function SE2_training(){
     choices: [],
     trial_duration: function(){return flip_fb_train*1000;},
     reward: train_rew,
-    target_score: train_TS,
     timer: false,
     data: {
       blockNb: -2,
