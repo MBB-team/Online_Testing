@@ -231,7 +231,7 @@ function SE2(nbBlocks, nbTrials){
       var EnS = {
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-        choices: EnS_main[0],
+        choices: EnS_main[1],
         on_finish: function(data){
           var TS_current = data.target_score;
           var rew_current = data.reward;
