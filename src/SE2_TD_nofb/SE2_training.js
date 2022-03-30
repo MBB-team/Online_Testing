@@ -293,6 +293,14 @@ function SE2_training(){
     type: 'html-button-response-WH',
     stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
     choices: ['0','1','2','3','4'],
+    on_finish: function(data){
+      var TS_current = data.target_score;
+      var rew_current = data.reward;
+      if (nCorrect >= TS_current){
+        points_total_train = points_total_train + rew_current;
+        data.nTS = points_total_train;
+      }
+    },
     data: {
       blockNb: -2,
       trialNb: 999,
@@ -325,8 +333,8 @@ function SE2_training(){
     }
   }
 
-  timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions6);
+  // timelineTask_train.push(fullscreenExp);
+  // timelineTask_train.push(instructions6);
 
   var feedback_with_grid_train = {
     type: 'html-button-response-fb-WH',
@@ -404,8 +412,8 @@ function SE2_training(){
 
 
   // PUSH TO TIMELINE //
-  timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(feedback_sans_grid_train);
+  // timelineTask_train.push(fullscreenExp);
+  // timelineTask_train.push(feedback_sans_grid_train);
 
   // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
   var if_explicit_feedback_train = {
@@ -439,8 +447,8 @@ function SE2_training(){
     }
   }
 
-  timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions7);
+  // timelineTask_train.push(fullscreenExp);
+  // timelineTask_train.push(instructions7);
 
 
 

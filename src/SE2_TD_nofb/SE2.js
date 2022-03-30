@@ -353,8 +353,8 @@ function SE2(nbBlocks, nbTrials){
 
 
       // PUSH TO TIMELINE //
-      timelineTask.push(fullscreenExp);
-      timelineTask.push(feedback_sans_grid);
+      // timelineTask.push(fullscreenExp);
+      // timelineTask.push(feedback_sans_grid);
 
       // CONDITIONAL FOR IF PARTICIPANT SKIPS PAIR //
       var if_explicit_feedback = {
@@ -369,7 +369,7 @@ function SE2(nbBlocks, nbTrials){
         }
       }
 
-      timelineTask.push(if_explicit_feedback);
+      // timelineTask.push(if_explicit_feedback);
 
 
       trial_counter++;
@@ -448,7 +448,6 @@ function SE2(nbBlocks, nbTrials){
         timelineTask.push(probe);
 
       };
-
       var trial_n = trial_i + 1;
       nbTrial_counter++;
 
@@ -489,6 +488,7 @@ function SE2(nbBlocks, nbTrials){
       // PUSH TO TIMELINE //
       timelineTask.push(fullscreenExp);
       timelineTask.push(effort_want);
+
 
       var effort_phase = {
         type: 'html-button-response-WH',
@@ -637,6 +637,17 @@ function SE2(nbBlocks, nbTrials){
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
         choices: EnS_btns,
+        on_finish: function(data){
+          var TS_current = data.target_score;
+          var rew_current = data.reward;
+          if (nCorrect >= TS_current){
+            points_total = points_total + rew_current;
+            nTS++;
+          }
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+        },
         data: {
           blockNb: block_i,
           trialNb: trial_counter,
@@ -774,7 +785,7 @@ function SE2(nbBlocks, nbTrials){
         }
       }
 
-      timelineTask.push(if_explicit_feedback);
+      // timelineTask.push(if_explicit_feedback);
 
       trial_counter++;
 
@@ -817,7 +828,7 @@ function SE2(nbBlocks, nbTrials){
       var max_points = exp.max_points;
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
-      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var total_points = points_total + jsPsych.data.get().filter({test_part:'post_test_conf_train'}).values()[0].nTS
       var points_fin = total_points == 1 ? 'point':'points';
       var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
       var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>En total, vous avez gagné : <b>'+total_points+' '+points_fin+'</b>. Vous recevrez : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
