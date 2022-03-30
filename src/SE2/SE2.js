@@ -244,6 +244,10 @@ function SE2(nbBlocks, nbTrials){
         }
       };
 
+      // PUSH TO TIMELINE //
+      timelineTask.push(fullscreenExp);
+      timelineTask.push(EnS);
+
       var test_conf = {
         type: 'html-slider-response-WH',
         stimulus:'<p>Combien d’effort avez-vous fourni pour mémoriser les paires ?</p><p>0% = <b>Aucune charge mentale</b> et 100% = <b>Charge mentale maximale</b>',
