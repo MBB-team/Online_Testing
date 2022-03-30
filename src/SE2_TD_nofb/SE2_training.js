@@ -296,10 +296,10 @@ function SE2_training(){
     on_finish: function(data){
       var TS_current = data.target_score;
       var rew_current = data.reward;
-      if (nCorrect >= TS_current){
+      if (nCorrect_train >= TS_current){
         points_total_train = points_total_train + rew_current;
-        data.nTS = points_total_train;
       }
+      data.nTS = points_total_train;
     },
     data: {
       blockNb: -2,
@@ -428,7 +428,7 @@ function SE2_training(){
     }
   }
 
-  timelineTask_train.push(if_explicit_feedback_train);
+  // timelineTask_train.push(if_explicit_feedback_train);
 
   // instructions - resume
   var instructions7 = {
@@ -448,7 +448,7 @@ function SE2_training(){
   }
 
   // timelineTask_train.push(fullscreenExp);
-  // timelineTask_train.push(instructions7);
+  timelineTask_train.push(instructions7);
 
 
 

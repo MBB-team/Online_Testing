@@ -232,6 +232,17 @@ function SE2(nbBlocks, nbTrials){
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
         choices: EnS_main[0],
+        on_finish: function(data){
+          var TS_current = data.target_score;
+          var rew_current = data.reward;
+          if (nCorrect >= TS_current){
+            points_total = points_total + rew_current;
+            nTS++;
+          }
+          nCorrect       = 0;
+          correct_i      = [0,0,0,0,0,0,0,0,0,0];
+          test_counter   = 0;
+        },
         data: {
           blockNb: -1,
           trialNb: trial_counter,
@@ -799,12 +810,12 @@ function SE2(nbBlocks, nbTrials){
     type: 'html-button-response-WH',
     stimulus: '',
     choices: [],
-    trial_duration: 1,
+    trial_duration: 1000,
     on_finish: function(data){
       var max_points = exp.max_points;
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
-      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var total_points = points_total + jsPsych.data.get().filter({test_part:'post_test_conf_train'}).values()[0].nTS
       var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
       data.nTS = JSON.stringify([nTS, total_points, euro_rew]);
     },
