@@ -231,7 +231,7 @@ function SE2(nbBlocks, nbTrials){
       var EnS = {
         type: 'html-button-response-WH',
         stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
-        choices: EnS_main[0],
+        choices: EnS_main[1],
         data: {
           blockNb: -1,
           trialNb: trial_counter,
@@ -243,6 +243,10 @@ function SE2(nbBlocks, nbTrials){
           nTS: 999
         }
       };
+
+      // PUSH TO TIMELINE //
+      timelineTask.push(fullscreenExp);
+      timelineTask.push(EnS);
 
       var test_conf = {
         type: 'html-slider-response-WH',
