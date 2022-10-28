@@ -1,4 +1,6 @@
 function SE2(nbBlocks, nbTrials){
+  // test tag please ignore 1
+
 
   // INITIALISATION //
   var timelineTask  = [];

@@ -65,7 +65,7 @@ deploy staging:
     VAULT_ENV_ROLE: assume-role-dev
     SKIP_TERRAFORM_PROCESS: "true"
   trigger:
-    project: icm-institute/iconics/software-factory/deployer
+    project: icm-institute/dsi/dev/software-factory/deployer
     branch: cogmood
     strategy: depend
   rules:
