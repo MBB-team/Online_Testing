@@ -64,6 +64,7 @@ deploy staging:
     TARGET_AWS_ACCOUNT: $AWS_ACCOUNT_DEV
     VAULT_ENV_ROLE: assume-role-dev
     SKIP_TERRAFORM_PROCESS: "true"
+    TF_DOCKER_VERSION: "0.15.0"
   trigger:
     project: icm-institute/dsi/dev/software-factory/deployer
     branch: cogmood
