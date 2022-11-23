@@ -247,15 +247,10 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
         "rt":               response.rt,   // integer
         "stimulus":         trial.stimulus,  // string
         "button_pressed":   parseInt(response.button),   // integer
-        "flips":            999,   // integer
-        "conf_response":    999,   // integer
-        "responses":       "999",  // string
-        "SE_max":           999,   // integer
-        "SE_min":           999,   // integer
-        "SE_max_ini":       999,   // integer
-        "SE_min_ini":       999,   // integer
-        "response_row":     999,   // integer
-        "response_col":     999,   // integer
+        "effort":           999,   // integer
+        "slider_response":  999,   // integer
+        "response_row":     "999",   // string
+        "response_col":     "999",   // string
         "target_row":       999,   // integer
         "target_col":       999,   // integer
         "correct_row":      999,   // integer
@@ -263,6 +258,8 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
         "correct":          null,   // BOOL
         "trial_time_elapsed": timeDiff  // integer
       };
+
+
 
       // clear the display
       display_element.innerHTML = '';

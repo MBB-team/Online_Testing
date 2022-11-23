@@ -18,23 +18,16 @@ Per trial:
             <link     href = "jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
             <script   src  = "getBrowserInfo.js"></script> <!-- add the external functions-->
             <script   src  = "jsPsych-master/plugins_WH/fullscreen-WH.js"></script> <!-- plugin that Juliana modified -->
-            <script   src  = 'jsPsych-master/plugins_WH/jspsych-instructions-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-effort-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-fb-WH.js'></script>
-            <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-effort-want-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
-            <script   src  = 'jsPsych-master/plugins_WH/jspsych-animation-WH.js'></script>
-            <script   src  = 'jsPsych-master/plugins_WH/jspsych-SE2-confidence-slider-WH.js'></script>
-            <script   src  = 'Stimuli/Grids/grid_indexes_SE2.js'></script>
-            <script   src  = 'Stimuli/Grids/generate_grids_TS.js'></script>
-            <script   src  = 'Stimuli/Grids/generate_grids_main.js'></script>
-            <script   src  = 'Stimuli/Conditions/Condition_perms.js'></script>
-            <script   src  = 'Stimuli/Conditions/eff_q.js'></script>
+            <script   src  = 'Stimuli/Grids/generateGridsMain.js'></script>
+            <script   src  = 'Stimuli/Grids/SE2Template - Task Conditions.js'></script>
             <script   src  = 'Stimuli/Timer/timer.js'></script>
-            <script   src  = 'SE2.js'></script>
-            <script   src  = 'SE2_training.js'></script>
+            <script   src  = 'SE2TaskTimeline.js'></script>
+            <script   src  = 'SE2TrainingTimeline_EnS1st.js'></script>
             <script   src = "../js/dataSaver.js"></script>
             <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link     rel='icon' href='/favicon.ico' />
@@ -64,32 +57,18 @@ Per trial:
                block0:         true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "SE2",
-               nbTrials:       40, // 40
-               nbBlocks:       4, // 4
-               block0nTr:      6, // 6
-               rew_levels:    [0, 1], // 0 1
-               TS_levels:     [0, 0], // 0 0
-               TS:            [6], // 6
-               filler_TS_lvl: [1, 0, 1, 0], // 1 0 1 0
-               filler_TS:     [4, 8], // 4 8
-               block0TS:      6, // 4
+  const exp = {name:           "SE2Template",
+               nbTrials:       36, // gridIndexesOriginal[0].length
+               TS:            [3, 5, 7], // [4 6 8]
                rew:           [1, 10], // 1 10
                rew_euro:      [10, 25], // 10 25
-               max_points:    [254], // 254
-               TD_levels:     [2, 0, 2, 0], // 0 2 0 2
-               TD:            [0.75, 1, 1.25], // 0.75 1 1.25
+               max_points:    [199], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
                effLimits:     [0, 60], //15 75
                grid:          [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]]}; // 4x6
 
   // Timings
-  const time = {flipSpeed:     1000, // in ms so 1 sec
-                responseSpeed: 3000,
-                SEconf:        180000,
-                highlight:     500,
-                showFeedback:  5000,
-                fixation:      1000,
-                rewatch:       5000};
+  const time = {highlight:     500,
+                fixation:      1000};
 
   // instructions
   const nbInstr              = 7;
@@ -141,10 +120,7 @@ Per trial:
       delay_after: 300,
       check_fullscreen: true,
       data: {
-        blockNb: 999,
         trialNb: 999,
-        TinB: 999,
-        testNb: 999,
         target_score: 999,
         reward: 999,
         test_part: 'firstFullscreen',
@@ -157,10 +133,7 @@ Per trial:
           message: "Vous devez \352tre en mode plein \351cran pour continuer l'exp\351rience!  <br></br> Veuillez cliquer sur le bouton ci-dessous pour passer en mode plein \351cran.<br></br><p>",
           fullscreen_mode: false,
           data: {
-            blockNb: 999,
             trialNb: 999,
-            TinB: 999,
-            testNb: 999,
             target_score: 999,
             reward: 999,
             test_part: 'fullscreenExp',
@@ -203,40 +176,18 @@ Per trial:
       lettersImg_html[t-1] = '<img src="'+lettersImg[t-1]+'"></img>';
     };
 
-    // Grids
-    var cond_perm_pt = randi(0,cond_perms.length);
-    var cond_pt = cond_perms[cond_perm_pt].map(x => x - 1);
-    // var cond_pt = [1,8,9,5,6,3,7,4,2,8,1,5,3,9,7,6,2,4,8,1,9,5,6,3,4,2,7].map(x => x - 1);
+    // Task Conditions & Grids
+    var condPermPt     = randi(0,gridIndexesOriginal.length); // randomly select a permutation
+    var rewPt          = rewArray[condPermPt];
+    var TSPt           = TSArray[condPermPt];
+    var gridIndexesPt  = gridIndexesOriginal[condPermPt];
+
+    var squareSize    = screen.height/7;
+    var matchingPairs = 1; // if the two images are the same or not
 
 
-    // if we need cond_pt indexes to be scaled up across blocks such that cond in block:bN = cond + (bN-1)*n_trialsinblock
-    // var cond_pt_ind = Array(exp.nbBlocks);
-    //
-    // for (var bNi=0; bNi<exp.nbBlocks; bNi++){
-    //   var ind = Array.from(Array(exp.TS_levels.length).keys());
-    //   ind = ind.map(x => x + bNi*exp.TS_levels.length);
-    //   cond_pt_ind[bNi] = ind.map(x => cond_pt[x] + bNi*exp.TS_levels.length);
-    // }
-    // cond_pt_ind = cond_pt_ind.flat();
-
-    // else we just want a vector of 1:exp.nbTrials
-    var cond_pt_ind = Array.from(Array(exp.nbTrials).keys());
-
-    // (pseudo-)shuffle grids for main experiment
-    var grid_indexes_packed   = jsPsych.randomization.shuffle(grid_indexes_original); // shuffled across blocks
-    var grid_indexes          = grid_indexes_packed.flat();
-    var grid_indexes_shuffled_main = Array(exp.nbTrials-exp.nbBlocks);
-    for (var trNi=0; trNi<exp.nbTrials-exp.nbBlocks; trNi++){
-      grid_indexes_shuffled_main[trNi] = grid_indexes[cond_pt_ind[trNi]]; // jsPsych.randomization.shuffle(grid_indexes); // shuffle the order of grids
-    };
-
-    var square_size = screen.height/7;
-    var matching_pairs = 1; // if the two images are the same or not
-    var all_flip_stimuli_main   = generate_grids_main(exp.nbTrials-exp.nbBlocks, numbersImg, numbersImg2, grid_indexes_shuffled_main, square_size, matching_pairs, cond_pt, exp.grid);
-    var all_flip_stimuli_train  = generate_grids_TS(1,            numbersImg, numbersImg2, train_grid_indexes,    square_size, matching_pairs, [4], exp.grid)
-
-    var gridStimuli       = all_flip_stimuli_main;
-    var gridStimuli_train = all_flip_stimuli_train;
+    var gridStimuli      = generateGridsMain(numbersImg, numbersImg2, gridIndexesPt, squareSize, matchingPairs, TSPt, exp.grid);
+    var gridStimuliTrain = generateGridsMain(numbersImg, numbersImg2, gridIndexesTrain, squareSize, matchingPairs, [0], exp.grid);
 
     function updateLoadedCount(nLoaded){
       var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + 1)  * 100), 100);
@@ -260,7 +211,7 @@ Per trial:
     var exp_timeline = [];
 
     if (cfg.debug == false) {
-      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2, greySquare],
+      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
 
@@ -273,14 +224,16 @@ Per trial:
       // Execute the experiment
       // Training phase
       var points_total = 0;
-      var task_training = SE2TrainingTimeline();
-      for (var i = 0; i < task_training.length; i++){
-        if (cfg.instructions){
-          exp_timeline.push(task_training[i]);
-        }
-      };
+      if (cfg.instructions){
+        var task_training = SE2TrainingTimeline();
+        for (var i = 0; i < task_training.length; i++){
+          if (cfg.instructions){
+            exp_timeline.push(task_training[i]);
+          }
+        };
+      }
 
-      var task = SE2TimelineTask();
+      var task = SE2TaskTimeline();
       for (var i = 0; i < task.length; i++) {
         exp_timeline.push(task[i]);
       };

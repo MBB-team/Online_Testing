@@ -144,7 +144,7 @@ jsPsych.plugins["html-button-response-fb-WH"] = (function() {
 
     if (trial.grid){
       // Highlight the appropriate cells
-      for (var pair_i = 0; pair_i < numbersImg.length; pair_i++){
+      for (var pair_i = 0; pair_i < trial.target_score; pair_i++){
         // Highlight the pair we showed yellow
         var square_target  = display_element.querySelector('#jspsych-SE_WH-stimulus-cell-'+trial.target[pair_i][0]+'-'+trial.target[pair_i][1]); // get the cell
         // square_target.style.outline = "5px solid yellow"; // set its outline to yellow
@@ -221,15 +221,10 @@ jsPsych.plugins["html-button-response-fb-WH"] = (function() {
         "rt":               response.rt,   // integer
         "stimulus":         trial.stimulus,  // string
         "button_pressed":   parseInt(response.button),   // integer
-        "flips":            999,   // integer
-        "conf_response":    999,   // integer
-        "responses":       "999",  // string
-        "SE_max":           999,   // integer
-        "SE_min":           999,   // integer
-        "SE_max_ini":       999,   // integer
-        "SE_min_ini":       999,   // integer
-        "response_row":     999,   // integer
-        "response_col":     999,   // integer
+        "effort":            999,   // integer
+        "slider_response":   999,   // integer
+        "response_row":     "999",   // string
+        "response_col":     "999",   // string
         "target_row":       999,   // integer
         "target_col":       999,   // integer
         "correct_row":      999,   // integer

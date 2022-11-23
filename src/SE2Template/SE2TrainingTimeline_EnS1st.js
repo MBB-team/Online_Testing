@@ -5,8 +5,7 @@ function SE2TrainingTimeline(){
   var nCorrect_train      = 0; // the number of correct responses given by the pts
   var correct_i_train     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter_train  = 0; // counter for looping through test trials during execution
-  var flib_fb_train       = []; // flip length of time for feedback
-  var train_TS            = 4;
+  var train_TS            = 3;
   var train_rew           = 1;
   var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
@@ -19,10 +18,7 @@ function SE2TrainingTimeline(){
     stimulus: '<p style="font-size:70px">Test de métacognition</p><p style="font-size:50px">Veuillez lire attentivement les instructions qui vont suivre.</p>',
     choices: ['Ok'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',
@@ -38,10 +34,7 @@ function SE2TrainingTimeline(){
     stimulus: [instrImg_html[0]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',
@@ -57,10 +50,7 @@ function SE2TrainingTimeline(){
     stimulus: [instrImg_html[1]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',
@@ -83,14 +73,11 @@ function SE2TrainingTimeline(){
     start: function(){return randi(exp.effLimits[0],exp.effLimits[1]);},
     require_movement: true,
     effort: true,
-    on_finish: function(data){
-      effortDuration_train = data.slider_response;
-    },
+    // on_finish: function(data){
+    //   var effortDuration_train = data.slider_response;
+    // },
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: train_TS,
       reward: train_rew,
       test_part: 'effort_want_train',
@@ -108,10 +95,7 @@ function SE2TrainingTimeline(){
     stimulus: [instrImg_html[2]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',
@@ -128,10 +112,7 @@ function SE2TrainingTimeline(){
     choices: [],
     trial_duration: time.fixation,
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: train_TS,
       reward: train_rew,
       test_part: 'fixation',
@@ -144,29 +125,29 @@ function SE2TrainingTimeline(){
   timelineTask_train.push(effort_phase);
 
   // effort //
-  var flip_train = {
+  var effort_train = {
     type: 'html-button-response-effort-WH',
     stimulus: [gridStimuliTrain],
     choices: [],
-    trial_duration: function(){return effortDuration_train*1000;},
+    trial_duration: function(){
+      var effortDuration_train = jsPsych.data.get().filter({test_part: 'effort_want_train'}).values()[0]['slider_response'];
+      return effortDuration_train*1000;
+    },
     reward: train_rew,
     target_score: train_TS,
     timer: true,
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: train_TS,
       reward: train_rew,
-      test_part: 'flip_train',
+      test_part: 'effort_train',
       nTS: 999
     }
   }; // effort
 
   // PUSH TO TIMELINE //
   timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(flip_train);
+  timelineTask_train.push(effort_train);
 
   // instructions3
   var instructions4 = {
@@ -174,10 +155,7 @@ function SE2TrainingTimeline(){
     stimulus: [instrImg_html[3]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',
@@ -188,16 +166,47 @@ function SE2TrainingTimeline(){
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions4);
 
+  // EXPECTATION QUESTION //
+  var EnS_train = {
+    type: 'html-button-response-WH',
+    stimulus: '<p>Combien d&#39emplacements pensez-vous capabale de correctement retrouver? ?</p>',
+    choices: ['0','1','2','3'],
+    data: {
+      trialNb: 999,
+      target_score: train_TS,
+      reward: train_rew,
+      test_part: 'post_test_conf_train',
+      nTS: 999
+    }
+  };
+
+  timelineTask_train.push(fullscreenExp);
+  timelineTask_train.push(EnS_train);
+
+  // instructions5
+  var instructions5 = {
+    type: 'html-button-response-WH',
+    stimulus: [instrImg_html[4]],
+    choices: ['Ok'],
+    data: {
+      trialNb: 999,
+      target_score: 999,
+      reward: 999,
+      test_part: 'instructions',
+      nTS: 999
+    }
+  }
+
+  timelineTask_train.push(fullscreenExp);
+  timelineTask_train.push(instructions5);
+
   var test_phase = {
     type: 'html-button-response-WH',
     stimulus: '<p><b>Tenez-vous pre&#770t.e !</b></p>',
     choices: [],
     trial_duration: time.fixation,
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: train_TS,
       reward: train_rew,
       test_part: 'fixation',
@@ -231,7 +240,7 @@ function SE2TrainingTimeline(){
 
   var test_train = {
     type: 'serial-reaction-time-mouse-WH',
-    timeline: test_trials_train,
+    timeline: testTrials,
     grid: grid_dim_train,
     grid_square_size: screen.height/7,
     response_ends_trial: true,
@@ -248,9 +257,7 @@ function SE2TrainingTimeline(){
       test_counter_train++
     },
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
       target_score: train_TS,
       reward: train_rew,
       test_part: 'test_train',
@@ -263,56 +270,12 @@ function SE2TrainingTimeline(){
   timelineTask_train.push(test_train);
 
   // instructions5
-  var instructions5 = {
-    type: 'html-button-response-WH',
-    stimulus: [instrImg_html[4]],
-    choices: ['Ok'],
-    data: {
-      blockNb: -2,
-      trialNb: 999,
-      TinB: 999,
-      testNb: 999,
-      target_score: 999,
-      reward: 999,
-      test_part: 'instructions',
-      nTS: 999
-    }
-  }
-
-  timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(instructions5);
-
-
-  // EXPECTATION QUESTION //
-  var EnS_train = {
-    type: 'html-button-response-WH',
-    stimulus: '<p>Combien d&#39emplacements pensez-vous capabale de correctement retrouver? ?</p>',
-    choices: ['0','1','2','3','4'],
-    data: {
-      blockNb: -2,
-      trialNb: 999,
-      TinB: 999,
-      testNb: 999,
-      target_score: train_TS,
-      reward: train_rew,
-      test_part: 'post_test_conf_train',
-      nTS: 999
-    }
-  };
-
-  timelineTask_train.push(fullscreenExp);
-  timelineTask_train.push(EnS_train);
-  
-  // instructions5
   var instructions6 = {
     type: 'html-button-response-WH',
     stimulus: [instrImg_html[5]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',
@@ -325,7 +288,7 @@ function SE2TrainingTimeline(){
 
   var feedback_with_grid_train = {
     type: 'html-button-response-fb-WH',
-    stimulus: [gridStimuliTrain],
+    stimulus: gridStimuliTrain,
     grid: true,
     choices: ['Terminer l&#39entra&icirc;nement'],
     target: target_i_train,
@@ -334,10 +297,7 @@ function SE2TrainingTimeline(){
     reward: train_rew,
     target_correct: target_corr_i_train,
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: train_TS,
       reward: train_rew,
       test_part: 'feedback_grid_train',
@@ -374,10 +334,7 @@ function SE2TrainingTimeline(){
       data.nTS = points_total_train;
     },
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: train_TS,
       reward: train_rew,
       test_part: 'feedback_train',
@@ -411,10 +368,7 @@ function SE2TrainingTimeline(){
     stimulus: [instrImg_html[6]],
     choices: ['Commencer le test principal !'],
     data: {
-      blockNb: -2,
       trialNb: 999,
-      TinB: 999,
-      testNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'instructions',

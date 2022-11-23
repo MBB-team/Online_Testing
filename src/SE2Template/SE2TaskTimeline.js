@@ -1,7 +1,7 @@
 function SE2TaskTimeline(){
 
   // Initialise Variables
-  var timelineTask;
+  var timelineTask = [];
   var pointsTotal = 0;
 
 
@@ -10,12 +10,14 @@ function SE2TaskTimeline(){
 
     // Initialise inputs
     let trialNbCurrent     = trialInd+1;
-    let rewCurrent         = exp.rewArray[trialInd];
-    let TSCurrent          = exp.TSArray[trialInd];
+    let rewCurrent         = exp.rew[rewPt[trialInd]];
+    let TSCurrent          = exp.TS[TSPt[trialInd]];
     let gridStimuliCurrent = gridStimuli[trialInd];
-    let gridIndexesCurrent = gridIndexesShuffled[trialInd];
+    let gridIndexesCurrent = gridIndexesPt[trialInd];
     let target_i           = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
     let target_corr_i      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
+    let TD                 = 1;
+    var nTS;
 
     // ==== Trial # & Effort Want ==== //
     // Inputs:
@@ -32,7 +34,7 @@ function SE2TaskTimeline(){
       prompt: '<p> Exercice : '+trialNbCurrent+'/'+exp.nbTrials+'.<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TSCurrent+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+rewCurrent+'</b>.</p><div><br></div>',
       stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
       min: exp.effLimits[0],
-      min: exp.effLimits[1],
+      max: exp.effLimits[1],
       start: function(){return randi(exp.effLimits[0],exp.effLimits[1]);},
       require_movement: true,
       effort: true,
@@ -46,7 +48,11 @@ function SE2TaskTimeline(){
         var effortDuration = data.slider_response;
       },
       data: {
-        trialNb: trialInd
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
+        test_part: 'effort_want',
+        nTS: 999
       }
 
     }
@@ -71,7 +77,11 @@ function SE2TaskTimeline(){
       choices: [],
       trial_duration: time.fixation,
       data: {
-        trialNb: trialInd
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
+        test_part: 'fixation',
+        nTS: 999
       }
     }; // fixation
 
@@ -84,13 +94,19 @@ function SE2TaskTimeline(){
       stimulus: gridStimuliCurrent,
       choices: [],
       trial_duration: function(){
+        var CurrentTrialInd = jsPsych.data.getLastTrialData().values()[0]['trialNb'];
+        var effortDuration = jsPsych.data.get().filter({test_part: 'effort_want','trialNb': CurrentTrialInd}).values()[0]['slider_response'];
         return effortDuration*1000;
       },
       reward: rewCurrent,
       target_score: TSCurrent,
       timer: true, // do we show a timer of the amount of time left?
       data: {
-        trialNb: trialInd
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
+        test_part: 'effort',
+        nTS: 999
       }
     }; // effort
 
@@ -104,13 +120,19 @@ function SE2TaskTimeline(){
     // - E[# of Successes]
     // - E[# of Successes] Reaction Time
 
-    let EnSStr = [...Array(TSCurrent).keys()];
+    var EnSBtns = TSCurrent + 1;
+    let EnSStr;
+    EnSStr = [...Array(EnSBtns).keys()];
     var EnS = {
       type: 'html-button-response-WH',
       stimulus: '<p>Combien d&#39emplacements pensez-vous pouvoir retrouver correctement ?</p>',
       choices: EnSStr.map(String),
       data: {
-        trialNb: trialInd
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
+        test_part: 'EnS',
+        nTS: 999
       }
     }; // EnS
 
@@ -128,8 +150,6 @@ function SE2TaskTimeline(){
     // - Confidence (per pair)
     // - Confidence Reaction Time
 
-    var targetLocation  = Array(TSCurrent);
-    var correctLocation = Array(TSCurrent);
     var testTrials      = [];
 
     // Initialise test locations
@@ -139,10 +159,10 @@ function SE2TaskTimeline(){
       // var pair_1st = 0; // for non-matching version of task, show numbers and test animals
       var pair_2nd = 1 - pair_1st;
 
-      target_i[testInd]      = trial_grid_indexes[testInd][pair_1st].map(function(v){return (v - 1)})
-      target_corr_i[testInd] = trial_grid_indexes[testInd][pair_2nd].map(function(v){return (v - 1)})
+      target_i[testInd]      = gridIndexesCurrent[testInd][pair_1st].map(function(v){return (v - 1)})
+      target_corr_i[testInd] = gridIndexesCurrent[testInd][pair_2nd].map(function(v){return (v - 1)})
 
-      test_trials.push({
+      testTrials.push({
         target_location:  target_i[testInd],
         correct_location: gridIndexesCurrent[testInd][pair_2nd].map(function(v){return (v - 1)}),
         target_image:     numbersImg[testInd]
@@ -153,7 +173,7 @@ function SE2TaskTimeline(){
 
     var test = {
       type: 'serial-reaction-time-mouse-WH',
-      timeline: test_trials,
+      timeline: testTrials,
       grid: exp.grid,
       grid_square_size: screen.height/7,
       response_ends_trial: true,
@@ -170,7 +190,11 @@ function SE2TaskTimeline(){
         test_counter++;
       },
       data: {
-        trialNb: trialInd
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
+        test_part: 'test',
+        nTS: 999
       }
     }; // test
 
@@ -202,9 +226,9 @@ function SE2TaskTimeline(){
         if (nCorrect >= TSCurrent){
           pointsTotal = pointsTotal + rewCurrent;
           nTS++;
-          feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné '+feedback.reward+' '+pointsStr+'.</p>';
+          feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacementsStr + '!</p><p>Vous avez gagné '+feedback.reward+' '+pointsStr+'.</p>';
         } else {
-          feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacements + '!</p><p>Vous avez gagné 0 points.</p>';
+          feedback.stimulus = '<p style="margin:0px">Vous avez correctement retrouvé <b>'+nCorrect+'</b>' + emplacementsStr + '!</p><p>Vous avez gagné 0 points.</p>';
         };
       },
       on_finish: function(data){ // reset counters
@@ -215,7 +239,11 @@ function SE2TaskTimeline(){
         }
       },
       data: {
-        trialNb: trialInd
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
+        test_part: 'feedback_no_grid',
+        nTS: 999
       }
     }; // feedback_sans_grid
 
@@ -231,15 +259,13 @@ function SE2TaskTimeline(){
       choices: ['Passer au prochain exercice'],
       target: target_i,
       correct_responses: function(){return correct_i},
-      target_score: TS,
-      reward: rew,
+      target_score: TSCurrent,
+      reward: rewCurrent,
       target_correct: target_corr_i,
       data: {
-        trialNb: trial_counter,
-        TinB: TD,
-        testNb: 999,
-        target_score: TS,
-        reward: rew,
+        trialNb: trialInd,
+        target_score: TSCurrent,
+        reward: rewCurrent,
         test_part: 'feedback_grid',
         nTS: 999
       }
@@ -274,7 +300,7 @@ function SE2TaskTimeline(){
       var max_points = exp.max_points;
       var max_euro   = exp.rew_euro[1];
       var min_euro   = exp.rew_euro[0];
-      var total_points = points_total + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
+      var total_points = pointsTotal + jsPsych.data.get().filter({test_part:'feedback_train'}).values()[0].nTS
       var points_fin = total_points == 1 ? 'point':'points';
       var euro_rew   = Math.round((((max_euro - min_euro)*(total_points - 0))/(max_points - 0)) + min_euro);
       var finish_stim = '<p>Le test de me&#769tacognition est maintenant termine&#769.</p><p>En total, vous avez gagné : <b>'+total_points+' '+points_fin+'</b>. Vous recevrez : <b>'+euro_rew+' €.</b></p><p><b>Merci beaucoup pour votre participation !</b></p>';
@@ -282,8 +308,7 @@ function SE2TaskTimeline(){
     },
     choices: ['Fin'],
     data: {
-      trialNb: trialInd,
-      testNb: 999,
+      trialNb: 999,
       target_score: 999,
       reward: 999,
       test_part: 'finish',

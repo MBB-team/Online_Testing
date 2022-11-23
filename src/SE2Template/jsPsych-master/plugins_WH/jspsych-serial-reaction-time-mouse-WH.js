@@ -224,13 +224,8 @@ jsPsych.plugins["serial-reaction-time-mouse-WH"] = (function() {
         "rt":               JSON.stringify(response.rt),   // string
         "stimulus":        "999",  // string
         "button_pressed":   button_response,   // integer
-        "flips":            999,   // integer
-        "conf_response":    999,   // integer
-        "responses":       "999",  // string
-        "SE_max":           999,   // integer
-        "SE_min":           999,   // integer
-        "SE_max_ini":       999,   // integer
-        "SE_min_ini":       999,   // integer
+        "effort":           999,   // integer
+        "slider_response":  999,   // integer
         "response_row":     JSON.stringify(response.row),   // Str
         "response_col":     JSON.stringify(response.column),   // Str
         "target_row":       trial.target_location[0],   // integer
