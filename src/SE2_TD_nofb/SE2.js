@@ -1,5 +1,5 @@
 function SE2(nbBlocks, nbTrials){
-  // test tag please ignore 1
+  // test tag please ignore 2
 
 
   // INITIALISATION //
