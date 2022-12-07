@@ -190,7 +190,7 @@ Per trial:
     var gridStimuliTrain = generateGridsMain(numbersImg, numbersImg2, gridIndexesTrain, squareSize, matchingPairs, [0], exp.grid);
 
     function updateLoadedCount(nLoaded){
-      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + 1)  * 100), 100);
+      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + numbersImg2 + lettersImg + 1)  * 100), 100);
       document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
       //console.log('Loaded '+percentcomplete+'% of images');
     }
@@ -211,7 +211,7 @@ Per trial:
     var exp_timeline = [];
 
     if (cfg.debug == false) {
-      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2],
+      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg, numbersImg2, lettersImg],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
 
