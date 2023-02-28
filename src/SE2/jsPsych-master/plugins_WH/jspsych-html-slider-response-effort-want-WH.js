@@ -117,15 +117,15 @@ jsPsych.plugins['html-slider-response-effort-want-WH'] = (function() {
     if (trial.prompt !== null){
       html += trial.prompt;
     }
-
+    
     html += '<div id="jspsych-html-slider-response-stimulus">' + trial.stimulus + '</div>';
-    html += '<div class="jspsych-html-slider-response-container" style="display:flex; justify-content:center; position:relative; margin: 0 auto 1em auto; ';
+    html += '<div class="jspsych-html-slider-response-container" style="display:flex; position:relative; margin: 0 auto 1em auto; ';
     if(trial.slider_width !== null){
       html += 'width:'+trial.slider_width+'px;';
     }
     html += '">';
     html += '<div style="display: inline-block; position: relative; text-align: center; width: auto; margin: 0 1em 0 1em">';
-    html += '<span style="text-align: center; font-size: 100%;">Min: '+trial.min+' secondes</span>';
+    html += '<span style="text-align: center; font-size: 100%;">Min: 0 secondes</span>';
     html += '</div>';
     html += '<div style="width:auto; display: inline-block; position: relative;"><input type="range" value="'+trial.start+'" min="'+trial.min+'" max="'+trial.max+'" step="'+trial.step+'" style="width: 100%;" id="jspsych-html-slider-response-response" oninput="this.nextElementSibling.value = this.value"></input>';
     if (trial.effort){
@@ -133,7 +133,7 @@ jsPsych.plugins['html-slider-response-effort-want-WH'] = (function() {
     }
     html += '</div>';
     html += '<div style="display: inline-block; position: relative; text-align: center; width: auto; margin: 0 1em 0 1em">';
-    html += '<span style="text-align: center; font-size: 100%;">Max: '+trial.max+' secondes</span>';
+    html += '<span style="text-align: center; font-size: 100%;">Max: 60 secondes</span>';
 
     html += '</div>';
     html += '</div>';
