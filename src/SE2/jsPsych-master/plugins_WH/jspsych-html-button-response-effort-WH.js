@@ -84,12 +84,6 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
         default: null,
         description: 'The bonus of this trial.'
       },
-      target_score: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Target Score',
-        default: null,
-        description: 'The target score of this trial.'
-      },
     }
   }
 
@@ -105,9 +99,8 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
     html += '<div><canvas class="jspsych-html-timer"></canvas></div>';
     html += '<div style="">'+trial.stimulus+'</div>';
     var points = trial.reward == 1 ? 'point':'points';
-    html += '<div id="jspsych-html-bonus"><p style="margin:0%">Bonus :<br>'+trial.reward+' ' + points + '<br><br>Objectif :<br>'+trial.target_score+' paires</p></div>';
+    html += '<div id="jspsych-html-bonus"><p style="margin:0%">Bonus :<br>'+trial.reward+' ' + points + '</p></div>';
     html += '</div>';
-
 
     //display buttons
     var buttons = [];
@@ -136,19 +129,17 @@ jsPsych.plugins["html-button-response-effort-WH"] = (function() {
 
     display_element.innerHTML = html;
 
-    // even if we aren't drawing the timer, we need a blank HTML element for correct spacing
-    can = display_element.querySelector('.jspsych-html-timer');
-    ctx = can.getContext('2d'),
-    sta = -Math.PI / 2,
-    dur = trial.trial_duration;
-
-    var timer_size = screen.height/8;
-    can.height = timer_size;
-    can.width = timer_size;
-    var bonus = display_element.querySelector('#jspsych-html-bonus')
-    bonus.style.width = ''+timer_size+'px';
-
     if (trial.timer){
+      can = display_element.querySelector('.jspsych-html-timer');
+      ctx = can.getContext('2d'),
+      sta = -Math.PI / 2,
+      dur = trial.trial_duration;
+
+      var timer_size = screen.height/8;
+      can.height = timer_size;
+      can.width = timer_size;
+      var bonus = display_element.querySelector('#jspsych-html-bonus')
+      bonus.style.width = ''+timer_size+'px';
 
       // document.body.appendChild(can);
       ctx.font = "normal 30px Arial";
