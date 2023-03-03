@@ -3,15 +3,15 @@ function SE2_training(){
   // INITIALISATION //
   var timelineTask_train  = [];
   var nCorrect_train      = 0; // the number of correct responses given by the pts
-  var correct_i_train     = [0,0,0,0,0,0,0,0,0,0]; // array of correct response indexes
+  var correct_i_train     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter_train  = 0; // counter for looping through test trials during execution
-  var clicked_i_train     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
+  var clicked_i_train     = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the participants click
   var flib_fb_train       = []; // flip length of time for feedback
   var train_TS            = 4;
   var train_rew           = 1;
-  var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
-  var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
-  var grid_dim_train      = exp.grid;
+  var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
+  var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
+  var grid_dim_train      = [[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]];
   var points_total_train  = 0;
 
   // First instructions
@@ -20,7 +20,7 @@ function SE2_training(){
     stimulus: '<p style="font-size:70px">Test de métacognition</p><p style="font-size:50px">Veuillez lire attentivement les instructions qui vont suivre.</p>',
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -39,7 +39,7 @@ function SE2_training(){
     stimulus: [instrImg_html[0]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -58,7 +58,7 @@ function SE2_training(){
     stimulus: [instrImg_html[1]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -76,19 +76,18 @@ function SE2_training(){
   var effort_want_train = {
     type: 'html-slider-response-effort-want-WH',
     prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
-    // prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p></p><p>Si vous retrouvez correctement les emplacements de toutes les paires, vous recevrez un bonus de <br><b>'+train_rew+' point</b>.</p><div><br></div>',
     stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
-    labels: [''],
-    min: exp.eff[0],
-    max: exp.eff[1],
-    start: function(){return randi(exp.eff[0],exp.eff[1]);},
+    labels: ['0 secondes','60 secondes'],
+    min: 0,
+    max: 60,
+    start: function(){return randi(0,60);},
     require_movement: true,
     effort: true,
     on_finish: function(data){
       flip_fb_train = data.conf_response;
     },
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -109,7 +108,7 @@ function SE2_training(){
     stimulus: [instrImg_html[2]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -129,7 +128,7 @@ function SE2_training(){
     choices: [],
     trial_duration: time.fixation,
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -151,10 +150,9 @@ function SE2_training(){
     choices: [],
     trial_duration: function(){return flip_fb_train*1000;},
     reward: train_rew,
-    target_score: train_TS,
-    timer: false,
+    timer: true,
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -175,7 +173,7 @@ function SE2_training(){
     stimulus: [instrImg_html[3]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -195,7 +193,7 @@ function SE2_training(){
     choices: [],
     trial_duration: time.fixation,
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -253,7 +251,7 @@ function SE2_training(){
       test_counter_train++
     },
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: test_i,
@@ -274,7 +272,7 @@ function SE2_training(){
     stimulus: [instrImg_html[4]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -294,7 +292,7 @@ function SE2_training(){
     stimulus: '<p>Combien d&#39emplacements pensez-vous avoir correctement retrouvé ?</p>',
     choices: ['0','1','2','3','4'],
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -314,7 +312,7 @@ function SE2_training(){
     stimulus: [instrImg_html[5]],
     choices: ['Ok'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -340,12 +338,12 @@ function SE2_training(){
     target_correct: target_corr_i_train,
     on_finish: function(){ // reset counters
       nCorrect_train       = 0;
-      correct_i_train      = [0,0,0,0,0,0,0,0,0,0];
+      correct_i_train      = [0,0,0,0,0,0,0,0];
       test_counter_train   = 0;
-      clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+      clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
     },
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -384,14 +382,14 @@ function SE2_training(){
     on_finish: function(data){ // reset counters
       if (data.button == 1){
         nCorrect_train       = 0;
-        correct_i_train      = [0,0,0,0,0,0,0,0,0,0];
+        correct_i_train      = [0,0,0,0,0,0,0,0];
         test_counter_train   = 0;
-        clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
+        clicked_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]];
       }
       data.nTS = points_total_train;
     },
     data: {
-      blockNb: -2,
+      blockNb: -1,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
@@ -428,7 +426,7 @@ function SE2_training(){
     stimulus: [instrImg_html[6]],
     choices: ['Commencer le test principal !'],
     data: {
-      blockNb: -2,
+      blockNb: 999,
       trialNb: 999,
       TinB: 999,
       testNb: 999,
