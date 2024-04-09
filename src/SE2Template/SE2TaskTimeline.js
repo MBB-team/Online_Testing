@@ -175,7 +175,7 @@ function SE2TaskTimeline(){
       type: 'serial-reaction-time-mouse-WH',
       timeline: testTrials,
       grid: exp.grid,
-      grid_square_size: screen.height/7,
+      grid_square_size: exp.squareSize,
       response_ends_trial: true,
       highlight: time.highlight,
       allow_nontarget_responses: true,
@@ -201,6 +201,8 @@ function SE2TaskTimeline(){
     // Push to Timeline //
     timelineTask.push(fullscreenExp);
     timelineTask.push(test);
+
+    console.log("the correct numbers are", correct_i)
 
     // ==== Feedback ==== //
     // Inputs:
