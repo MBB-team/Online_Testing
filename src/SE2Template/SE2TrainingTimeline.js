@@ -55,7 +55,7 @@ function SE2TrainingTimeline(){
   var instructions2 = {
     type: 'html-button-response-WH',
     stimulus: [instrImg_html[1]],
-    choices: ['Nour'],
+    choices: ['Ok'],
     data: {
       blockNb: -2,
       trialNb: 999,
@@ -233,7 +233,7 @@ function SE2TrainingTimeline(){
     type: 'serial-reaction-time-mouse-WH',
     timeline: test_trials_train,
     grid: grid_dim_train,
-    grid_square_size: screen.height/7, 
+    grid_square_size: screen.height/7,
     response_ends_trial: true,
     highlight: time.highlight,
     allow_nontarget_responses: true,

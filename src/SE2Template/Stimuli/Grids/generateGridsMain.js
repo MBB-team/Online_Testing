@@ -18,7 +18,6 @@ function generateGridsMain(numbersImg, numbersImg2, gridIndexesPt, squareSize, m
   for (var grid_i = 0; grid_i <= nbTrials-1; grid_i++){ // for each grid
 
     var grid_num = new Array(grid.length).fill(0).map(() => new Array(grid[0].length).fill(999));
-    console.log("The gridsize is:", grid_num); 
 
     n_TS = exp.TS[TSPt[grid_i]]; // get the current TS
 

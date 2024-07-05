@@ -64,12 +64,7 @@ Per trial:
                rew_euro:      [10, 25], // 10 25
                max_points:    [199], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
                effLimits:     [0, 60], //15 75
-               grid:          [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]], // 6x4: [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]],5x5:[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
-               squareSize:    screen.height/9};
-               console.log ("Screen height is:", screen.height);
-               console.log ("Screen width is:", screen.width);
-               console.log("Calculated square size:", screen.height / 8);
-               
+               grid:          [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]]}; // 4x6
 
   // Timings
   const time = {highlight:     500,
@@ -85,7 +80,7 @@ Per trial:
         case 'http:':
         case 'https:':
               //theses lines are not executed unless the file is on a web server (assuming with php module)
-              dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php'); 
+              dataSaver = new DataSaver(dataSaverModes.SERVER, 'write_data.php');
               dataSaver.SetClientIds(JSON.parse('{<?php echoAsJSON($clientIds); ?>}'));
               break;
         case 'file':
@@ -171,7 +166,7 @@ Per trial:
     for (var t=1; t <= 8; t++){
       numbersImg2[t-1] = 'Stimuli/Images2/image'+t+'.jpg'; // pre-load all the stimuli numbers
       numbersImg2_html[t-1] = '<img src="'+numbersImg2[t-1]+'"></img>';
-    };  
+    };
 
     // Letters
     var lettersImg  = [];
@@ -187,13 +182,12 @@ Per trial:
     var TSPt           = TSArray[condPermPt];
     var gridIndexesPt  = gridIndexesOriginal[condPermPt];
 
-    //var squareSize    = screen.height/10;
+    var squareSize    = screen.height/7;
     var matchingPairs = 1; // if the two images are the same or not
-    console.log("Start Train grid")
-    var gridStimuliTrain = generateGridsMain(numbersImg, numbersImg2, gridIndexesTrain, exp.squareSize, matchingPairs, [0], exp.grid);
-    console.log("Start normals grids")
-    var gridStimuli      = generateGridsMain(numbersImg, numbersImg2, gridIndexesPt, exp.squareSize, matchingPairs, TSPt, exp.grid);
-   
+
+
+    var gridStimuli      = generateGridsMain(numbersImg, numbersImg2, gridIndexesPt, squareSize, matchingPairs, TSPt, exp.grid);
+    var gridStimuliTrain = generateGridsMain(numbersImg, numbersImg2, gridIndexesTrain, squareSize, matchingPairs, [0], exp.grid);
 
     function updateLoadedCount(nLoaded){
       var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length + numbersImg2 + lettersImg + 1)  * 100), 100);
@@ -265,7 +259,7 @@ Per trial:
     async function endTask() {
       /*update messages and hide retry button*/
       var errorMessage = document.getElementById('dataSendError');
-      var buttonRetry = document.getElementById('dataRetenrySd');
+      var buttonRetry = document.getElementById('dataRetrySend');
       var infoMessage = document.getElementById('dataLeftText');
       var sendAnimation = document.getElementById('sendAnimation');
 

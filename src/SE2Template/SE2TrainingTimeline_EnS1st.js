@@ -5,15 +5,12 @@ function SE2TrainingTimeline(){
   var nCorrect_train      = 0; // the number of correct responses given by the pts
   var correct_i_train     = [0,0,0,0,0,0,0,0]; // array of correct response indexes
   var test_counter_train  = 0; // counter for looping through test trials during execution
-  var train_TS            = exp.TS[0];
+  var train_TS            = 3;
   var train_rew           = 1;
   var target_i_train      = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the target image
   var target_corr_i_train = [[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null],[null,null]]; // for indexing the location of the correct image
   var grid_dim_train      = exp.grid;
   var points_total_train  = 0;
-  var squareSize          = exp.squareSize[0];
-
-
 
   // First instructions
   var instructions0 = {
@@ -126,8 +123,7 @@ function SE2TrainingTimeline(){
   // PUSH TO TIMELINE //
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(effort_phase);
-  
-  console.log(gridStimuliTrain);
+
   // effort //
   var effort_train = {
     type: 'html-button-response-effort-WH',
@@ -170,35 +166,19 @@ function SE2TrainingTimeline(){
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(instructions4);
 
-
-  
   // EXPECTATION QUESTION //
-
-  //MODIFIED BY NOUR TO DYNAMICALLY CHANGE THE CHOICES OPTIONS 
-
-  function createEnS_train() {
-    var train_TS = exp.TS[0];
-    var choices = [];
-    for (var i = 0; i <= train_TS; i++) {
-        choices.push(i.toString());
+  var EnS_train = {
+    type: 'html-button-response-WH',
+    stimulus: '<p>Combien d&#39emplacements pensez-vous capabale de correctement retrouver? ?</p>',
+    choices: ['0','1','2','3'],
+    data: {
+      trialNb: 999,
+      target_score: train_TS,
+      reward: train_rew,
+      test_part: 'post_test_conf_train',
+      nTS: 999
     }
-
-    var EnS_train = {
-        type: 'html-button-response-WH',
-        stimulus: '<p>Combien d&#39emplacements pensez-vous capabale de correctement retrouver? ?</p>',
-        choices: choices,
-        data: {
-            trialNb: 999,
-            target_score: train_TS,
-            reward: train_rew,
-            test_part: 'post_test_conf_train',
-            nTS: 999
-        }
-    };
-
-    return EnS_train;
-}
-    var EnS_train = createEnS_train();
+  };
 
   timelineTask_train.push(fullscreenExp);
   timelineTask_train.push(EnS_train);
@@ -262,7 +242,7 @@ function SE2TrainingTimeline(){
     type: 'serial-reaction-time-mouse-WH',
     timeline: testTrials,
     grid: grid_dim_train,
-    grid_square_size: squareSize, //screen.height/10,
+    grid_square_size: screen.height/7,
     response_ends_trial: true,
     highlight: time.highlight,
     allow_nontarget_responses: true,
