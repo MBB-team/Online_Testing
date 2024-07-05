@@ -58,16 +58,16 @@ build and push prod image:
 deploy staging:
   stage: deploy staging
   variables:
-    APP_NAME: $CI_PROJECT_NAME
+    APP_NAME: cogmood
     ENVIRONMENT: staging
     REF_NAME: develop
-    TARGET_AWS_ACCOUNT: $AWS_ACCOUNT_DEV
-    VAULT_ENV_ROLE: assume-role-dev
-    SKIP_TERRAFORM_PROCESS: "true"
+    SKIP_TERRAFORM: "true"
+    SKIP_ANSIBLE: "true"
+    SKIP_MIDDLEWARE: "true"
     TF_DOCKER_VERSION: "0.15.0"
   trigger:
     project: icm-institute/dsi/dev/software-factory/deployer
-    branch: cogmood
+    branch: next
     strategy: depend
   rules:
     - if: '$CI_COMMIT_REF_NAME == "develop"'
