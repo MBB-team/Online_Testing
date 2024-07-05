@@ -153,7 +153,7 @@ Created: 27/03/24 -->
     var instrImg = [];
     var instrImg_html = [];
     for (var t=1; t <= nbInstr; t++){
-      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.PNG'; // pre-load all instructions
+      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.png'; // pre-load all instructions
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
     };
 
@@ -323,7 +323,7 @@ Created: 27/03/24 -->
              jsPsych.data.addProperties({date: date});
              var trialData = jsPsych.data.getLastTrialData().json();
              console.log("Trial data:", trialData);
-             //saveData(); // edit out if not on server
+             saveData(); // edit out if not on server
        },
         on_finish: function (data) {
         // Save data after each trial
