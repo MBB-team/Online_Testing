@@ -1,3 +1,3 @@
 SET NAMES utf8;
 
-INSERT IGNORE INTO `task` (`taskID`, `taskName`, `url`, `dataTableName`) VALUES ('SE3_1', 'Session 1', 'SE3Template/index_1.php', 'tableSE3');
+INSERT IGNORE INTO `task` (`taskID`, `taskName`, `url`, `dataTableName`) VALUES ('SE3', 'Commencer le test', 'SE3Template/index.php', 'tableSE3');
