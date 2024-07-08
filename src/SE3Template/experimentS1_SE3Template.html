@@ -90,9 +90,24 @@ Created: 27/03/24 -->
               break;
         case 'file':
         case 'file:':
+            //theses lines are executed when running from local (without server)
               dataSaver = new DataSaver(dataSaverModes.LOG);
+              //for debug
+              //try to get participantID and sessionName from url
+              let urlParams = new URLSearchParams(window.location.search);
+
+              let participantID = urlParams.get('participantID');
+              if(!participantID) {participantID = '40part1';}
+
+              let sessionName = urlParams.get('sessionName');
+              if(!sessionName) {sessionName = 'SE3_G1_S1';}
+
+              dataSaver.SetClientIds({"participantID":participantID,"runID":"-1","runKey":"0a1b2c3d","sessionName":sessionName});
               break;
   }
+
+  console.log('dataSaver.clientIds.participantID:' + dataSaver.clientIds.participantID);
+  console.log('dataSaver.clientIds.sessionName:' + dataSaver.clientIds.sessionName);
 
   // Checks if the browser is Chrome or Firefox (best compatibility)
   var browserInfo = getBrowserInfo();
@@ -153,7 +168,7 @@ Created: 27/03/24 -->
     var instrImg = [];
     var instrImg_html = [];
     for (var t=1; t <= nbInstr; t++){
-      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.PNG'; // pre-load all instructions
+      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.png'; // pre-load all instructions
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
     };
 
@@ -170,10 +185,13 @@ Created: 27/03/24 -->
     var gridStimuliTrain = generateGridsTrain(numbersImg, gridIndexesTrain, 4); //train TS is 4 - prob need to make this more explicit
 
     //var condition  = randi(1,6); //this is the last part of the ID 
-    var condition = 6;
+    //var condition = 6;
+    var condition = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
     console.log ("Condition for this part is:", condition);
-    var PartID     = randi(0,83); // this is the first part of the ID 
-    var sessID     = 1; //this is session 1 
+    //var PartID     = randi(0,83); // this is the first part of the ID 
+    var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,2));
+    //var sessID     = 1; //this is session 1 
+    var sessID    = parseInt(dataSaver.clientIds.sessionName.substring(dataSaver.clientIds.sessionName.length - 1)); //last character of sessionName
     
     //block 1 conditions
     var TSPt_b1       = TSArray[PartID][sessID][0];
@@ -323,7 +341,7 @@ Created: 27/03/24 -->
              jsPsych.data.addProperties({date: date});
              var trialData = jsPsych.data.getLastTrialData().json();
              console.log("Trial data:", trialData);
-             //saveData(); // edit out if not on server
+             saveData(); // edit out if not on server
        },
         on_finish: function (data) {
         // Save data after each trial
@@ -348,7 +366,7 @@ Created: 27/03/24 -->
     async function endTask() {
       /*update messages and hide retry button*/
       var errorMessage = document.getElementById('dataSendError');
-      var buttonRetry = document.getElementById('dataRetenrySd');
+      var buttonRetry = document.getElementById('dataRetrySend');
       var infoMessage = document.getElementById('dataLeftText');
       var sendAnimation = document.getElementById('sendAnimation');
 
