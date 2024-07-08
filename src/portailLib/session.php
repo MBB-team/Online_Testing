@@ -188,6 +188,7 @@ function getTaskUrl($taskID)
 //$run["taskSessionID"] 
 //$run["taskUrl"] 
 //$run["runKey"]
+//$run["sessionName"]
 function prepareTask($taskID) 
 {
     //check if user can do the task
@@ -262,7 +263,14 @@ function prepareTask($taskID)
             }
             $run["runKey"] = $runKey;
 
-            
+            // Get sessionName
+            $sql = "SELECT sessionName FROM taskSession WHERE taskSessionID = ".$run["taskSessionID"];
+
+            $sessionNameStmt = $conn->prepare($sql);
+            $sessionNameStmt->execute();
+            $sessionName = $sessionNameStmt->fetchColumn();
+
+            $run["sessionName"] = $sessionName;
             
             return $run;
         }
