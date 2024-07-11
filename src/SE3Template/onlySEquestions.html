@@ -30,10 +30,7 @@ Created: 27/03/24 -->
             <script   src  = 'block3gridsTaskTimeline.js'></script>
             <script   src  = 'block3SETaskTimeline.js'></script>     <!-- NEED TO CHANGE --> 
             <script   src  = 'SE3TrainingTimelineW1.js'></script>
-            <script   src  = 'SE3_reminders_S2Timeline.js'></script>
-            <script   src  = 'SE3_reminders_S3Timeline.js'></script>
             <script   src = "../js/dataSaver.js"></script>
-            <script   src  = 'questionnaireTimeline.js'></script>
             <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link     rel='icon' href='/favicon.ico' />
       </head>
@@ -79,7 +76,7 @@ Created: 27/03/24 -->
                 fixation:      1000};
 
   // instructions
-  const nbInstr              = 22; //Change if there are changes 
+  const nbInstr              = 21; //Change if there are changes 
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {
@@ -171,22 +168,8 @@ Created: 27/03/24 -->
     var instrImg = [];
     var instrImg_html = [];
     for (var t=1; t <= nbInstr; t++){
-      instrImg[t-1] = 'Stimuli/Instructions_S1/Slide'+t+'.png'; // pre-load all instructions
+      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.png'; // pre-load all instructions
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
-    };
-    //reminder instructions for session 2 and 3 
-    var instrImg_S2 = [];
-    var instrImg_S2_html = [];
-    for (var t=1; t <= 3; t++){
-      instrImg_S2[t-1] = 'Stimuli/Instructions_S2/Slide'+t+'.png'; // pre-load all instructions
-      instrImg_S2_html[t-1] = '<img src="'+instrImg_S2[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
-    };
-    //reminder instructions for session 2 and 3 
-    var instrImg_S3 = [];
-    var instrImg_S3_html = [];
-    for (var t=1; t <= 3; t++){
-      instrImg_S3[t-1] = 'Stimuli/Instructions_S3/Slide'+t+'.png'; // pre-load all instructions
-      instrImg_S3_html[t-1] = '<img src="'+instrImg_S3[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
     };
 
     // Numbers 
@@ -293,40 +276,22 @@ Created: 27/03/24 -->
       exp_timeline.push(firstFullscreen)
 
       // Execute the experiment
-      
+      /*
       // Training phase
-      if (cfg.instructions & sessID==1){
+      if (cfg.instructions){
         var task_training = SE3TrainingTimelineW1();
         for (var i = 0; i < task_training.length; i++){
           if (cfg.instructions){
             exp_timeline.push(task_training[i]);
           }
         };
-      };
-
-      if (sessID==2){
-        var task_training = SE3_reminders_S2Timeline();
-        for (var i = 0; i < task_training.length; i++){
-          if (cfg.instructions){
-            exp_timeline.push(task_training[i]);
-          }
-        };
-      };
-
-      if (sessID==3){
-        var task_training = SE3_reminders_S3Timeline();
-        for (var i = 0; i < task_training.length; i++){
-          if (cfg.instructions){
-            exp_timeline.push(task_training[i]);
-          }
-        };
-      };
+      }
 
       var block1grids = block1gridsTaskTimeline();
       for (var i = 0; i < block1grids.timelineTask.length; i++) {
         exp_timeline.push(block1grids.timelineTask[i]);
       };
-    
+    */
      
       var block1SE = block1SETaskTimeline();
       for (var i = 0; i < block1SE.timelineTask.length; i++) {
@@ -349,51 +314,20 @@ Created: 27/03/24 -->
       for (var i = 0; i < block3grids.timelineTask.length; i++) {
         exp_timeline.push(block3grids.timelineTask[i]);
       };
-
-      var questionnaire = questionnaireTimeline();
-      if (sessID==3){
-      for (var i = 0; i < questionnaire.timelineTask.length; i++) {
-        exp_timeline.push(questionnaire.timelineTask[i]);
-      };  };
      
-      var finishAll = {
-        type: 'html-button-response-WH',
-        stimulus: function() {
-        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
-       },
-      }
       var finishAll = {
       type: 'html-button-response-WH',
       stimulus: function() {
         var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
         var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
        },
-     choices: ["Fin"],
-      on_finish: function(data){
-          data.pointsTotal = pointsTotal;
-          data.exCorrect = exCorrect;
-          data.euro_rew = euro_rew;
-        },
+      choices: ["Fin"],
       data: {
-        PartID: PartID,
-        SessID: sessID, 
-        condition: condition,
         test_part: 'finish full thing',
-        get_data: 1,
+        get_data: 0,
         trialNb: 999,
-        blockInd: 999,
         target_score: 999,
-        reward: 999,
-        SE_eff: 999,
-        SE_type: '999',
-        NC: 999,
-        adjustedNC: 999,
-        finalNC: 999,
-        nTS: 999,
-        euro_rew: 999,
-        exCorrect: 999,
-        pointsTotal:999,
+        nTS: 999
      }
      };
      exp_timeline.push(finishAll)

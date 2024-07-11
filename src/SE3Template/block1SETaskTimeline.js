@@ -39,18 +39,23 @@ function block1SETaskTimeline (){
             start: function() { return randi(0, 100); },
             require_movement: true,
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
+                trialNb: 999,
+                blockInd: 1,
                 test_part: 'SE_quest',
                 get_data: 1,
-                blockInd: 1,
-                trialNb: 0,
                 target_score: difficulty,
-                SE_type: 'lower',
+                reward: 999,
                 SE_eff: function() {
                     return get_lower(difficulty);
                 },
-                reward: 999,
+                SE_type: 'lower',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999,
             }
         });
     
@@ -65,18 +70,23 @@ function block1SETaskTimeline (){
             start: function() { return randi(0, 100); },
             require_movement: true,
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
+                trialNb: 999,
+                blockInd: 1,
                 test_part: 'SE_quest',
                 get_data: 1,
-                blockInd: 1,
-                trialNb: 0,
                 target_score: difficulty,
-                SE_type: 'median',
+                reward: 999,
                 SE_eff: function() {
                     return get_median(difficulty);
                 },
-                reward: 999,
+                SE_type: 'median',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999,
             }
         });
     
@@ -91,18 +101,23 @@ function block1SETaskTimeline (){
             start: function() { return randi(0, 100); },
             require_movement: true,
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
+                trialNb: 999,
+                blockInd: 1,
                 test_part: 'SE_quest',
                 get_data: 1,
-                blockInd: 1,
-                trialNb: 0,
                 target_score: difficulty,
-                SE_type: 'higher',
+                reward: 999,
                 SE_eff: function() {
                     return get_higher(difficulty);
                 },
-                reward: 999,
+                SE_type: 'higher',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999,
             }
         });
     

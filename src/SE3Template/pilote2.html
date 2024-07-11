@@ -20,6 +20,8 @@ Created: 27/03/24 -->
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-instructions-NM.js'></script> 
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-percentage-NM.js'></script>
+            <script   src  = 'jsPsych-master/plugins/jspsych-survey-text.js'></script>
+            <script   src  = 'jsPsych-master/plugins/jspsych-survey-multi-choice.js'></script>
             <script   src  = 'Stimuli/Grids/generateGridsMain.js'></script>
             <script   src  = 'Stimuli/Grids/generateGridsTrain.js'></script>
             <script   src  = 'Stimuli/Grids/SE3Template - Task Conditions.js'></script>  <!-- NEED TO CHANGE -->
@@ -28,12 +30,10 @@ Created: 27/03/24 -->
             <script   src  = 'block1SETaskTimeline.js'></script>     
             <script   src  = 'block2gridsTaskTimeline.js'></script>
             <script   src  = 'block3gridsTaskTimeline.js'></script>
-            <script   src  = 'block3SETaskTimeline.js'></script>     <!-- NEED TO CHANGE --> 
-            <script   src  = 'SE3TrainingTimelineW1.js'></script>
-            <script   src  = 'SE3_reminders_S2Timeline.js'></script>
-            <script   src  = 'SE3_reminders_S3Timeline.js'></script>
-            <script   src = "../js/dataSaver.js"></script>
             <script   src  = 'questionnaireTimeline.js'></script>
+            <script   src  = 'block3SETaskTimeline.js'></script>  
+            <script   src  = 'SE3TrainingTimelineW1.js'></script>   <!-- NEED TO CHANGE --> 
+            <script   src = "../js/dataSaver.js"></script>
             <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link     rel='icon' href='/favicon.ico' />
       </head>
@@ -62,16 +62,16 @@ Created: 27/03/24 -->
                block0:         true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "SE2Template",
-               nbTrials:       36, // gridIndexesOriginal[0].length
-               nbTrials_block: 6, // CHANGE!
-               TS:             [5, 7, 9], // [6 8 10]
-               rew:            [10, 100], // 1 10
+  const exp = {name:           "SE3pilote",
+               nbTrials:       18,
+               nbTrials_block: 6, 
+               TS:             [5, 7, 9], 
+               rew:            [10, 100], 
                max_points:     [1980], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
                eur_max:        [8],
-               effLimits:      [0, 90], //15 75
-               grid:           [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]], // 6x4: [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]],5x5:[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
-               squareSize:     screen.height/7}; // can maybe even / 7 ? 
+               effLimits:      [0, 90],
+               grid:           [[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]], 
+               squareSize:     screen.height/7}; 
                
 
   // Timings
@@ -79,7 +79,7 @@ Created: 27/03/24 -->
                 fixation:      1000};
 
   // instructions
-  const nbInstr              = 22; //Change if there are changes 
+  const nbInstr              = 21; //Change if there are changes 
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {
@@ -93,24 +93,9 @@ Created: 27/03/24 -->
               break;
         case 'file':
         case 'file:':
-            //theses lines are executed when running from local (without server)
               dataSaver = new DataSaver(dataSaverModes.LOG);
-              //for debug
-              //try to get participantID and sessionName from url
-              let urlParams = new URLSearchParams(window.location.search);
-
-              let participantID = urlParams.get('participantID');
-              if(!participantID) {participantID = '40part1';}
-
-              let sessionName = urlParams.get('sessionName');
-              if(!sessionName) {sessionName = 'SE3_G1_S1';}
-
-              dataSaver.SetClientIds({"participantID":participantID,"runID":"-1","runKey":"0a1b2c3d","sessionName":sessionName});
               break;
   }
-
-  console.log('dataSaver.clientIds.participantID:' + dataSaver.clientIds.participantID);
-  console.log('dataSaver.clientIds.sessionName:' + dataSaver.clientIds.sessionName);
 
   // Checks if the browser is Chrome or Firefox (best compatibility)
   var browserInfo = getBrowserInfo();
@@ -171,22 +156,8 @@ Created: 27/03/24 -->
     var instrImg = [];
     var instrImg_html = [];
     for (var t=1; t <= nbInstr; t++){
-      instrImg[t-1] = 'Stimuli/Instructions_S1/Slide'+t+'.png'; // pre-load all instructions
+      instrImg[t-1] = 'Stimuli/Instructions_pilote2/Slide'+t+'.PNG'; // pre-load all instructions
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
-    };
-    //reminder instructions for session 2 and 3 
-    var instrImg_S2 = [];
-    var instrImg_S2_html = [];
-    for (var t=1; t <= 3; t++){
-      instrImg_S2[t-1] = 'Stimuli/Instructions_S2/Slide'+t+'.png'; // pre-load all instructions
-      instrImg_S2_html[t-1] = '<img src="'+instrImg_S2[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
-    };
-    //reminder instructions for session 2 and 3 
-    var instrImg_S3 = [];
-    var instrImg_S3_html = [];
-    for (var t=1; t <= 3; t++){
-      instrImg_S3[t-1] = 'Stimuli/Instructions_S3/Slide'+t+'.png'; // pre-load all instructions
-      instrImg_S3_html[t-1] = '<img src="'+instrImg_S3[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
     };
 
     // Numbers 
@@ -201,14 +172,10 @@ Created: 27/03/24 -->
     // Task Conditions & Grids
     var gridStimuliTrain = generateGridsTrain(numbersImg, gridIndexesTrain, 4); //train TS is 4 - prob need to make this more explicit
 
-    //var condition  = randi(1,6); //this is the last part of the ID 
-    //var condition = 6;
-    var condition = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
+    var condition  = randi(1,4); //here we just want two conditions 
     console.log ("Condition for this part is:", condition);
-    //var PartID     = randi(0,83); // this is the first part of the ID 
-    var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,2));
-    //var sessID     = 1; //this is session 1 
-    var sessID    = parseInt(dataSaver.clientIds.sessionName.substring(dataSaver.clientIds.sessionName.length - 1)); //last character of sessionName
+    var PartID     = randi(0,83); //WILL CHANGE AND WILL BE the first part of the ID 
+    var sessID     = 1; //this is session 1 
     
     //block 1 conditions
     var TSPt_b1       = TSArray[PartID][sessID][0];
@@ -294,51 +261,34 @@ Created: 27/03/24 -->
 
       // Execute the experiment
       
+      /*
       // Training phase
-      if (cfg.instructions & sessID==1){
+      if (cfg.instructions){
         var task_training = SE3TrainingTimelineW1();
         for (var i = 0; i < task_training.length; i++){
           if (cfg.instructions){
             exp_timeline.push(task_training[i]);
           }
         };
-      };
-
-      if (sessID==2){
-        var task_training = SE3_reminders_S2Timeline();
-        for (var i = 0; i < task_training.length; i++){
-          if (cfg.instructions){
-            exp_timeline.push(task_training[i]);
-          }
-        };
-      };
-
-      if (sessID==3){
-        var task_training = SE3_reminders_S3Timeline();
-        for (var i = 0; i < task_training.length; i++){
-          if (cfg.instructions){
-            exp_timeline.push(task_training[i]);
-          }
-        };
-      };
+      }
+      */
 
       var block1grids = block1gridsTaskTimeline();
       for (var i = 0; i < block1grids.timelineTask.length; i++) {
         exp_timeline.push(block1grids.timelineTask[i]);
       };
-    
      
+      /*
       var block1SE = block1SETaskTimeline();
       for (var i = 0; i < block1SE.timelineTask.length; i++) {
         exp_timeline.push(block1SE.timelineTask[i]);
       };
-  
-
+      */
       var block2 = block2gridsTaskTimeline();
       for (var i = 0; i < block2.timelineTask.length; i++) {
         exp_timeline.push(block2.timelineTask[i]);
       };
-
+      /*
       var block3SE = block3SETaskTimeline();
       for (var i = 0; i < block3SE.timelineTask.length; i++) {
         exp_timeline.push(block3SE.timelineTask[i]);
@@ -349,51 +299,26 @@ Created: 27/03/24 -->
       for (var i = 0; i < block3grids.timelineTask.length; i++) {
         exp_timeline.push(block3grids.timelineTask[i]);
       };
-
+      
       var questionnaire = questionnaireTimeline();
-      if (sessID==3){
       for (var i = 0; i < questionnaire.timelineTask.length; i++) {
         exp_timeline.push(questionnaire.timelineTask[i]);
-      };  };
+      };
+      */
      
-      var finishAll = {
-        type: 'html-button-response-WH',
-        stimulus: function() {
-        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
-       },
-      }
       var finishAll = {
       type: 'html-button-response-WH',
       stimulus: function() {
         var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
+        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagnés <b>' + pointsTotal + ' points</b>. </p>';
        },
-     choices: ["Fin"],
-      on_finish: function(data){
-          data.pointsTotal = pointsTotal;
-          data.exCorrect = exCorrect;
-          data.euro_rew = euro_rew;
-        },
+      choices: ["Sauvegarder les données"],
       data: {
-        PartID: PartID,
-        SessID: sessID, 
-        condition: condition,
         test_part: 'finish full thing',
-        get_data: 1,
+        get_data: 0,
         trialNb: 999,
-        blockInd: 999,
         target_score: 999,
-        reward: 999,
-        SE_eff: 999,
-        SE_type: '999',
-        NC: 999,
-        adjustedNC: 999,
-        finalNC: 999,
-        nTS: 999,
-        euro_rew: 999,
-        exCorrect: 999,
-        pointsTotal:999,
+        nTS: 999
      }
      };
      exp_timeline.push(finishAll)
@@ -405,11 +330,11 @@ Created: 27/03/24 -->
              jsPsych.data.addProperties({date: date});
              var trialData = jsPsych.data.getLastTrialData().json();
              console.log("Trial data:", trialData);
-             saveData(); // edit out if not on server
+             //saveData(); // edit out if not on server
        },
         on_finish: function (data) {
         // Save data after each trial
-        var filename = "realthing_test" + PartID + "_sess" + sessID + "_data.csv";
+        var filename = "fulldataSE3_part" + PartID + "_cond" + condition + ".csv";
         // Call the function to save all trial data to CSV
         jsPsych.data.get().filter({ get_data: 1 }).localSave("csv", filename);
 
@@ -430,7 +355,7 @@ Created: 27/03/24 -->
     async function endTask() {
       /*update messages and hide retry button*/
       var errorMessage = document.getElementById('dataSendError');
-      var buttonRetry = document.getElementById('dataRetrySend');
+      var buttonRetry = document.getElementById('dataRetenrySd');
       var infoMessage = document.getElementById('dataLeftText');
       var sendAnimation = document.getElementById('sendAnimation');
 

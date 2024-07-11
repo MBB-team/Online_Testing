@@ -42,7 +42,10 @@ function block1gridsTaskTimeline(){
 
       var effort_want = {
         type: 'html-slider-response-effort-want-WH',
-        prompt: '<p>Block : 1/3    Exercice : '+trialNbCurrent+'/'+exp.nbTrials_block+'<p style="font-size:30px">Votre objectif est de mémoriser <b>'+TSCurrent+' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>'+rewCurrent+'</b> points. </p><div><br></div>',
+        prompt: '<p style="position: relative; top: -20px; color: grey;">Exercice: ' + trialNbCurrent + '/' + exp.nbTrials_block + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block: 1/3</p>' +
+        '<p style="font-size:30px">Votre objectif est de mémoriser <b>' + TSCurrent + ' paires de chiffres</b>.</p>' +
+        '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>' + rewCurrent + '</b> points. </p>' +
+        '<div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         min: exp.effLimits[0],
         max: exp.effLimits[1],
@@ -61,18 +64,24 @@ function block1gridsTaskTimeline(){
             var effortDuration = data.slider_response;
             console.log("I chose this many seconds:", effortDuration);
           },
-        data: {
-          test_part: 'effort_want',
-          get_data: 1, 
-          trialNb: trialInd,
-          blockInd: 1,
-          target_score: TSCurrent,
-          SE_eff: 999,
-          reward: rewCurrent,
-          nTS: 999,
-          success: 999
+          data: {
+            PartID: PartID,
+            SessID: sessID, 
+            condition: condition,
+            trialNb: trialInd,
+            blockInd: 1,
+            test_part: 'effort_want',
+            get_data: 1,
+            target_score: TSCurrent,
+            reward: rewCurrent,
+            SE_eff: 999,
+            SE_type: '999',
+            NC: 999,
+            adjustedNC: 999,
+            finalNC: 999,
+            nTS: 999,
         }
-  
+ 
       }
   
       // Push to Timeline //
@@ -91,20 +100,26 @@ function block1gridsTaskTimeline(){
   
       var fixation = {
         type: 'html-button-response-WH',
-        stimulus: '<p><b>Tenez-vous pre&#770t.e !</b></p>',
+        stimulus: '<p><b>Tenez-vous pre&#770t.e </b></p>',
         choices: [],
         trial_duration: time.fixation,
         data: {
+          PartID: PartID,
+          SessID: sessID, 
+          condition: condition,
           trialNb: trialInd,
-          get_data: 0,
           blockInd: 1,
-          target_score: TSCurrent,
           test_part: 'fixation',
-          SE_eff: 999,
+          get_data: 0,
+          target_score: TSCurrent,
           reward: rewCurrent,
+          SE_eff: 999,
+          SE_type: '999',
+          NC: 999,
+          adjustedNC: 999,
+          finalNC: 999,
           nTS: 999,
-          success: 999
-        }
+      }
       }; // fixation
   
       // Push to Timeline //
@@ -126,15 +141,22 @@ function block1gridsTaskTimeline(){
         target_score: TSCurrent,
         timer: true, // do we show a timer of the amount of time left?
         data: {
+          PartID: PartID,
+          SessID: sessID, 
+          condition: condition,
           trialNb: trialInd,
           blockInd: 1,
-          target_score: TSCurrent,
-          SE_eff: 999,
           test_part: 'effort',
+          get_data: 0,
+          target_score: TSCurrent,
           reward: rewCurrent,
+          SE_eff: 999,
+          SE_type: '999',
+          NC: 999,
+          adjustedNC: 999,
+          finalNC: 999,
           nTS: 999,
-          success: 999
-        }
+      }
       }; // effort
   
       // Push to Timeline //
@@ -202,16 +224,22 @@ function block1gridsTaskTimeline(){
           test_counter++;
         },
         data: {
+          PartID: PartID,
+          SessID: sessID, 
+          condition: condition,
+          trialNb: trialInd,
+          blockInd: 1,
           test_part: 'test',
           get_data: 1,
-          blockInd: 1,
-          trialNb: trialInd,
           target_score: TSCurrent,
-          SE_eff: 999,
           reward: rewCurrent,
+          SE_eff: 999,
+          SE_type: '999',
+          NC: 999,
+          adjustedNC: 999,
+          finalNC: 999,
           nTS: 999,
-          success: 999
-        }
+      }
       }; // test
       console.log("NM: out of the loop exCorrect is at trial"+ trialInd+": "+ exCorrect)
       console.log("NM: out of the loop pointsTotal is at trial"+ trialInd+": "+ pointsTotal)
@@ -244,16 +272,22 @@ function block1gridsTaskTimeline(){
           console.log("Button Pressed:", data.button_pressed);
         },
         data: {
+          PartID: PartID,
+          SessID: sessID, 
+          condition: condition,
+          trialNb: trialInd,
+          blockInd: 1,
           test_part: 'EnS',
           get_data: 1,
-          blockInd: 1,
-          trialNb: trialInd,
           target_score: TSCurrent,
-          SE_eff: 999,
           reward: rewCurrent,
+          SE_eff: 999,
+          SE_type: '999',
+          NC: 999,
+          adjustedNC: 999,
+          finalNC: 999,
           nTS: 999,
-          success: 999
-        }
+      }
       }; // EnS
   
       // Push to Timeline //
@@ -263,19 +297,28 @@ function block1gridsTaskTimeline(){
 // ==== ÉTAPE 5 - FIN D'UN EXO ====
       var nextexo = {
         type: 'html-button-response-WH',
-        stimulus:'<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 1/3</b>.</p> <p> Quand vous êtes prêt.e.s, </p>',
+        stimulus:'<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 1/3</b>.</p> <p> Quand vous êtes prêt.e, </p>',
         choices: trialNbCurrent < exp.nbTrials_block ? ['Passez au prochain exercice'] : ['Suivant'],
+        on_finish: function(data){
+          data.finalNC = nCorrect
+        },
         data: {
-            test_part: 'next_exo',
-            get_data: 1,
-            blockInd: 1,
-            trialNb: trialInd,
-            target_score: 999,
-            SE_eff: 999,
-            reward: 999,
-            nTS: 999,
-            success: trial_success,
-          }
+          PartID: PartID,
+          SessID: sessID, 
+          condition: condition,
+          trialNb: trialInd,
+          blockInd: 1,
+          test_part: 'next_exo',
+          get_data: 1,
+          target_score: TSCurrent,
+          reward: rewCurrent,
+          SE_eff: 999,
+          SE_type: '999',
+          NC: 999,
+          adjustedNC: 999,
+          finalNC: 999,
+          nTS: 999,
+      }
       }
       timelineTask.push(fullscreenExp);
       timelineTask.push(nextexo);
@@ -296,6 +339,10 @@ function block1gridsTaskTimeline(){
       },
       choices: ["Passez au exercices d'auto-évaluation"],
       data: {
+        PartID: PartID,
+        SessID: sessID, 
+        condition: condition,
+        blockInd: 1, 
         test_part: 'finish block 1',
         trialNb: 999,
         target_score: 999,
