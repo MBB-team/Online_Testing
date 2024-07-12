@@ -64,7 +64,7 @@ Created: 27/03/24 -->
   // Configuration parameters of experiment
   const exp = {name:           "SE2Template",
                nbTrials:       36, // gridIndexesOriginal[0].length
-               nbTrials_block: 6, // CHANGE!
+               nbTrials_block: 12, // CHANGE!
                TS:             [5, 7, 9], // [6 8 10]
                rew:            [10, 100], // 1 10
                max_points:     [1980], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
