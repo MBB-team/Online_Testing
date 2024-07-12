@@ -108,7 +108,7 @@ function block2gridsTaskTimeline(){
             },
             on_finish: function(data) {
                 var effortDuration = data.slider_response;
-                if (condition === 3 || condition === 4) {
+                if (condition === 2) {
                     adjustedNC = effortalg(TSCurrent, rewCurrent, effortDuration);
                     console.log("For trial ", trialInd, "the effort selected was ", effortDuration, )
                 }
@@ -391,10 +391,7 @@ function block2gridsTaskTimeline(){
         if (condition === 1 || condition === 2) {
             timelineTask.push(fullscreenExp);
             timelineTask.push(feedback_nextexo);
-        } else if (condition === 3 || condition === 4) {
-            timelineTask.push(fullscreenExp);
-            timelineTask.push(feedback_nextexo);
-        } else if (condition === 5 || condition === 6) {
+        } else if (condition === 3) {
             timelineTask.push(fullscreenExp);
             timelineTask.push(nofeedback_nextexo);
         }

@@ -64,7 +64,7 @@ Created: 27/03/24 -->
   // Configuration parameters of experiment
   const exp = {name:           "SE2Template",
                nbTrials:       36, // gridIndexesOriginal[0].length
-               nbTrials_block: 6, // CHANGE!
+               nbTrials_block: 12, // CHANGE!
                TS:             [5, 7, 9], // [6 8 10]
                rew:            [10, 100], // 1 10
                max_points:     [1980], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
@@ -167,6 +167,44 @@ Created: 27/03/24 -->
 
     // ------------------------------ PRE-LOAD MEDIA ----------------------------- //
 
+    //useful function
+
+    function get_condition(conditionID, sessID){
+      //1 = Perf, 2 = effort, 3 = control
+      if (sessID ==1){
+        if (conditionID == 1 || conditionID == 2){
+          condition = 1
+        };
+        if (conditionID == 3 || conditionID == 4){
+          condition = 2
+        };
+        if (conditionID == 5 || conditionID == 6){
+          condition = 3
+        };
+      }
+      if (sessID ==2){
+        if (conditionID == 3 || conditionID == 5){
+          condition = 1
+        };
+        if (conditionID == 1 || conditionID == 6){
+          condition = 2
+        };
+        if (conditionID == 2|| conditionID == 4){
+          condition = 3
+        }};
+      if (sessID ==3){
+        if (conditionID == 4 || conditionID == 6){
+          condition = 1
+        };
+        if (conditionID == 2 || conditionID == 5){
+          condition = 2
+        };
+        if (conditionID == 1 || conditionID == 3){
+          condition = 3
+        }
+      }
+      return condition
+}
     // Instructions
     var instrImg = [];
     var instrImg_html = [];
@@ -203,13 +241,15 @@ Created: 27/03/24 -->
 
     //var condition  = randi(1,6); //this is the last part of the ID 
     //var condition = 6;
-    var condition = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
-    console.log ("Condition for this part is:", condition);
+    var conditionID = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
+   
     //var PartID     = randi(0,83); // this is the first part of the ID 
     var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,2));
     //var sessID     = 1; //this is session 1 
     var sessID    = parseInt(dataSaver.clientIds.sessionName.substring(dataSaver.clientIds.sessionName.length - 1)); //last character of sessionName
-    
+    var condition = get_condition(conditionID, sessID);
+   console.log ("Condition for this part is:", condition);
+    //COND 1: P E C ; COND 2: P C E; COND 3: E P C; COND 4: E C P; COND 5: C P E; COND 6: C E P
     //block 1 conditions
     var TSPt_b1       = TSArray[PartID][sessID][0];
     var rewPt_b1      = rewArray[PartID][sessID][0];
