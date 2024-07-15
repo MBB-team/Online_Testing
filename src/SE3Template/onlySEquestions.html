@@ -276,7 +276,6 @@ Created: 27/03/24 -->
       exp_timeline.push(firstFullscreen)
 
       // Execute the experiment
-      
       /*
       // Training phase
       if (cfg.instructions){
@@ -287,19 +286,18 @@ Created: 27/03/24 -->
           }
         };
       }
-      */
 
       var block1grids = block1gridsTaskTimeline();
       for (var i = 0; i < block1grids.timelineTask.length; i++) {
         exp_timeline.push(block1grids.timelineTask[i]);
       };
-    
-     /*
+    */
+     
       var block1SE = block1SETaskTimeline();
       for (var i = 0; i < block1SE.timelineTask.length; i++) {
         exp_timeline.push(block1SE.timelineTask[i]);
       };
-      */
+  
 
       var block2 = block2gridsTaskTimeline();
       for (var i = 0; i < block2.timelineTask.length; i++) {
@@ -321,7 +319,7 @@ Created: 27/03/24 -->
       type: 'html-button-response-WH',
       stimulus: function() {
         var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagnés <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
+        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
        },
       choices: ["Fin"],
       data: {

@@ -637,7 +637,7 @@ function SE3TrainingTimelineW1(){
     var instructions21 = {
       type: 'html-button-response-instructions-NM',
       stimulus: [instrImg_html[20]],
-      choices: ['Commencer'],
+      choices: ['Suivant'],
       data: {
         trialNb: 999,
         target_score: 999,
@@ -648,6 +648,23 @@ function SE3TrainingTimelineW1(){
     }
     timelineTask_train.push(fullscreenExp);
     timelineTask_train.push(instructions21);
+  
+
+    var instructions22 = {
+      type: 'html-button-response-instructions-NM',
+      stimulus: [instrImg_html[21]],
+      choices: ['Commencer'],
+      blocked_duration: 3000,
+      data: {
+        trialNb: 999,
+        target_score: 999,
+        reward: 999,
+        test_part: 'instructions',
+        nTS: 999
+      }
+    }
+    timelineTask_train.push(fullscreenExp);
+    timelineTask_train.push(instructions22);
   
    
   
