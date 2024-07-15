@@ -77,10 +77,10 @@ function block2gridsTaskTimeline(){
 
     for (var trialInd = 0; trialInd < exp.nbTrials_block; trialInd++){
         let trialNbCurrent = trialInd + 1;
-        let TSCurrent = exp.TS[TSPt_b3[trialInd]];
-        let rewCurrent = exp.rew[rewPt_b3[trialInd]];
-        let gridStimuliCurrent = gridStimuli_b3[trialInd];
-        let gridIndexesCurrent = gridIndexesPt_b3[trialInd];
+        let TSCurrent = exp.TS[TSPt_b2[trialInd]];
+        let rewCurrent = exp.rew[rewPt_b2[trialInd]];
+        let gridStimuliCurrent = gridStimuli_b2[trialInd];
+        let gridIndexesCurrent = gridIndexesPt_b2[trialInd];
         let target_i = Array(TSCurrent).fill([null, null]); // Adjust based on TSCurrent
         let target_corr_i = Array(TSCurrent).fill([null, null]); // Adjust based on TSCurrent
         let TD = 1;
