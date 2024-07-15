@@ -44,6 +44,10 @@ CREATE TABLE IF NOT EXISTS `tableSE3` (
   `finalNC` int(3) DEFAULT NULL,
   `success` int(3) DEFAULT NULL,
   `get_data` tinyint(1) DEFAULT NULL,
+  `euro_rew` FLOAT DEFAULT NULL,
+  `exCorrect` int(4) DEFAULT NULL
+  `pointsTotal` int(4) DEFAULT NULL,
+  `response` text DEFAULT NULL,
   `PartID` int(3) DEFAULT NULL,
   `Condition` int(3) DEFAULT NULL,
   `SessID` int(3) DEFAULT NULL,
