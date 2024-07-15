@@ -278,7 +278,7 @@ Created: 27/03/24 -->
     // --------------------------------- FONCTIONS PURES  ----------------------------//
 
     function updateLoadedCount(nLoaded){
-      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length  + 1)  * 100), 100);
+      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + instrImg_S2.length + instrImg_S3.length + numbersImg.length  + 1)  * 100), 100);
       document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
       //console.log('Loaded '+percentcomplete+'% of images');
     }
@@ -318,7 +318,7 @@ Created: 27/03/24 -->
     var exp_timeline = [];
 
     if (cfg.debug == false) {
-      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg],
+      jsPsych.pluginAPI.preloadImages([instrImg, instrImg_S2, instrImg_S3, numbersImg],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
 
