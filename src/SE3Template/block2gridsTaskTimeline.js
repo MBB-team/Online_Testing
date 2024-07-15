@@ -93,7 +93,10 @@ function block2gridsTaskTimeline(){
 
         var effort_want = {
             type: 'html-slider-response-effort-want-WH',
-            prompt: '<p>Block : 2/3    Exercice : ' + trialNbCurrent + '/' + exp.nbTrials_block + '<p style="font-size:30px">Votre objectif est de mémoriser <b>' + TSCurrent + ' paires de chiffres</b>.</p><p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>' + rewCurrent + '</b> points. </p><div><br></div>',
+            prompt: '<p style="position: relative; top: -20px; color: grey;">Exercice: ' + trialNbCurrent + '/' + exp.nbTrials_block + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block: 2/3</p>' +
+            '<p style="font-size:30px">Votre objectif est de mémoriser <b>' + TSCurrent + ' paires de chiffres</b>.</p>' +
+            '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>' + rewCurrent + '</b> points. </p>' +
+            '<div><br></div>',
             stimulus: '<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
             min: exp.effLimits[0],
             max: exp.effLimits[1],
@@ -105,21 +108,27 @@ function block2gridsTaskTimeline(){
             },
             on_finish: function(data) {
                 var effortDuration = data.slider_response;
-                if (condition === 3 || condition === 4) {
+                if (condition === 2) {
                     adjustedNC = effortalg(TSCurrent, rewCurrent, effortDuration);
                     console.log("For trial ", trialInd, "the effort selected was ", effortDuration, )
                 }
             },
             data: {
-                test_part: 'effort_want',
-                get_data: 1,
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
                 trialNb: trialInd,
                 blockInd: 2,
+                test_part: 'effort_want',
+                get_data: 1,
                 target_score: TSCurrent,
-                SE_eff: 999,
                 reward: rewCurrent,
+                SE_eff: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999
             }
         };
 
@@ -134,15 +143,21 @@ function block2gridsTaskTimeline(){
             choices: [],
             trial_duration: time.fixation,
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
                 trialNb: trialInd,
-                get_data: 0,
                 blockInd: 2,
-                target_score: TSCurrent,
                 test_part: 'fixation',
-                SE_eff: 999,
+                get_data: 0,
+                target_score: TSCurrent,
                 reward: rewCurrent,
+                SE_eff: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999
             }
         };
 
@@ -164,14 +179,21 @@ function block2gridsTaskTimeline(){
             target_score: TSCurrent,
             timer: true, // do we show a timer of the amount of time left?
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
                 trialNb: trialInd,
                 blockInd: 2,
-                target_score: TSCurrent,
-                SE_eff: 999,
                 test_part: 'effort',
+                get_data: 0,
+                target_score: TSCurrent,
                 reward: rewCurrent,
+                SE_eff: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999
             }
         };
 
@@ -223,15 +245,21 @@ function block2gridsTaskTimeline(){
                 test_counter++;
             },
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
+                trialNb: trialInd,
+                blockInd: 2,
                 test_part: 'test',
                 get_data: 1,
-                blockInd: 2,
-                trialNb: trialInd,
                 target_score: TSCurrent,
-                SE_eff: 999,
                 reward: rewCurrent,
+                SE_eff: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999
             }
         };
 
@@ -251,15 +279,21 @@ function block2gridsTaskTimeline(){
                 console.log("Button Pressed:", data.button_pressed);
             },
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
+                trialNb: trialInd,
+                blockInd: 2,
                 test_part: 'EnS',
                 get_data: 1,
-                blockInd: 2,
-                trialNb: trialInd,
                 target_score: TSCurrent,
-                SE_eff: 999,
                 reward: rewCurrent,
+                SE_eff: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: 999
             }
         };
 
@@ -293,46 +327,71 @@ function block2gridsTaskTimeline(){
                     exCorrect++;
                     pointsTotal += rewCurrent;
                     nTS++;
-                    feedback.stimulus = '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p style="margin:0px"> Bravo, vous avez correctement retrouvé <b>' + finalNC + '</b>' + emplacementsStr + '!</p><p> Vous avez réussi cet exercice. Vous gagnez <b>' + rewCurrent + '</b> points. </p> <p> Quand vous êtes prêt.e.s, </p>';
+                    feedback.stimulus = '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p style="margin:0px"> Bravo, vous avez correctement retrouvé <b>' + finalNC + '</b>' + emplacementsStr + '!</p><p> Vous avez réussi cet exercice. Vous gagnez <b>' + rewCurrent + '</b> points. </p> <p> Quand vous êtes prêt.e, </p>';
                 } else {
-                    feedback.stimulus = '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p style="margin:0px">Vous avez correctement retrouvé <b>' + finalNC + '</b>' + emplacementsStr + '!</p><p> Malheureusement, vous n\'avez pas réussi cet exercice. Vous ne gagnez aucun point. </p> <p> Quand vous êtes prêt.e.s, </p>';
+                    feedback.stimulus = '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p style="margin:0px">Vous avez correctement retrouvé <b>' + finalNC + '</b>' + emplacementsStr + '!</p><p> Malheureusement, vous n\'avez pas réussi cet exercice. Vous ne gagnez aucun point. </p> <p> Quand vous êtes prêt.e, </p>';
                 }
             },
+            on_finish: function(data){
+                var finalNC = nCorrect + adjustedNC;
+                if (finalNC < 0) {
+                    finalNC = 0;
+                } else if (finalNC > TSCurrent) {
+                    finalNC = TSCurrent;
+                }
+                data.finalNC = finalNC;
+                data.NC = nCorrect;
+                data.adjustedNC = adjustedNC;
+            },
             data: {
-                test_part: 'feedback',
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
                 trialNb: trialInd,
                 blockInd: 2,
+                test_part: 'feedback',
+                get_data: 1,
                 target_score: TSCurrent,
                 reward: rewCurrent,
+                SE_eff: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
                 finalNC: 999,
-                nTS: 999
+                nTS: 999,
             }
         };
 
         var nofeedback_nextexo = {
             type: 'html-button-response-WH',
-            stimulus: '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p> Quand vous êtes prêt.e.s, </p>',
+            stimulus: '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p> Quand vous êtes prêt.e, </p>',
             choices: trialNbCurrent < exp.nbTrials_block ? ['Passez au prochain exercice'] : ['Suivant'],
+            on_finish: function(data){
+                data.finalNC = nCorrect
+            },
             data: {
+                PartID: PartID,
+                SessID: sessID, 
+                condition: condition,
+                trialNb: trialInd,
+                blockInd: 2,
                 test_part: 'next_exo',
                 get_data: 1,
-                blockInd: 2,
-                trialNb: trialInd,
-                target_score: 999,
+                target_score: TSCurrent,
+                reward: rewCurrent,
                 SE_eff: 999,
-                reward: 999,
+                SE_type: '999',
+                NC: 999,
+                adjustedNC: 999,
+                finalNC: 999,
                 nTS: 999,
-                success: trial_success,
             }
         };
 
         if (condition === 1 || condition === 2) {
             timelineTask.push(fullscreenExp);
             timelineTask.push(feedback_nextexo);
-        } else if (condition === 3 || condition === 4) {
-            timelineTask.push(fullscreenExp);
-            timelineTask.push(feedback_nextexo);
-        } else if (condition === 5 || condition === 6) {
+        } else if (condition === 3) {
             timelineTask.push(fullscreenExp);
             timelineTask.push(nofeedback_nextexo);
         }
