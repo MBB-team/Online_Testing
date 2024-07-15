@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `tableSE3` (
   `pointsTotal` int(4) DEFAULT NULL,
   `response` text DEFAULT NULL,
   `PartID` int(3) DEFAULT NULL,
-  `Condition` int(3) DEFAULT NULL,
+  `condition` int(3) DEFAULT NULL,
   `SessID` int(3) DEFAULT NULL,
   `adjustedNC` int(3) DEFAULT NULL,
   `NC` int(3) DEFAULT NULL,
