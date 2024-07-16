@@ -30,7 +30,10 @@ Created: 27/03/24 -->
             <script   src  = 'block3gridsTaskTimeline.js'></script>
             <script   src  = 'block3SETaskTimeline.js'></script>     <!-- NEED TO CHANGE --> 
             <script   src  = 'SE3TrainingTimelineW1.js'></script>
+            <script   src  = 'SE3_reminders_S2Timeline.js'></script>
+            <script   src  = 'SE3_reminders_S3Timeline.js'></script>
             <script   src = "../js/dataSaver.js"></script>
+            <script   src  = 'questionnaireTimeline.js'></script>
             <link     href= "../css/sendingAnimation.css" rel="stylesheet" type="text/css"></link>
             <link     rel='icon' href='/favicon.ico' />
       </head>
@@ -59,9 +62,9 @@ Created: 27/03/24 -->
                block0:         true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "SE2Template",
+  const exp = {name:           "SE3",
                nbTrials:       36, // gridIndexesOriginal[0].length
-               nbTrials_block: 6, // CHANGE!
+               nbTrials_block: 12, // CHANGE!
                TS:             [5, 7, 9], // [6 8 10]
                rew:            [10, 100], // 1 10
                max_points:     [1980], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
@@ -76,7 +79,7 @@ Created: 27/03/24 -->
                 fixation:      1000};
 
   // instructions
-  const nbInstr              = 21; //Change if there are changes 
+  const nbInstr              = 22; //Change if there are changes 
 
   // --------------------------------- INITIALISATION  --------------------------- //
   switch(window.location.protocol) {
@@ -164,12 +167,64 @@ Created: 27/03/24 -->
 
     // ------------------------------ PRE-LOAD MEDIA ----------------------------- //
 
+    //useful function
+
+    function get_condition(conditionID, sessID){
+      //1 = Perf, 2 = effort, 3 = control
+      if (sessID ==1){
+        if (conditionID == 1 || conditionID == 2){
+          condition = 1
+        };
+        if (conditionID == 3 || conditionID == 4){
+          condition = 2
+        };
+        if (conditionID == 5 || conditionID == 6){
+          condition = 3
+        };
+      }
+      if (sessID ==2){
+        if (conditionID == 3 || conditionID == 5){
+          condition = 1
+        };
+        if (conditionID == 1 || conditionID == 6){
+          condition = 2
+        };
+        if (conditionID == 2|| conditionID == 4){
+          condition = 3
+        }};
+      if (sessID ==3){
+        if (conditionID == 4 || conditionID == 6){
+          condition = 1
+        };
+        if (conditionID == 2 || conditionID == 5){
+          condition = 2
+        };
+        if (conditionID == 1 || conditionID == 3){
+          condition = 3
+        }
+      }
+      return condition
+}
     // Instructions
     var instrImg = [];
     var instrImg_html = [];
     for (var t=1; t <= nbInstr; t++){
-      instrImg[t-1] = 'Stimuli/Instructions/Slide'+t+'.png'; // pre-load all instructions
+      instrImg[t-1] = 'Stimuli/Instructions_S1/Slide'+t+'.png'; // pre-load all instructions
       instrImg_html[t-1] = '<img src="'+instrImg[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
+    };
+    //reminder instructions for session 2 and 3 
+    var instrImg_S2 = [];
+    var instrImg_S2_html = [];
+    for (var t=1; t <= 3; t++){
+      instrImg_S2[t-1] = 'Stimuli/Instructions_S2/Slide'+t+'.png'; // pre-load all instructions
+      instrImg_S2_html[t-1] = '<img src="'+instrImg_S2[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
+    };
+    //reminder instructions for session 2 and 3 
+    var instrImg_S3 = [];
+    var instrImg_S3_html = [];
+    for (var t=1; t <= 3; t++){
+      instrImg_S3[t-1] = 'Stimuli/Instructions_S3/Slide'+t+'.png'; // pre-load all instructions
+      instrImg_S3_html[t-1] = '<img src="'+instrImg_S3[t-1]+'"  id="image-instructions" style="height:'+screen.height/1.25+'px"></img>';
     };
 
     // Numbers 
@@ -186,13 +241,15 @@ Created: 27/03/24 -->
 
     //var condition  = randi(1,6); //this is the last part of the ID 
     //var condition = 6;
-    var condition = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
-    console.log ("Condition for this part is:", condition);
+    var conditionID = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
+   
     //var PartID     = randi(0,83); // this is the first part of the ID 
     var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,2));
     //var sessID     = 1; //this is session 1 
     var sessID    = parseInt(dataSaver.clientIds.sessionName.substring(dataSaver.clientIds.sessionName.length - 1)); //last character of sessionName
-    
+    var condition = get_condition(conditionID, sessID);
+   console.log ("Condition for this part is:", condition);
+    //COND 1: P E C ; COND 2: P C E; COND 3: E P C; COND 4: E C P; COND 5: C P E; COND 6: C E P
     //block 1 conditions
     var TSPt_b1       = TSArray[PartID][sessID][0];
     var rewPt_b1      = rewArray[PartID][sessID][0];
@@ -212,6 +269,7 @@ Created: 27/03/24 -->
     //Global variables
     var pointsTotal = 0;
     var exCorrect   = 0;
+    var euro_rew     = 0;
     
 
    
@@ -221,7 +279,7 @@ Created: 27/03/24 -->
     // --------------------------------- FONCTIONS PURES  ----------------------------//
 
     function updateLoadedCount(nLoaded){
-      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + numbersImg.length  + 1)  * 100), 100);
+      var percentcomplete = Math.min(Math.ceil(nLoaded / (instrImg.length + instrImg_S2.length + instrImg_S3.length + numbersImg.length  + 1)  * 100), 100);
       document.getElementById('loadingPercent').innerHTML = percentcomplete + ' %';
       //console.log('Loaded '+percentcomplete+'% of images');
     }
@@ -261,7 +319,7 @@ Created: 27/03/24 -->
     var exp_timeline = [];
 
     if (cfg.debug == false) {
-      jsPsych.pluginAPI.preloadImages([instrImg, numbersImg],
+      jsPsych.pluginAPI.preloadImages([instrImg, instrImg_S2, instrImg_S3, numbersImg],
       function(){ startExperiment();},
       function(nLoaded){updateLoadedCount(nLoaded);});
 
@@ -276,23 +334,41 @@ Created: 27/03/24 -->
       exp_timeline.push(firstFullscreen)
 
       // Execute the experiment
-      /*
+      
       // Training phase
-      if (cfg.instructions){
+      if (cfg.instructions & sessID==1){
         var task_training = SE3TrainingTimelineW1();
         for (var i = 0; i < task_training.length; i++){
           if (cfg.instructions){
             exp_timeline.push(task_training[i]);
           }
         };
-      }
+      };
+
+      if (sessID==2){
+        var task_training = SE3_reminders_S2Timeline();
+        for (var i = 0; i < task_training.length; i++){
+          if (cfg.instructions){
+            exp_timeline.push(task_training[i]);
+          }
+        };
+      };
+
+      if (sessID==3){
+        var task_training = SE3_reminders_S3Timeline();
+        for (var i = 0; i < task_training.length; i++){
+          if (cfg.instructions){
+            exp_timeline.push(task_training[i]);
+          }
+        };
+      };
 
       var block1grids = block1gridsTaskTimeline();
       for (var i = 0; i < block1grids.timelineTask.length; i++) {
         exp_timeline.push(block1grids.timelineTask[i]);
       };
-    */
-     
+    
+    
       var block1SE = block1SETaskTimeline();
       for (var i = 0; i < block1SE.timelineTask.length; i++) {
         exp_timeline.push(block1SE.timelineTask[i]);
@@ -303,31 +379,57 @@ Created: 27/03/24 -->
       for (var i = 0; i < block2.timelineTask.length; i++) {
         exp_timeline.push(block2.timelineTask[i]);
       };
-
+ 
       var block3SE = block3SETaskTimeline();
       for (var i = 0; i < block3SE.timelineTask.length; i++) {
         exp_timeline.push(block3SE.timelineTask[i]);
       };
-     
+    
 
       var block3grids = block3gridsTaskTimeline();
       for (var i = 0; i < block3grids.timelineTask.length; i++) {
         exp_timeline.push(block3grids.timelineTask[i]);
       };
-     
+      
+      var questionnaire = questionnaireTimeline();
+      if (sessID==3){
+      for (var i = 0; i < questionnaire.timelineTask.length; i++) {
+        exp_timeline.push(questionnaire.timelineTask[i]);
+      };  }; 
+
+      var finishAll = {
+        type: 'html-button-response-WH',
+        stimulus: function() {
+        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
+        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
+       },
+      }
       var finishAll = {
       type: 'html-button-response-WH',
       stimulus: function() {
-        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
+        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';       
+        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b> en plus de votre rémunération de base . </p>';
        },
-      choices: ["Fin"],
+     choices: ["Fin"],
       data: {
+        PartID: PartID,
+        SessID: sessID, 
+        condition: condition,
         test_part: 'finish full thing',
-        get_data: 0,
+        get_data: 1,
         trialNb: 999,
+        blockInd: 999,
         target_score: 999,
-        nTS: 999
+        reward: 999,
+        SE_eff: 999,
+        SE_type: '999',
+        NC: 999,
+        adjustedNC: 999,
+        finalNC: 999,
+        nTS: 999,
+        euro_rew: euro_rew,
+        exCorrect: exCorrect,
+        pointsTotal:pointsTotal,
      }
      };
      exp_timeline.push(finishAll)

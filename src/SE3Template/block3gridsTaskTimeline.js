@@ -36,8 +36,8 @@ function block3gridsTaskTimeline(){
         var effort_want = {
           type: 'html-slider-response-effort-want-WH',
           prompt: '<p style="position: relative; top: -20px; color: grey;">Exercice: ' + trialNbCurrent + '/' + exp.nbTrials_block + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block: 3/3</p>' +
-          '<p style="font-size:30px">Votre objectif est de mémoriser <b>' + TSCurrent + ' paires de chiffres</b>.</p>' +
-          '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>' + rewCurrent + '</b> points. </p>' +
+          '<p style="font-size:30px">Votre objectif est de mémoriser <b  style="color:darkblue;">' + TSCurrent + '</b><span  style="color:darkblue;"> paires de chiffres</span>.</p>' +
+          '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b  style="color:darkgreen;">' + rewCurrent + '</b> <span style="color:darkgreen;"> points</span>.</p>' +
           '<div><br></div>',
           stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
           min: exp.effLimits[0],
@@ -292,6 +292,11 @@ function block3gridsTaskTimeline(){
           choices: trialNbCurrent < exp.nbTrials_block ? ['Passez au prochain exercice'] : ['Fin'],
           on_finish: function(data){
             data.finalNC = nCorrect
+            euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10/ 100; 
+            euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10/ 100; 
+            euro_rew = euro_rew.toFixed(2);
+            console.log("NOW: Here the euro_rew is:", euro_rew)
+            console.log("NOW: Here the euro_rew is before dividing:",Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10)
           },
           data: {
             PartID: PartID,

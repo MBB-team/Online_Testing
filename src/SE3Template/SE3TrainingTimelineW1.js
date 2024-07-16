@@ -221,7 +221,7 @@ function SE3TrainingTimelineW1(){
     // effort want slider
     var effort_want_train = {
       type: 'html-slider-response-effort-want-WH',
-      prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b>'+train_TS+' paires de chiffres</b>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b>'+train_rew+' point</b>.</p><div><br></div>',
+      prompt: '<p>Exercice d&#39entra&icirc;nement.</p><p>Votre objectif est de mémoriser <b style="color:darkblue;">'+train_TS+'</b> <span  style="color:darkblue;">  paires de chiffres</span>.</p><p>Si vous atteignez cet objectif, vous recevrez un bonus de <b style="color:darkgreen;">'+train_rew+'</b> <span  style="color:darkgreen;"> point</span>.</p><div><br></div>',
       stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
       labels: [''],
       min: exp.effLimits[0],
@@ -498,8 +498,11 @@ function SE3TrainingTimelineW1(){
 
       var sequestion_train = {
         type: 'html-slider-response-percentage-NM',
-        prompt: '<p> Si vous deviez mémoriser <b> 4 paires </b> </p> <p>et que vous aviez <b>25 secondes</b> pour mémoriser la grille, </p>',
-        stimulus:'<p> quelle est la probabilité que vous réussirez à retrouver toutes les paires? </p>',
+        stimulus: '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
+        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">25</b> secondes</p>'
+        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">4</b> paires </p>'
+        + '<p style="text-align: left;"></p>'
+        + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>',
         min: 0,
         max: 100,
         start: function(){return randi(0,100)},
@@ -649,7 +652,6 @@ function SE3TrainingTimelineW1(){
     timelineTask_train.push(fullscreenExp);
     timelineTask_train.push(instructions21);
   
-
     var instructions22 = {
       type: 'html-button-response-instructions-NM',
       stimulus: [instrImg_html[21]],
@@ -665,6 +667,38 @@ function SE3TrainingTimelineW1(){
     }
     timelineTask_train.push(fullscreenExp);
     timelineTask_train.push(instructions22);
+
+    var instructions23 = {
+      type: 'html-button-response-instructions-NM',
+      stimulus: [instrImg_html[22]],
+      choices: ['Commencer'],
+      blocked_duration: 3000,
+      data: {
+        trialNb: 999,
+        target_score: 999,
+        reward: 999,
+        test_part: 'instructions',
+        nTS: 999
+      }
+    }
+    timelineTask_train.push(fullscreenExp);
+    timelineTask_train.push(instructions23);
+
+    var instructions24 = {
+      type: 'html-button-response-instructions-NM',
+      stimulus: [instrImg_html[23]],
+      choices: ['Commencer'],
+      blocked_duration: 3000,
+      data: {
+        trialNb: 999,
+        target_score: 999,
+        reward: 999,
+        test_part: 'instructions',
+        nTS: 999
+      }
+    }
+    timelineTask_train.push(fullscreenExp);
+    timelineTask_train.push(instructions24);
   
    
   

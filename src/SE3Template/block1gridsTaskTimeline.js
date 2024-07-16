@@ -43,8 +43,8 @@ function block1gridsTaskTimeline(){
       var effort_want = {
         type: 'html-slider-response-effort-want-WH',
         prompt: '<p style="position: relative; top: -20px; color: grey;">Exercice: ' + trialNbCurrent + '/' + exp.nbTrials_block + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block: 1/3</p>' +
-        '<p style="font-size:30px">Votre objectif est de mémoriser <b>' + TSCurrent + ' paires de chiffres</b>.</p>' +
-        '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>' + rewCurrent + '</b> points. </p>' +
+        '<p style="font-size:30px">Votre objectif est de mémoriser <b  style="color:darkblue;">' + TSCurrent + '</b><span  style="color:darkblue;"> paires de chiffres</span>.</p>' +
+        '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b  style="color:darkgreen;">' + rewCurrent + '</b> <span style="color:darkgreen;"> points</span>. </p>' +
         '<div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         min: exp.effLimits[0],
