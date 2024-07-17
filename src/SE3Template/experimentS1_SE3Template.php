@@ -20,6 +20,8 @@ Created: 27/03/24 -->
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-instructions-NM.js'></script> 
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-percentage-NM.js'></script>
+            <script   src  = 'jsPsych-master/plugins/jspsych-survey-text.js'></script>
+            <script   src  = 'jsPsych-master/plugins/jspsych-survey-multi-choice.js'></script>
             <script   src  = 'Stimuli/Grids/generateGridsMain.js'></script>
             <script   src  = 'Stimuli/Grids/generateGridsTrain.js'></script>
             <script   src  = 'Stimuli/Grids/SE3Template - Task Conditions.js'></script>  <!-- NEED TO CHANGE -->
