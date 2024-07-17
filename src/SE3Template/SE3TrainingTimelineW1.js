@@ -499,7 +499,7 @@ function SE3TrainingTimelineW1(){
       var sequestion_train = {
         type: 'html-slider-response-percentage-NM',
         stimulus: '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
-        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">25</b> secondes</p>'
+        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissez <b style="color:red;">25</b> secondes</p>'
         + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">4</b> paires </p>'
         + '<p style="text-align: left;"></p>'
         + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>',
@@ -655,7 +655,7 @@ function SE3TrainingTimelineW1(){
     var instructions22 = {
       type: 'html-button-response-instructions-NM',
       stimulus: [instrImg_html[21]],
-      choices: ['Commencer'],
+      choices: ['Suivant'],
       blocked_duration: 3000,
       data: {
         trialNb: 999,
@@ -671,7 +671,7 @@ function SE3TrainingTimelineW1(){
     var instructions23 = {
       type: 'html-button-response-instructions-NM',
       stimulus: [instrImg_html[22]],
-      choices: ['Commencer'],
+      choices: ['Suivant'],
       blocked_duration: 3000,
       data: {
         trialNb: 999,

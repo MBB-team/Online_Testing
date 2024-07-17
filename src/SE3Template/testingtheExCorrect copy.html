@@ -65,8 +65,8 @@ Created: 27/03/24 -->
 
   // Configuration parameters of experiment
   const exp = {name:           "SE3",
-               nbTrials:       36, // gridIndexesOriginal[0].length
-               nbTrials_block: 12, // CHANGE!
+               nbTrials:       3, // gridIndexesOriginal[0].length
+               nbTrials_block: 1, // CHANGE!
                TS:             [5, 7, 9], // [6 8 10]
                rew:            [10, 100], // 1 10
                max_points:     [1980], // a(n_rew)*(n_tr/n_rew) +... a(n_rew)*(n_tr/n_rew) + 1
@@ -338,6 +338,7 @@ Created: 27/03/24 -->
 
       // Execute the experiment
       
+      /*
       // Training phase
       if (cfg.instructions & sessID==1){
         var task_training = SE3TrainingTimelineW1();
@@ -365,41 +366,42 @@ Created: 27/03/24 -->
           }
         };
       };
-
+      */
       var block1grids = block1gridsTaskTimeline();
       for (var i = 0; i < block1grids.timelineTask.length; i++) {
         exp_timeline.push(block1grids.timelineTask[i]);
       };
     
-    
+    /*
       var block1SE = block1SETaskTimeline();
       for (var i = 0; i < block1SE.timelineTask.length; i++) {
         exp_timeline.push(block1SE.timelineTask[i]);
       };
-  
+  */
 
       var block2 = block2gridsTaskTimeline();
       for (var i = 0; i < block2.timelineTask.length; i++) {
         exp_timeline.push(block2.timelineTask[i]);
       };
- 
+ /*
       var block3SE = block3SETaskTimeline();
       for (var i = 0; i < block3SE.timelineTask.length; i++) {
         exp_timeline.push(block3SE.timelineTask[i]);
       };
     
-
+*/
       var block3grids = block3gridsTaskTimeline();
       for (var i = 0; i < block3grids.timelineTask.length; i++) {
         exp_timeline.push(block3grids.timelineTask[i]);
       };
-      
+     
+      /*
       var questionnaire = questionnaireTimeline();
       if (sessID==3){
       for (var i = 0; i < questionnaire.timelineTask.length; i++) {
         exp_timeline.push(questionnaire.timelineTask[i]);
       };  }; 
-
+*/
       var finishAll = {
         type: 'html-button-response-WH',
         stimulus: function() {

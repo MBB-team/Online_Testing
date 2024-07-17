@@ -338,6 +338,9 @@ function block1gridsTaskTimeline(){
         return finish_stim;
       },
       choices: ["Passez au exercices d'auto-évaluation"],
+      on_finish: function(){
+      console.log("After block 1, the exCorrect is: ", exCorrect, "and points Total is: ", pointsTotal)
+    },
       data: {
         PartID: PartID,
         SessID: sessID, 
@@ -351,6 +354,7 @@ function block1gridsTaskTimeline(){
     }
     
     timelineTask.push(finish);
+    
     return {timelineTask}
     
   
