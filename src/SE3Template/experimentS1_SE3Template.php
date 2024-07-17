@@ -20,6 +20,8 @@ Created: 27/03/24 -->
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-serial-reaction-time-mouse-WH.js'></script>
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-button-response-instructions-NM.js'></script> 
             <script   src  = 'jsPsych-master/plugins_WH/jspsych-html-slider-response-percentage-NM.js'></script>
+            <script   src  = 'jsPsych-master/plugins/jspsych-survey-text.js'></script>
+            <script   src  = 'jsPsych-master/plugins/jspsych-survey-multi-choice.js'></script>
             <script   src  = 'Stimuli/Grids/generateGridsMain.js'></script>
             <script   src  = 'Stimuli/Grids/generateGridsTrain.js'></script>
             <script   src  = 'Stimuli/Grids/SE3Template - Task Conditions.js'></script>  <!-- NEED TO CHANGE -->
@@ -62,7 +64,7 @@ Created: 27/03/24 -->
                block0:         true};
 
   // Configuration parameters of experiment
-  const exp = {name:           "SE2Template",
+  const exp = {name:           "SE3",
                nbTrials:       36, // gridIndexesOriginal[0].length
                nbTrials_block: 12, // CHANGE!
                TS:             [5, 7, 9], // [6 8 10]
@@ -244,7 +246,7 @@ Created: 27/03/24 -->
     var conditionID = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
    
     //var PartID     = randi(0,83); // this is the first part of the ID 
-    var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,2));
+    var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,3))-1;
     //var sessID     = 1; //this is session 1 
     var sessID    = parseInt(dataSaver.clientIds.sessionName.substring(dataSaver.clientIds.sessionName.length - 1)); //last character of sessionName
     var condition = get_condition(conditionID, sessID);
@@ -269,6 +271,7 @@ Created: 27/03/24 -->
     //Global variables
     var pointsTotal = 0;
     var exCorrect   = 0;
+    var euro_rew     = 0;
     
 
    
@@ -367,7 +370,7 @@ Created: 27/03/24 -->
         exp_timeline.push(block1grids.timelineTask[i]);
       };
     
-     
+    
       var block1SE = block1SETaskTimeline();
       for (var i = 0; i < block1SE.timelineTask.length; i++) {
         exp_timeline.push(block1SE.timelineTask[i]);
@@ -378,43 +381,38 @@ Created: 27/03/24 -->
       for (var i = 0; i < block2.timelineTask.length; i++) {
         exp_timeline.push(block2.timelineTask[i]);
       };
-
+ 
       var block3SE = block3SETaskTimeline();
       for (var i = 0; i < block3SE.timelineTask.length; i++) {
         exp_timeline.push(block3SE.timelineTask[i]);
       };
-     
+    
 
       var block3grids = block3gridsTaskTimeline();
       for (var i = 0; i < block3grids.timelineTask.length; i++) {
         exp_timeline.push(block3grids.timelineTask[i]);
       };
-
+      
       var questionnaire = questionnaireTimeline();
       if (sessID==3){
       for (var i = 0; i < questionnaire.timelineTask.length; i++) {
         exp_timeline.push(questionnaire.timelineTask[i]);
-      };  };
-     
+      };  }; 
+
       var finishAll = {
         type: 'html-button-response-WH',
         stimulus: function() {
         var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
+        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
        },
       }
       var finishAll = {
       type: 'html-button-response-WH',
       stimulus: function() {
-        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';
-        var euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 100) / 100;        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b>. </p>';
+        var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';       
+        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b> en plus de votre rémunération de base pour cette séance. </p> <p> <i> <b> Rappel: </b> Vous ne recevrez que votre bonus si vous faites la totalité des trois séances en respectant les règles </i> <p>';
        },
      choices: ["Fin"],
-      on_finish: function(data){
-          data.pointsTotal = pointsTotal;
-          data.exCorrect = exCorrect;
-          data.euro_rew = euro_rew;
-        },
       data: {
         PartID: PartID,
         SessID: sessID, 
@@ -431,9 +429,9 @@ Created: 27/03/24 -->
         adjustedNC: 999,
         finalNC: 999,
         nTS: 999,
-        euro_rew: 999,
-        exCorrect: 999,
-        pointsTotal:999,
+        euro_rew: euro_rew,
+        exCorrect: exCorrect,
+        pointsTotal:pointsTotal,
      }
      };
      exp_timeline.push(finishAll)

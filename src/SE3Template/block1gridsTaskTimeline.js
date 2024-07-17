@@ -43,8 +43,8 @@ function block1gridsTaskTimeline(){
       var effort_want = {
         type: 'html-slider-response-effort-want-WH',
         prompt: '<p style="position: relative; top: -20px; color: grey;">Exercice: ' + trialNbCurrent + '/' + exp.nbTrials_block + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block: 1/3</p>' +
-        '<p style="font-size:30px">Votre objectif est de mémoriser <b>' + TSCurrent + ' paires de chiffres</b>.</p>' +
-        '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b>' + rewCurrent + '</b> points. </p>' +
+        '<p style="font-size:30px">Votre objectif est de mémoriser <b  style="color:darkblue;">' + TSCurrent + '</b><span  style="color:darkblue;"> paires de chiffres</span>.</p>' +
+        '<p style="font-size:30px">Si vous atteignez cet objectif, vous gagnerez <b  style="color:darkgreen;">' + rewCurrent + '</b> <span style="color:darkgreen;"> points</span>. </p>' +
         '<div><br></div>',
         stimulus:'<p>Pendant combien de temps souhaitez-vous voir la grille ?</p>',
         min: exp.effLimits[0],
@@ -68,7 +68,7 @@ function block1gridsTaskTimeline(){
             PartID: PartID,
             SessID: sessID, 
             condition: condition,
-            trialNb: trialInd,
+            trialNb: trialNbCurrent,
             blockInd: 1,
             test_part: 'effort_want',
             get_data: 1,
@@ -107,7 +107,7 @@ function block1gridsTaskTimeline(){
           PartID: PartID,
           SessID: sessID, 
           condition: condition,
-          trialNb: trialInd,
+          trialNb: trialNbCurrent,
           blockInd: 1,
           test_part: 'fixation',
           get_data: 0,
@@ -144,7 +144,7 @@ function block1gridsTaskTimeline(){
           PartID: PartID,
           SessID: sessID, 
           condition: condition,
-          trialNb: trialInd,
+          trialNb: trialNbCurrent,
           blockInd: 1,
           test_part: 'effort',
           get_data: 0,
@@ -227,7 +227,7 @@ function block1gridsTaskTimeline(){
           PartID: PartID,
           SessID: sessID, 
           condition: condition,
-          trialNb: trialInd,
+          trialNb: trialNbCurrent,
           blockInd: 1,
           test_part: 'test',
           get_data: 1,
@@ -275,7 +275,7 @@ function block1gridsTaskTimeline(){
           PartID: PartID,
           SessID: sessID, 
           condition: condition,
-          trialNb: trialInd,
+          trialNb: trialNbCurrent,
           blockInd: 1,
           test_part: 'EnS',
           get_data: 1,
@@ -306,7 +306,7 @@ function block1gridsTaskTimeline(){
           PartID: PartID,
           SessID: sessID, 
           condition: condition,
-          trialNb: trialInd,
+          trialNb: trialNbCurrent,
           blockInd: 1,
           test_part: 'next_exo',
           get_data: 1,

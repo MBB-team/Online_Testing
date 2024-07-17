@@ -32,7 +32,11 @@ function block1SETaskTimeline (){
             type: 'html-slider-response-percentage-NM',
             stimulus: function() {
                 var lower = get_lower(difficulty);
-                return '<p>En investissant <b>' + lower + '</b> secondes pour réviser <b>' + difficulty + '</b> paires, quelle est la probabilité que vous réussissez l’exercice? </p><p> (<b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires)</p>';
+                return '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
+                        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">' + lower + '</b> secondes</p>'
+                        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">' + difficulty + '</b> paires </p>'
+                        + '<p style="text-align: left;"></p>'
+                        + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>';
             },
             min: 0,
             max: 100,
@@ -63,7 +67,11 @@ function block1SETaskTimeline (){
             type: 'html-slider-response-percentage-NM',
             stimulus: function() {
                 var medianEffortDuration = get_median(difficulty);
-                return '<p>En investissant <b>' + medianEffortDuration + '</b> secondes pour réviser <b>' + difficulty + '</b> paires, quelle est la probabilité que vous réussissez l’exercice? </p><p> (<b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires)</p>';
+                return '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
+                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">' + medianEffortDuration + '</b> secondes</p>'
+                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">' + difficulty + '</b> paires </p>'
+                + '<p style="text-align: left;"></p>'
+                + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>';
             },
             min: 0,
             max: 100,
@@ -94,7 +102,11 @@ function block1SETaskTimeline (){
             type: 'html-slider-response-percentage-NM',
             stimulus: function() {
                 var higher = get_higher(difficulty);
-                return '<p>En investissant <b>' + higher + '</b> secondes pour réviser <b>' + difficulty + '</b> paires, quelle est la probabilité que vous réussissez l’exercice? </p><p> (<b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires)</p>';
+                return '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
+                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">' + higher + '</b> secondes</p>'
+                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">' + difficulty + '</b> paires </p>'
+                + '<p style="text-align: left;"></p>'
+                + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>';
             },
             min: 0,
             max: 100,
@@ -138,9 +150,32 @@ SE_questions_b1 = jsPsych.randomization.shuffle(all_SE_questions);
 SE_questions_b1.forEach((question, index) => {
     question.data.trialNb = index + 1;
 });
-
+var fixation = {
+    type: 'html-button-response-WH',
+    stimulus: '<p><b>+</b></p>',
+    choices: [],
+    trial_duration: time.fixation,
+    data: {
+      PartID: PartID,
+      SessID: sessID, 
+      condition: condition,
+      trialNb: 999,
+      blockInd: 3,
+      test_part: 'fixation',
+      get_data: 0,
+      target_score: 999,
+      reward: 999,
+      SE_eff: 999,
+      SE_type: '999',
+      NC: 999,
+      adjustedNC: 999,
+      finalNC: 999,
+      nTS: 999,
+  }
+  }; // fixation
 // STEP 5 - Add the SE questions to the timeline
 SE_questions_b1.forEach(question => {
+    timelineTask.push(fixation)
     timelineTask.push(question);
 });
 
