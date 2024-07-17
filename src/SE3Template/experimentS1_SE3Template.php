@@ -408,7 +408,7 @@ Created: 27/03/24 -->
       type: 'html-button-response-WH',
       stimulus: function() {
         var ex_fin = exCorrect == 1 ? 'exercice' : 'exercices';       
-        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b> en plus de votre rémunération de base . </p>';
+        return '<p>Vous avez fini!</p> <p> Au total, vous avez réussi <b>' + exCorrect + ' ' + ex_fin + '</b>. </p> <p> Vous avez gagné <b>' + pointsTotal + ' points</b>, donc vous recevrez un bonus de <b> ' + euro_rew + ' euros </b> en plus de votre rémunération de base pour cette séance. </p> <p> <i> <b> Rappel: </b> Vous ne recevrez que votre bonus si vous faites la totalité des trois séances en respectant les règles </i> <p>';
        },
      choices: ["Fin"],
       data: {
