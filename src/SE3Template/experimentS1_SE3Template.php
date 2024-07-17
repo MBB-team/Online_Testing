@@ -246,7 +246,7 @@ Created: 27/03/24 -->
     var conditionID = parseInt(dataSaver.clientIds.participantID.substring(dataSaver.clientIds.participantID.length - 1));
    
     //var PartID     = randi(0,83); // this is the first part of the ID 
-    var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,2))-1;
+    var PartID    = parseInt(dataSaver.clientIds.participantID.substring(0,3))-1;
     //var sessID     = 1; //this is session 1 
     var sessID    = parseInt(dataSaver.clientIds.sessionName.substring(dataSaver.clientIds.sessionName.length - 1)); //last character of sessionName
     var condition = get_condition(conditionID, sessID);
