@@ -451,9 +451,9 @@ Created: 27/03/24 -->
        },
         on_finish: function (data) {
         // Save data after each trial
-        var filename = "realthing_test" + PartID + "_sess" + sessID + "_data.csv";
+        //var filename = "realthing_test" + PartID + "_sess" + sessID + "_data.csv";
         // Call the function to save all trial data to CSV
-        jsPsych.data.get().filter({ get_data: 1 }).localSave("csv", filename);
+        //jsPsych.data.get().filter({ get_data: 1 }).localSave("csv", filename);
 
         // Call jspsych_finish function
         jspsych_finish();
