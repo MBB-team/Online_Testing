@@ -155,6 +155,35 @@ function block3SETaskTimeline (){
 
 var all_SE_questions = [];
 
+var focusquestion = {
+    type: 'html-slider-response-percentage-NM',
+    stimulus: function() {
+        return '<p style="text-align: left;">Ceci est une question pour évaluer votre concentration: </p>'
+        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- choisissez <b style="color:red;"> 35 </b> % </p>'
+        + '<p style="text-align: left;"><i><b>Rappel:</b> Répondez aux questions d&#39;auto évaluation au mieux que vous pouvez </i></p>';
+    },
+    min: 0,
+    max: 100,
+    start: function() { return randi(0, 100); },
+    require_movement: true,
+    data: {
+        PartID: PartID,
+        SessID: sessID, 
+        condition: condition,
+        trialNb: 999,
+        blockInd: 3,
+        test_part: 'focus_quest',
+        get_data: 1,
+        target_score: 999,
+        reward: 999,
+        SE_eff: 999,
+        SE_type: '999',
+        NC: 999,
+        adjustedNC: 999,
+        finalNC: 999,
+        nTS: 999,
+        }};
+
 var fixation = {
     type: 'html-button-response-WH',
     stimulus: '<p><b>+</b></p>',
@@ -183,6 +212,8 @@ exp.TS.forEach(difficulty => {
     var SE_questions = generateSEQuestions(difficulty);
     all_SE_questions = all_SE_questions.concat(SE_questions);
 });
+//add a focus question in the SE questions
+all_SE_questions.push(focusquestion);
 
 // Randomize the order of SE questions
 SE_questions_b1 = jsPsych.randomization.shuffle(all_SE_questions);
