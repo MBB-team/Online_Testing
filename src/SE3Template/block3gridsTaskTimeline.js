@@ -295,8 +295,8 @@ function block3gridsTaskTimeline(){
             euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10/ 100; 
             euro_rew = Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10/ 100; 
             euro_rew = euro_rew.toFixed(2);
-            console.log("NOW: Here the euro_rew is:", euro_rew)
-            console.log("NOW: Here the euro_rew is before dividing:",Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10)
+            console.log("NOW: in block 3 Here the euro_rew is:", euro_rew, "and the exCorrect is ", exCorrect, "and the pointsTotal is ", pointsTotal);
+            console.log("NOW: Here the euro_rew is before dividing:",Math.round((pointsTotal * exp.eur_max / exp.max_points) * 10)*10);
           },
           data: {
             PartID: PartID,

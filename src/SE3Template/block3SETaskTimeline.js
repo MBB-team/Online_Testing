@@ -51,7 +51,7 @@ function block3SETaskTimeline (){
             stimulus: function() {
                 var lower = get_lower(difficulty);
                 return '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
-                        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">' + lower + '</b> secondes</p>'
+                        + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissez <b style="color:red;">' + lower + '</b> secondes</p>'
                         + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">' + difficulty + '</b> paires </p>'
                         + '<p style="text-align: left;"></p>'
                         + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>';            },
@@ -85,7 +85,7 @@ function block3SETaskTimeline (){
             stimulus: function() {
                 var medianEffortDuration = get_median(difficulty);
                 return '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
-                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">' + medianEffortDuration + '</b> secondes</p>'
+                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissez <b style="color:red;">' + medianEffortDuration + '</b> secondes</p>'
                 + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">' + difficulty + '</b> paires </p>'
                 + '<p style="text-align: left;"></p>'
                 + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>';
@@ -120,7 +120,7 @@ function block3SETaskTimeline (){
             stimulus: function() {
                 var higher = get_higher(difficulty);
                 return '<p style="text-align: left;">Quelle est la probabilité que vous réussissez un exercice dans lequel vous: </p>'
-                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissiez <b style="color:red;">' + higher + '</b> secondes</p>'
+                + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- investissez <b style="color:red;">' + higher + '</b> secondes</p>'
                 + '<p style="text-align: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- pour réviser <b style="color:darkblue;">' + difficulty + '</b> paires </p>'
                 + '<p style="text-align: left;"></p>'
                 + '<p style="text-align: left;"><i><b>Rappel:</b> réussir l’exercice c’est se souvenir de l’emplacement de toutes les paires</i></p>';
