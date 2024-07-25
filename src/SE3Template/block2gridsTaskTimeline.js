@@ -237,10 +237,9 @@ function block2gridsTaskTimeline(){
                 }
                 console.log("NM:Now the nCorrect is", nCorrect)
                 if (nCorrect >= TSCurrent) {
-                    exCorrect++;
-                    pointsTotal += rewCurrent;
+                    
                     trial_success = 1; 
-                    console.log("NM: here you are correct so exCorrect is now:", exCorrect, "and points total is:", pointsTotal);
+                
                 }
                 test_counter++;
             },
@@ -324,9 +323,10 @@ function block2gridsTaskTimeline(){
                 feedback.data.finalNC = finalNC; 
                 
                 if (finalNC >= TSCurrent){
-
+                    exCorrect++;
+                    pointsTotal += rewCurrent;
                     nTS++;
-                    console.log("ExCorrect is now in block 2 ", exCorrect, "and pointsTotal is ", pointsTotal);
+                    console.log("in the feedback condtion ExCorrect is now in block 2 ", exCorrect, "and pointsTotal is ", pointsTotal);
                     feedback.stimulus = '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p style="margin:0px"> Bravo, vous avez correctement retrouvé <b>' + finalNC + '</b>' + emplacementsStr + '!</p><p> Vous avez réussi cet exercice. Vous gagnez <b>' + rewCurrent + '</b> points. </p> <p> Quand vous êtes prêt.e, </p>';
                 } else {
                     feedback.stimulus = '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p style="margin:0px">Vous avez correctement retrouvé <b>' + finalNC + '</b>' + emplacementsStr + '!</p><p> Malheureusement, vous n\'avez pas réussi cet exercice. Vous ne gagnez aucun point. </p> <p> Quand vous êtes prêt.e, </p>';
@@ -367,8 +367,13 @@ function block2gridsTaskTimeline(){
             stimulus: '<p> Vous avez fini exercice <b>'+trialNbCurrent+'/'+exp.nbTrials_block+' </b> du bloc <b> 2/3</b>.</p> <p> Quand vous êtes prêt.e, </p>',
             choices: trialNbCurrent < exp.nbTrials_block ? ['Passez au prochain exercice'] : ['Suivant'],
             on_finish: function(data){
+                if (nCorrect >= TSCurrent){
+                    exCorrect++;
+                    pointsTotal += rewCurrent;
+                
+                }
                 data.finalNC = nCorrect
-                console.log("In block 2 now the exCorrect is ", exCorrect, "and the pointsTotal is ", pointsTotal);
+                console.log("In block 2, no feedback cond now the exCorrect is ", exCorrect, "and the pointsTotal is ", pointsTotal);
             },
             data: {
                 PartID: PartID,
